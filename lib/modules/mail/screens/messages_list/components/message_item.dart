@@ -1,6 +1,4 @@
 //@dart=2.9
-import 'dart:convert';
-
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
@@ -11,7 +9,6 @@ import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
-import 'package:collection/collection.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -230,6 +227,8 @@ class _MessageItemState extends BState<MessageItem> {
               widget.isNote
                   ? ListTile(
                       key: Key(m.uid.toString()),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                       title: Text(
                         m.subject.isNotEmpty
                             ? m.subject
@@ -299,6 +298,8 @@ class _MessageItemState extends BState<MessageItem> {
                     )
                   : ListTile(
                       key: Key(m.uid.toString()),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                       title: Text(_getEmailTitle(),
                           style: TextStyle(
                             fontWeight: fontWeight,
@@ -434,12 +435,12 @@ class _MessageItemState extends BState<MessageItem> {
                     ),
             ),
           ),
-          Divider(
-            indent: 16.0,
-            endIndent: 16.0,
-            height: 0.0,
-            color: theme.disabledColor.withOpacity(0.08),
-          ),
+          if (BuildProperty.useMailDivider)
+            Divider(
+              height: 0.0,
+              thickness: 0.5,
+              color: theme.disabledColor.withOpacity(0.08),
+            ),
           if (widget.children.isNotEmpty && _showThreads)
             ...widget.children.map((t) {
               return Stack(
@@ -448,11 +449,6 @@ class _MessageItemState extends BState<MessageItem> {
                     padding: const EdgeInsets.only(left: 16.0),
                     child: Column(
                       children: <Widget>[
-//                      Divider(
-//                        height: 0.0,
-//                        indent: 4.0,
-//                        endIndent: 16.0,
-//                      ),
                         MessageItem(
                           widget.isSent,
                           t,

@@ -25,7 +25,7 @@ class AdaptiveDrawerIcon extends StatelessWidget {
     // Если включены кастомные иконки для drawer, используем SVG
     if (BuildProperty.useCustomDrawerIcons) {
       final iconPath =
-          '${BuildProperty.image_dir}/drawer/inbox/${iconName}.svg';
+          '${BuildProperty.image_dir}/drawer/mail/${iconName}.svg';
 
       return SvgPicture.asset(
         iconPath,

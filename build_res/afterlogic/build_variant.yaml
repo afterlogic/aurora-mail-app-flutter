@@ -60,6 +60,10 @@ useCustomDrawerIcons: false # use custom drawer folder icons
 useContactsRoundIcons: false # use round contact icons
 useContactsDivider: false # use dividers between contacts
 
+#Custom mail
+useMailDivider: false # use dividers between mail messages
+useCustomStarIcons: false # use custom star icons for mail
+
 #Custom input styles
 useCustomInputStyles: false # use custom input styles
 

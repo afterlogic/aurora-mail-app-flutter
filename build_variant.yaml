@@ -89,6 +89,8 @@ useCustomDrawerIcons: true # use custom drawer folder icons
 #Custom contacts
 useContactsRoundIcons: true # use round contact icons
 useContactsDivider: true # use dividers between contacts
+useMailDivider: false
+useCustomStarIcons: false
 
 #Custom input styles
 useCustomInputStyles: true # use custom input styles

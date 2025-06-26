@@ -183,7 +183,8 @@ flutter:
     - {{image_dir}}/settings/common/
     - {{image_dir}}/settings/sync/
     - {{image_dir}}/drawer/
-    - {{image_dir}}/drawer/inbox/
+    - {{image_dir}}/drawer/mail/
+    - {{image_dir}}/mail/
 
   fonts:
     - family: WebMailIcons

@@ -1,6 +1,9 @@
 //@dart=2.9
+import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/shared_ui/svg_icon.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/material.dart';
+import 'package:theme/app_color.dart';
 
 class Star extends StatefulWidget {
   final bool value;
@@ -61,23 +64,42 @@ class _StarState extends BState<Star> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    // Определяем цвета в зависимости от темы
+    final starActiveColor = AppColor.starActive;
+    final starInactiveColor = theme.brightness == Brightness.light
+        ? AppColor.starInactiveLight
+        : AppColor.starInactiveDark;
+
     if (_isStarred) {
       return Transform.scale(
-          scale: 1 + _scaleAnimation.value / 4,
-          child: IconButton(
-            padding: EdgeInsets.zero,
-            icon: Icon(Icons.star, color: Color(0xFFFDCC25)),
-            onPressed: widget.enabled ? () => _setStarred(false) : null,
-          ));
+        scale: 1 + _scaleAnimation.value / 4,
+        child: IconButton(
+          padding: EdgeInsets.zero,
+          icon: BuildProperty.useCustomStarIcons
+              ? SvgIcon(
+                  '${BuildProperty.image_dir}/mail/star.active.svg', // Залитая активная звезда
+                  color: starActiveColor,
+                )
+              : Icon(Icons.star, color: starActiveColor),
+          onPressed: widget.enabled ? () => _setStarred(false) : null,
+        ),
+      );
     } else {
       return Transform.scale(
         scale: 1 - _scaleAnimation.value / 7,
         child: IconButton(
           padding: EdgeInsets.zero,
-          icon: Icon(
-            Icons.star_border,
-            color: widget.enabled ? theme.disabledColor : null,
-          ),
+          icon: BuildProperty.useCustomStarIcons
+              ? SvgIcon(
+                  '${BuildProperty.image_dir}/mail/star.svg', // Контур неактивной звезды
+                  color:
+                      widget.enabled ? starInactiveColor : theme.disabledColor,
+                )
+              : Icon(
+                  Icons.star_border, // Возвращаем контур для базовой звезды
+                  color:
+                      widget.enabled ? starInactiveColor : theme.disabledColor,
+                ),
           onPressed: widget.enabled ? () => _setStarred(true) : null,
         ),
       );

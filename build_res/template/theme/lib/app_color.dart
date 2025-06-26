@@ -22,4 +22,11 @@ class AppColor {
 
   // AppBar divider color (only used when useAppBarDivider is enabled)
   static const appBarDivider = Color(0xFFEBEBEB);
+
+  // Цвета для звёзд в mail (дефолтные)
+  static const starActive = Color(0xFFFFC107); // дефолтная активная звезда
+  static const starInactiveLight =
+      Color(0xFFB0B0B0); // неактивная звезда в светлой теме
+  static const starInactiveDark =
+      Color(0xFF808080); // неактивная звезда в тёмной теме
 }
