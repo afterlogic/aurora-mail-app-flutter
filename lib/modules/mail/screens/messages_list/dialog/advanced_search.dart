@@ -3,6 +3,7 @@ import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:flutter/material.dart';
+import 'package:theme/app_color.dart';
 
 class AdvancedSearch extends StatefulWidget {
   final String searchText;
@@ -356,11 +357,23 @@ class AdvancedSearchState extends State<AdvancedSearch> {
       ),
       actions: <Widget>[
         TextButton(
-          child: Text(S.of(context).btn_cancel),
+          child: Text(
+            S.of(context).btn_cancel,
+            style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? AppColor.primaryVariant
+                    : null),
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         TextButton(
-          child: Text(S.of(context).messages_list_app_bar_search),
+          child: Text(
+            S.of(context).messages_list_app_bar_search,
+            style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? AppColor.primaryVariant
+                    : null),
+          ),
           onPressed: _search,
         ),
       ],

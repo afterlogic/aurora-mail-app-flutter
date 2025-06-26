@@ -303,6 +303,9 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                 data: AppTheme.floatIconTheme,
                 child: Icon(MdiIcons.pen),
               ),
+              shadow: BuildProperty.disableShadowFloatingActionButton
+                  ? null
+                  : BoxShadow(),
               onPressed: () => Navigator.pushNamed(
                 context,
                 ComposeRoute.name,
@@ -555,6 +558,9 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                 data: AppTheme.floatIconTheme,
                 child: Icon(MdiIcons.pen),
               ),
+              shadow: BuildProperty.disableShadowFloatingActionButton
+                  ? null
+                  : BoxShadow(),
               onPressed: () => Navigator.pushNamed(
                 context,
                 ComposeRoute.name,
@@ -605,7 +611,14 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                 appBarKey.currentState.search(result);
               }
             },
-            child: Text(S.of(context).btn_message_advanced_search),
+            child: Text(
+              S.of(context).btn_message_advanced_search,
+              style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? AppColor.primaryVariant
+                    : null,
+              ),
+            ),
           ),
         if (filter == MessagesFilter.unread)
           Column(
@@ -615,7 +628,11 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
               TextButton(
                 child: Text(
                   S.of(context).btn_show_all,
-                  style: TextStyle(color: theme.primaryColor),
+                  style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? AppColor.primaryVariant
+                        : null,
+                  ),
                 ),
                 onPressed: () => _showAllMessages(context),
               )

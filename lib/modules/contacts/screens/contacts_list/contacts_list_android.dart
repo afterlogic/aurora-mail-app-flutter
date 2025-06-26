@@ -223,6 +223,10 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
                                 data: AppTheme.floatIconTheme,
                                 child: Icon(MdiIcons.accountPlusOutline),
                               ),
+                              shadow: BuildProperty
+                                      .disableShadowFloatingActionButton
+                                  ? null
+                                  : BoxShadow(),
                               onPressed: () => Navigator.pushNamed(
                                 context,
                                 ContactEditRoute.name,
@@ -279,6 +283,9 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
                     data: AppTheme.floatIconTheme,
                     child: Icon(MdiIcons.accountPlusOutline),
                   ),
+                  shadow: BuildProperty.disableShadowFloatingActionButton
+                      ? null
+                      : BoxShadow(),
                   onPressed: () => Navigator.pushNamed(
                     context,
                     ContactEditRoute.name,

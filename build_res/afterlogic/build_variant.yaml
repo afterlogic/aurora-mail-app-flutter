@@ -47,6 +47,11 @@ supportAllowAccess: true
 #useYubiKit: true
 #yubico_flutter_lib: "git: https://github.com/afterlogic/yubico_flutter"
 
+#Custom floating action button
+# true and false values are inverted
+disableShadowFloatingActionButton: false # disable shadow for floating action button
+disableScreenShadowFloatingActionButton: false # disable shadow for floating action button on screen
+
 #Custom Drawer
 useDrawerGradient: false # use gradient for drawer
 useCustomDrawerIcons: false # use custom drawer folder icons

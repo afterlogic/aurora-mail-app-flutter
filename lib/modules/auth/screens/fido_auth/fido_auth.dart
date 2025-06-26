@@ -1,4 +1,5 @@
 //@dart=2.9
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/event.dart';
@@ -109,7 +110,10 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                           width: double.infinity,
                           child: AMButton(
                             color: Theme.of(context).primaryColor,
-                            shadow: AppColor.enableShadow ? null : BoxShadow(),
+                            shadow:
+                                BuildProperty.disableShadowFloatingActionButton
+                                    ? null
+                                    : BoxShadow(),
                             child: Text(
                               S.of(context).fido_btn_try_again,
                               style: TextStyle(color: AppTheme.loginTextColor),

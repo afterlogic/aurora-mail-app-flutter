@@ -1096,6 +1096,9 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                           data: AppTheme.floatIconTheme,
                           child: Icon(Icons.perm_media),
                         ),
+                        shadow: BuildProperty.disableShadowFloatingActionButton
+                            ? null
+                            : BoxShadow(),
                         onPressed: () =>
                             _bloc.add(UploadAttachment(FileType.media)),
                       ),
@@ -1106,6 +1109,9 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                         data: AppTheme.floatIconTheme,
                         child: Icon(Icons.attachment),
                       ),
+                      shadow: BuildProperty.disableShadowFloatingActionButton
+                          ? null
+                          : BoxShadow(),
                       onPressed: () =>
                           _bloc.add(UploadAttachment(FileType.any)),
                     ),

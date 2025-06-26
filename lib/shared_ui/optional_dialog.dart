@@ -2,6 +2,7 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:theme/app_color.dart';
 
 class OptionalDialogResult {
   final bool generalResult;
@@ -27,22 +28,22 @@ class OptionalDialog extends StatefulWidget {
   }) : super(key: key);
 
   static Future<OptionalDialogResult> showWithOptions(
-      BuildContext context,
-      String title,
-      String description,
-      Map<String, bool> options,
-      String actionText, {
-        List<Widget> actions,
-      }) {
+    BuildContext context,
+    String title,
+    String description,
+    Map<String, bool> options,
+    String actionText, {
+    List<Widget> actions,
+  }) {
     return dialog(
         context: context,
         builder: (_) => OptionalDialog(
-          title: title,
-          description: description,
-          options: options,
-          actionText: actionText,
-          actions: actions,
-        )).then((value) => ( value as OptionalDialogResult) ?? null);
+              title: title,
+              description: description,
+              options: options,
+              actionText: actionText,
+              actions: actions,
+            )).then((value) => (value as OptionalDialogResult) ?? null);
   }
 
   static Future<bool> show(
@@ -117,13 +118,26 @@ class _OptionalDialogState extends State<OptionalDialog> {
     }
     return AlertDialog(
       title: title == null ? null : Text(title),
+      titleTextStyle: TextStyle(
+        color: Theme.of(context).brightness == Brightness.light
+            ? AppColor.primary
+            : null,
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: children,
       ),
       actions: <Widget>[
         TextButton(
-          child: Text(S.of(context).btn_cancel),
+          child: Text(
+            S.of(context).btn_cancel,
+            style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? AppColor.primaryVariant
+                    : null),
+          ),
           onPressed: () => Navigator.pop(
             context,
             OptionalDialogResult(generalResult: false, options: options),
@@ -131,7 +145,13 @@ class _OptionalDialogState extends State<OptionalDialog> {
         ),
         if (actions != null) ...actions,
         TextButton(
-          child: Text(actionText),
+          child: Text(
+            actionText,
+            style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? AppColor.primaryVariant
+                    : null),
+          ),
           onPressed: () => Navigator.pop(
             context,
             OptionalDialogResult(generalResult: true, options: options),

@@ -91,7 +91,10 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
                         width: double.infinity,
                         child: AMButton(
                           color: Theme.of(context).primaryColor,
-                          shadow: AppColor.enableShadow ? null : BoxShadow(),
+                          shadow:
+                              BuildProperty.disableShadowFloatingActionButton
+                                  ? null
+                                  : BoxShadow(),
                           child: Text(
                             S.of(context).btn_verify_pin,
                             style: TextStyle(color: AppTheme.loginTextColor),

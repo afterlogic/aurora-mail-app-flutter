@@ -130,7 +130,9 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
     final children = <Widget>[
       AMButton(
         color: Theme.of(context).primaryColor,
-        shadow: AppColor.enableShadow ? null : BoxShadow(),
+        shadow: BuildProperty.disableShadowFloatingActionButton
+            ? null
+            : BoxShadow(),
         child: Text(S.of(context).btn_share,
             style: TextStyle(color: Colors.white)),
         onPressed: () async {
@@ -157,7 +159,9 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
       if (isAndroid9orLow)
         AMButton(
           color: Theme.of(context).primaryColor,
-          shadow: AppColor.enableShadow ? null : BoxShadow(),
+          shadow: BuildProperty.disableShadowFloatingActionButton
+              ? null
+              : BoxShadow(),
           child: Text(S.of(context).btn_download,
               style: TextStyle(color: Colors.white)),
           onPressed: () {
@@ -168,7 +172,9 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
       if (isAndroid9orLow) space,
       AMButton(
         color: Theme.of(context).primaryColor,
-        shadow: AppColor.enableShadow ? null : BoxShadow(),
+        shadow: BuildProperty.disableShadowFloatingActionButton
+            ? null
+            : BoxShadow(),
         child: Text(S.of(context).btn_delete,
             style: TextStyle(color: Colors.white)),
         onPressed: () async {

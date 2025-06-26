@@ -58,6 +58,9 @@ class _ManageUsersAndroidState extends BState<ManageUsersAndroid> {
                 data: AppTheme.floatIconTheme,
                 child: Icon(MdiIcons.accountPlus),
               ),
+              shadow: BuildProperty.disableShadowFloatingActionButton
+                  ? null
+                  : BoxShadow(),
               onPressed: () => _addAccount(context),
             )
           : null,

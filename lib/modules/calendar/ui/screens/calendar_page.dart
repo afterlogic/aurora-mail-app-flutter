@@ -230,7 +230,10 @@ class _CalendarPageState extends State<CalendarPage>
                           setState(() {});
                         },
                         child: Container(
-                          color: Colors.black.withOpacity(0.2),
+                          color: BuildProperty
+                                  .disableScreenShadowFloatingActionButton
+                              ? Colors.black.withOpacity(0.2)
+                              : Colors.transparent,
                         )),
                   ),
               ],
@@ -273,6 +276,9 @@ class _CalendarPageState extends State<CalendarPage>
                     data: AppTheme.floatIconTheme,
                     child: Icon(Icons.event, size: 32),
                   ),
+                  shadow: BuildProperty.disableShadowFloatingActionButton
+                      ? null
+                      : BoxShadow(),
                   onPressed: () {
                     BlocProvider.of<EventsBloc>(context).add(SelectEvent(null));
                     _overlay = false;
@@ -289,6 +295,9 @@ class _CalendarPageState extends State<CalendarPage>
                 data: AppTheme.floatIconTheme,
                 child: Icon(MdiIcons.plus),
               ),
+              shadow: BuildProperty.disableShadowFloatingActionButton
+                  ? null
+                  : BoxShadow(),
               onPressed: () {
                 _overlay = true;
                 setState(() {});

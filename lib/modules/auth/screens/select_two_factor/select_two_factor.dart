@@ -41,7 +41,9 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
             width: double.infinity,
             child: AMButton(
               color: Theme.of(context).primaryColor,
-              shadow: AppColor.enableShadow ? null : BoxShadow(),
+              shadow: BuildProperty.disableShadowFloatingActionButton
+                  ? null
+                  : BoxShadow(),
               child: Text(
                 S.of(context).tfa_btn_use_security_key,
                 style: TextStyle(color: AppTheme.loginTextColor),

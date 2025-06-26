@@ -237,7 +237,6 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                   ErrorToShow.message(state.errorMsg.message),
                 );
               }
-
             },
             child: BlocBuilder<AuthBloc, AuthState>(
               bloc: BlocProvider.of<AuthBloc>(context),
@@ -282,121 +281,123 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                       PresentationHeader(),
                       Spacer(),
                     ],
-                    Column(
-                      children: <Widget>[
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.7),
-                            borderRadius: BorderRadius.circular(8),
-                            // border: Border.all(
-                            //   color: Colors.white.withOpacity(0.3),
-                            //   width: 1.0,
-                            // ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.15),
-                                blurRadius: 30.0,
-                                offset: Offset(0, 4),
+                    Column(children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.7),
+                          borderRadius: BorderRadius.circular(8),
+                          // border: Border.all(
+                          //   color: Colors.white.withOpacity(0.3),
+                          //   width: 1.0,
+                          // ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.15),
+                              blurRadius: 30.0,
+                              offset: Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.0,
+                          vertical: 36.0,
+                        ),
+                        child: Column(children: <Widget>[
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Sign in',
+                              textAlign: TextAlign.left,
+                              style: theme.textTheme.titleLarge.copyWith(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Column(
+                            children: <Widget>[
+                              if (widget.isDialog &&
+                                  LayoutConfig.of(context).isTablet)
+                                Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Text(
+                                    widget.email == null
+                                        ? S.of(context).settings_accounts_add
+                                        : S
+                                            .of(context)
+                                            .settings_accounts_relogin,
+                                    style: theme.textTheme.titleLarge,
+                                  ),
+                                ),
+                              if (_showHostField)
+                                AuthInput(
+                                  controller: hostCtrl,
+                                  inputFormatters: [HostInputFormatter()],
+                                  label: S.of(context).login_input_host,
+                                  keyboardType: TextInputType.url,
+                                  isEnabled: !loading,
+                                ),
+                              SizedBox(height: 10),
+                              AuthInput(
+                                enableSuggestions: false,
+                                autocorrect: false,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.deny(" ")
+                                ],
+                                controller: emailCtrl,
+                                label: S.of(context).login_input_email,
+                                keyboardType: TextInputType.emailAddress,
+                                validator: (value) => validateInput(
+                                    context, value, [
+                                  ValidationType.empty,
+                                  ValidationType.email
+                                ]),
+                                isEnabled: !loading,
+                              ),
+                              SizedBox(height: 10),
+                              AuthInput(
+                                controller: passwordCtrl,
+                                label: S.of(context).login_input_password,
+                                validator: (value) => validateInput(
+                                    context, value, [ValidationType.empty]),
+                                isPassword: true,
+                                isEnabled: !loading,
                               ),
                             ],
                           ),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 20.0,
-                            vertical: 36.0,
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              Align(
-                                alignment: Alignment.centerLeft,
+                          if (widget.isDialog) SizedBox(height: 40.0),
+                          SizedBox(height: 20),
+                          SizedBox(
+                            width: double.infinity,
+                            child: _debugRouteToTwoFactor(
+                              AMButton(
+                                // color: Theme.of(context).primaryColor,
+                                color: Color(0xFF3975B5),
+                                radius: BorderRadius.circular(10.0),
+                                shadow: BuildProperty
+                                        .disableShadowFloatingActionButton
+                                    ? null
+                                    : BoxShadow(),
                                 child: Text(
-                                  'Sign in',
-                                  textAlign: TextAlign.left,
-                                  style: theme.textTheme.titleLarge.copyWith(
-                                    fontSize: 24.0,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
+                                    widget.isDialog
+                                        ? S.of(context).btn_add_account
+                                        : 'Continue', //S.of(context).btn_login,
+                                    style: TextStyle(color: Colors.white)),
+                                isLoading: loading,
+                                onPressed: () => _login(context),
                               ),
-                              SizedBox(height: 10),
-                              Column(
-                                children: <Widget>[
-                                  if (widget.isDialog && LayoutConfig.of(context).isTablet)
-                                    Padding(
-                                      padding: const EdgeInsets.all(16),
-                                      child: Text(
-                                        widget.email == null
-                                            ? S.of(context).settings_accounts_add
-                                            : S.of(context).settings_accounts_relogin,
-                                        style: theme.textTheme.titleLarge,
-                                      ),
-                                    ),
-                                  if (_showHostField)
-                                    AuthInput(
-                                      controller: hostCtrl,
-                                      inputFormatters: [HostInputFormatter()],
-                                      label: S.of(context).login_input_host,
-                                      keyboardType: TextInputType.url,
-                                      isEnabled: !loading,
-                                    ),
-                                  SizedBox(height: 10),
-                                  AuthInput(
-                                    enableSuggestions: false,
-                                    autocorrect: false,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.deny(" ")
-                                    ],
-                                    controller: emailCtrl,
-                                    label: S.of(context).login_input_email,
-                                    keyboardType: TextInputType.emailAddress,
-                                    validator: (value) => validateInput(context, value,
-                                        [ValidationType.empty, ValidationType.email]),
-                                    isEnabled: !loading,
-                                  ),
-                                  SizedBox(height: 10),
-                                  AuthInput(
-                                    controller: passwordCtrl,
-                                    label: S.of(context).login_input_password,
-                                    validator: (value) => validateInput(
-                                        context, value, [ValidationType.empty]),
-                                    isPassword: true,
-                                    isEnabled: !loading,
-                                  ),                             
-                                ],
-                              ),
-                              if (widget.isDialog) SizedBox(height: 40.0),
-                              SizedBox(height: 20),
-                              SizedBox(
-                                width: double.infinity,
-                                child: _debugRouteToTwoFactor(
-                                  AMButton(
-                                    // color: Theme.of(context).primaryColor,
-                                    color: Color(0xFF3975B5),
-                                    radius: BorderRadius.circular(10.0),
-                                    shadow: AppColor.enableShadow ? null : BoxShadow(),
-                                    child: Text(
-                                        widget.isDialog
-                                            ? S.of(context).btn_add_account
-                                            : 'Continue',//S.of(context).btn_login,
-                                        style: TextStyle(color: Colors.white)),
-                                    isLoading: loading,
-                                    onPressed: () => _login(context),
-                                  ),
-                                ),
-                              ),
-                            ]
+                            ),
                           ),
-                        ),
-
-                        if (BuildProperty.registrationLink.isNotEmpty)
-                          const SizedBox(height: 30.0),
-                          _buildRegisterLink(),
-
-                        SizedBox(height: 50),
-                      ]
-                    )
+                        ]),
+                      ),
+                      if (BuildProperty.registrationLink.isNotEmpty)
+                        const SizedBox(height: 30.0),
+                      _buildRegisterLink(),
+                      SizedBox(height: 50),
+                    ])
                   ],
                 ),
-                
               ),
             ),
           ),
