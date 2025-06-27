@@ -1,10 +1,10 @@
 //@dart=2.9
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
-import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/mail_logo.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_ui_kit/components/am_button.dart';
 import 'package:flutter/material.dart';
 import 'package:theme/app_color.dart';
@@ -75,7 +75,7 @@ class UpgradePlanWidget extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: AMButton(
-                          color: Theme.of(context).primaryColor,
+                          color: AppColor.primaryVariant,
                           shadow:
                               BuildProperty.disableShadowFloatingActionButton
                                   ? null

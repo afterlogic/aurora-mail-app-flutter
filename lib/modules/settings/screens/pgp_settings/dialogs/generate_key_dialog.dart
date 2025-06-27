@@ -1,12 +1,12 @@
 //@dart=2.9
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/alias_or_account.dart';
-import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
+import 'package:aurora_mail/utils/input_utils.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:flutter/material.dart';
-import 'package:aurora_mail/utils/base_state.dart';
 
 class GenerateKeyDialog extends StatefulWidget {
   final List<AliasOrAccount> identities;
@@ -43,14 +43,14 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
         key: _formKey,
         child: Column(
           children: <Widget>[
-            DropdownButtonFormField(
-              decoration: InputDecoration(
-                  labelText: S.of(context).login_input_email),
+            DropdownButtonFormField<AliasOrAccount>(
+              decoration: InputUtils.getUnlymeInputDecoration(
+                labelText: S.of(context).login_input_email,
+              ),
               value: current,
               items: widget.identities.map((value) {
                 return DropdownMenuItem<AliasOrAccount>(
                   value: value,
-//                  child: Text(identityViewName(value.name, value.mail)),
                   child: _buildEmails(value),
                 );
               }).toList(),
@@ -69,10 +69,11 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
                 setState(() {});
               },
             ),
+            SizedBox(height: 16.0),
             TextFormField(
-              decoration: InputDecoration(
+              decoration: InputUtils.getUnlymeInputDecoration(
                 labelText: S.of(context).login_input_password,
-                suffix: GestureDetector(
+                suffixIcon: GestureDetector(
                   child: Icon(
                     _obscure ? Icons.visibility : Icons.visibility_off,
                   ),
@@ -87,9 +88,11 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
               controller: _passwordController,
               obscureText: _obscure,
             ),
-            DropdownButtonFormField(
-              decoration:
-                  InputDecoration(labelText: S.of(context).label_length),
+            SizedBox(height: 16.0),
+            DropdownButtonFormField<int>(
+              decoration: InputUtils.getUnlymeInputDecoration(
+                labelText: S.of(context).label_length,
+              ),
               value: length,
               items: lengths.map((value) {
                 return DropdownMenuItem<int>(

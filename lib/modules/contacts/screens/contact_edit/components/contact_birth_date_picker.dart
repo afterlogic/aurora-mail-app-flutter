@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_bloc.dart';
 import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/utils/input_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -97,20 +98,11 @@ class _ContactBirthDatePickerState extends BState<ContactBirthDatePicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: GestureDetector(
-        onTap: _pick,
-        child: AbsorbPointer(
-          child: TextField(
-            controller: _dateText,
-            decoration: InputDecoration(
-              labelText: S.of(context).contacts_view_birthday,
-              alignLabelWithHint: true,
-            ),
-          ),
-        ),
-      ),
+    return InputUtils.buildUnlymeDatePicker(
+      context: context,
+      controller: _dateText,
+      labelText: S.of(context).contacts_view_birthday,
+      onTap: _pick,
     );
   }
 }

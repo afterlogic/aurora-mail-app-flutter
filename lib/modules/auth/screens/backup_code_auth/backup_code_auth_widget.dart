@@ -1,14 +1,14 @@
 //@dart=2.9
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/backup_code_auth/backup_code_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/backup_code_auth/backup_code_event.dart';
 import 'package:aurora_mail/modules/auth/blocs/backup_code_auth/backup_code_state.dart';
 import 'package:aurora_mail/modules/auth/screens/component/two_factor_screen.dart';
+import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/auth/screens/select_two_factor/select_two_factor_route.dart';
-import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
-import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
@@ -93,7 +93,7 @@ class _BackupCodeAuthWidgetState extends BState<BackupCodeAuthWidget> {
                       SizedBox(
                         width: double.infinity,
                         child: AMButton(
-                          color: Theme.of(context).primaryColor,
+                          color: AppColor.primaryVariant,
                           shadow:
                               BuildProperty.disableShadowFloatingActionButton
                                   ? null

@@ -181,10 +181,14 @@ class InputUtils {
     required List<T> items,
     required ValueChanged<T?> onChanged,
     required String Function(T) itemBuilder,
+    Widget Function(T)? itemWidget,
     String? labelText,
     String? hintText,
     bool enabled = true,
     String? Function(T?)? validator,
+    bool isExpanded = true,
+    bool isDense = false,
+    List<Widget> Function(BuildContext)? selectedItemBuilder,
   }) {
     if (!BuildProperty.useCustomInputStyles) {
       return DropdownButtonFormField<T>(
@@ -192,7 +196,9 @@ class InputUtils {
         items: items
             .map((item) => DropdownMenuItem<T>(
                   value: item,
-                  child: Text(itemBuilder(item)),
+                  child: itemWidget != null
+                      ? itemWidget(item)
+                      : Text(itemBuilder(item)),
                 ))
             .toList(),
         onChanged: enabled ? onChanged : null,
@@ -201,6 +207,9 @@ class InputUtils {
           labelText: labelText,
           hintText: hintText,
         ),
+        isExpanded: isExpanded,
+        isDense: isDense,
+        selectedItemBuilder: selectedItemBuilder,
       );
     }
 
@@ -209,20 +218,40 @@ class InputUtils {
       items: items
           .map((item) => DropdownMenuItem<T>(
                 value: item,
-                child: Text(
-                  itemBuilder(item),
-                  style: TextStyle(color: AppColor.primary),
-                ),
+                child: itemWidget != null
+                    ? itemWidget(item)
+                    : Text(
+                        itemBuilder(item),
+                        style:
+                            TextStyle(color: AppColor.primary, fontSize: 14.0),
+                      ),
               ))
           .toList(),
       onChanged: enabled ? onChanged : null,
       validator: validator,
       dropdownColor: Colors.white,
-      icon: Icon(Icons.arrow_drop_down, color: AppColor.inputPlaceholder),
+      icon: Icon(Icons.arrow_drop_down,
+          color: AppColor.inputPlaceholder, size: 20),
       decoration: getUnlymeInputDecoration(
         labelText: labelText,
         hintText: hintText,
+        contentPadding: isDense
+            ? EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0)
+            : EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
       ),
+      isExpanded: isExpanded,
+      isDense: isDense,
+      selectedItemBuilder: selectedItemBuilder ??
+          (context) {
+            return items.map((item) {
+              return Text(
+                itemBuilder(item),
+                style: TextStyle(color: AppColor.primary, fontSize: 14.0),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              );
+            }).toList();
+          },
     );
   }
 
@@ -418,6 +447,58 @@ class InputUtils {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  /// Создает кастомный Date Picker с unlyme стилями
+  static Widget buildUnlymeDatePicker({
+    required BuildContext context,
+    required TextEditingController controller,
+    required String labelText,
+    required VoidCallback onTap,
+    bool enabled = true,
+    Widget? suffixIcon,
+  }) {
+    if (!BuildProperty.useCustomInputStyles) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: GestureDetector(
+          onTap: enabled ? onTap : null,
+          child: AbsorbPointer(
+            child: TextField(
+              controller: controller,
+              enabled: enabled,
+              decoration: InputDecoration(
+                labelText: labelText,
+                alignLabelWithHint: true,
+                suffixIcon: suffixIcon,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: GestureDetector(
+        onTap: enabled ? onTap : null,
+        child: AbsorbPointer(
+          child: TextFormField(
+            controller: controller,
+            enabled: enabled,
+            decoration: getUnlymeInputDecoration(
+              labelText: labelText,
+              suffixIcon: suffixIcon ??
+                  Icon(
+                    Icons.calendar_today,
+                    color: AppColor.inputPlaceholder,
+                    size: 20,
+                  ),
+            ),
+          ),
+        ),
       ),
     );
   }

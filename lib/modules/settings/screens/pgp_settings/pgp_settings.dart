@@ -338,7 +338,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
     final children = <Widget>[
       if (state.contactPublic.isNotEmpty)
         AMButton(
-          color: Theme.of(context).primaryColor,
+          color: AppColor.primaryVariant,
           shadow: BuildProperty.disableShadowFloatingActionButton
               ? null
               : BoxShadow(),
@@ -350,7 +350,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
         ),
       space,
       AMButton(
-        color: Theme.of(context).primaryColor,
+        color: AppColor.primaryVariant,
         shadow: BuildProperty.disableShadowFloatingActionButton
             ? null
             : BoxShadow(),
@@ -362,7 +362,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
       ),
       space,
       AMButton(
-        color: Theme.of(context).primaryColor,
+        color: AppColor.primaryVariant,
         shadow: BuildProperty.disableShadowFloatingActionButton
             ? null
             : BoxShadow(),
@@ -374,7 +374,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
       ),
       space,
       AMButton(
-        color: Theme.of(context).primaryColor,
+        color: AppColor.primaryVariant,
         shadow: BuildProperty.disableShadowFloatingActionButton
             ? null
             : BoxShadow(),

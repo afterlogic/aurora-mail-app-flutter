@@ -16,8 +16,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
-import 'nfc_dialog.dart';
 import 'fido_auth_route.dart';
+import 'nfc_dialog.dart';
 
 class IosFidoAuthWidget extends StatefulWidget {
   final FidoAuthRouteArgs args;
@@ -109,7 +109,7 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                         SizedBox(
                           width: double.infinity,
                           child: AMButton(
-                            color: Theme.of(context).primaryColor,
+                            color: AppColor.primaryVariant,
                             shadow:
                                 BuildProperty.disableShadowFloatingActionButton
                                     ? null

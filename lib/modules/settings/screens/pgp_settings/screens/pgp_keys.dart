@@ -116,7 +116,7 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
           );
     final children = <Widget>[
       AMButton(
-        color: Theme.of(context).primaryColor,
+        color: AppColor.primaryVariant,
         shadow: BuildProperty.disableShadowFloatingActionButton
             ? null
             : BoxShadow(),
@@ -136,7 +136,7 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
       space,
       if (isAndroid9orLow)
         AMButton(
-          color: Theme.of(context).primaryColor,
+          color: AppColor.primaryVariant,
           shadow: BuildProperty.disableShadowFloatingActionButton
               ? null
               : BoxShadow(),

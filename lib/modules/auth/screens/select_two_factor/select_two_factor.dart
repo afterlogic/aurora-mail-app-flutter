@@ -1,4 +1,5 @@
 //@dart=2.9
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/screens/backup_code_auth/backup_code_auth_route.dart';
 import 'package:aurora_mail/modules/auth/screens/component/two_factor_screen.dart';
@@ -6,14 +7,13 @@ import 'package:aurora_mail/modules/auth/screens/fido_auth/fido_auth_route.dart'
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/auth/screens/select_two_factor/select_two_factor_route.dart';
 import 'package:aurora_mail/modules/auth/screens/two_factor_auth/two_factor_auth_route.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
+import 'package:aurora_ui_kit/components/am_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:aurora_mail/build_property.dart';
-import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_ui_kit/components/am_button.dart';
-import 'package:theme/app_theme.dart';
 import 'package:theme/app_color.dart';
+import 'package:theme/app_theme.dart';
 
 class SelectTwoFactorWidget extends StatefulWidget {
   final SelectTwoFactorRouteArgs args;
@@ -40,7 +40,7 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
           SizedBox(
             width: double.infinity,
             child: AMButton(
-              color: Theme.of(context).primaryColor,
+              color: AppColor.primaryVariant,
               shadow: BuildProperty.disableShadowFloatingActionButton
                   ? null
                   : BoxShadow(),
@@ -65,7 +65,7 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
           SizedBox(
             width: double.infinity,
             child: AMButton(
-              color: Theme.of(context).primaryColor,
+              color: AppColor.primaryVariant,
               child: Text(
                 S.of(context).tfa_btn_use_auth_app,
                 style: TextStyle(color: AppTheme.loginTextColor),
@@ -87,7 +87,7 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
           SizedBox(
             width: double.infinity,
             child: AMButton(
-              color: Theme.of(context).primaryColor,
+              color: AppColor.primaryVariant,
               child: Text(
                 S.of(context).tfa_btn_use_backup_code,
                 style: TextStyle(color: AppTheme.loginTextColor),

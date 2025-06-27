@@ -13,6 +13,7 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:aurora_ui_kit/components/am_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
 class TrustDeviceWidget extends StatefulWidget {
@@ -90,7 +91,7 @@ class _TrustDeviceWidgetState extends BState<TrustDeviceWidget> {
                     SizedBox(
                       width: double.infinity,
                       child: AMButton(
-                        color: Theme.of(context).primaryColor,
+                        color: AppColor.primaryVariant,
                         shadow: BuildProperty.disableShadowFloatingActionButton
                             ? null
                             : BoxShadow(),

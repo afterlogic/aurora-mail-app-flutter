@@ -15,25 +15,13 @@ class DiscardChangesDialog extends StatelessWidget {
       content: content,
       actions: <Widget>[
         TextButton(
-          child: Text(
-            S.of(context).btn_discard,
-            style: TextStyle(
-                color: theme.brightness == Brightness.light
-                    ? theme.primaryColor
-                    : null),
-          ),
+          child: Text(S.of(context).btn_discard),
           onPressed: () {
             Navigator.pop(context, DiscardChangesOption.discard);
           },
         ),
         TextButton(
-          child: Text(
-            S.of(context).btn_save,
-            style: TextStyle(
-                color: theme.brightness == Brightness.light
-                    ? theme.primaryColor
-                    : null),
-          ),
+          child: Text(S.of(context).btn_save),
           onPressed: () {
             Navigator.pop(context, DiscardChangesOption.save);
           },

@@ -11,6 +11,7 @@ import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/utils/input_utils.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:crypto_model/crypto_model.dart';
@@ -21,7 +22,6 @@ import 'package:theme/app_color.dart';
 import 'components/contact_birth_date_picker.dart';
 import 'components/contact_check_box.dart';
 import 'components/contact_input.dart';
-import 'components/contact_primary_input.dart';
 import 'components/contact_title.dart';
 import 'components/key_input.dart';
 import 'dialog/confirm_edit_dialog.dart';
@@ -591,19 +591,47 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
       return ContactInput(label, _getPrimaryEmailCtrl(),
           keyboardType: TextInputType.emailAddress);
     } else {
-      final options = [
-        "${S.of(context).contacts_view_personal_email}",
-        "${S.of(context).contacts_view_business_email}",
-        "${S.of(context).contacts_view_other_email}",
-      ];
-      return ContactPrimaryInput<int>(
-        (int value) => setState(() => _primaryEmail = value),
-        _primaryEmail,
-        label,
-        options,
-        (value) => options.indexOf(value),
-        _getPrimaryEmailCtrl(),
-        keyboardType: TextInputType.emailAddress,
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        child: Row(
+          children: [
+            // Dropdown для выбора типа email (слева)
+            Expanded(
+              flex: 1,
+              child: InputUtils.buildUnlymeDropdownFormField<int>(
+                labelText: null,
+                value: _primaryEmail,
+                items: [0, 1, 2],
+                isDense: true,
+                onChanged: (value) {
+                  if (value != null) setState(() => _primaryEmail = value);
+                },
+                itemBuilder: (index) {
+                  switch (index) {
+                    case 0:
+                      return "Personal";
+                    case 1:
+                      return "Business";
+                    case 2:
+                      return "Other";
+                    default:
+                      return "";
+                  }
+                },
+              ),
+            ),
+            SizedBox(width: 8.0),
+            // Текстовое поле для email (справа)
+            Expanded(
+              flex: 2,
+              child: InputUtils.buildUnlymeTextFormField(
+                controller: _getPrimaryEmailCtrl(),
+                labelText: label,
+                keyboardType: TextInputType.emailAddress,
+              ),
+            ),
+          ],
+        ),
       );
     }
   }
@@ -615,19 +643,47 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
       return ContactInput(label, _getPrimaryPhoneCtrl(),
           keyboardType: TextInputType.phone);
     } else {
-      final options = [
-        "${S.of(context).contacts_view_mobile}",
-        "${S.of(context).contacts_view_personal_phone}",
-        "${S.of(context).contacts_view_business_phone}",
-      ];
-      return ContactPrimaryInput<int>(
-        (int value) => setState(() => _primaryPhone = value),
-        _primaryPhone,
-        label,
-        options,
-        (value) => options.indexOf(value),
-        _getPrimaryPhoneCtrl(),
-        keyboardType: TextInputType.phone,
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        child: Row(
+          children: [
+            // Dropdown для выбора типа телефона (слева)
+            Expanded(
+              flex: 1,
+              child: InputUtils.buildUnlymeDropdownFormField<int>(
+                labelText: null,
+                value: _primaryPhone,
+                items: [0, 1, 2],
+                isDense: true,
+                onChanged: (value) {
+                  if (value != null) setState(() => _primaryPhone = value);
+                },
+                itemBuilder: (index) {
+                  switch (index) {
+                    case 0:
+                      return "Mobile";
+                    case 1:
+                      return "Personal";
+                    case 2:
+                      return "Business";
+                    default:
+                      return "";
+                  }
+                },
+              ),
+            ),
+            SizedBox(width: 8.0),
+            // Текстовое поле для телефона (справа)
+            Expanded(
+              flex: 2,
+              child: InputUtils.buildUnlymeTextFormField(
+                controller: _getPrimaryPhoneCtrl(),
+                labelText: label,
+                keyboardType: TextInputType.phone,
+              ),
+            ),
+          ],
+        ),
       );
     }
   }
@@ -638,17 +694,44 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
     if (!_showAllFields) {
       return ContactInput(label, _getPrimaryAddressCtrl());
     } else {
-      final options = [
-        "${S.of(context).contacts_view_personal_address}",
-        "${S.of(context).contacts_view_business_address}",
-      ];
-      return ContactPrimaryInput<int>(
-        (int value) => setState(() => _primaryAddress = value),
-        _primaryAddress,
-        label,
-        options,
-        (value) => options.indexOf(value),
-        _getPrimaryAddressCtrl(),
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        child: Row(
+          children: [
+            // Dropdown для выбора типа адреса (слева)
+            Expanded(
+              flex: 1,
+              child: InputUtils.buildUnlymeDropdownFormField<int>(
+                labelText: null,
+                value: _primaryAddress,
+                items: [0, 1],
+                isDense: true,
+                onChanged: (value) {
+                  if (value != null) setState(() => _primaryAddress = value);
+                },
+                itemBuilder: (index) {
+                  switch (index) {
+                    case 0:
+                      return "Personal";
+                    case 1:
+                      return "Business";
+                    default:
+                      return "";
+                  }
+                },
+              ),
+            ),
+            SizedBox(width: 8.0),
+            // Текстовое поле для адреса (справа)
+            Expanded(
+              flex: 2,
+              child: InputUtils.buildUnlymeTextFormField(
+                controller: _getPrimaryAddressCtrl(),
+                labelText: label,
+              ),
+            ),
+          ],
+        ),
       );
     }
   }

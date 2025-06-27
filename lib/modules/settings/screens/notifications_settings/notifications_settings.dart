@@ -51,7 +51,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                   final isProgress = state is ProgressState;
                   final tokenStatus = state is InitState ? state.state : null;
                   Widget button = AMButton(
-                    color: Theme.of(context).primaryColor,
+                    color: AppColor.primaryVariant,
                     shadow: BuildProperty.disableShadowFloatingActionButton
                         ? null
                         : BoxShadow(),
