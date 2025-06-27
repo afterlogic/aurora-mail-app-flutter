@@ -59,13 +59,13 @@ useCustomDrawerIcons: false # use custom drawer folder icons
 #Custom contacts
 useContactsRoundIcons: false # use round contact icons
 useContactsDivider: false # use dividers between contacts
-
+useCustomContactIcons: false # use custom SVG icons for contact details
 #Custom mail
 useMailDivider: false # use dividers between mail messages
 useCustomStarIcons: false # use custom star icons for mail
 
-#Custom input styles
-useCustomInputStyles: false # use custom input styles
+#Custom input styles (for special Container components only)
+useCustomInputStyles: false # use custom input styles for special components
 
 #Custom bottom bar
 useCustomBottomBarIcons: false # use custom bottom bar icons

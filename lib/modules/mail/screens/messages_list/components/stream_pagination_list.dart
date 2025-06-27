@@ -70,7 +70,7 @@ class _StreamPaginationListState extends State<StreamPaginationList> {
     }
     final existHeader = widget.header != null;
     final list = ListView.builder(
-      padding: EdgeInsets.only(top: 6.0, bottom: 82.0),
+      padding: EdgeInsets.only(bottom: 82.0),
       itemCount: parts.length + (existHeader ? 1 : 0),
       itemBuilder: (context, _id) {
         var id = _id;
@@ -172,10 +172,23 @@ class _ListPartWidgetState extends State<_ListPartWidget> {
           return SizedBox.shrink();
         }
       }
+      // Строим список с divider'ами между элементами
+      final widgets = <Widget>[];
+      for (int i = 0; i < messages.length; i++) {
+        widgets.add(widget.builder(context, messages[i]));
+        // Добавляем divider после каждого элемента, кроме последнего
+        if (i < messages.length - 1) {
+          widgets.add(Divider(
+            height: 0.0,
+            thickness: 0.5,
+            color: Theme.of(context).disabledColor.withOpacity(0.08),
+          ));
+        }
+      }
+
       return Column(
         mainAxisSize: MainAxisSize.min,
-        children:
-            messages.map((item) => widget.builder(context, item)).toList(),
+        children: widgets,
       );
     } else if (widget.part.size != null) {
       return SizedBox.fromSize(size: widget.part.size);

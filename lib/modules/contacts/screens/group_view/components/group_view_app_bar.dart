@@ -18,7 +18,6 @@ class GroupViewAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AMAppBar(
       backgroundColor: AppColor.appBarBackground,
-      textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
       shadow: BoxShadow(color: Colors.transparent),
       actions: <Widget>[
 //        IconButton(

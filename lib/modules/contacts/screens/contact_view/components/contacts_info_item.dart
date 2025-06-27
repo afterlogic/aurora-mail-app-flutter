@@ -1,13 +1,17 @@
 //@dart=2.9
+import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/shared_ui/adaptive_contact_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:theme/app_color.dart';
 
-import 'info_action_button.dart';
+import 'adaptive_action_button.dart';
 
 enum InfoAction { email, call, visitWebsite, none }
 
 class ContactsInfoItem extends StatelessWidget {
   final IconData icon;
+  final String iconName;
   final String label;
   final String value;
   final InfoAction action;
@@ -15,6 +19,7 @@ class ContactsInfoItem extends StatelessWidget {
 
   ContactsInfoItem({
     @required this.icon,
+    this.iconName,
     @required this.label,
     @required this.value,
     this.action = InfoAction.none,
@@ -30,15 +35,26 @@ class ContactsInfoItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           SizedBox(width: 16.0),
-          Icon(icon, color: theme.primaryColor),
+          iconName?.isNotEmpty == true
+              ? AdaptiveContactIcon(
+                  fallbackIcon: icon,
+                  iconName: iconName,
+                  color: theme.primaryColor,
+                )
+              : Icon(icon, color: theme.primaryColor),
           SizedBox(width: 22.0),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(value,
-                    style:
-                        TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0)),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16.0,
+                      color: BuildProperty.useCustomContactIcons
+                          ? AppColor.contactsPrimary
+                          : null,
+                    )),
                 SizedBox(height: 5.0),
                 Text(
                   label,
@@ -57,13 +73,25 @@ class ContactsInfoItem extends StatelessWidget {
     switch (action) {
       case InfoAction.email:
         assert(cb != null);
-        return InfoActionButton(icon: MdiIcons.emailOutline, cb: cb);
+        return AdaptiveActionButton(
+          fallbackIcon: MdiIcons.emailOutline,
+          iconName: 'email',
+          cb: cb,
+        );
       case InfoAction.call:
         assert(cb != null);
-        return InfoActionButton(icon: MdiIcons.phone, cb: cb);
+        return AdaptiveActionButton(
+          fallbackIcon: MdiIcons.phone,
+          iconName: 'phone',
+          cb: cb,
+        );
       case InfoAction.visitWebsite:
         assert(cb != null);
-        return InfoActionButton(icon: MdiIcons.web, cb: cb);
+        return AdaptiveActionButton(
+          fallbackIcon: MdiIcons.web,
+          iconName: 'web-page',
+          cb: cb,
+        );
       case InfoAction.none:
         assert(cb == null);
         return SizedBox();

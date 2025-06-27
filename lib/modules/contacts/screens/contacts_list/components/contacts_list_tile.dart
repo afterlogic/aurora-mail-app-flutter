@@ -226,11 +226,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
       return Column(
         children: [
           contactTile,
-          Divider(
-            height: 1,
-            thickness: 0.5,
-            color: Colors.grey[300],
-          ),
+          Divider(),
         ],
       );
     }

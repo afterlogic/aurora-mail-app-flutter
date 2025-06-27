@@ -211,16 +211,18 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       format: S.of(context).format_contacts_birth_date,
     );
 
-    final sectionTitleTheme = theme.textTheme.bodyText1;
+    final sectionTitleTheme = BuildProperty.useCustomContactIcons
+        ? theme.textTheme.bodyText1.copyWith(
+            color: AppColor.contactsPrimary,
+            fontSize: 14.0,
+            fontWeight: FontWeight.w600,
+          )
+        : theme.textTheme.bodyText1;
 
     final _mainInfo = _buildInfos([
-//      _buildInfoItem(
-//        icon: Icons.person_outline,
-//        label: i18n(context, S.contacts_view_name),
-//        v: c.fullName,
-//      ),
       _buildInfoItem(
         icon: Icons.alternate_email,
+        iconName: 'email',
         label: S.of(context).contacts_view_email,
         v: _contactInfo.viewEmail,
         action: InfoAction.email,
@@ -228,6 +230,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       ),
       _buildInfoItem(
         icon: MdiIcons.phone,
+        iconName: 'phone',
         label: S.of(context).contacts_view_phone,
         v: _contactInfo.viewPhone,
         action: InfoAction.call,
@@ -235,31 +238,37 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       ),
       _buildInfoItem(
         icon: MdiIcons.mapMarkerOutline,
+        iconName: 'address',
         label: S.of(context).contacts_view_address,
         v: _contactInfo.viewAddress,
       ),
       _buildInfoItem(
         icon: MdiIcons.skype,
+        iconName: 'skype',
         label: S.of(context).contacts_view_skype,
         v: c.skype,
       ),
       _buildInfoItem(
         icon: MdiIcons.facebook,
+        iconName: 'facebook',
         label: S.of(context).contacts_view_facebook,
         v: c.facebook,
       ),
       _buildInfoItem(
         icon: Icons.person_outline,
+        iconName: 'first-name',
         label: S.of(context).contacts_view_first_name,
         v: c.firstName,
       ),
       _buildInfoItem(
         icon: Icons.person_outline,
+        iconName: 'last-name',
         label: S.of(context).contacts_view_last_name,
         v: c.lastName,
       ),
       _buildInfoItem(
         icon: Icons.person_outline,
+        iconName: 'nickname',
         label: S.of(context).contacts_view_nickname,
         v: c.nickName,
       ),
@@ -269,6 +278,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       if (_contactInfo.viewEmail != c.personalEmail)
         _buildInfoItem(
           icon: Icons.alternate_email,
+          iconName: 'email',
           label: S.of(context).contacts_view_email,
           v: c.personalEmail,
           action: InfoAction.email,
@@ -277,31 +287,37 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       if (_contactInfo.viewAddress != c.personalAddress)
         _buildInfoItem(
           icon: MdiIcons.mapMarkerOutline,
+          iconName: 'address',
           label: S.of(context).contacts_view_address,
           v: c.personalAddress,
         ),
       _buildInfoItem(
         icon: MdiIcons.homeCityOutline,
+        iconName: 'city',
         label: S.of(context).contacts_view_city,
         v: c.personalCity,
       ),
       _buildInfoItem(
         icon: MdiIcons.map,
+        iconName: 'state',
         label: S.of(context).contacts_view_province,
         v: c.personalState,
       ),
       _buildInfoItem(
         icon: MdiIcons.postOutline,
+        iconName: 'zip',
         label: S.of(context).contacts_view_zip,
         v: c.personalZip,
       ),
       _buildInfoItem(
         icon: MdiIcons.earth,
+        iconName: 'country',
         label: S.of(context).contacts_view_country,
         v: c.personalCountry,
       ),
       _buildInfoItem(
         icon: Icons.web,
+        iconName: 'web-page',
         label: S.of(context).contacts_view_web_page,
         v: c.personalWeb,
         action: InfoAction.visitWebsite,
@@ -309,12 +325,14 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       ),
       _buildInfoItem(
         icon: MdiIcons.fax,
+        iconName: 'fax',
         label: S.of(context).contacts_view_fax,
         v: c.personalFax,
       ),
       if (_contactInfo.viewPhone != c.personalPhone)
         _buildInfoItem(
           icon: MdiIcons.phone,
+          iconName: 'phone',
           label: S.of(context).contacts_view_phone,
           v: c.personalPhone,
           action: InfoAction.call,
@@ -323,6 +341,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       if (_contactInfo.viewPhone != c.personalMobile)
         _buildInfoItem(
           icon: MdiIcons.cellphone,
+          iconName: 'phone',
           label: S.of(context).contacts_view_mobile,
           v: c.personalMobile,
           action: InfoAction.call,
@@ -334,6 +353,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       if (_contactInfo.viewEmail != c.businessEmail)
         _buildInfoItem(
           icon: Icons.alternate_email,
+          iconName: 'email',
           label: S.of(context).contacts_view_email,
           v: c.businessEmail,
           action: InfoAction.email,
@@ -341,52 +361,62 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
         ),
       _buildInfoItem(
         icon: MdiIcons.officeBuildingOutline,
+        iconName: 'company',
         label: S.of(context).contacts_view_company,
         v: c.businessCompany,
       ),
       _buildInfoItem(
         icon: MdiIcons.officeBuildingOutline,
+        iconName: 'department',
         label: S.of(context).contacts_view_department,
         v: c.businessDepartment,
       ),
       _buildInfoItem(
         icon: MdiIcons.officeBuildingOutline,
+        iconName: 'job-title',
         label: S.of(context).contacts_view_job_title,
         v: c.businessJobTitle,
       ),
       _buildInfoItem(
         icon: MdiIcons.officeBuildingOutline,
+        iconName: 'office',
         label: S.of(context).contacts_view_office,
         v: c.businessOffice,
       ),
       if (_contactInfo.viewAddress != c.businessAddress)
         _buildInfoItem(
           icon: MdiIcons.mapMarkerOutline,
+          iconName: 'address',
           label: S.of(context).contacts_view_address,
           v: c.businessAddress,
         ),
       _buildInfoItem(
         icon: MdiIcons.homeCityOutline,
+        iconName: 'city',
         label: S.of(context).contacts_view_city,
         v: c.businessCity,
       ),
       _buildInfoItem(
         icon: MdiIcons.map,
+        iconName: 'state',
         label: S.of(context).contacts_view_province,
         v: c.businessState,
       ),
       _buildInfoItem(
         icon: MdiIcons.postOutline,
+        iconName: 'zip',
         label: S.of(context).contacts_view_zip,
         v: c.businessZip,
       ),
       _buildInfoItem(
         icon: MdiIcons.earth,
+        iconName: 'country',
         label: S.of(context).contacts_view_country,
         v: c.businessCountry,
       ),
       _buildInfoItem(
         icon: MdiIcons.web,
+        iconName: 'web-page',
         label: S.of(context).contacts_view_web_page,
         v: c.businessWeb,
         action: InfoAction.visitWebsite,
@@ -394,12 +424,14 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       ),
       _buildInfoItem(
         icon: MdiIcons.fax,
+        iconName: 'fax',
         label: S.of(context).contacts_view_fax,
         v: c.businessFax,
       ),
       if (_contactInfo.viewPhone != c.businessPhone)
         _buildInfoItem(
           icon: MdiIcons.cellphone,
+          iconName: 'phone',
           label: S.of(context).contacts_view_phone,
           v: c.businessPhone,
           action: InfoAction.call,
@@ -411,6 +443,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       if (_contactInfo.viewEmail != c.otherEmail)
         _buildInfoItem(
           icon: Icons.alternate_email,
+          iconName: 'email',
           label: S.of(context).contacts_view_other_email,
           v: c.otherEmail,
           action: InfoAction.email,
@@ -418,11 +451,13 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
         ),
       _buildInfoItem(
         icon: MdiIcons.calendar,
+        iconName: 'birthday',
         label: S.of(context).contacts_view_birthday,
         v: birthDate,
       ),
       _buildInfoItem(
         icon: MdiIcons.text,
+        iconName: 'note',
         label: S.of(context).contacts_view_notes,
         v: c.notes,
       ),
@@ -554,17 +589,15 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
               children: <Widget>[
                 ..._mainInfo,
                 if (personalInfo.isNotEmpty)
-                  Divider(indent: 16.0, endIndent: 16.0),
-                if (personalInfo.isNotEmpty)
                   ListTile(
                     title: Text(
                       S.of(context).contacts_view_section_home,
                       style: sectionTitleTheme,
                     ),
                   ),
+                if (personalInfo.isNotEmpty && BuildProperty.useContactsDivider)
+                  Divider(),
                 ...personalInfo,
-                if (businessInfo.isNotEmpty)
-                  Divider(indent: 16.0, endIndent: 16.0),
                 if (businessInfo.isNotEmpty)
                   ListTile(
                     title: Text(
@@ -572,9 +605,9 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
                       style: sectionTitleTheme,
                     ),
                   ),
+                if (businessInfo.isNotEmpty && BuildProperty.useContactsDivider)
+                  Divider(),
                 ...businessInfo,
-                if (otherInfo.isNotEmpty)
-                  Divider(indent: 16.0, endIndent: 16.0),
                 if (otherInfo.isNotEmpty)
                   ListTile(
                     title: Text(
@@ -582,12 +615,10 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
                       style: sectionTitleTheme,
                     ),
                   ),
+                if (otherInfo.isNotEmpty && BuildProperty.useContactsDivider)
+                  Divider(),
                 ...otherInfo,
-                if (BuildProperty.cryptoEnable && keyInfo != null)
-                  Divider(indent: 16.0, endIndent: 16.0),
                 if (BuildProperty.cryptoEnable && keyInfo != null) keyInfo,
-                if (groupInfo.isNotEmpty)
-                  Divider(indent: 16.0, endIndent: 16.0),
                 if (groupInfo.isNotEmpty)
                   ListTile(
                     title: Text(
@@ -595,6 +626,8 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
                       style: sectionTitleTheme,
                     ),
                   ),
+                if (groupInfo.isNotEmpty && BuildProperty.useContactsDivider)
+                  Divider(),
                 if (groupInfo.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -660,19 +693,34 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
   }
 
   List<Widget> _buildInfos(List<Widget> nullableWidgets) {
-    return nullableWidgets.where((w) => w != null).toList();
+    final filteredWidgets = nullableWidgets.where((w) => w != null).toList();
+    if (!BuildProperty.useContactsDivider || filteredWidgets.isEmpty) {
+      return filteredWidgets;
+    }
+
+    final result = <Widget>[];
+    for (int i = 0; i < filteredWidgets.length; i++) {
+      result.add(filteredWidgets[i]);
+      // Добавляем divider после каждого элемента, кроме последнего
+      if (i < filteredWidgets.length - 1) {
+        result.add(Divider());
+      }
+    }
+    return result;
   }
 
   Widget _buildInfoItem({
     @required IconData icon,
     @required String label,
     @required String v,
+    String iconName,
     InfoAction action = InfoAction.none,
     void Function() cb,
   }) {
     if (v.isNotEmpty) {
       return ContactsInfoItem(
         icon: icon,
+        iconName: iconName,
         label: label,
         value: v,
         cb: cb,

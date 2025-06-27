@@ -1,4 +1,5 @@
 //@dart=2.9
+import 'package:aurora_mail/utils/input_utils.dart';
 import 'package:flutter/material.dart';
 
 class ContactPrimaryInput<T> extends StatefulWidget {
@@ -70,46 +71,16 @@ class _ContactPrimaryInputState<T> extends State<ContactPrimaryInput<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
-      child: InputDecorator(
-        decoration: InputDecoration(
-          labelText: widget.label,
-          alignLabelWithHint: true,
-          contentPadding: EdgeInsets.all(0),
-        ),
-        child: Row(
-          children: <Widget>[
-            Flexible(
-              flex: 1,
-              child: DropdownButton<T>(
-                items: widget.options
-                    .map((o) => DropdownMenuItem(
-                          value: widget.optionsToValue(o),
-                          child: Text(o),
-                        ))
-                    .toList(),
-                underline: SizedBox.shrink(),
-                value: widget.selectedValue,
-                onChanged: widget.onChanged,
-              ),
-            ),
-            Expanded(
-              child: TextFormField(
-                controller: textCtrl,
-                keyboardType: widget.keyboardType,
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    contentPadding: EdgeInsets.all(0)),
-              ),
-            ),
-          ],
-        ),
-      ),
+    return InputUtils.buildUnlymePrimaryInput<T>(
+      label: widget.label,
+      onChanged: (value) {
+        if (value != null) widget.onChanged(value);
+      },
+      selectedValue: widget.selectedValue,
+      options: widget.options,
+      optionsToValue: widget.optionsToValue,
+      primaryTextCtrl: textCtrl,
+      keyboardType: widget.keyboardType,
     );
   }
 }

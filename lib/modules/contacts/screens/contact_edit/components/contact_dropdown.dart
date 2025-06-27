@@ -1,4 +1,5 @@
 //@dart=2.9
+import 'package:aurora_mail/utils/input_utils.dart';
 import 'package:flutter/material.dart';
 
 class ContactDropdown extends StatelessWidget {
@@ -15,16 +16,13 @@ class ContactDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<int>(
-      items: options
-          .map((o) => DropdownMenuItem(
-                value: options.indexOf(o),
-                child: Text(o),
-              ))
-          .toList(),
-      underline: SizedBox.shrink(),
+    return InputUtils.buildUnlymeDropdown<int>(
       value: primaryValue,
-      onChanged: onSelected,
+      items: List.generate(options.length, (index) => index),
+      onChanged: (value) {
+        if (value != null) onSelected(value);
+      },
+      itemBuilder: (index) => options[index],
     );
   }
 }

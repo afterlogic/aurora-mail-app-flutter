@@ -933,7 +933,6 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
               onIdentity: setIdentityOrSender,
               textCtrl: _fromCtrl,
             ),
-            Divider(height: 0.0),
             ComposeEmails(
               key: _toKey,
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
@@ -950,7 +949,6 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
               },
               bloc: _bloc,
             ),
-            Divider(height: 0.0),
             ComposeEmails(
               key: _ccKey,
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
@@ -972,7 +970,6 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
               },
               bloc: _bloc,
             ),
-            Divider(height: 0.0),
             if (_showBCC)
               ComposeEmails(
                 key: _bccKey,
@@ -994,7 +991,6 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 children: <Widget>[
-                  if (_showBCC) Divider(height: 0.0),
                   ComposeSubject(
                     focusNode: subjectNode,
                     textCtrl: _subjectTextCtrl,
@@ -1010,8 +1006,6 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                       bodyNode.requestFocus();
                     },
                   ),
-                  if (!isTablet && _attachments.isNotEmpty)
-                    Divider(height: 0.0),
                   if (!isTablet)
                     BlocBuilder<ComposeBloc, ComposeState>(
                       builder: (_, state) {
@@ -1033,7 +1027,6 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                 ],
               ),
             ),
-            Divider(height: 0.0),
           ],
         ),
       ),

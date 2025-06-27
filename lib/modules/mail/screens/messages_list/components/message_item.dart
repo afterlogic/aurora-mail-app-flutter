@@ -227,8 +227,6 @@ class _MessageItemState extends BState<MessageItem> {
               widget.isNote
                   ? ListTile(
                       key: Key(m.uid.toString()),
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                       title: Text(
                         m.subject.isNotEmpty
                             ? m.subject
@@ -298,8 +296,6 @@ class _MessageItemState extends BState<MessageItem> {
                     )
                   : ListTile(
                       key: Key(m.uid.toString()),
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                       title: Text(_getEmailTitle(),
                           style: TextStyle(
                             fontWeight: fontWeight,
@@ -435,12 +431,7 @@ class _MessageItemState extends BState<MessageItem> {
                     ),
             ),
           ),
-          if (BuildProperty.useMailDivider)
-            Divider(
-              height: 0.0,
-              thickness: 0.5,
-              color: theme.disabledColor.withOpacity(0.08),
-            ),
+          if (BuildProperty.useMailDivider) Divider(),
           if (widget.children.isNotEmpty && _showThreads)
             ...widget.children.map((t) {
               return Stack(

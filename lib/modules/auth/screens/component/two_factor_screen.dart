@@ -1,4 +1,5 @@
 //@dart=2.9
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/mail_logo.dart';
@@ -9,7 +10,6 @@ import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:theme/app_theme.dart';
-import 'package:aurora_mail/build_property.dart';
 
 class TwoFactorScene extends StatefulWidget {
   final bool isDialog;
@@ -61,7 +61,6 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
           ? AMAppBar(
               title: Text(S.of(context).settings_accounts_add),
               backgroundColor: Color(0xFFF4F1FD),
-              textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             )
           : null,
