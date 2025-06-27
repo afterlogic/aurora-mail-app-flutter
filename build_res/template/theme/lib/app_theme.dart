@@ -105,6 +105,11 @@ class AppTheme {
 
   static final _dialogTheme = DialogTheme(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+    titleTextStyle: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w500,
+      color: AppColor.appBarText, // Используем цвет текста из AppColor
+    ),
   );
 
   static final _buttonTheme = ButtonThemeData(

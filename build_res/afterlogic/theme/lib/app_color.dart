@@ -35,6 +35,15 @@ class AppColor {
   static const settingsIconDark = Color(0xFF698AD0); // иконки в темной теме
   static const settingsArrowDark = Color(0xFFFFFFFF); // стрелки в темной теме
 
+  // Цвета для drawer иконок
+  // Светлая тема
+  static const drawerIconLight =
+      Color(0xFF6F788D); // иконки drawer в светлой теме
+
+  // Темная тема
+  static const drawerIconDark =
+      Color(0xFFFFFFFF); // иконки drawer в темной теме
+
   static const warning = Color(0xFFF44336);
   static const enableShadow = true;
 
@@ -47,4 +56,22 @@ class AppColor {
       Color(0xFFB0B0B0); // неактивная звезда в светлой теме
   static const starInactiveDark =
       Color(0xFF808080); // неактивная звезда в тёмной теме
+
+  // Цвета для полей ввода (для совместимости)
+  static const inputBackground = Color(0xFFF5F5F5); // стандартный фон инпутов
+  static const inputBorder = Color(0xFFE0E0E0); // стандартная граница инпутов
+  static const inputPlaceholder = Color(0xFF757575); // стандартный placeholder
+
+  // Цвета для секций и групп инпутов (для совместимости)
+  static const sectionBackground = Color(0xFFF5F5F5); // фон для секций
+  static const sectionText = Color(0xFF212121); // текст секций
+  static const inputGroupBackground =
+      Color(0xFFF5F5F5); // фон для группы инпутов
+  static const inputGroupBorder =
+      Color(0xFFE0E0E0); // граница для группы инпутов
+
+  // Цвета для текста (для совместимости)
+  static const appBarText = Color(0xFF212121); // текст в appbar
+  static const contactsPrimary =
+      Color(0xFF212121); // основной цвет текста контактов
 }

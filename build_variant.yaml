@@ -85,6 +85,7 @@ disableScreenShadowFloatingActionButton: false # disable shadow for floating act
 #Custom Drawer
 useDrawerGradient: true # use gradient for drawer
 useCustomDrawerIcons: true # use custom drawer folder icons
+useCustomDrawerIconColors: true # use custom colors for drawer icons
 
 #Custom contacts
 useContactsRoundIcons: true # use round contact icons

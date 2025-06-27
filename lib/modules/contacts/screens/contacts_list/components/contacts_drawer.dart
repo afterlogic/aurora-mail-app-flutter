@@ -7,6 +7,7 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
+import 'package:aurora_mail/shared_ui/adaptive_drawer_icon.dart';
 import 'package:aurora_mail/shared_ui/gradient_drawer.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/storage_util.dart';
@@ -76,7 +77,12 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
                           style: TextStyle(color: theme.disabledColor),
                         ),
                         IconButton(
-                          icon: Icon(Icons.add, color: theme.primaryColor),
+                          icon: AdaptiveDrawerIcon(
+                            defaultIcon: Icons.add,
+                            iconName: 'add',
+                            folder: 'contacts',
+                            color: theme.primaryColor,
+                          ),
                           onPressed: _addGroup,
                         ),
                       ],
@@ -101,7 +107,11 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
         children: [
           if (isAllVisible)
             ListTile(
-              leading: Icon(MdiIcons.accountGroup),
+              leading: AdaptiveDrawerIcon(
+                defaultIcon: MdiIcons.accountGroup,
+                iconName: 'all',
+                folder: 'contacts',
+              ),
               title: Text(S.of(context).contacts_drawer_storage_all),
               selected: state.showAllVisibleContacts == true,
               onTap: () {
@@ -114,16 +124,40 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
           ...visibleStorages.map((s) {
             if (s.id == StorageNames.personal) {
               return _buildStorageTile(
-                  icon: WebMailIcons.personal, s: s, state: state);
+                  iconWidget: AdaptiveDrawerIcon(
+                    defaultIcon: WebMailIcons.personal,
+                    iconName: 'personal',
+                    folder: 'contacts',
+                  ),
+                  s: s,
+                  state: state);
             } else if (s.id == StorageNames.shared) {
               return _buildStorageTile(
-                  icon: WebMailIcons.shared_with_all, s: s, state: state);
+                  iconWidget: AdaptiveDrawerIcon(
+                    defaultIcon: WebMailIcons.shared_with_all,
+                    iconName: 'shared',
+                    folder: 'contacts',
+                  ),
+                  s: s,
+                  state: state);
             } else if (s.id == StorageNames.team) {
               return _buildStorageTile(
-                  icon: Icons.business_center, s: s, state: state);
+                  iconWidget: AdaptiveDrawerIcon(
+                    defaultIcon: Icons.business_center,
+                    iconName: 'team',
+                    folder: 'contacts',
+                  ),
+                  s: s,
+                  state: state);
             } else {
               return _buildStorageTile(
-                  icon: WebMailIcons.personal, s: s, state: state);
+                  iconWidget: AdaptiveDrawerIcon(
+                    defaultIcon: WebMailIcons.personal,
+                    iconName: 'personal',
+                    folder: 'contacts',
+                  ),
+                  s: s,
+                  state: state);
             }
           }).toList(),
         ],
@@ -140,11 +174,11 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
 
   Widget _buildStorageTile({
     @required ContactsStorage s,
-    @required IconData icon,
+    @required Widget iconWidget,
     @required ContactsState state,
   }) {
     return ListTile(
-      leading: Icon(icon),
+      leading: iconWidget,
       title: Text(
         s.displayName.length > 6 && s.displayName.substring(0, 6) == 'LABEL_'
             ? getStorageName(s.displayName.substring(6), context)
@@ -167,7 +201,11 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
       return Column(
         children: state.groups
             .map((g) => ListTile(
-                  leading: Icon(MdiIcons.pound),
+                  leading: AdaptiveDrawerIcon(
+                    defaultIcon: MdiIcons.pound,
+                    iconName: 'group',
+                    folder: 'contacts',
+                  ),
                   title: Text(g.name),
                   selected: g.uuid == state.selectedGroup,
                   onTap: () {

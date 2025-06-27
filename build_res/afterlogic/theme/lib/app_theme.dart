@@ -5,7 +5,6 @@ import 'app_color.dart';
 
 class AppTheme {
   static final light = ThemeData(
-
     progressIndicatorTheme: ProgressIndicatorThemeData(
       color: AppColor.primary,
     ),
@@ -30,11 +29,11 @@ class AppTheme {
     buttonTheme: _buttonTheme,
     dialogTheme: _dialogTheme,
     snackBarTheme: SnackBarThemeData(
-      behavior: SnackBarBehavior.floating,
-      insetPadding: EdgeInsets.all(6),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-      backgroundColor: Colors.green
-    ),
+        behavior: SnackBarBehavior.floating,
+        insetPadding: EdgeInsets.all(6),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        backgroundColor: Colors.green),
     splashFactory: InkRipple.splashFactory,
     disabledColor: Colors.black.withOpacity(0.4),
     scaffoldBackgroundColor: Colors.white,
@@ -89,26 +88,24 @@ class AppTheme {
     buttonTheme: _buttonTheme,
     dialogTheme: _dialogTheme,
     snackBarTheme: SnackBarThemeData(
-      behavior: SnackBarBehavior.floating,
-      insetPadding: EdgeInsets.all(6),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-      backgroundColor: Colors.green
-    ),
+        behavior: SnackBarBehavior.floating,
+        insetPadding: EdgeInsets.all(6),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        backgroundColor: Colors.green),
     inputDecorationTheme: InputDecorationTheme(
         floatingLabelStyle: TextStyle(color: AppColor.primary)),
     textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all(AppColor.primary),
-        )
-    ),
+      foregroundColor: MaterialStateProperty.all(AppColor.primary),
+    )),
     colorScheme: ColorScheme.fromSeed(
         seedColor: AppColor.primary,
         secondary: AppColor.primary,
         onPrimary: AppColor.primary,
         error: AppColor.warning,
         background: Color(0xFFe6ebf0),
-        brightness: Brightness.dark
-    ),
+        brightness: Brightness.dark),
 
 //    iconTheme: IconThemeData(color: AppColor.primary),
     splashFactory: InkRipple.splashFactory,
@@ -162,6 +159,11 @@ class AppTheme {
 
   static final _dialogTheme = DialogTheme(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+    titleTextStyle: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w500,
+      color: AppColor.appBarText, // Используем цвет текста из AppColor
+    ),
   );
 
   static final _buttonTheme = ButtonThemeData(

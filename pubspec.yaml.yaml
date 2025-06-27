@@ -184,6 +184,7 @@ flutter:
     - {{image_dir}}/settings/sync/
     - {{image_dir}}/drawer/
     - {{image_dir}}/drawer/mail/
+    - {{image_dir}}/drawer/contacts/
     - {{image_dir}}/mail/
     - {{image_dir}}/contacts/
 
