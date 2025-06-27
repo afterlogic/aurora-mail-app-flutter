@@ -111,6 +111,7 @@ useCustomSettingsColors: true # use custom colors for settings menu items
 
 #AppBar customization
 useAppBarDivider: true # add divider line under AppBar
+useCustomAppBarIcons: true # use custom SVG icons in AppBar (burger, search, back/close)
 
 #Theme selection
 showThemeSelection: false # show theme selection in settings

@@ -9,6 +9,7 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/components/search
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/utils/storage_util.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -153,7 +154,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
           children: <Widget>[
             if (state.selectedGroup != null)
               IconButton(
-                icon: Icon(Icons.info_outline),
+                icon: AppBarIcons.info(),
                 onPressed: () {
                   final group = state.groups
                       .firstWhere((g) => g.uuid == state.selectedGroup);
@@ -168,8 +169,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 28, top: 6),
-                    child: Icon(
-                      Icons.search,
+                    child: AppBarIcons.search(
                       color: theme.disabledColor,
                     ),
                   ),
@@ -186,6 +186,11 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
       }
 
       return AMAppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: AppBarIcons.burger(),
+          onPressed: () => Scaffold.of(context).openDrawer(),
+        ),
         title: _buildTitle(context, state),
         backgroundColor: AppColor.appBarBackground,
         textStyle: TextStyle(
@@ -197,7 +202,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
             ? <Widget>[
                 if (state.selectedGroup != null)
                   IconButton(
-                    icon: Icon(Icons.info_outline),
+                    icon: AppBarIcons.info(),
                     onPressed: () {
                       final group = state.groups
                           .firstWhere((g) => g.uuid == state.selectedGroup);
@@ -206,7 +211,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
                     },
                   ),
                 IconButton(
-                  icon: Icon(Icons.search),
+                  icon: AppBarIcons.search(),
                   onPressed: changeMode,
                 ),
                 if (BuildProperty.multiUserEnable)

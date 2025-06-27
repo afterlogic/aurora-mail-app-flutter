@@ -2,6 +2,7 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +70,11 @@ class _AboutAndroidState extends BState<AboutAndroid> {
       appBar: isTablet
           ? null
           : AMAppBar(
+              automaticallyImplyLeading: false,
+              leading: IconButton(
+                icon: AppBarIcons.back(),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
               title: Text(S.of(context).settings_about),
               backgroundColor: AppColor.appBarBackground,
               textStyle: TextStyle(

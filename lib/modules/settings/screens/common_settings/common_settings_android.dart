@@ -6,6 +6,7 @@ import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/components/theme_selection_dialog.dart';
 import 'package:aurora_mail/shared_ui/adaptive_settings_menu_icon.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +63,11 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
       appBar: isTablet
           ? null
           : AMAppBar(
+              automaticallyImplyLeading: false,
+              leading: IconButton(
+                icon: AppBarIcons.back(),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
               title: Text(S.of(context).settings_common),
               backgroundColor: AppColor.appBarBackground,
               textStyle: TextStyle(

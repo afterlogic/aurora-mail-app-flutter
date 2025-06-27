@@ -17,6 +17,7 @@ import 'package:aurora_mail/modules/calendar/ui/views/tasks_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/week_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_drawer.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tab.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/extensions/bloc_provider_extensions.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -24,6 +25,7 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
@@ -124,8 +126,16 @@ class _CalendarPageState extends State<CalendarPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: GlobalKey<ScaffoldState>(),
       drawer: CalendarDrawer(),
       appBar: AMAppBar(
+        automaticallyImplyLeading: false,
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: AppBarIcons.burger(),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
         title: Text(S.of(context).calendar),
         backgroundColor: AppColor.appBarBackground,
         textStyle: TextStyle(
@@ -253,35 +263,8 @@ class _CalendarPageState extends State<CalendarPage>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.8),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              'Create event',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          AMFloatingActionButton(
-                            backgroundColor: Colors.white,
-                            child: IconTheme(
-                              data: AppTheme.floatIconTheme,
-                              child: Icon(Icons.event,
-                                  size: 32, color: Colors.black),
-                            ),
-                            shadow:
-                                BuildProperty.disableShadowFloatingActionButton
-                                    ? null
-                                    : BoxShadow(),
-                            onPressed: () {
+                          GestureDetector(
+                            onTap: () {
                               BlocProvider.of<EventsBloc>(context)
                                   .add(SelectEvent(null));
                               _overlay = false;
@@ -290,6 +273,96 @@ class _CalendarPageState extends State<CalendarPage>
                                 EventCreationPage.name,
                               );
                             },
+                            child: BuildProperty.useCustomInputStyles
+                                ? Container(
+                                    padding: const EdgeInsets.only(
+                                      top: 12,
+                                      left: 16,
+                                      right: 24,
+                                      bottom: 12,
+                                    ),
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: ShapeDecoration(
+                                      color: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      shadows: [
+                                        BoxShadow(
+                                          color: Color(0x19000000),
+                                          blurRadius: 16,
+                                          offset: Offset(0, 8),
+                                          spreadRadius: 0,
+                                        )
+                                      ],
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        _buildCalendarIcon(
+                                            'event', Icons.event),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          'Create event',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: const Color(0xFF031743),
+                                            fontSize: 14,
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.w500,
+                                            height: 1.35,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : Row(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 12, vertical: 8),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withOpacity(0.8),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          'Create event',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      AMFloatingActionButton(
+                                        backgroundColor: Colors.white,
+                                        child: IconTheme(
+                                          data: AppTheme.floatIconTheme,
+                                          child: Icon(Icons.event,
+                                              size: 32, color: Colors.black),
+                                        ),
+                                        shadow: BuildProperty
+                                                .disableShadowFloatingActionButton
+                                            ? null
+                                            : BoxShadow(),
+                                        onPressed: () {
+                                          BlocProvider.of<EventsBloc>(context)
+                                              .add(SelectEvent(null));
+                                          _overlay = false;
+                                          setState(() {});
+                                          Navigator.of(context).pushNamed(
+                                            EventCreationPage.name,
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
                           ),
                         ],
                       ),
@@ -298,35 +371,8 @@ class _CalendarPageState extends State<CalendarPage>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.8),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              'Create task',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          AMFloatingActionButton(
-                            heroTag: 'task',
-                            backgroundColor: Colors.white,
-                            child: IconTheme(
-                              data: AppTheme.floatIconTheme,
-                              child: Icon(Icons.add_task, color: Colors.black),
-                            ),
-                            shadow:
-                                BuildProperty.disableShadowFloatingActionButton
-                                    ? null
-                                    : BoxShadow(),
-                            onPressed: () {
+                          GestureDetector(
+                            onTap: () {
                               BlocProvider.of<TasksBloc>(context)
                                   .add(SelectTask(null));
                               _overlay = false;
@@ -335,39 +381,104 @@ class _CalendarPageState extends State<CalendarPage>
                                 TaskCreationPage.name,
                               );
                             },
+                            child: BuildProperty.useCustomInputStyles
+                                ? Container(
+                                    padding: const EdgeInsets.only(
+                                      top: 12,
+                                      left: 16,
+                                      right: 24,
+                                      bottom: 12,
+                                    ),
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: ShapeDecoration(
+                                      color: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      shadows: [
+                                        BoxShadow(
+                                          color: Color(0x19000000),
+                                          blurRadius: 16,
+                                          offset: Offset(0, 8),
+                                          spreadRadius: 0,
+                                        )
+                                      ],
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        _buildCalendarIcon(
+                                            'task', Icons.add_task),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          'Create task',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: const Color(0xFF031743),
+                                            fontSize: 14,
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.w500,
+                                            height: 1.35,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : Row(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 12, vertical: 8),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withOpacity(0.8),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          'Create task',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      AMFloatingActionButton(
+                                        heroTag: 'task',
+                                        backgroundColor: Colors.white,
+                                        child: IconTheme(
+                                          data: AppTheme.floatIconTheme,
+                                          child: Icon(Icons.add_task,
+                                              color: Colors.black),
+                                        ),
+                                        shadow: BuildProperty
+                                                .disableShadowFloatingActionButton
+                                            ? null
+                                            : BoxShadow(),
+                                        onPressed: () {
+                                          BlocProvider.of<TasksBloc>(context)
+                                              .add(SelectTask(null));
+                                          _overlay = false;
+                                          setState(() {});
+                                          Navigator.of(context).pushNamed(
+                                            TaskCreationPage.name,
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
                           ),
                         ],
                       ),
                       // Space for the main button
                       const SizedBox(height: 72), // Height of FAB + some margin
                     ] else ...[
-                      // Original layout for other builds
-                      AMFloatingActionButton(
-                        heroTag: 'task',
-                        backgroundColor: Colors.white,
-                        mini: true,
-                        shadow: BoxShadow(
-                          color:
-                              Theme.of(context).primaryColor.withOpacity(0.3),
-                          blurRadius: 4.0,
-                          offset: Offset(0.0, 3.0),
-                        ),
-                        child: IconTheme(
-                          data: AppTheme.floatIconTheme,
-                          child: Icon(Icons.add_task,
-                              color: Theme.of(context).primaryColor),
-                        ),
-                        onPressed: () {
-                          BlocProvider.of<TasksBloc>(context)
-                              .add(SelectTask(null));
-                          _overlay = false;
-                          setState(() {});
-                          Navigator.of(context).pushNamed(
-                            TaskCreationPage.name,
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 16),
+                      // Original layout for other builds - single event button
                       AMFloatingActionButton(
                         child: IconTheme(
                           data: AppTheme.floatIconTheme,
@@ -430,10 +541,31 @@ class _CalendarPageState extends State<CalendarPage>
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.calendar),
     );
   }
+
+  Widget _buildCalendarIcon(String iconName, IconData fallbackIcon) {
+    if (BuildProperty.useCustomInputStyles) {
+      final iconPath = '${BuildProperty.image_dir}/calendar/$iconName.svg';
+      return SvgPicture.asset(
+        iconPath,
+        width: 28,
+        height: 28,
+        placeholderBuilder: (context) => Icon(
+          fallbackIcon,
+          size: 28,
+          color: const Color(0xFF031743),
+        ),
+      );
+    }
+    return Icon(
+      fallbackIcon,
+      size: 28,
+      color: const Color(0xFF031743),
+    );
+  }
 }
 
 class _BlocErrorsHandler extends StatelessWidget {
-  const _BlocErrorsHandler({super.key, required this.child});
+  const _BlocErrorsHandler({required this.child});
 
   final Widget child;
 

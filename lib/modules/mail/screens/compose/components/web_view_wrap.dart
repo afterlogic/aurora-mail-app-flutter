@@ -1,5 +1,4 @@
 //@dart=2.9
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -100,11 +99,12 @@ class _WebViewWrapState extends State<WebViewWrap> {
                             ),
                           ),
                   ),
-                  if (!widget.simplified) Positioned(
-                    bottom: bottom + 15,
-                    right: 15,
-                    child: closeWebView,
-                  ),
+                  if (!widget.simplified)
+                    Positioned(
+                      bottom: bottom + 15,
+                      right: 15,
+                      child: closeWebView,
+                    ),
                 ],
               ),
             ],

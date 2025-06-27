@@ -12,6 +12,7 @@ import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/key_re
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key_route.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_keys_route.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_navigator.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -54,6 +55,11 @@ class _PgpSettingsState extends BState<PgpSettings> {
       appBar: isTablet
           ? null
           : AMAppBar(
+              automaticallyImplyLeading: false,
+              leading: IconButton(
+                icon: AppBarIcons.back(),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
               title: Text(S.of(context).label_pgp_settings),
               backgroundColor: AppColor.appBarBackground,
               textStyle: TextStyle(

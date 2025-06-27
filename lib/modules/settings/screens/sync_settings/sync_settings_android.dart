@@ -7,6 +7,7 @@ import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/components/freq_selection_dialog.dart';
 import 'package:aurora_mail/shared_ui/adaptive_settings_menu_icon.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +75,11 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
       appBar: isTablet
           ? null
           : AMAppBar(
+              automaticallyImplyLeading: false,
+              leading: IconButton(
+                icon: AppBarIcons.back(),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
               title: Text(S.of(context).settings_sync),
               backgroundColor: AppColor.appBarBackground,
               textStyle: TextStyle(

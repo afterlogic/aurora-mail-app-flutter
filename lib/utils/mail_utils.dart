@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:aurora_logger/aurora_logger.dart';
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
@@ -15,7 +16,6 @@ import 'package:aurora_mail/utils/extensions/colors_extensions.dart';
 import 'package:collection/collection.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
@@ -31,7 +31,7 @@ class MailUtils {
       final extended =
           decodedList.firstWhereOrNull((e) => types.contains(e["@Object"]));
       return extended as Map<String, dynamic>;
-    } catch (e, s) {
+    } catch (e) {
       return null;
     }
   }
@@ -298,9 +298,17 @@ class MailUtils {
       html, body {
         margin: 0;
         overflow-x: hidden;
-        padding: 10px;
+        padding: ${BuildProperty.useCustomInputStyles ? '8px' : '10px'};
         color:${_getWebColor(DefaultTextStyle.of(context).style.color)};
         background: ${_getWebColor(theme.scaffoldBackgroundColor)};
+      }
+      .input-area {
+        ${BuildProperty.useCustomInputStyles ? 'background: rgba(245, 245, 245, 0.5); border: 1px solid #EBEBEB; border-radius: 8px; min-height: 200px; padding: 16px; box-sizing: border-box;' : ''}
+      }
+      .input-area:empty:before {
+        content: attr(data-placeholder);
+        color: ${BuildProperty.useCustomInputStyles ? _getWebColor(Colors.grey.shade600) : _getWebColor(Colors.grey.shade500)};
+        pointer-events: none;
       }
       .primary-color {
         color: ${_getWebColor(theme.primaryColor)};
@@ -394,22 +402,38 @@ class MailUtils {
     </style>
     <script>      
     window.getBodyContent = function () {
-    return document.body.innerHTML;
+      var inputArea = document.querySelector('.input-area');
+      return inputArea ? inputArea.innerHTML : document.body.innerHTML;
     }
     window.setBodyContent = function (content) {
-      document.body.innerHTML=content;
+      var inputArea = document.querySelector('.input-area');
+      if (inputArea) {
+        inputArea.innerHTML = content;
+      } else {
+        document.body.innerHTML = content;
+      }
     }
     window.setPlain = function () {
-     document.body.style = "white-space: pre;";
+      var inputArea = document.querySelector('.input-area');
+      if (inputArea) {
+        inputArea.style.whiteSpace = "pre";
+      } else {
+        document.body.style.whiteSpace = "pre";
+      }
     }
     
     window.setHtml = function () {
-        document.body.style = "";
+      var inputArea = document.querySelector('.input-area');
+      if (inputArea) {
+        inputArea.style.whiteSpace = "";
+      } else {
+        document.body.style.whiteSpace = "";
+      }
     }
     </script>
   </head>
-  <body contenteditable="true" ${!isHtml ? "style=\"white-space: pre;\"" : ""}>
-    $text
+  <body contenteditable="false" ${!isHtml ? "style=\"white-space: pre;\"" : ""}>
+    <div class="input-area" contenteditable="true" data-placeholder="${S.of(context).compose_body_placeholder}">$text</div>
   </body>
 </html>
     

@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,7 @@ class SearchBarState extends BState<SearchBar> {
         width: double.infinity,
         child: ListTile(
           key: Key("search_mail_app_bar"),
-          leading: IconButton(onPressed: null, icon: Icon(Icons.search)),
+          leading: IconButton(onPressed: null, icon: AppBarIcons.search()),
           title: TextField(
             autofocus: true,
             decoration: InputDecoration.collapsed(
@@ -64,7 +65,7 @@ class SearchBarState extends BState<SearchBar> {
             controller: widget.searchCtrl,
           ),
           trailing: IconButton(
-            icon: Icon(Icons.close),
+            icon: AppBarIcons.close(),
             onPressed: () {
               setState(() {
                 widget.searchCtrl.clear();
@@ -78,7 +79,11 @@ class SearchBarState extends BState<SearchBar> {
     } else {
       return AMAppBar(
         key: Key("search_mail_app_bar"),
-        leading: Icon(Icons.search),
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: AppBarIcons.search(),
+          onPressed: null,
+        ),
         title: TextField(
           style: theme.titleTextStyle,
           autofocus: true,
@@ -93,7 +98,7 @@ class SearchBarState extends BState<SearchBar> {
         shadow: BoxShadow(color: Colors.transparent),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.close),
+            icon: AppBarIcons.close(),
             onPressed: () {
               setState(() {
                 widget.searchCtrl.clear();

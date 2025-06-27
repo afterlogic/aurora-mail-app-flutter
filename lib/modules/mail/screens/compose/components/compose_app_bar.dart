@@ -1,6 +1,7 @@
 //@dart=2.9
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,7 @@ class _ComposeAppBarState extends BState<ComposeAppBar> {
       shadow: BoxShadow(color: Colors.transparent),
       centerTitle: false,
       leading: IconButton(
-        icon: Icon(Icons.close),
+        icon: AppBarIcons.back(),
         onPressed: () =>
             widget.onAppBarActionSelected(ComposeAppBarAction.cancel),
       ),

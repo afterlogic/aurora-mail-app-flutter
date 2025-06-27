@@ -187,6 +187,8 @@ flutter:
     - {{image_dir}}/drawer/contacts/
     - {{image_dir}}/mail/
     - {{image_dir}}/contacts/
+    - {{image_dir}}/calendar/
+    - {{image_dir}}/m-app-bar/
 
   fonts:
     - family: WebMailIcons

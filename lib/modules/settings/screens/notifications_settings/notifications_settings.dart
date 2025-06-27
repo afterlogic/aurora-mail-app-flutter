@@ -4,6 +4,7 @@ import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/notifications/bloc.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
@@ -27,6 +28,11 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
       appBar: isTablet
           ? null
           : AMAppBar(
+              automaticallyImplyLeading: false,
+              leading: IconButton(
+                icon: AppBarIcons.back(),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
               title: Text(
                 S.of(context).label_notifications_settings,
               ),

@@ -1,5 +1,6 @@
 //@dart=2.9
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:theme/app_color.dart';
@@ -25,6 +26,10 @@ class GroupEditAppBar extends StatelessWidget implements PreferredSizeWidget {
       textStyle: TextStyle(
           color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
       shadow: BoxShadow(color: Colors.transparent),
+      leading: IconButton(
+        icon: AppBarIcons.back(),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
       actions: <Widget>[
         Builder(
           builder: (context) => TextButton(

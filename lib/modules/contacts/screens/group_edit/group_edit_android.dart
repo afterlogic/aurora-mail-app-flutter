@@ -8,6 +8,7 @@ import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/utils/input_utils.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -176,13 +177,12 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
     TextInputType type,
   ]) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: TextField(
         controller: ctrl,
         keyboardType: type,
-        decoration: InputDecoration(
+        decoration: InputUtils.getUnlymeInputDecoration(
           labelText: label,
-          alignLabelWithHint: true,
         ),
       ),
     );

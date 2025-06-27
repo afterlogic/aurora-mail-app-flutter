@@ -1,6 +1,7 @@
 //@dart=2.9
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -126,6 +127,10 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
             fontSize: 18,
             fontWeight: FontWeight.w600),
         shadow: BoxShadow(color: Colors.transparent),
+        leading: IconButton(
+          icon: AppBarIcons.back(),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         actions: actions,
       );
     } else {

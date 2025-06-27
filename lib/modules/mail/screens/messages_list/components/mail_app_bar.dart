@@ -12,6 +12,7 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/components/search
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/select_app_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -145,8 +146,7 @@ class MailAppBarState extends BState<MailAppBar> {
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 28, top: 6),
-                  child: Icon(
-                    Icons.search,
+                  child: AppBarIcons.search(
                     color: theme.disabledColor,
                   ),
                 ),
@@ -165,6 +165,10 @@ class MailAppBarState extends BState<MailAppBar> {
       key: Key("default_mail_app_bar"),
       backgroundColor: AppColor.appBarBackground,
       shadow: BoxShadow(color: Colors.transparent),
+      leading: IconButton(
+        icon: AppBarIcons.burger(),
+        onPressed: () => Scaffold.of(context).openDrawer(),
+      ),
       title: BlocBuilder<MailBloc, MailState>(
         bloc: _mailBloc,
         buildWhen: (_, state) =>
@@ -188,7 +192,7 @@ class MailAppBarState extends BState<MailAppBar> {
       actions: widget.enable
           ? <Widget>[
               IconButton(
-                icon: Icon(Icons.search),
+                icon: AppBarIcons.search(),
                 onPressed: changeMode,
               ),
               if (BuildProperty.multiUserEnable)
