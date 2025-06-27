@@ -75,6 +75,8 @@ class _ContactsListTileState extends State<ContactsListTile> {
         orElse: () => null);
 
     return ListTile(
+      contentPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+      horizontalTitleGap: 8.0, // Уменьшаем отступ между кружком и текстом
       leading: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -82,9 +84,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
             width: 36.0,
             height: 36.0,
             decoration: BoxDecoration(
-              color: theme.brightness == Brightness.dark
-                  ? theme.primaryColor.withOpacity(0.2)
-                  : theme.primaryColor.withOpacity(0.06),
+              color: theme.primaryColor,
               borderRadius: BorderRadius.circular(
                 BuildProperty.useContactsRoundIcons ? 18.0 : 10.0,
               ),
@@ -95,7 +95,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.w500,
-                  color: theme.primaryColor,
+                  color: Colors.white,
                 ),
               ),
             ),

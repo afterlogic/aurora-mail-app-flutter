@@ -62,7 +62,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
                       S.of(context).contacts_drawer_section_storages,
-                      style: TextStyle(color: theme.disabledColor),
+                      style: TextStyle(color: theme.primaryColor),
                     ),
                   ),
                   _buildStorages(context, state),
@@ -74,7 +74,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
                       children: <Widget>[
                         Text(
                           S.of(context).contacts_drawer_section_groups,
-                          style: TextStyle(color: theme.disabledColor),
+                          style: TextStyle(color: theme.primaryColor),
                         ),
                         IconButton(
                           icon: AdaptiveDrawerIcon(

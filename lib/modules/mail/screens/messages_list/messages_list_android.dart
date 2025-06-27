@@ -301,7 +301,9 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
           : AMFloatingActionButton(
               child: IconTheme(
                 data: AppTheme.floatIconTheme,
-                child: Icon(MdiIcons.pen),
+                child: Icon(BuildProperty.usePlusIconForActionButtons
+                    ? Icons.add
+                    : MdiIcons.pen),
               ),
               shadow: BuildProperty.disableShadowFloatingActionButton
                   ? null
@@ -556,7 +558,9 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
           : AMFloatingActionButton(
               child: IconTheme(
                 data: AppTheme.floatIconTheme,
-                child: Icon(MdiIcons.pen),
+                child: Icon(BuildProperty.usePlusIconForActionButtons
+                    ? Icons.add
+                    : MdiIcons.pen),
               ),
               shadow: BuildProperty.disableShadowFloatingActionButton
                   ? null

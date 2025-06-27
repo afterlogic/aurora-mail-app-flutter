@@ -39,7 +39,7 @@ class InputUtils {
       labelStyle: TextStyle(color: AppColor.inputPlaceholder),
       hintStyle: TextStyle(color: AppColor.inputPlaceholder),
       contentPadding: contentPadding ??
-          EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+          EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
     );
   }
 
@@ -236,8 +236,8 @@ class InputUtils {
         labelText: labelText,
         hintText: hintText,
         contentPadding: isDense
-            ? EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0)
-            : EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+            ? EdgeInsets.symmetric(vertical: 15.0, horizontal: 12.0)
+            : EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
       ),
       isExpanded: isExpanded,
       isDense: isDense,
@@ -284,7 +284,8 @@ class InputUtils {
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+      height: 52.0,
+      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
       decoration: BoxDecoration(
         color: AppColor.inputBackground,
         borderRadius: BorderRadius.circular(8.0),

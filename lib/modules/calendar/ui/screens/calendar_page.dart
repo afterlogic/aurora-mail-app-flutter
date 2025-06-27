@@ -242,58 +242,181 @@ class _CalendarPageState extends State<CalendarPage>
         ],
       ),
       floatingActionButton: _overlay
-          ? Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+          ? Stack(
               children: [
-                AMFloatingActionButton(
-                  heroTag: 'task',
-                  backgroundColor: Colors.white,
-                  mini: true,
-                  shadow: BoxShadow(
-                    color: Theme.of(context).primaryColor.withOpacity(0.3),
-                    blurRadius: 4.0,
-                    offset: Offset(0.0, 3.0),
-                  ),
-                  child: IconTheme(
-                    data: AppTheme.floatIconTheme,
-                    child: Icon(Icons.add_task,
-                        color: Theme.of(context).primaryColor),
-                  ),
-                  onPressed: () {
-                    BlocProvider.of<TasksBloc>(context).add(SelectTask(null));
-                    _overlay = false;
-                    setState(() {});
-                    Navigator.of(context).pushNamed(
-                      TaskCreationPage.name,
-                    );
-                  },
+                // Overlay buttons (positioned above main button)
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    // Create Event button with label (first - more commonly used)
+                    if (BuildProperty.usePlusIconForActionButtons) ...[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.8),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              'Create event',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          AMFloatingActionButton(
+                            backgroundColor: Colors.white,
+                            child: IconTheme(
+                              data: AppTheme.floatIconTheme,
+                              child: Icon(Icons.event,
+                                  size: 32, color: Colors.black),
+                            ),
+                            shadow:
+                                BuildProperty.disableShadowFloatingActionButton
+                                    ? null
+                                    : BoxShadow(),
+                            onPressed: () {
+                              BlocProvider.of<EventsBloc>(context)
+                                  .add(SelectEvent(null));
+                              _overlay = false;
+                              setState(() {});
+                              Navigator.of(context).pushNamed(
+                                EventCreationPage.name,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      // Create Task button with label
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.8),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              'Create task',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          AMFloatingActionButton(
+                            heroTag: 'task',
+                            backgroundColor: Colors.white,
+                            child: IconTheme(
+                              data: AppTheme.floatIconTheme,
+                              child: Icon(Icons.add_task, color: Colors.black),
+                            ),
+                            shadow:
+                                BuildProperty.disableShadowFloatingActionButton
+                                    ? null
+                                    : BoxShadow(),
+                            onPressed: () {
+                              BlocProvider.of<TasksBloc>(context)
+                                  .add(SelectTask(null));
+                              _overlay = false;
+                              setState(() {});
+                              Navigator.of(context).pushNamed(
+                                TaskCreationPage.name,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      // Space for the main button
+                      const SizedBox(height: 72), // Height of FAB + some margin
+                    ] else ...[
+                      // Original layout for other builds
+                      AMFloatingActionButton(
+                        heroTag: 'task',
+                        backgroundColor: Colors.white,
+                        mini: true,
+                        shadow: BoxShadow(
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.3),
+                          blurRadius: 4.0,
+                          offset: Offset(0.0, 3.0),
+                        ),
+                        child: IconTheme(
+                          data: AppTheme.floatIconTheme,
+                          child: Icon(Icons.add_task,
+                              color: Theme.of(context).primaryColor),
+                        ),
+                        onPressed: () {
+                          BlocProvider.of<TasksBloc>(context)
+                              .add(SelectTask(null));
+                          _overlay = false;
+                          setState(() {});
+                          Navigator.of(context).pushNamed(
+                            TaskCreationPage.name,
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      AMFloatingActionButton(
+                        child: IconTheme(
+                          data: AppTheme.floatIconTheme,
+                          child: Icon(Icons.event, size: 32),
+                        ),
+                        shadow: BuildProperty.disableShadowFloatingActionButton
+                            ? null
+                            : BoxShadow(),
+                        onPressed: () {
+                          BlocProvider.of<EventsBloc>(context)
+                              .add(SelectEvent(null));
+                          _overlay = false;
+                          setState(() {});
+                          Navigator.of(context).pushNamed(
+                            EventCreationPage.name,
+                          );
+                        },
+                      ),
+                      // Space for the main button
+                      const SizedBox(height: 72), // Height of FAB + some margin
+                    ],
+                  ],
                 ),
-                const SizedBox(
-                  height: 16,
-                ),
-                AMFloatingActionButton(
-                  child: IconTheme(
-                    data: AppTheme.floatIconTheme,
-                    child: Icon(Icons.event, size: 32),
+                // Main close button (positioned at the bottom right)
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: AMFloatingActionButton(
+                    child: IconTheme(
+                      data: AppTheme.floatIconTheme,
+                      child: Icon(Icons.close),
+                    ),
+                    shadow: BuildProperty.disableShadowFloatingActionButton
+                        ? null
+                        : BoxShadow(),
+                    onPressed: () {
+                      _overlay = false;
+                      setState(() {});
+                    },
                   ),
-                  shadow: BuildProperty.disableShadowFloatingActionButton
-                      ? null
-                      : BoxShadow(),
-                  onPressed: () {
-                    BlocProvider.of<EventsBloc>(context).add(SelectEvent(null));
-                    _overlay = false;
-                    setState(() {});
-                    Navigator.of(context).pushNamed(
-                      EventCreationPage.name,
-                    );
-                  },
                 ),
               ],
             )
           : AMFloatingActionButton(
               child: IconTheme(
                 data: AppTheme.floatIconTheme,
-                child: Icon(MdiIcons.plus),
+                child: Icon(BuildProperty.usePlusIconForActionButtons
+                    ? Icons.add
+                    : MdiIcons.plus),
               ),
               shadow: BuildProperty.disableShadowFloatingActionButton
                   ? null

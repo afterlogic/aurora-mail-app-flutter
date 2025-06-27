@@ -78,7 +78,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('My calendars',
-                              style: TextStyle(color: theme.disabledColor)),
+                              style: TextStyle(color: theme.primaryColor)),
                           IconButton(
                               padding: EdgeInsets.zero,
                               constraints: BoxConstraints(),
@@ -125,7 +125,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                                 horizontal: _horizontalHeaderPadding)
                             .copyWith(top: 16, bottom: 4),
                         child: Text('Shared with me',
-                            style: TextStyle(color: theme.disabledColor)),
+                            style: TextStyle(color: theme.primaryColor)),
                       ),
                     if (sharedCalendars?.isNotEmpty ?? false)
                       Divider(
@@ -154,7 +154,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                                 horizontal: _horizontalHeaderPadding)
                             .copyWith(top: 16, bottom: 4),
                         child: Text('Shared with all',
-                            style: TextStyle(color: theme.disabledColor)),
+                            style: TextStyle(color: theme.primaryColor)),
                       ),
                     if (sharedToAllCalendars?.isNotEmpty ?? false)
                       Divider(
@@ -532,7 +532,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
                       child: Icon(
                         Icons.keyboard_arrow_down,
                         size: 32,
-                        color: Color(0xFFB6B5B5),
+                        color: Theme.of(context).primaryColor,
                       ),
                     );
                   },
@@ -546,11 +546,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
           child: Column(
               children: _menuItems
                   .map((e) => Container(
-                        color: _isExpanded
-                            ? Theme.of(context).brightness == Brightness.dark
-                                ? Colors.black45
-                                : Color(0xFFECF5FF)
-                            : null,
+                        color: null,
                         child: ListTile(
                           title: Text(e.titleBuilder(context)),
                           contentPadding: EdgeInsets.symmetric(

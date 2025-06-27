@@ -221,7 +221,10 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
                           ? AMFloatingActionButton(
                               child: IconTheme(
                                 data: AppTheme.floatIconTheme,
-                                child: Icon(MdiIcons.accountPlusOutline),
+                                child: Icon(
+                                    BuildProperty.usePlusIconForActionButtons
+                                        ? Icons.add
+                                        : MdiIcons.accountPlusOutline),
                               ),
                               shadow: BuildProperty
                                       .disableShadowFloatingActionButton
@@ -281,7 +284,9 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
               ? AMFloatingActionButton(
                   child: IconTheme(
                     data: AppTheme.floatIconTheme,
-                    child: Icon(MdiIcons.accountPlusOutline),
+                    child: Icon(BuildProperty.usePlusIconForActionButtons
+                        ? Icons.add
+                        : MdiIcons.accountPlusOutline),
                   ),
                   shadow: BuildProperty.disableShadowFloatingActionButton
                       ? null

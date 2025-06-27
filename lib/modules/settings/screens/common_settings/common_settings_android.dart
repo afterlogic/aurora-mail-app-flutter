@@ -79,50 +79,51 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
             ),
           Expanded(
             child: BlocBuilder<SettingsBloc, SettingsState>(
-        builder: (_, state) {
-          if (state is SettingsLoaded) {
-            return ListView(
-              children: <Widget>[
-                SwitchListTile.adaptive(
-                    title: Row(
-                      children: <Widget>[
+              builder: (_, state) {
+                if (state is SettingsLoaded) {
+                  return ListView(
+                    children: <Widget>[
+                      SwitchListTile.adaptive(
+                          title: Row(
+                            children: <Widget>[
                               AdaptiveSettingsMenuIcon(
                                 defaultIcon: Icons.access_time,
                                 iconName: '24-hour-format',
                                 iconFolder: 'common',
-                          color: theme.primaryColor,
-                          background: iconBG,
-                        ),
-                        SizedBox(width: 16.0),
-                        Expanded(
+                                color: theme.primaryColor,
+                                background: iconBG,
+                              ),
+                              SizedBox(width: 16.0),
+                              Expanded(
                                 child: Text(
                                     S.of(context).settings_24_time_format,
-                              overflow: TextOverflow.ellipsis),
+                                    overflow: TextOverflow.ellipsis),
+                              ),
+                            ],
+                          ),
+                          activeColor: theme.primaryColor,
+                          value: state.is24,
+                          onChanged: (val) => bloc.add(SetTimeFormat(val))),
+                      _buildDivider(),
+                      if (BuildProperty.showThemeSelection)
+                        ListTile(
+                          leading: AdaptiveSettingsMenuIcon(
+                            defaultIcon: Icons.color_lens,
+                            iconName: 'app-theme',
+                            iconFolder: 'common',
+                            color: theme.primaryColor,
+                            background: iconBG,
+                          ),
+                          title: Text(S.of(context).settings_dark_theme),
+                          trailing: _buildTrailingArrow(),
+                          onTap: () => ThemeSelectionDialog.show(
+                              context,
+                              state.darkThemeEnabled,
+                              (val) => bloc.add(SetDarkTheme(val))),
                         ),
-                      ],
-                    ),
-                    activeColor: theme.primaryColor,
-                    value: state.is24,
-                    onChanged: (val) => bloc.add(SetTimeFormat(val))),
-                      _buildDivider(),
-                ListTile(
-                        leading: AdaptiveSettingsMenuIcon(
-                          defaultIcon: Icons.color_lens,
-                          iconName: 'app-theme',
-                          iconFolder: 'common',
-                    color: theme.primaryColor,
-                    background: iconBG,
-                  ),
-                  title: Text(S.of(context).settings_dark_theme),
-                        trailing: _buildTrailingArrow(),
-                  onTap: () => ThemeSelectionDialog.show(
-                      context,
-                      state.darkThemeEnabled,
-                      (val) => bloc.add(SetDarkTheme(val))),
-                  ),
-                      _buildDivider(),
-                if (Language.availableLanguages.length > 2)
-                  ListTile(
+                      if (BuildProperty.showThemeSelection) _buildDivider(),
+                      if (Language.availableLanguages.length > 2)
+                        ListTile(
                           leading: AdaptiveSettingsMenuIcon(
                             defaultIcon: Icons.translate,
                             iconName: 'language',
@@ -130,7 +131,7 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                             color: theme.primaryColor,
                             background: iconBG,
                           ),
-                    title: Text(S.of(context).settings_language),
+                          title: Text(S.of(context).settings_language),
                           trailing: _buildTrailingArrow(),
                           onTap: () => LanguageSelectionDialog.show(
                               context,
@@ -139,12 +140,12 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                         ),
                       if (Language.availableLanguages.length > 2)
                         _buildDivider(),
-              ],
-            );
-          } else {
-            return SizedBox();
-          }
-        },
+                    ],
+                  );
+                } else {
+                  return SizedBox();
+                }
+              },
             ),
           ),
         ],

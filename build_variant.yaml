@@ -111,3 +111,9 @@ useCustomSettingsColors: true # use custom colors for settings menu items
 
 #AppBar customization
 useAppBarDivider: true # add divider line under AppBar
+
+#Theme selection
+showThemeSelection: false # show theme selection in settings
+
+#Action button icons
+usePlusIconForActionButtons: true # use plus icon for floating action buttons
