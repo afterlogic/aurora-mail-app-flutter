@@ -33,7 +33,7 @@ _iosAppId: '{{_appId}}'
 _appleGroupId: ''
 packageName: '{{_appId}}'
 version: ''
-build: 332
+build: 333
 
 icon: '{{image_dir}}/icon.png'
 main_logo: '{{image_dir}}/main_logo.png'
@@ -49,7 +49,7 @@ autodiscover_url: ''
 deepLink: '{{packageName}}'
 
 foreground_icon: '{{image_dir}}/icon_foreground.png'
-background_color: '#3b3b3b'
+background_color: '#FFFFFF'
 _theme_module: '{{_dir}}/theme'
 
 privacyPolicy: ''

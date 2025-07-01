@@ -6,10 +6,10 @@ import NotificationCenter
 import BackgroundTasks
 import UserNotifications
 import alarm_service
-// import Firebase
+import Firebase
 import receive_sharing
 import ios_notification_handler
-// import FirebaseMessaging
+import FirebaseMessaging
 
 @UIApplicationMain
 class AppDelegate: FlutterAppDelegate{
@@ -18,6 +18,7 @@ class AppDelegate: FlutterAppDelegate{
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        FirebaseApp.configure()
         UserDefaults().set(Bundle.main.object(forInfoDictionaryKey:"ShareGroup") as! String,forKey: SwiftReceiveSharingPlugin.shareGroupKey)
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().delegate = self

@@ -12,8 +12,8 @@ dependencies:
 
   flutter_localizations:
     sdk: flutter
-  # firebase_core_platform_interface: ^4.5.3
-#  flutter_cupertino_localizations: 1.0.1
+  firebase_core_platform_interface: ^4.5.3
+  #flutter_cupertino_localizations: 1.0.1
   table_calendar: ^3.0.8
 
   # state management
@@ -71,9 +71,9 @@ dependencies:
   uni_links: ^0.5.1
   flutter_custom_tabs: ^1.0.4
   # crashlytics
-#  firebase_core: ^2.8.0
-#  firebase_crashlytics: ^3.0.17
-#  firebase_messaging: ^14.0.2
+  firebase_core: ^2.8.0
+  firebase_crashlytics: ^3.0.17
+  firebase_messaging: ^14.0.2
   # file encryption
   encrypt:
 

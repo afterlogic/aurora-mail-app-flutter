@@ -1,5 +1,5 @@
 # Uncomment this line to define a global platform for your project
-platform :ios, '14.0'
+platform :ios, '12.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -29,8 +29,7 @@ flutter_ios_podfile_setup
 
 target 'Runner' do
   use_frameworks! :linkage => :static
-  use_modular_headers!
-
+  
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
   # Force Alamofire version
@@ -39,60 +38,41 @@ target 'Runner' do
 #   target 'AppShareExtension' do
 #       inherit! :search_paths
 #   end
-
 end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
-    # Force all Firebase pods to use non-modular headers
     flutter_additional_ios_build_settings(target)
-
+    
     target.build_configurations.each do |config|
       config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
-
+      
+      # Отключаем строгие проверки для всех таргетов
       config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+      config.build_settings['CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS'] = 'NO'
+      config.build_settings['CLANG_WARN_DOCUMENTATION_COMMENTS'] = 'NO'
+      config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = 'NO'
       config.build_settings['GCC_WARN_INHIBIT_ALL_WARNINGS'] = 'YES'
       config.build_settings['ENABLE_BITCODE'] = 'NO'
-
-      config.build_settings['OTHER_LDFLAGS'] = '$(inherited) -framework Flutter'
-
-        # disable unused permissions
-        # see https://pub.dev/packages/permission_handler#android-and-ios-specific-permissions
+      
+      # Специальные настройки только для Firebase плагинов Flutter (не для самого Firebase SDK)
+      if target.name.include?('firebase_') && !target.name.include?('Firebase')
+        config.build_settings['DEFINES_MODULE'] = 'NO'
+      end
+      
       config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
         '$(inherited)',
-
-#        # dart: PermissionGroup.calendar
-#         'PERMISSION_EVENTS=0',
-
-        # dart: PermissionGroup.reminders
-          'PERMISSION_REMINDERS=0',
-
-#        # dart: PermissionGroup.contacts
-#         'PERMISSION_CONTACTS=0',
-
-        # dart: PermissionGroup.camera
-          'PERMISSION_CAMERA=0',
-
-        # dart: PermissionGroup.microphone
-          'PERMISSION_MICROPHONE=0',
-
-        # dart: PermissionGroup.speech
-          'PERMISSION_SPEECH_RECOGNIZER=0',
-
-        # dart: PermissionGroup.photos
-          'PERMISSION_PHOTOS=0',
-
-        # dart: [PermissionGroup.location, PermissionGroup.locationAlways, PermissionGroup.locationWhenInUse]
-          'PERMISSION_LOCATION=0',
-
-        ## dart: PermissionGroup.notification
-        # 'PERMISSION_NOTIFICATIONS=0',
-
-        # dart: PermissionGroup.mediaLibrary
-          'PERMISSION_MEDIA_LIBRARY=0',
-
-        # dart: PermissionGroup.sensors
-          'PERMISSION_SENSORS=0'
+        'PB_FIELD_32BIT=1',
+        'PB_NO_PACKED_STRUCTS=1',
+        'PB_ENABLE_MALLOC=1',
+        'PERMISSION_REMINDERS=0',
+        'PERMISSION_CAMERA=0',
+        'PERMISSION_MICROPHONE=0',
+        'PERMISSION_SPEECH_RECOGNIZER=0',
+        'PERMISSION_PHOTOS=0',
+        'PERMISSION_LOCATION=0',
+        'PERMISSION_MEDIA_LIBRARY=0',
+        'PERMISSION_SENSORS=0'
       ]
     end
   end
