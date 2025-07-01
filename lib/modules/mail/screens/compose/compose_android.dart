@@ -935,7 +935,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
             ),
             ComposeEmails(
               key: _toKey,
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               enable: !lockUsers,
               focusNode: toNode,
               label: S.of(context).messages_to,
@@ -951,7 +951,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
             ),
             ComposeEmails(
               key: _ccKey,
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               enable: !lockUsers,
               focusNode: ccNode,
               label: S.of(context).messages_cc,
@@ -973,7 +973,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
             if (_showBCC)
               ComposeEmails(
                 key: _bccKey,
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 enable: !lockUsers,
                 focusNode: bccNode,
                 label: S.of(context).messages_bcc,
@@ -988,7 +988,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                 bloc: _bloc,
               ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Column(
                 children: <Widget>[
                   ComposeSubject(

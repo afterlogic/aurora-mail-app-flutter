@@ -21,6 +21,7 @@ class InputUtils {
     return InputDecoration(
       labelText: labelText,
       hintText: hintText,
+      floatingLabelBehavior: FloatingLabelBehavior.auto,
       suffixIcon: suffixIcon,
       filled: true,
       fillColor: AppColor.inputBackground,

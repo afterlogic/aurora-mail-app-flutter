@@ -1,9 +1,9 @@
 //@dart=2.9
 import 'dart:io';
 
-import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/utils/input_utils.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -37,101 +37,39 @@ class _ComposeSubjectState extends BState<ComposeSubject> {
     return GestureDetector(
       onTap: widget.focusNode.requestFocus,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: BuildProperty.useCustomInputStyles
-            ? Container(
-                decoration: BoxDecoration(
-                  color: Color(0x80F5F5F5), // #F5F5F580
-                  borderRadius: BorderRadius.circular(8.0),
-                  border: Border.all(
-                    color: Color(0xFFEBEBEB), // #EBEBEB
-                    width: 1.0,
-                  ),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text(S.of(context).messages_subject,
-                          style: theme.textTheme.subtitle1.copyWith(
-                            color: Color(0xFF6F788D), // #6F788D
-                          )),
-                    ),
-                    SizedBox(width: 8.0),
-                    Flexible(
-                      flex: 1,
-                      child: Wrap(spacing: 8.0, children: [
-                        TextField(
-                          onTap: null,
-                          focusNode: widget.focusNode,
-                          controller: widget.textCtrl,
-                          decoration: InputDecoration.collapsed(
-                            hintText: null,
-                            fillColor: Colors.transparent,
-                            filled: false,
+        padding: const EdgeInsets.symmetric(vertical: 4.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: InputUtils.buildUnlymeTextField(
+                controller: widget.textCtrl,
+                labelText: S.of(context).messages_subject,
+                focusNode: widget.focusNode,
+                onEditingComplete: widget.onNext,
+                suffixIcon: widget.onAttach != null
+                    ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.attachment),
+                            padding: EdgeInsets.zero,
+                            color: theme.primaryColor,
+                            onPressed: () => widget.onAttach(FileType.any),
                           ),
-                          onEditingComplete: widget.onNext,
-                        ),
-                      ]),
-                    ),
-                    if (widget.onAttach != null) ...[
-                      IconButton(
-                        icon: Icon(Icons.attachment),
-                        padding: EdgeInsets.zero,
-                        color: theme.primaryColor,
-                        onPressed: () => widget.onAttach(FileType.any),
-                      ),
-                      if (Platform.isIOS)
-                        IconButton(
-                          icon: Icon(Icons.perm_media),
-                          padding: EdgeInsets.zero,
-                          color: theme.primaryColor,
-                          onPressed: () => widget.onAttach(FileType.media),
-                        ),
-                    ],
-                  ],
-                ),
-              )
-            : Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(S.of(context).messages_subject,
-                        style: theme.textTheme.subtitle1),
-                  ),
-                  SizedBox(width: 8.0),
-                  Flexible(
-                    flex: 1,
-                    child: Wrap(spacing: 8.0, children: [
-                      TextField(
-                        onTap: null,
-                        focusNode: widget.focusNode,
-                        controller: widget.textCtrl,
-                        decoration: InputDecoration.collapsed(
-                          hintText: null,
-                        ),
-                        onEditingComplete: widget.onNext,
-                      ),
-                    ]),
-                  ),
-                  if (widget.onAttach != null) ...[
-                    IconButton(
-                      icon: Icon(Icons.attachment),
-                      padding: EdgeInsets.zero,
-                      color: theme.primaryColor,
-                      onPressed: () => widget.onAttach(FileType.any),
-                    ),
-                    if (Platform.isIOS)
-                      IconButton(
-                        icon: Icon(Icons.perm_media),
-                        padding: EdgeInsets.zero,
-                        color: theme.primaryColor,
-                        onPressed: () => widget.onAttach(FileType.media),
-                      ),
-                  ],
-                ],
+                          if (Platform.isIOS)
+                            IconButton(
+                              icon: Icon(Icons.perm_media),
+                              padding: EdgeInsets.zero,
+                              color: theme.primaryColor,
+                              onPressed: () => widget.onAttach(FileType.media),
+                            ),
+                        ],
+                      )
+                    : null,
               ),
+            ),
+          ],
+        ),
       ),
     );
   }
