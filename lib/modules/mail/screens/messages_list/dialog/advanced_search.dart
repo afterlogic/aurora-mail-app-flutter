@@ -78,26 +78,27 @@ class AdvancedSearchState extends State<AdvancedSearch> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            SizedBox(height: 16.0),
             InputUtils.buildUnlymeTextField(
               controller: fromCtrl,
               labelText: S.of(context).messages_from,
             ),
-            SizedBox(height: BuildProperty.useCustomInputStyles ? 8.0 : 0.0),
+            SizedBox(height: BuildProperty.useCustomInputStyles ? 16.0 : 8.0),
             InputUtils.buildUnlymeTextField(
               controller: toCtrl,
               labelText: S.of(context).messages_to,
             ),
-            SizedBox(height: BuildProperty.useCustomInputStyles ? 8.0 : 0.0),
+            SizedBox(height: BuildProperty.useCustomInputStyles ? 16.0 : 8.0),
             InputUtils.buildUnlymeTextField(
               controller: subjectCtrl,
               labelText: S.of(context).messages_subject,
             ),
-            SizedBox(height: BuildProperty.useCustomInputStyles ? 8.0 : 0.0),
+            SizedBox(height: BuildProperty.useCustomInputStyles ? 16.0 : 8.0),
             InputUtils.buildUnlymeTextField(
               controller: textCtrl,
               labelText: S.of(context).input_message_search_text,
             ),
-            SizedBox(height: BuildProperty.useCustomInputStyles ? 8.0 : 0.0),
+            SizedBox(height: BuildProperty.useCustomInputStyles ? 16.0 : 8.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -117,10 +118,11 @@ class AdvancedSearchState extends State<AdvancedSearch> {
                         setState(() {});
                       }
                     },
-                    child: SizedBox(
+                    child: since == null ? null : SizedBox(
                       height: 20,
-                      child:
-                          since == null ? null : Text(dateFormat.format(since)),
+                      child: Center(
+                        child: Text(dateFormat.format(since)),
+                      ),
                     ),
                   ),
                 ),
@@ -141,16 +143,17 @@ class AdvancedSearchState extends State<AdvancedSearch> {
                         setState(() {});
                       }
                     },
-                    child: SizedBox(
+                    child: till == null ? null : SizedBox(
                       height: 20,
-                      child:
-                          till == null ? null : Text(dateFormat.format(till)),
+                      child: Center(
+                        child: Text(dateFormat.format(till)),
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: BuildProperty.useCustomInputStyles ? 8.0 : 0.0),
+            SizedBox(height: BuildProperty.useCustomInputStyles ? 16.0 : 8.0),
             Row(
               children: [
                 Checkbox(
@@ -160,13 +163,19 @@ class AdvancedSearchState extends State<AdvancedSearch> {
                     setState(() {});
                   },
                 ),
-                Expanded(
-                  child: Text(
-                    S.of(context).messages_view_tab_attachments,
-                    style: TextStyle(
-                      color: BuildProperty.useCustomInputStyles
-                          ? Color(0xFF6F788D)
-                          : null,
+                GestureDetector(
+                  onTap: () {
+                    withAttachment = !withAttachment;
+                    setState(() {});
+                  },
+                  child: Expanded(
+                    child: Text(
+                      S.of(context).messages_view_tab_attachments,
+                      style: TextStyle(
+                        color: BuildProperty.useCustomInputStyles
+                            ? Color(0xFF6F788D)
+                            : null,
+                      ),
                     ),
                   ),
                 ),

@@ -510,15 +510,17 @@ class InputUtils {
     required BuildContext context,
     required String labelText,
     required VoidCallback onTap,
-    required Widget child,
+    Widget? child,
     bool enabled = true,
   }) {
     return GestureDetector(
       onTap: enabled ? onTap : null,
       child: InputDecorator(
+        isEmpty: child == null,
         decoration: BuildProperty.useCustomInputStyles
             ? InputDecoration(
                 labelText: labelText,
+                floatingLabelBehavior: FloatingLabelBehavior.auto,
                 filled: true,
                 fillColor: AppColor.inputBackground,
                 border: OutlineInputBorder(
@@ -542,6 +544,7 @@ class InputUtils {
               )
             : InputDecoration(
                 labelText: labelText,
+                floatingLabelBehavior: FloatingLabelBehavior.auto,
               ),
         child: child,
       ),
