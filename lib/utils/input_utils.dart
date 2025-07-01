@@ -503,4 +503,47 @@ class InputUtils {
       ),
     );
   }
+
+  /// Создает кастомный Date Picker с unlyme стилями используя InputDecorator
+  static Widget buildUnlymeInputDecorator({
+    required BuildContext context,
+    required String labelText,
+    required VoidCallback onTap,
+    required Widget child,
+    bool enabled = true,
+  }) {
+    return GestureDetector(
+      onTap: enabled ? onTap : null,
+      child: InputDecorator(
+        decoration: BuildProperty.useCustomInputStyles
+            ? InputDecoration(
+                labelText: labelText,
+                filled: true,
+                fillColor: AppColor.inputBackground,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide:
+                      BorderSide(color: AppColor.inputBorder, width: 1.0),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide:
+                      BorderSide(color: AppColor.inputBorder, width: 1.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide:
+                      BorderSide(color: AppColor.inputBorder, width: 1.0),
+                ),
+                labelStyle: TextStyle(color: AppColor.inputPlaceholder),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              )
+            : InputDecoration(
+                labelText: labelText,
+              ),
+        child: child,
+      ),
+    );
+  }
 }

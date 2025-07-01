@@ -11,9 +11,10 @@ class AppBarIcons {
         '${BuildProperty.image_dir}/m-app-bar/burger.svg',
         width: 16.0,
         height: 12.0,
+        color: color,
       );
     }
-    return Icon(Icons.menu, color: color, size: size);
+    return Icon(Icons.menu, size: size, color: Colors.black);
   }
 
   // Простая функция для получения search icon
@@ -23,9 +24,10 @@ class AppBarIcons {
         '${BuildProperty.image_dir}/m-app-bar/search.svg',
         width: 20.0,
         height: 20.0,
+        color: color,
       );
     }
-    return Icon(Icons.search, color: color, size: size);
+    return Icon(Icons.search, size: size, color: Colors.black);
   }
 
   // Простая функция для получения close/exit icon
@@ -38,7 +40,7 @@ class AppBarIcons {
         color: color,
       );
     }
-    return Icon(Icons.arrow_back, color: color, size: size);
+    return Icon(Icons.arrow_back, size: size, color: Colors.black);
   }
 
   // Простая функция для получения back/exit icon (стрелка назад)
@@ -51,7 +53,7 @@ class AppBarIcons {
         color: color,
       );
     }
-    return Icon(Icons.arrow_back, color: color, size: size);
+    return Icon(Icons.arrow_back, size: size, color: Colors.black);
   }
 
   // Простая функция для получения back/exit icon (стрелка назад)
@@ -64,6 +66,6 @@ class AppBarIcons {
         color: color,
       );
     }
-    return Icon(Icons.info_outline, color: color, size: size);
+    return Icon(Icons.info_outline, size: size, color: Colors.black);
   }
 }
