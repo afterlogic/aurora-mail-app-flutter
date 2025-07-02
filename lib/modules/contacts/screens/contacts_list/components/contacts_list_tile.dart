@@ -126,7 +126,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
             : S.of(context).label_contact_with_not_name,
         maxLines: 1,
         style: title?.isNotEmpty == true
-            ? null
+            ? TextStyle(color: AppColor.primary, fontWeight: FontWeight.w500)
             : TextStyle(color: theme.disabledColor),
       ),
       subtitle: Text(
