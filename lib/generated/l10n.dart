@@ -1090,6 +1090,16 @@ class S {
     );
   }
 
+  /// `Key`
+  String get contacts_view_section_key {
+    return Intl.message(
+      'Key',
+      name: 'contacts_view_section_key',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Display name`
   String get contacts_view_display_name {
     return Intl.message(

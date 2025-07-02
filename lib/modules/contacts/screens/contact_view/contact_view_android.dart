@@ -467,8 +467,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
 
     final keyInfo = pgpKey == null
         ? null
-        : Column(
-            children: [
+        : _buildInfos([
               InkWell(
                 onTap: pgpKey == null
                     ? null
@@ -482,6 +481,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
                       },
                 child: _buildInfoItem(
                   icon: MdiIcons.key,
+                  iconName: 'key',
                   label: S.of(context).label_pgp_public_key,
                   v: pgpKey == null
                       ? ""
@@ -512,8 +512,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
                   },
                 ),
               ]
-            ],
-          );
+            ]);
 
     List<Widget> _buildGroups(List<String> groupUUIDs) {
       final widgets = <Widget>[];
@@ -624,7 +623,16 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
                 if (otherInfo.isNotEmpty && BuildProperty.useContactsDivider)
                   Divider(),
                 ...otherInfo,
-                if (BuildProperty.cryptoEnable && keyInfo != null) keyInfo,
+                if (BuildProperty.cryptoEnable && keyInfo != null)
+                  ListTile(
+                    title: Text(
+                      S.of(context).contacts_view_section_key,
+                      style: sectionTitleTheme,
+                    ),
+                  ),
+                if (BuildProperty.cryptoEnable && keyInfo != null && BuildProperty.useContactsDivider)
+                  Divider(),
+                if (BuildProperty.cryptoEnable && keyInfo != null) ...keyInfo,
                 if (groupInfo.isNotEmpty)
                   ListTile(
                     title: Text(
