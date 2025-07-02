@@ -1,4 +1,5 @@
 //@dart=2.9
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
 import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
@@ -6,6 +7,7 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:theme/app_color.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 enum ContactViewAppBarAction {
   attach,
@@ -45,26 +47,42 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     PopupMenuEntry<ContactViewAppBarAction> _buildMenuItem({
-      @required ContactViewAppBarAction value,
-      @required String text,
-      @required IconData icon,
-    }) {
-      return PopupMenuItem(
-        child: ListTile(
-          leading: Icon(
-            icon,
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.black
-                : null,
-          ),
-          title: Text(text),
-        ),
-        value: value,
+    @required ContactViewAppBarAction value,
+    @required String text,
+    @required IconData icon,
+    String customIconPath,
+  }) {
+    Widget iconWidget;
+    if (BuildProperty.useCustomAppBarIcons && customIconPath != null) {
+      iconWidget = SvgPicture.asset(
+        '${BuildProperty.image_dir}/m-app-bar/$customIconPath',
+        width: 24.0,
+        height: 24.0,
+        color: Theme.of(context).brightness == Brightness.light
+            ? Colors.black
+            : null,
+      );
+    } else {
+      iconWidget = Icon(
+        icon,
+        color: Theme.of(context).brightness == Brightness.light
+            ? Colors.black
+            : null,
       );
     }
+    
+    return PopupMenuItem(
+      child: ListTile(
+        leading: iconWidget,
+        title: Text(text),
+      ),
+      value: value,
+    );
+  }
 
     final actions = <Widget>[
       PopupMenuButton(
+        icon: AppBarIcons.menu(),
         onSelected: onActionSelected,
         itemBuilder: (_) => [
           if (hasEmail)
@@ -72,45 +90,47 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
               value: ContactViewAppBarAction.find_in_email,
               text: S.of(context).btn_contact_find_in_email,
               icon: Icons.search,
+              customIconPath: 'menu-find-in-email.svg',
             ),
           if (allowShare)
             _buildMenuItem(
               icon: WebMailIcons.shared_with_all,
               text: S.of(context).contacts_view_app_bar_share,
               value: ContactViewAppBarAction.share,
+              customIconPath: 'menu-share.svg',
             ),
           if (allowUnshare)
             _buildMenuItem(
               icon: WebMailIcons.unshare,
               text: S.of(context).contacts_view_app_bar_unshare,
               value: ContactViewAppBarAction.unshare,
+              customIconPath: 'unshare.svg',
             ),
           _buildMenuItem(
             icon: Icons.attach_file,
             text: S.of(context).contacts_view_app_bar_attach,
             value: ContactViewAppBarAction.attach,
+            customIconPath: 'menu-attach.svg',
           ),
-//            _buildMenuItem(
-//              icon: MdiIcons.emailSearchOutline,
-//              text: i18n(context, "contacts_view_app_bar_search_messages"),
-//              value: ContactViewAppBarAction.searchMessages,
-//            ),
           if (allowEdit)
             _buildMenuItem(
               icon: Icons.edit,
               text: S.of(context).contacts_view_app_bar_edit_contact,
               value: ContactViewAppBarAction.edit,
+              customIconPath: 'menu-edit.svg',
             ),
           _buildMenuItem(
             icon: MdiIcons.fileMove,
             text: S.of(context).contacts_group_add_to_group,
             value: ContactViewAppBarAction.add_to_group,
+            customIconPath: 'menu-add-to-group.svg',
           ),
           if (allowDelete)
             _buildMenuItem(
               icon: Icons.delete_outline,
               text: S.of(context).contacts_view_app_bar_delete_contact,
               value: ContactViewAppBarAction.delete,
+              customIconPath: 'menu-delete.svg',
             ),
         ],
       ),
