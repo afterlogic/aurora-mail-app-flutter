@@ -616,7 +616,6 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       if (widget.composeAction is OpenFromNotes) {
         return MailUtils.htmlToPlain(await _bodyTextCtrl.getText()) !=
             _message.rawBody;
-        ;
       }
 
       final changedSubject = _subjectTextCtrl.text != _message.subject;

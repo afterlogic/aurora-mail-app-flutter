@@ -122,7 +122,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
         );
         break;
       case ContactViewAppBarAction.searchMessages:
-        // TODO: Handle this case.
+        // TODO: Handle this case
         break;
       case ContactViewAppBarAction.edit:
         Navigator.pushNamed(
@@ -196,8 +196,10 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
     );
   }
 
+  // ignore: deprecated_member_use
   void _callContact(String phone) => launch("tel://$phone");
 
+  // ignore: deprecated_member_use
   void _visitWebsite(String site) => launch(site);
 
   @override
@@ -212,12 +214,12 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
     );
 
     final sectionTitleTheme = BuildProperty.useCustomContactIcons
-        ? theme.textTheme.bodyText1.copyWith(
+        ? theme.textTheme.bodyLarge.copyWith(
             color: AppColor.contactsPrimary,
             fontSize: 14.0,
             fontWeight: FontWeight.w600,
           )
-        : theme.textTheme.bodyText1;
+        : theme.textTheme.bodyLarge;
 
     final _mainInfo = _buildInfos([
       _buildInfoItem(

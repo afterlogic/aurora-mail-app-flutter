@@ -1,6 +1,5 @@
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
 
 import 'contacts_table.dart';
@@ -42,7 +41,9 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<List<ContactDb>> getContacts(int userLocalId,
-      {required List<String>? storages, required String? groupUuid, required String? pattern}) {
+      {required List<String>? storages,
+      required String? groupUuid,
+      required String? pattern}) {
     return (select(contactsTable)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) {
@@ -127,7 +128,8 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
         .watch();
   }
 
-  Future<void> updateContacts(List<ContactsTableCompanion> updatedContacts) async{
+  Future<void> updateContacts(
+      List<ContactsTableCompanion> updatedContacts) async {
     try {
       return transaction(() async {
         for (final contact in updatedContacts) {
@@ -154,7 +156,9 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
 
   Future<ContactDb?> getContactWithPgpKey(String email) {
     return (select(contactsTable)
-          ..where((item) => item.pgpPublicKey.isNotNull() & item.pgpPublicKey.equals('').not())
+          ..where((item) =>
+              item.pgpPublicKey.isNotNull() &
+              item.pgpPublicKey.equals('').not())
           ..where((item) => item.viewEmail.equals(email)))
         .get()
         .then((items) {
@@ -172,7 +176,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
-  Future deleteContactKey(String mail) async{
+  Future deleteContactKey(String mail) async {
     try {
       return transaction(() async {
         await (update(contactsTable)..where((c) => c.viewEmail.equals(mail)))

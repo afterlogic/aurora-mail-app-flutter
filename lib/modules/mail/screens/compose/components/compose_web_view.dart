@@ -1,6 +1,5 @@
 //@dart=2.9
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
@@ -156,11 +155,7 @@ class _ComposeWebViewState extends State<ComposeWebView> {
 
   initHtml() {
     var htmlData = MailUtils.wrapInHtmlEditor(
-      context,
-      "",
-      true,
-      widget.removeForcedHeight
-    );
+        context, "", true, widget.removeForcedHeight);
 
     if (true) {
       htmlData = htmlData

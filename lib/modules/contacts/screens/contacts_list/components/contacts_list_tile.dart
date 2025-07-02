@@ -7,10 +7,12 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
+import 'package:aurora_mail/shared_ui/adaptive_contact_icon.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:theme/app_color.dart';
 
 class ContactsListTile extends StatefulWidget {
   final Contact contact;
@@ -48,13 +50,29 @@ class _ContactsListTileState extends State<ContactsListTile> {
   Widget _getStorageIcon(BuildContext context) {
     switch (widget.contact.storage) {
       case StorageNames.personal:
-        return Icon(WebMailIcons.personal);
+        return AdaptiveContactIcon(
+          iconName: 'personal',
+          fallbackIcon: WebMailIcons.personal,
+          size: 20.0,
+        );
       case StorageNames.shared:
-        return Icon(WebMailIcons.shared_with_all);
+        return AdaptiveContactIcon(
+          iconName: 'shared-with-all',
+          fallbackIcon: WebMailIcons.shared_with_all,
+          size: 20.0,
+        );
       case StorageNames.team:
-        return Icon(Icons.business_center);
+        return AdaptiveContactIcon(
+          iconName: 'team',
+          fallbackIcon: Icons.business_center,
+          size: 20.0,
+        );
       default:
-        return Icon(WebMailIcons.personal);
+        return AdaptiveContactIcon(
+          iconName: 'personal',
+          fallbackIcon: WebMailIcons.personal,
+          size: 20.0,
+        );
     }
   }
 
@@ -84,7 +102,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
             width: 36.0,
             height: 36.0,
             decoration: BoxDecoration(
-              color: theme.primaryColor,
+              color: AppColor.primaryVariant,
               borderRadius: BorderRadius.circular(
                 BuildProperty.useContactsRoundIcons ? 18.0 : 10.0,
               ),
@@ -129,7 +147,14 @@ class _ContactsListTileState extends State<ContactsListTile> {
         children: <Widget>[
           if (widget.contact.pgpPublicKey != null &&
               widget.contact.pgpPublicKey.isNotEmpty)
-            Icon(MdiIcons.key),
+            Padding(
+              padding: EdgeInsets.only(right: 4.0),
+              child: AdaptiveContactIcon(
+                iconName: 'key',
+                fallbackIcon: MdiIcons.key,
+                size: 20.0,
+              ),
+            ),
           if (currentStorage != null &&
               currentStorage.name == StorageNames.team &&
               widget.contact.viewEmail == authBloc.currentAccount.email)
@@ -142,10 +167,13 @@ class _ContactsListTileState extends State<ContactsListTile> {
               padding: EdgeInsets.symmetric(vertical: 3.0, horizontal: 6.0),
               child: Text(
                 S.of(context).contacts_list_its_me_flag,
-                style: theme.textTheme.caption,
+                style: theme.textTheme.bodySmall,
               ),
             ),
-          _getStorageIcon(context),
+          Padding(
+            padding: EdgeInsets.only(right: 4.0),
+            child: _getStorageIcon(context),
+          ),
           if (widget.selectionController.enable)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -203,7 +231,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
                   destructibleAction: true,
                 ),
                 background: Container(
-                  color: Theme.of(context).errorColor,
+                  color: Theme.of(context).colorScheme.error,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
