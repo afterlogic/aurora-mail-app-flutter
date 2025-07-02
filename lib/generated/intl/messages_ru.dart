@@ -165,7 +165,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "clear_cache_during_logout": MessageLookupByLibrary.simpleMessage(
             "Очистить локальный кэш и сохранённые ключи"),
         "compose_body_placeholder":
-            MessageLookupByLibrary.simpleMessage("Текст сообщения..."),
+            MessageLookupByLibrary.simpleMessage("Текст сообщения"),
         "compose_discard_save_dialog_description":
             MessageLookupByLibrary.simpleMessage(
                 "Сохранить изменения в черновиках?"),

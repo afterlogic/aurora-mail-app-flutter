@@ -166,7 +166,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "clear_cache_during_logout": MessageLookupByLibrary.simpleMessage(
             "Yerel önbelleği ve kayıtlı anahtarları Temizle"),
         "compose_body_placeholder":
-            MessageLookupByLibrary.simpleMessage("İleti metni..."),
+            MessageLookupByLibrary.simpleMessage("İleti metni"),
         "compose_discard_save_dialog_description":
             MessageLookupByLibrary.simpleMessage(
                 "Değişiklikleri taslaklara Kaydet?"),

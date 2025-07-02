@@ -55,19 +55,19 @@ class _ComposeAppBarState extends BState<ComposeAppBar> {
           )
         else
           IconButton(
-            icon: Icon(Icons.send),
+            icon: AppBarIcons.send(),
             onPressed: () =>
                 widget.onAppBarActionSelected(ComposeAppBarAction.send),
           ),
         if (widget.action is! OpenFromNotes)
           PopupMenuButton<ComposeAppBarAction>(
+            icon: AppBarIcons.menu(),
             onSelected: widget.onAppBarActionSelected,
             itemBuilder: (BuildContext context) => [
               PopupMenuItem(
                 value: ComposeAppBarAction.saveToDrafts,
                 child: ListTile(
-                  leading: Icon(
-                    Icons.drafts,
+                  leading: AppBarIcons.drafts(
                     color: Theme.of(context).brightness == Brightness.light
                         ? Colors.black
                         : null,

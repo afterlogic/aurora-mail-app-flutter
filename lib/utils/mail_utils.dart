@@ -305,10 +305,14 @@ class MailUtils {
       .input-area {
         ${BuildProperty.useCustomInputStyles ? 'background: rgba(245, 245, 245, 0.5); border: 1px solid #EBEBEB; border-radius: 8px; min-height: 200px; padding: 16px; box-sizing: border-box;' : ''}
       }
+      .input-area:focus {
+        outline: none;
+      }
       .input-area:empty:before {
         content: attr(data-placeholder);
-        color: ${BuildProperty.useCustomInputStyles ? _getWebColor(Colors.grey.shade600) : _getWebColor(Colors.grey.shade500)};
+        color: #6F788D;
         pointer-events: none;
+        font-family: inherit;
       }
       .primary-color {
         color: ${_getWebColor(theme.primaryColor)};

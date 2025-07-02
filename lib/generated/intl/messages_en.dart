@@ -161,7 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "clear_cache_during_logout":
             MessageLookupByLibrary.simpleMessage("Delete cached data and keys"),
         "compose_body_placeholder":
-            MessageLookupByLibrary.simpleMessage("Message text..."),
+            MessageLookupByLibrary.simpleMessage("Message"),
         "compose_discard_save_dialog_description":
             MessageLookupByLibrary.simpleMessage("Save changes in drafts?"),
         "compose_discard_save_dialog_title":

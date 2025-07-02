@@ -663,7 +663,7 @@ class S {
   /// `Message text...`
   String get compose_body_placeholder {
     return Intl.message(
-      'Message text...',
+      'Message',
       name: 'compose_body_placeholder',
       desc: '',
       args: [],
