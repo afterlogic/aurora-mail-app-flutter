@@ -2,8 +2,8 @@ import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/base_calendar_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/color_selection_field.dart';
-import 'package:aurora_mail/modules/calendar/ui/widgets/text_input.dart';
 import 'package:aurora_mail/modules/calendar/utils/calendar_colors.dart';
+import 'package:aurora_mail/utils/input_utils.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
@@ -90,18 +90,18 @@ class _CalendarEditDialogState extends State<CalendarEditDialog> {
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextInput(
+            InputUtils.buildUnlymeTextFormField(
               controller: _nameController,
               labelText: 'Calendar name',
               validator: _validator,
             ),
             SizedBox(height: 16),
-            TextInput(
+            InputUtils.buildUnlymeTextFormField(
               controller: _descriptionController,
               labelText: 'Description',
             ),
             SizedBox(height: 16),
-            if(widget.calendar.isSubscribed)TextInput(
+            if(widget.calendar.isSubscribed)InputUtils.buildUnlymeTextFormField(
                 controller: _iCalController,
                 labelText: 'iCal URL'),
             SizedBox(height: 16),

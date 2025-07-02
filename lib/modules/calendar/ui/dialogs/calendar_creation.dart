@@ -2,14 +2,11 @@ import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/base_calendar_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/color_selection_field.dart';
-import 'package:aurora_mail/modules/calendar/ui/widgets/text_input.dart';
 import 'package:aurora_mail/modules/calendar/utils/calendar_colors.dart';
-import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
-import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_bloc.dart';
 import 'package:aurora_mail/utils/extensions/colors_extensions.dart';
+import 'package:aurora_mail/utils/input_utils.dart';
 import 'package:aurora_mail/utils/user_app_data_singleton.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CalendarCreationDialog extends StatefulWidget {
   const CalendarCreationDialog();
@@ -46,7 +43,8 @@ class _CalendarCreationDialogState extends State<CalendarCreationDialog> {
   @override
   void initState() {
     super.initState();
-    final calendarSettings = UserAppDataSingleton().getAppData?.calendarSettings;
+    final calendarSettings =
+        UserAppDataSingleton().getAppData?.calendarSettings;
     final serverColors = calendarSettings != null
         ? (calendarSettings["CalendarColors"] as List).cast<String>()
         : null;
@@ -91,13 +89,13 @@ class _CalendarCreationDialogState extends State<CalendarCreationDialog> {
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextInput(
+            InputUtils.buildUnlymeTextFormField(
               controller: _nameController,
               labelText: 'Calendar name',
               validator: _validator,
             ),
             SizedBox(height: 16),
-            TextInput(
+            InputUtils.buildUnlymeTextFormField(
               controller: _descriptionController,
               labelText: 'Description',
             ),
@@ -131,7 +129,7 @@ class _CalendarCreationDialogState extends State<CalendarCreationDialog> {
             ),
             if (_subscribeToIcalFeed) ...[
               SizedBox(height: 16),
-              TextInput(
+              InputUtils.buildUnlymeTextFormField(
                   controller: _iCalController,
                   validator: _subscribeToIcalFeed ? _validator : null,
                   labelText: 'iCal URL'),
