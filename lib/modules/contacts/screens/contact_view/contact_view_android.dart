@@ -524,7 +524,11 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
           widgets.add(SizedBox(
             height: 43,
             child: Chip(
-              label: Text(group.name),
+              backgroundColor: AppColor.primary,
+              label: Text(
+                group.name,
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ));
         }
