@@ -70,10 +70,6 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
               ),
               title: Text(S.of(context).settings_common),
               backgroundColor: AppColor.appBarBackground,
-              textStyle: TextStyle(
-                  color: Color(0xFF2D2D2D),
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: Column(

@@ -172,10 +172,6 @@ class _TaskCreationPageState extends State<TaskCreationPage> {
       appBar: AMAppBar(
         title: Text(_selectedTask == null ? 'Create Task' : 'Edit Task'),
         backgroundColor: AppColor.appBarBackground,
-        textStyle: TextStyle(
-            color: Color(0xFF2D2D2D),
-            fontSize: 18,
-            fontWeight: FontWeight.w600),
         shadow: BoxShadow(color: Colors.transparent),
         actions: [
           TextButton(

@@ -37,10 +37,6 @@ class MailViewAppBarMock extends StatelessWidget
       preferredSize: preferredSize,
       child: AMAppBar(
         backgroundColor: AppColor.appBarBackground,
-        textStyle: TextStyle(
-            color: Color(0xFF2D2D2D),
-            fontSize: 18,
-            fontWeight: FontWeight.w600),
       ),
     );
   }
@@ -67,10 +63,6 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
             final theme = Theme.of(context);
             return AMAppBar(
               backgroundColor: AppColor.appBarBackground,
-              textStyle: TextStyle(
-                  color: Color(0xFF2D2D2D),
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
               actions: folderType == null
                   ? []

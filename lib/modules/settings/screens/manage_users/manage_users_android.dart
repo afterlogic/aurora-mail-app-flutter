@@ -37,10 +37,6 @@ class _ManageUsersAndroidState extends BState<ManageUsersAndroid> {
           : AMAppBar(
               title: Text(S.of(context).settings_accounts_manage),
               backgroundColor: AppColor.appBarBackground,
-              textStyle: TextStyle(
-                  color: Color(0xFF2D2D2D),
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
               actions: <Widget>[
                 IconButton(

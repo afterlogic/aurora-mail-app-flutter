@@ -14,6 +14,7 @@ import 'package:aurora_mail/modules/calendar/ui/dialogs/deletion_confirm_dialog.
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/utils/url_downloader.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/discard_compose_changes_dialog.dart';
+import 'package:aurora_mail/shared_ui/adaptive_drawer_icon.dart';
 import 'package:aurora_mail/shared_ui/colored_checkbox.dart';
 import 'package:aurora_mail/shared_ui/gradient_drawer.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -92,9 +93,11 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                                   }
                                 });
                               },
-                              icon: Icon(
-                                Icons.add,
+                              icon: AdaptiveDrawerIcon(
+                                defaultIcon: Icons.add,
+                                iconName: 'add',
                                 color: Theme.of(context).primaryColor,
+                                folder: 'calendar',
                               ))
                         ],
                       ),
@@ -251,7 +254,11 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
     switch (item) {
       case _CalendarDrawerMenuItems.getLink:
         return _MenuItem(
-          icon: Icon(Icons.link),
+          icon: AdaptiveDrawerIcon(
+            defaultIcon: Icons.link,
+            iconName: 'get-a-link',
+            folder: 'calendar',
+          ),
           titleBuilder: (ctx) => 'Get a link',
           onTap: (ctx, ViewCalendar calendar) {
             CalendarLinksDialog.show(ctx, calendarId: calendar.id);
@@ -259,7 +266,11 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
         );
       case _CalendarDrawerMenuItems.edit:
         return _MenuItem(
-          icon: Icon(Icons.edit_outlined),
+          icon: AdaptiveDrawerIcon(
+            defaultIcon: Icons.edit_outlined,
+            iconName: 'edit',
+            folder: 'calendar',
+          ),
           titleBuilder: (ctx) => S.of(ctx).contacts_view_app_bar_edit_contact,
           onTap: (ctx, ViewCalendar calendar) {
             CalendarEditDialog.show(ctx, calendar: calendar).then((value) {
@@ -271,7 +282,11 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
         );
       case _CalendarDrawerMenuItems.download:
         return _MenuItem(
-          icon: Icon(Icons.file_download_outlined),
+          icon: AdaptiveDrawerIcon(
+            defaultIcon: Icons.file_download_outlined,
+            iconName: 'download',
+            folder: 'calendar',
+          ),
           titleBuilder: (ctx) => 'Import ICS file',
           onTap: (ctx, ViewCalendar calendar) async {
             final user = BlocProvider.of<AuthBloc>(ctx).currentUser;
@@ -283,7 +298,11 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
         );
       case _CalendarDrawerMenuItems.unsubscribe:
         return _MenuItem(
-          icon: Icon(Icons.unsubscribe_outlined),
+          icon: AdaptiveDrawerIcon(
+            defaultIcon: Icons.unsubscribe_outlined,
+            iconName: 'unsubscribe',
+            folder: 'calendar',
+          ),
           titleBuilder: (ctx) => 'Unsubscribe from calendar',
           onTap: (ctx, ViewCalendar calendar) {
             CalendarConfirmDialog.show(ctx,
@@ -310,7 +329,11 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
         );
       case _CalendarDrawerMenuItems.share:
         return _MenuItem(
-          icon: Icon(Icons.group_add_outlined),
+          icon: AdaptiveDrawerIcon(
+            defaultIcon: Icons.group_add_outlined,
+            iconName: 'shared',
+            folder: 'calendar',
+          ),
           titleBuilder: (ctx) => S.of(ctx).btn_share,
           onTap: (ctx, ViewCalendar calendar) {
             final initialParticipants = Set.of(calendar.shares);
@@ -361,7 +384,11 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
         );
       case _CalendarDrawerMenuItems.delete:
         return _MenuItem(
-          icon: Icon(Icons.delete_outline),
+          icon: AdaptiveDrawerIcon(
+            defaultIcon: Icons.delete_outline,
+            iconName: 'delete',
+            folder: 'calendar',
+          ),
           titleBuilder: (ctx) => S.of(ctx).btn_delete,
           onTap: (ctx, ViewCalendar calendar) {
             CalendarConfirmDialog.show(ctx,
@@ -533,10 +560,12 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
                     return Transform.rotate(
                       angle: _animationController.value *
                           pi, // 180 degrees in radians
-                      child: Icon(
-                        Icons.keyboard_arrow_down,
+                      child: AdaptiveDrawerIcon(
+                        defaultIcon: Icons.keyboard_arrow_down,
+                        iconName: 'arrow-bottom',
                         size: 32,
                         color: Theme.of(context).primaryColor,
+                        folder: 'calendar',
                       ),
                     );
                   },
@@ -571,7 +600,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
 }
 
 class _MenuItem {
-  final Icon icon;
+  final Widget icon;
   final String Function(BuildContext ctx) titleBuilder;
   final void Function(BuildContext ctx, ViewCalendar calendar) onTap;
 

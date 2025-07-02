@@ -37,10 +37,6 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                 S.of(context).label_notifications_settings,
               ),
               backgroundColor: AppColor.appBarBackground,
-              textStyle: TextStyle(
-                  color: Color(0xFF2D2D2D),
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: Column(

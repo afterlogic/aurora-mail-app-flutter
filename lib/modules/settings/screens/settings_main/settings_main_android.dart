@@ -221,10 +221,6 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
         appBar: AMAppBar(
           title: Text(S.of(context).settings),
           backgroundColor: AppColor.appBarBackground,
-          textStyle: TextStyle(
-              color: Color(0xFF2D2D2D),
-              fontSize: 18,
-              fontWeight: FontWeight.w600),
         ),
         body: Row(
           children: [
@@ -272,10 +268,6 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
           : AMAppBar(
               title: Text(S.of(context).settings),
               backgroundColor: AppColor.appBarBackground,
-              textStyle: TextStyle(
-                  color: Color(0xFF2D2D2D),
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: isTablet

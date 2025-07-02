@@ -183,10 +183,6 @@ class _EventCreationPageState extends State<EventCreationPage> {
       appBar: AMAppBar(
         title: Text(_selectedEvent == null ? 'Create Event' : 'Edit Event'),
         backgroundColor: AppColor.appBarBackground,
-        textStyle: TextStyle(
-            color: Color(0xFF2D2D2D),
-            fontSize: 18,
-            fontWeight: FontWeight.w600),
         shadow: BoxShadow(color: Colors.transparent),
         actions: [
           TextButton(

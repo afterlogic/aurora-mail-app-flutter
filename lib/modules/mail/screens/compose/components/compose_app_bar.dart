@@ -33,8 +33,6 @@ class _ComposeAppBarState extends BState<ComposeAppBar> {
   Widget build(BuildContext context) {
     return AMAppBar(
       backgroundColor: AppColor.appBarBackground,
-      textStyle: TextStyle(
-          color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
       shadow: BoxShadow(color: Colors.transparent),
       centerTitle: false,
       leading: IconButton(

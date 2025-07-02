@@ -20,12 +20,6 @@ class GroupViewAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: AppColor.appBarBackground,
       shadow: BoxShadow(color: Colors.transparent),
       actions: <Widget>[
-//        IconButton(
-//          icon: Icon(Icons.mail_outline),
-//          tooltip: i18n(context, S.contacts_group_view_app_bar_send_message),
-////          onPressed: () => onActionSelected(ContactViewAppBarAction.sendMessage),
-//          onPressed: null,
-//        ),
         IconButton(
           icon: Icon(Icons.edit),
           tooltip: S.of(context).contacts_group_view_app_bar_edit,

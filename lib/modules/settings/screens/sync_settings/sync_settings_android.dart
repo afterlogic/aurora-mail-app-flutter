@@ -82,10 +82,6 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
               ),
               title: Text(S.of(context).settings_sync),
               backgroundColor: AppColor.appBarBackground,
-              textStyle: TextStyle(
-                  color: Color(0xFF2D2D2D),
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: Column(

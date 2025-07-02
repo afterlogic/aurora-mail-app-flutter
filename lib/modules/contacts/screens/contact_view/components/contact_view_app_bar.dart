@@ -104,7 +104,7 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
               icon: WebMailIcons.unshare,
               text: S.of(context).contacts_view_app_bar_unshare,
               value: ContactViewAppBarAction.unshare,
-              customIconPath: 'unshare.svg',
+              customIconPath: 'menu-unshare.svg',
             ),
           _buildMenuItem(
             icon: Icons.attach_file,
@@ -142,10 +142,6 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
         backgroundColor: AppColor.appBarBackground,
-        textStyle: TextStyle(
-            color: Color(0xFF2D2D2D),
-            fontSize: 18,
-            fontWeight: FontWeight.w600),
         shadow: BoxShadow(color: Colors.transparent),
         leading: IconButton(
           icon: AppBarIcons.back(),

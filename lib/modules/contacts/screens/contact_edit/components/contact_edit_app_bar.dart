@@ -22,8 +22,6 @@ class ContactEditAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
           isEdit ? S.of(context).contacts_edit : S.of(context).contacts_add),
       backgroundColor: AppColor.appBarBackground,
-      textStyle: TextStyle(
-          color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
       shadow: BoxShadow(color: Colors.transparent),
       leading: IconButton(
         icon: AppBarIcons.back(),

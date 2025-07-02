@@ -62,10 +62,6 @@ class _PgpSettingsState extends BState<PgpSettings> {
               ),
               title: Text(S.of(context).label_pgp_settings),
               backgroundColor: AppColor.appBarBackground,
-              textStyle: TextStyle(
-                  color: Color(0xFF2D2D2D),
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: Column(

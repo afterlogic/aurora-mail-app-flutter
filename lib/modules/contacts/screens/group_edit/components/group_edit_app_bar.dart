@@ -23,8 +23,6 @@ class GroupEditAppBar extends StatelessWidget implements PreferredSizeWidget {
           ? S.of(context).contacts_group_edit
           : S.of(context).contacts_group_add),
       backgroundColor: AppColor.appBarBackground,
-      textStyle: TextStyle(
-          color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
       shadow: BoxShadow(color: Colors.transparent),
       leading: IconButton(
         icon: AppBarIcons.back(),
