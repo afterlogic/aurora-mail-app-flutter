@@ -71,21 +71,76 @@ class _ContactBirthDatePickerState extends BState<ContactBirthDatePicker> {
     final now = DateTime.now();
 
     if (Platform.isIOS) {
-      DateTime picked;
+      DateTime picked = _selectedDate;
       await showCupertinoModalPopup(
         context: context,
-        builder: (_) => SizedBox(
-          height: 230.0,
-          child: CupertinoDatePicker(
-            mode: CupertinoDatePickerMode.date,
-            maximumDate: now,
-            minimumDate: DateTime(now.year - 100),
-            initialDateTime: _selectedDate,
-            onDateTimeChanged: (dateTime) => picked = dateTime,
+        builder: (_) => Container(
+          height: 292.0,
+          color: CupertinoColors.systemBackground.resolveFrom(context),
+          child: Column(
+            children: [
+              Container(
+                height: 56.0,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: CupertinoColors.separator.resolveFrom(context),
+                      width: 0.5,
+                    ),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CupertinoButton(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(
+                          S.of(context).btn_cancel,
+                          style: TextStyle(
+                            color:
+                                CupertinoColors.systemBlue.resolveFrom(context),
+                            fontSize: 17.0,
+                          ),
+                        ),
+                      ),
+                      CupertinoButton(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
+                        onPressed: () {
+                          selectedDate = picked;
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          S.of(context).btn_done,
+                          style: TextStyle(
+                            color:
+                                CupertinoColors.systemBlue.resolveFrom(context),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 17.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: CupertinoDatePicker(
+                  mode: CupertinoDatePickerMode.date,
+                  maximumDate: now,
+                  minimumDate: DateTime(now.year - 100),
+                  initialDateTime: _selectedDate,
+                  onDateTimeChanged: (dateTime) => picked = dateTime,
+                ),
+              ),
+            ],
           ),
         ),
       );
-      selectedDate = picked;
     } else {
       selectedDate = await showDatePicker(
         context: context,
