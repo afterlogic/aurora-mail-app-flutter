@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
@@ -384,7 +385,8 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
   List<_MenuItem> _buildSharedToAllAccessWriteMenuItems() {
     return [
       _menuItemBuilder(_CalendarDrawerMenuItems.edit),
-      _menuItemBuilder(_CalendarDrawerMenuItems.download),
+      if (!BuildProperty.hideCalendarImportICSFile)
+        _menuItemBuilder(_CalendarDrawerMenuItems.download),
       _menuItemBuilder(_CalendarDrawerMenuItems.getLink),
     ];
   }
@@ -399,7 +401,8 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
   List<_MenuItem> _buildSharedAccessWriteMenuItems() {
     return [
       _menuItemBuilder(_CalendarDrawerMenuItems.edit),
-      _menuItemBuilder(_CalendarDrawerMenuItems.download),
+      if (!BuildProperty.hideCalendarImportICSFile)
+        _menuItemBuilder(_CalendarDrawerMenuItems.download),
       _menuItemBuilder(_CalendarDrawerMenuItems.getLink),
       _menuItemBuilder(_CalendarDrawerMenuItems.share),
       _menuItemBuilder(_CalendarDrawerMenuItems.unsubscribe),
@@ -409,7 +412,8 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
   List<_MenuItem> _buildDefaultMenuItems() {
     return [
       _menuItemBuilder(_CalendarDrawerMenuItems.edit),
-      _menuItemBuilder(_CalendarDrawerMenuItems.download),
+      if (!BuildProperty.hideCalendarImportICSFile)
+        _menuItemBuilder(_CalendarDrawerMenuItems.download),
       _menuItemBuilder(_CalendarDrawerMenuItems.getLink),
       _menuItemBuilder(_CalendarDrawerMenuItems.share),
       _menuItemBuilder(_CalendarDrawerMenuItems.delete),
