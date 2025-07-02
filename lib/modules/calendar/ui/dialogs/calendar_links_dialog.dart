@@ -139,8 +139,7 @@ class _LinkSection extends StatelessWidget {
   final String? title;
   final String? url;
   final Widget? titleIcon;
-  const _LinkSection(
-      {super.key, this.title, required this.url, this.titleIcon});
+  const _LinkSection({this.title, required this.url, this.titleIcon});
 
   @override
   Widget build(BuildContext context) {
@@ -190,10 +189,6 @@ class _LinkSection extends StatelessWidget {
             ),
           ),
         ),
-        const Divider(
-          color: Color(0xFFCBCBCB),
-          thickness: 1.25,
-        )
       ],
     );
   }
