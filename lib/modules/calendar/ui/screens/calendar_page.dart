@@ -132,7 +132,7 @@ class _CalendarPageState extends State<CalendarPage>
         automaticallyImplyLeading: false,
         leading: Builder(
           builder: (context) => IconButton(
-            icon: AppBarIcons.burger(),
+            icon: AppBarIcons.burger(context: context),
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         ),

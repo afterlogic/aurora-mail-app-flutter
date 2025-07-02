@@ -147,6 +147,7 @@ class MailAppBarState extends BState<MailAppBar> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 28, top: 6),
                   child: AppBarIcons.search(
+                    context: context,
                     color: theme.disabledColor,
                   ),
                 ),
@@ -166,7 +167,7 @@ class MailAppBarState extends BState<MailAppBar> {
       backgroundColor: AppColor.appBarBackground,
       shadow: BoxShadow(color: Colors.transparent),
       leading: IconButton(
-        icon: AppBarIcons.burger(),
+        icon: AppBarIcons.burger(context: context),
         onPressed: () => Scaffold.of(context).openDrawer(),
       ),
       title: BlocBuilder<MailBloc, MailState>(
@@ -192,7 +193,7 @@ class MailAppBarState extends BState<MailAppBar> {
       actions: widget.enable
           ? <Widget>[
               IconButton(
-                icon: AppBarIcons.search(),
+                icon: AppBarIcons.search(context: context),
                 onPressed: changeMode,
               ),
               if (BuildProperty.multiUserEnable)

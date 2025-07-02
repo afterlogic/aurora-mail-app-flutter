@@ -205,9 +205,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
     Widget contactTile = DecoratedBox(
       decoration: BoxDecoration(
         color: selected
-            ? Theme.of(context).brightness == Brightness.light
-                ? const Color.fromRGBO(0, 0, 0, 0.05)
-                : const Color.fromRGBO(255, 255, 255, 0.05)
+            ? Theme.of(context).highlightColor.withOpacity(0.1)
             : null,
       ),
       child: InkWell(

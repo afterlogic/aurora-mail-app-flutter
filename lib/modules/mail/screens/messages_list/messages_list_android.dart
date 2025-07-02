@@ -615,14 +615,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                 appBarKey.currentState.search(result);
               }
             },
-            child: Text(
-              S.of(context).btn_message_advanced_search,
-              style: TextStyle(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? AppColor.primaryVariant
-                    : null,
-              ),
-            ),
+            child: Text(S.of(context).btn_message_advanced_search),
           ),
         if (filter == MessagesFilter.unread)
           Column(
@@ -630,14 +623,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
               SizedBox(height: 12.0),
               Text(S.of(context).messages_filter_unread),
               TextButton(
-                child: Text(
-                  S.of(context).btn_show_all,
-                  style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? AppColor.primaryVariant
-                        : null,
-                  ),
-                ),
+                child: Text(S.of(context).btn_show_all),
                 onPressed: () => _showAllMessages(context),
               )
             ],

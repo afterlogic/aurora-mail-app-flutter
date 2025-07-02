@@ -154,7 +154,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
           children: <Widget>[
             if (state.selectedGroup != null)
               IconButton(
-                icon: AppBarIcons.info(),
+                icon: AppBarIcons.info(context: context),
                 onPressed: () {
                   final group = state.groups
                       .firstWhere((g) => g.uuid == state.selectedGroup);
@@ -170,6 +170,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 28, top: 6),
                     child: AppBarIcons.search(
+                      context: context,
                       color: theme.disabledColor,
                     ),
                   ),
@@ -188,7 +189,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
       return AMAppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
-          icon: AppBarIcons.burger(),
+          icon: AppBarIcons.burger(context: context),
           onPressed: () => Scaffold.of(context).openDrawer(),
         ),
         title: _buildTitle(context, state),
@@ -198,7 +199,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
             ? <Widget>[
                 if (state.selectedGroup != null)
                   IconButton(
-                    icon: AppBarIcons.info(),
+                    icon: AppBarIcons.info(context: context),
                     onPressed: () {
                       final group = state.groups
                           .firstWhere((g) => g.uuid == state.selectedGroup);
@@ -207,7 +208,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
                     },
                   ),
                 IconButton(
-                  icon: AppBarIcons.search(),
+                  icon: AppBarIcons.search(context: context),
                   onPressed: changeMode,
                 ),
                 if (BuildProperty.multiUserEnable)

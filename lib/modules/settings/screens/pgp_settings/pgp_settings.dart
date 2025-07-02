@@ -57,7 +57,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
           : AMAppBar(
               automaticallyImplyLeading: false,
               leading: IconButton(
-                icon: AppBarIcons.back(),
+                icon: AppBarIcons.back(context: context),
                 onPressed: () => Navigator.of(context).pop(),
               ),
               title: Text(S.of(context).label_pgp_settings),

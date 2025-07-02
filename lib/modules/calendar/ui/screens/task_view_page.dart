@@ -10,6 +10,7 @@ import 'package:aurora_mail/modules/calendar/ui/widgets/activity/main_info.dart'
 import 'package:aurora_mail/modules/calendar/ui/widgets/activity/recurrence_section.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/activity/reminders_section.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/activity/section_divider.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,16 +43,11 @@ class TaskViewPage extends StatelessWidget {
   PopupMenuEntry<EventViewAppBarAction> _buildMenuItem(
       {required EventViewAppBarAction value,
       required String text,
-      required IconData icon,
+      required Widget icon,
       required BuildContext context}) {
     return PopupMenuItem(
       child: ListTile(
-        leading: Icon(
-          icon,
-          color: Theme.of(context).brightness == Brightness.light
-              ? Colors.black
-              : null,
-        ),
+        leading: icon,
         title: Text(text),
       ),
       value: value,
@@ -62,16 +58,17 @@ class TaskViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final actions = <Widget>[
       PopupMenuButton(
+        icon: AppBarIcons.menu(context: context),
         onSelected: (EventViewAppBarAction action) =>
             onActionSelected(action, context),
         itemBuilder: (ctx) => [
           _buildMenuItem(
-              icon: Icons.edit,
+              icon: AppBarIcons.edit(context: ctx),
               text: S.of(ctx).contacts_view_app_bar_edit_contact,
               value: EventViewAppBarAction.edit,
               context: ctx),
           _buildMenuItem(
-              icon: Icons.delete_outline,
+              icon: AppBarIcons.delete(context: ctx),
               text: S.of(ctx).contacts_view_app_bar_delete_contact,
               value: EventViewAppBarAction.delete,
               context: ctx),

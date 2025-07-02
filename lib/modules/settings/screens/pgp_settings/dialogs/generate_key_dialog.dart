@@ -76,6 +76,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
                 suffixIcon: GestureDetector(
                   child: Icon(
                     _obscure ? Icons.visibility : Icons.visibility_off,
+                    color: Theme.of(context).accentColor,
                   ),
                   onTap: () {
                     _obscure = !_obscure;

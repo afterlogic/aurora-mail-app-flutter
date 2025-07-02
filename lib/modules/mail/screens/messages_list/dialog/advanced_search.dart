@@ -186,23 +186,11 @@ class AdvancedSearchState extends State<AdvancedSearch> {
       ),
       actions: <Widget>[
         TextButton(
-          child: Text(
-            S.of(context).btn_cancel,
-            style: TextStyle(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? AppColor.primaryVariant
-                    : null),
-          ),
+          child: Text(S.of(context).btn_cancel),
           onPressed: () => Navigator.pop(context),
         ),
         TextButton(
-          child: Text(
-            S.of(context).messages_list_app_bar_search,
-            style: TextStyle(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? AppColor.primaryVariant
-                    : null),
-          ),
+          child: Text(S.of(context).messages_list_app_bar_search),
           onPressed: _search,
         ),
       ],

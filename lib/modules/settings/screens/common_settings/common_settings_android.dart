@@ -65,7 +65,7 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
           : AMAppBar(
               automaticallyImplyLeading: false,
               leading: IconButton(
-                icon: AppBarIcons.back(),
+                icon: AppBarIcons.back(context: context),
                 onPressed: () => Navigator.of(context).pop(),
               ),
               title: Text(S.of(context).settings_common),

@@ -58,17 +58,9 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
         '${BuildProperty.image_dir}/m-app-bar/$customIconPath',
         width: 24.0,
         height: 24.0,
-        color: Theme.of(context).brightness == Brightness.light
-            ? Colors.black
-            : null,
       );
     } else {
-      iconWidget = Icon(
-        icon,
-        color: Theme.of(context).brightness == Brightness.light
-            ? Colors.black
-            : null,
-      );
+      iconWidget = Icon(icon);
     }
     
     return PopupMenuItem(
@@ -82,7 +74,7 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     final actions = <Widget>[
       PopupMenuButton(
-        icon: AppBarIcons.menu(),
+        icon: AppBarIcons.menu(context: context),
         onSelected: onActionSelected,
         itemBuilder: (_) => [
           if (hasEmail)
@@ -144,7 +136,7 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
         backgroundColor: AppColor.appBarBackground,
         shadow: BoxShadow(color: Colors.transparent),
         leading: IconButton(
-          icon: AppBarIcons.back(),
+          icon: AppBarIcons.back(context: context),
           onPressed: () => Navigator.of(context).pop(),
         ),
         actions: actions,

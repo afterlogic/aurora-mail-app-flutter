@@ -54,7 +54,7 @@ class SearchBarState extends BState<SearchBar> {
         width: double.infinity,
         child: ListTile(
           key: Key("search_mail_app_bar"),
-          leading: IconButton(onPressed: null, icon: AppBarIcons.search()),
+          leading: IconButton(onPressed: null, icon: AppBarIcons.search(context: context)),
           title: TextField(
             autofocus: true,
             decoration: InputDecoration.collapsed(
@@ -65,7 +65,7 @@ class SearchBarState extends BState<SearchBar> {
             controller: widget.searchCtrl,
           ),
           trailing: IconButton(
-            icon: AppBarIcons.close(),
+            icon: AppBarIcons.close(context: context),
             onPressed: () {
               setState(() {
                 widget.searchCtrl.clear();
@@ -81,7 +81,7 @@ class SearchBarState extends BState<SearchBar> {
         key: Key("search_mail_app_bar"),
         automaticallyImplyLeading: false,
         leading: IconButton(
-          icon: AppBarIcons.search(),
+          icon: AppBarIcons.search(context: context),
           onPressed: null,
         ),
         title: TextField(
@@ -98,7 +98,7 @@ class SearchBarState extends BState<SearchBar> {
         shadow: BoxShadow(color: Colors.transparent),
         actions: <Widget>[
           IconButton(
-            icon: AppBarIcons.close(),
+            icon: AppBarIcons.close(context: context),
             onPressed: () {
               setState(() {
                 widget.searchCtrl.clear();

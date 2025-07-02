@@ -25,7 +25,7 @@ class GroupEditAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: AppColor.appBarBackground,
       shadow: BoxShadow(color: Colors.transparent),
       leading: IconButton(
-        icon: AppBarIcons.back(),
+        icon: AppBarIcons.back(context: context),
         onPressed: () => Navigator.of(context).pop(),
       ),
       actions: <Widget>[
