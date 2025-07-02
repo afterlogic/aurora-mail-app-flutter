@@ -1,8 +1,8 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/days_of_week.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/every_week_frequency.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/base_calendar_dialog.dart';
+import 'package:aurora_mail/utils/input_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -127,8 +127,9 @@ class _WeeklyRecurrenceSelectDialogState
               Expanded(
                 child: InputDecorator(
                   decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      contentPadding: EdgeInsets.zero.copyWith(left: 8)),
+                    border: const OutlineInputBorder(),
+                    contentPadding: EdgeInsets.zero.copyWith(left: 8),
+                  ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<EveryWeekFrequency>(
                       value: frequency,
@@ -192,7 +193,11 @@ class _WeeklyRecurrenceSelectDialogState
               SizedBox(width: 8),
               if (!isAlways)
                 Expanded(
-                  child: GestureDetector(
+                  child: InputUtils.buildUnlymeInputDecorator(
+                    context: context,
+                    labelText: untilDate == null
+                        ? 'Select date'
+                        : '${DateFormat('yyyy/MM/dd').format(untilDate!)}',
                     onTap: () async {
                       final DateTime? picked = await showDatePicker(
                         context: context,
@@ -206,25 +211,27 @@ class _WeeklyRecurrenceSelectDialogState
                         });
                       }
                     },
-                    child: AbsorbPointer(
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          suffixIcon: Padding(
-                            padding: const EdgeInsets.only(bottom: 4.0),
-                            child: Icon(
-                              Icons.calendar_today_outlined,
-                              size: 16,
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            untilDate == null
+                                ? 'Select date'
+                                : '${DateFormat('yyyy/MM/dd').format(untilDate!)}',
+                            style: TextStyle(
+                              color: untilDate == null && !isAlways
+                                  ? Colors.red
+                                  : null,
                             ),
                           ),
-                          border: const OutlineInputBorder(gapPadding: 0),
-                          contentPadding: EdgeInsets.zero.copyWith(left: 8),
-                          errorText: untilDate == null && !isAlways
-                              ? 'Select date'
-                              : null,
-                          hintText: untilDate == null
-                              ? null
-                              : '${DateFormat('yyyy/MM/dd').format(untilDate!)}',
-                        ),
+                          Icon(
+                            Icons.calendar_today_outlined,
+                            size: 16,
+                          ),
+                        ],
                       ),
                     ),
                   ),

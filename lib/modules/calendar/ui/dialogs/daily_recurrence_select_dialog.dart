@@ -1,5 +1,6 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/base_calendar_dialog.dart';
+import 'package:aurora_mail/utils/input_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -11,8 +12,7 @@ class DailyRecurrenceSelectDialog extends StatefulWidget {
 
   static Future<RecurrenceData?> show(BuildContext context,
       {required DateTime? untilDate,
-      required void Function(DateTime? untilDate)
-          onSaveCallback}) {
+      required void Function(DateTime? untilDate) onSaveCallback}) {
     return showDialog<RecurrenceData?>(
         context: context,
         builder: (_) => DailyRecurrenceSelectDialog(
@@ -45,7 +45,7 @@ class _DailyRecurrenceSelectDialogState
       actions: [
         TextButton(
           onPressed: () {
-            if(!isAlways && untilDate == null) return;
+            if (!isAlways && untilDate == null) return;
             widget.onSaveCallback(isAlways ? null : untilDate);
             Navigator.of(context).pop();
           },
@@ -109,24 +109,15 @@ class _DailyRecurrenceSelectDialogState
                         });
                       }
                     },
-                    child: AbsorbPointer(
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          suffixIcon: Padding(
-                            padding: const EdgeInsets.only(bottom: 4.0),
-                            child: Icon(
-                              Icons.calendar_today_outlined,
-                              size: 16,
-                            ),
-                          ),
-                          border: const OutlineInputBorder(gapPadding: 0),
-                          contentPadding: EdgeInsets.zero.copyWith(left: 8),
-                          errorText: untilDate == null && !isAlways ? 'Select date' : null,
-                          hintText: untilDate == null
-                              ? null
-                              : '${DateFormat('yyyy/MM/dd').format(untilDate!)}',
-                        ),
-                      ),
+                    child: InputUtils.buildUnlymeInputDecorator(
+                      context: context,
+                      labelText: untilDate == null
+                          ? 'Select date'
+                          : DateFormat('yyyy/MM/dd').format(untilDate!),
+                      onTap: () {},
+                      child: untilDate == null
+                          ? null
+                          : Text(DateFormat('yyyy/MM/dd').format(untilDate!)),
                     ),
                   ),
                 ),

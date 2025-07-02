@@ -1,6 +1,6 @@
-import 'package:aurora_mail/modules/calendar/ui/widgets/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:linkwell/linkwell.dart';
+import 'package:aurora_mail/utils/input_utils.dart';
 
 class MainInfo extends StatelessWidget {
   final String? title;
@@ -34,7 +34,7 @@ class MainInfo extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: isEditable
           ? [
-              TextInput(
+              InputUtils.buildUnlymeTextFormField(
                 controller: titleController!,
                 focusNode: titleFocus!,
                 labelText: 'Title',
@@ -44,24 +44,42 @@ class MainInfo extends StatelessWidget {
                   }
                   return null;
                 },
+                keyboardType: null,
+                enabled: true,
+                onChanged: null,
+                onEditingComplete: null,
+                obscureText: false,
+                maxLines: 1,
               ),
               const SizedBox(
                 height: 20,
               ),
-              TextInput(
-                multiLine: true,
+              InputUtils.buildUnlymeTextFormField(
                 controller: descriptionController!,
                 focusNode: descriptionFocus!,
                 labelText: 'Description',
+                keyboardType: TextInputType.multiline,
+                enabled: true,
+                validator: null,
+                onChanged: null,
+                onEditingComplete: null,
+                obscureText: false,
+                maxLines: 4,
               ),
               const SizedBox(
                 height: 20,
               ),
-              TextInput(
-                multiLine: true,
+              InputUtils.buildUnlymeTextFormField(
                 controller: locationController!,
                 focusNode: locationFocus!,
                 labelText: 'Location',
+                keyboardType: TextInputType.multiline,
+                enabled: true,
+                validator: null,
+                onChanged: null,
+                onEditingComplete: null,
+                obscureText: false,
+                maxLines: 4,
               ),
             ]
           : [
