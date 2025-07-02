@@ -10,7 +10,6 @@ import 'package:aurora_mail/modules/mail/screens/compose/components/fit_text_fie
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CalendarSharingDialog extends StatefulWidget {
@@ -233,11 +232,23 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
                 ),
                 SizedBox(width: 8),
                 SizedBox(
-                  height: 53,
-                  width: 53,
+                  height: 52,
+                  width: 52,
                   child: ElevatedButton(
                     onPressed: _addParticipants,
-                    child: Icon(Icons.add),
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      shadowColor: Colors.transparent,
+                      padding: EdgeInsets.zero,
+                      minimumSize: Size(53, 53),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.add,
+                      size: 24,
+                    ),
                   ),
                 ),
               ],

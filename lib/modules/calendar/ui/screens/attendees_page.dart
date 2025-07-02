@@ -282,11 +282,23 @@ class _AttendeesPageState extends State<AttendeesPage> {
                   ),
                   SizedBox(width: 8),
                   SizedBox(
-                    height: 53,
-                    width: 53,
+                    height: 52,
+                    width: 52,
                     child: ElevatedButton(
                       onPressed: _addAttendees,
-                      child: Icon(Icons.add),
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        shadowColor: Colors.transparent,
+                        padding: EdgeInsets.zero,
+                        minimumSize: Size(53, 53),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                      child: Icon(
+                        Icons.add,
+                        size: 24,
+                      ),
                     ),
                   ),
                 ],
