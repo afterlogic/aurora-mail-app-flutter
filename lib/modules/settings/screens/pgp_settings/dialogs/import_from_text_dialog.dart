@@ -3,6 +3,7 @@ import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/shared_ui/sized_dialog_content.dart';
 import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/utils/input_utils.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:flutter/material.dart';
 
@@ -21,20 +22,19 @@ class _ImportFromTextDialogState extends BState<ImportFromTextDialog>
     return AlertDialog(
       title: Text(S.of(context).label_pgp_import_key),
       content: SizedDialogContent(
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: Colors.black.withAlpha(7),
-          ),
-          child: Form(
-            key: _formKey,
-            child: TextFormField(
-              controller: _textController,
-              validator: (v) => validateInput(context, v, [
-                ValidationType.empty,
-              ]),
-              expands: true,
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
+        child: Form(
+          key: _formKey,
+          child: TextFormField(
+            controller: _textController,
+            validator: (v) => validateInput(context, v, [
+              ValidationType.empty,
+            ]),
+            expands: true,
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+            textAlignVertical: TextAlignVertical.top,
+            decoration: InputUtils.getUnlymeInputDecoration(
+              contentPadding: EdgeInsets.all(8.0),
             ),
           ),
         ),
