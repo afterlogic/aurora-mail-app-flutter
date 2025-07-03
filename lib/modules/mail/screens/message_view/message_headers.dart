@@ -19,11 +19,7 @@ class MessageHeaders extends StatelessWidget {
       ),
       body: Column(
         children: [
-          if (BuildProperty.useAppBarDivider)
-            Container(
-              height: 1,
-              color: AppColor.appBarDivider,
-            ),
+          if (BuildProperty.useAppBarDivider) Divider(height: 1),
           Expanded(
             child: Padding(
               child: SelectableText(text),

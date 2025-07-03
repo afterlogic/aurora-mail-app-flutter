@@ -117,9 +117,12 @@ class _OptionalDialogState extends State<OptionalDialog> {
     }
     return AlertDialog(
       title: title == null ? null : Text(title),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: children,
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: children,
+        ),
       ),
       actions: <Widget>[
         TextButton(

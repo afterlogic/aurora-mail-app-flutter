@@ -12,14 +12,17 @@ class SelectKeyDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(S.of(context).label_contact_select_key),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: keys.map((key) {
-          return InkWell(
-            onTap: () => Navigator.pop(context, key),
-            child: KeyItem(pgpKey: key),
-          );
-        }).toList(),
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: keys.map((key) {
+            return InkWell(
+              onTap: () => Navigator.pop(context, key),
+              child: KeyItem(pgpKey: key),
+            );
+          }).toList(),
+        ),
       ),
     );
   }

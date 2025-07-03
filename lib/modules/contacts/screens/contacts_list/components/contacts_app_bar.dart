@@ -5,6 +5,7 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/select_app_bar.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_view/group_view_route.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/search_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
@@ -108,7 +109,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
                       selectedStorage.displayName.substring(6), context)
                   : selectedStorage.displayName,
               style: TextStyle(
-                  fontSize: theme.textTheme.caption.fontSize,
+                  fontSize: theme.textTheme.bodySmall.fontSize,
                   fontWeight: FontWeight.w400),
             ),
           ],
@@ -124,7 +125,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
             Text(
               "# " + selectedGroup.name,
               style: TextStyle(
-                  fontSize: theme.textTheme.caption.fontSize,
+                  fontSize: theme.textTheme.bodySmall.fontSize,
                   fontWeight: FontWeight.w400),
             ),
           ],
@@ -138,7 +139,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
             Text(
               S.of(context).contacts_list_app_bar_all_contacts,
               style: TextStyle(
-                  fontSize: theme.textTheme.caption.fontSize,
+                  fontSize: theme.textTheme.bodySmall.fontSize,
                   fontWeight: FontWeight.w400),
             ),
           ],
@@ -168,10 +169,9 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 28, top: 6),
+                    padding: const EdgeInsets.only(left: 16),
                     child: AppBarIcons.search(
                       context: context,
-                      color: theme.disabledColor,
                     ),
                   ),
                 ),
@@ -188,10 +188,12 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
 
       return AMAppBar(
         automaticallyImplyLeading: false,
-        leading: IconButton(
-          icon: AppBarIcons.burger(context: context),
-          onPressed: () => Scaffold.of(context).openDrawer(),
-        ),
+        leading: LayoutConfig.of(context).isTablet
+            ? null
+            : IconButton(
+                icon: AppBarIcons.burger(context: context),
+                onPressed: () => Scaffold.of(context).openDrawer(),
+              ),
         title: _buildTitle(context, state),
         backgroundColor: AppColor.appBarBackground,
         shadow: BoxShadow(color: Colors.transparent),

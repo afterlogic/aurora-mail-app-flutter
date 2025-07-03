@@ -12,7 +12,10 @@ class DiscardChangesDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      content: content,
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
+        child: content,
+      ),
       actions: <Widget>[
         TextButton(
           child: Text(S.of(context).btn_discard),

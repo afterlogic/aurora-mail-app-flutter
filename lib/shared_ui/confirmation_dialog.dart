@@ -42,7 +42,10 @@ class ConfirmationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: title == null ? null : Text(title),
-      content: Text(description),
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
+        child: Text(description),
+      ),
       actions: <Widget>[
         TextButton(
           child: Text(S.of(context).btn_cancel),

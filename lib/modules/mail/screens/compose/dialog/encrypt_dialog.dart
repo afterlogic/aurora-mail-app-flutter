@@ -16,38 +16,41 @@ class _EncryptDialogState extends BState<EncryptDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(S.of(context).label_pgp_sign_or_encrypt),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(S.of(context).btn_pgp_encrypt),
-                Checkbox(
-                  value: _encrypt,
-                  onChanged: (bool value) {
-                    _encrypt = value;
-                    setState(() {});
-                  },
-                ),
-              ],
-            ),
-            Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(S.of(context).label_pgp_sign),
-                Checkbox(
-                  value: _sign,
-                  onChanged: (bool value) {
-                    _sign = value;
-                    setState(() {});
-                  },
-                ),
-              ],
-            ),
-          ],
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(S.of(context).btn_pgp_encrypt),
+                  Checkbox(
+                    value: _encrypt,
+                    onChanged: (bool value) {
+                      _encrypt = value;
+                      setState(() {});
+                    },
+                  ),
+                ],
+              ),
+              Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(S.of(context).label_pgp_sign),
+                  Checkbox(
+                    value: _sign,
+                    onChanged: (bool value) {
+                      _sign = value;
+                      setState(() {});
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       actions: <Widget>[

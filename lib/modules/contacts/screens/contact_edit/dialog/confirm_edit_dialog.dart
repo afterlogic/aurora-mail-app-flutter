@@ -7,7 +7,10 @@ class ConfirmationEditDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      content: Text(S.of(context).error_contact_pgp_key_will_not_be_valid),
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
+        child: Text(S.of(context).error_contact_pgp_key_will_not_be_valid),
+      ),
       actions: <Widget>[
         TextButton(
           child: Text(S.of(context).btn_cancel),

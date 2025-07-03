@@ -79,65 +79,67 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog>
             null;
     return AlertDialog(
       title: Text(S.of(context).label_pgp_import_key),
-      content: BlocListener(
-        bloc: widget.bloc,
-        listener: (BuildContext context, state) {
-          if (state is ImportComplete) {
-            Navigator.pop(context);
-          }
-        },
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              if (newKeys.isNotEmpty && !BuildProperty.legacyPgpKey)
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Text(S.of(context).hint_pgp_keys_for_import),
-                ),
-              Column(
-                children: newKeys.map((displayKey) {
-                  return KeyItem(
-                      pgpKey: displayKey.key,
-                      external: displayKey.external,
-                      selected: displayKey.selected,
-                      onSelect: (select) {
-                        setState(() {
-                          displayKey.toggle();
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
+        child: BlocListener(
+          bloc: widget.bloc,
+          listener: (BuildContext context, state) {
+            if (state is ImportComplete) {
+              Navigator.pop(context);
+            }
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                if (newKeys.isNotEmpty && !BuildProperty.legacyPgpKey)
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    child: Text(S.of(context).hint_pgp_keys_for_import),
+                  ),
+                Column(
+                  children: newKeys.map((displayKey) {
+                    return KeyItem(
+                        pgpKey: displayKey.key,
+                        external: displayKey.external,
+                        selected: displayKey.selected,
+                        onSelect: (select) {
+                          setState(() {
+                            displayKey.toggle();
+                          });
                         });
-                      });
-                }).toList(),
-              ),
-              if (!BuildProperty.legacyPgpKey) ...[
-                if (existedKeys.isNotEmpty)
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    child: Text(S.of(context).hint_pgp_existed_keys),
-                  ),
-                Column(
-                  children: existedKeys.map((displayKey) {
-                    return KeyItem(
-                      pgpKey: displayKey.key,
-                      external: displayKey.external,
-                    );
                   }).toList(),
                 ),
-                if (externalPrivateKeys.isNotEmpty)
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    child:
-                        Text(S.of(context).hint_pgp_external_private_keys),
+                if (!BuildProperty.legacyPgpKey) ...[
+                  if (existedKeys.isNotEmpty)
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: Text(S.of(context).hint_pgp_existed_keys),
+                    ),
+                  Column(
+                    children: existedKeys.map((displayKey) {
+                      return KeyItem(
+                        pgpKey: displayKey.key,
+                        external: displayKey.external,
+                      );
+                    }).toList(),
                   ),
-                Column(
-                  children: externalPrivateKeys.map((displayKey) {
-                    return KeyItem(
-                      pgpKey: displayKey.key,
-                      external: displayKey.external,
-                    );
-                  }).toList(),
-                ),
+                  if (externalPrivateKeys.isNotEmpty)
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: Text(S.of(context).hint_pgp_external_private_keys),
+                    ),
+                  Column(
+                    children: externalPrivateKeys.map((displayKey) {
+                      return KeyItem(
+                        pgpKey: displayKey.key,
+                        external: displayKey.external,
+                      );
+                    }).toList(),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),

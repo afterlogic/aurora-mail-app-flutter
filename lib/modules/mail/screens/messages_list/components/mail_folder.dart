@@ -109,7 +109,10 @@ class FolderHelper {
   static Widget getIcon(Folder folder) {
     switch (folder.folderType) {
       case FolderType.notes:
-        return Icon(Icons.push_pin_outlined);
+        return AdaptiveDrawerIcon(
+          defaultIcon: Icons.push_pin_outlined,
+          iconName: 'notes',
+        );
       case FolderType.inbox:
         return AdaptiveDrawerIcon(
           defaultIcon: Icons.inbox,

@@ -25,19 +25,22 @@ class PeriodSelectionDialog extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       titlePadding: EdgeInsets.all(24.0),
       title: Text(S.of(context).settings_sync_period),
-      content: AMDialogList(
-        children: Period.values.map((period) {
-          return RadioListTile(
-            activeColor: theme.primaryColor,
-            title: Text(SyncPeriod.periodToTitle(context, period)),
-            value: period,
-            groupValue: selectedItem,
-            onChanged: (val) {
-              onItemSelected(period);
-              Navigator.pop(context);
-            },
-          );
-        }).toList(),
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
+        child: AMDialogList(
+          children: Period.values.map((period) {
+            return RadioListTile(
+              activeColor: theme.primaryColor,
+              title: Text(SyncPeriod.periodToTitle(context, period)),
+              value: period,
+              groupValue: selectedItem,
+              onChanged: (val) {
+                onItemSelected(period);
+                Navigator.pop(context);
+              },
+            );
+          }).toList(),
+        ),
       ),
       actions: <Widget>[
         TextButton(

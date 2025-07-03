@@ -25,39 +25,42 @@ class ThemeSelectionDialog extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       titlePadding: EdgeInsets.all(24.0),
       title: Text(S.of(context).settings_dark_theme),
-      content: AMDialogList(
-        children: [
-          RadioListTile<bool>(
-            activeColor: theme.primaryColor,
-            title: Text(S.of(context).settings_dark_theme_system),
-            value: null,
-            groupValue: isTheme,
-            onChanged: (val) {
-              onItemSelected(null);
-              Navigator.pop(context);
-            },
-          ),
-          RadioListTile<bool>(
-            activeColor: theme.primaryColor,
-            title: Text(S.of(context).settings_dark_theme_dark),
-            value: true,
-            groupValue: isTheme,
-            onChanged: (val) {
-              onItemSelected(true);
-              Navigator.pop(context);
-            },
-          ),
-          RadioListTile<bool>(
-            activeColor: theme.primaryColor,
-            title: Text(S.of(context).settings_dark_theme_light),
-            value: false,
-            groupValue: isTheme,
-            onChanged: (val) {
-              onItemSelected(false);
-              Navigator.pop(context);
-            },
-          ),
-        ],
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
+        child: AMDialogList(
+          children: [
+            RadioListTile<bool>(
+              activeColor: theme.primaryColor,
+              title: Text(S.of(context).settings_dark_theme_system),
+              value: null,
+              groupValue: isTheme,
+              onChanged: (val) {
+                onItemSelected(null);
+                Navigator.pop(context);
+              },
+            ),
+            RadioListTile<bool>(
+              activeColor: theme.primaryColor,
+              title: Text(S.of(context).settings_dark_theme_dark),
+              value: true,
+              groupValue: isTheme,
+              onChanged: (val) {
+                onItemSelected(true);
+                Navigator.pop(context);
+              },
+            ),
+            RadioListTile<bool>(
+              activeColor: theme.primaryColor,
+              title: Text(S.of(context).settings_dark_theme_light),
+              value: false,
+              groupValue: isTheme,
+              onChanged: (val) {
+                onItemSelected(false);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
       ),
       actions: <Widget>[
         TextButton(

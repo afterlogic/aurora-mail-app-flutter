@@ -269,73 +269,82 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
         ),
         body: !animationFinished
             ? SizedBox.shrink()
-            : BlocListener(
-                bloc: _messageViewBloc,
-                listener: (context, state) {
-                  if (state is DecryptComplete) {
-                    decryptedText = MailUtils.plainToHtml(state.text);
-                    setState(() {});
+            : Column(
+                children: [
+                  if (BuildProperty.useAppBarDivider) Divider(height: 1),
+                  Expanded(
+                    child: BlocListener(
+                      bloc: _messageViewBloc,
+                      listener: (context, state) {
+                        if (state is DecryptComplete) {
+                          decryptedText = MailUtils.plainToHtml(state.text);
+                          setState(() {});
 
-                    _showSnack(
-                        state.type == EncryptType.Sign
-                            ? (state.verified
-                                ? S.of(context).label_pgp_verified
-                                : S.of(context).label_pgp_not_verified)
-                            : (state.verified
-                                ? S.of(context).label_pgp_decrypted_and_verified
-                                : S
-                                    .of(context)
-                                    .label_pgp_decrypted_but_not_verified),
-                        context);
-                  }
-                  if (state is DownloadStarted) {
-                    _showSnack(
-                      S
-                          .of(context)
-                          .messages_attachment_downloading(state.fileName),
-                      context,
-                    );
-                  }
-                  if (state is SuccessChangedInviteStatus) {
-                    _showSnack(
-                      'Invitation status was updated successfully',
-                      context,
-                    );
-                  }
-                  if (state is MessagesViewError) {
-                    _showError(
-                      state.errorMsg,
-                      context,
-                      isError: true,
-                      arg: state.arg,
-                    );
-                  }
-                  if (state is DownloadFinished) {
-                    if (state.path == null) {
-                      _showSnack(
-                        S.of(context).messages_attachment_download_failed,
-                        context,
-                        isError: true,
-                      );
-                    } else {
-                      _showSnack(
-                        S
-                            .of(context)
-                            .messages_attachment_download_success(state.path),
-                        context,
-                      );
-                    }
-                  }
-                },
-                child: MessageWebView(
-                  message,
-                  attachments,
-                  decryptedText,
-                  pgpBloc,
-                  contactsBloc,
-                  _messageViewBloc,
-                  key: webViewKey,
-                ),
+                          _showSnack(
+                              state.type == EncryptType.Sign
+                                  ? (state.verified
+                                      ? S.of(context).label_pgp_verified
+                                      : S.of(context).label_pgp_not_verified)
+                                  : (state.verified
+                                      ? S
+                                          .of(context)
+                                          .label_pgp_decrypted_and_verified
+                                      : S
+                                          .of(context)
+                                          .label_pgp_decrypted_but_not_verified),
+                              context);
+                        }
+                        if (state is DownloadStarted) {
+                          _showSnack(
+                            S.of(context).messages_attachment_downloading(
+                                state.fileName),
+                            context,
+                          );
+                        }
+                        if (state is SuccessChangedInviteStatus) {
+                          _showSnack(
+                            'Invitation status was updated successfully',
+                            context,
+                          );
+                        }
+                        if (state is MessagesViewError) {
+                          _showError(
+                            state.errorMsg,
+                            context,
+                            isError: true,
+                            arg: state.arg,
+                          );
+                        }
+                        if (state is DownloadFinished) {
+                          if (state.path == null) {
+                            _showSnack(
+                              S.of(context).messages_attachment_download_failed,
+                              context,
+                              isError: true,
+                            );
+                          } else {
+                            _showSnack(
+                              S
+                                  .of(context)
+                                  .messages_attachment_download_success(
+                                      state.path),
+                              context,
+                            );
+                          }
+                        }
+                      },
+                      child: MessageWebView(
+                        message,
+                        attachments,
+                        decryptedText,
+                        pgpBloc,
+                        contactsBloc,
+                        _messageViewBloc,
+                        key: webViewKey,
+                      ),
+                    ),
+                  ),
+                ],
               ),
         bottomNavigationBar: BuildProperty.cryptoEnable
             ? MailBottomBar(

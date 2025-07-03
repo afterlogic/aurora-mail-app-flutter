@@ -1,7 +1,6 @@
 //@dart=2.9
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
-import 'package:aurora_mail/shared_ui/sized_dialog_content.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/input_utils.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
@@ -21,7 +20,9 @@ class _ImportFromTextDialogState extends BState<ImportFromTextDialog>
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(S.of(context).label_pgp_import_key),
-      content: SizedDialogContent(
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
+        height: MediaQuery.of(context).size.height / 2,
         child: Form(
           key: _formKey,
           child: TextFormField(

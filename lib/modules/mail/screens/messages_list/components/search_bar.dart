@@ -52,28 +52,37 @@ class SearchBarState extends BState<SearchBar> {
       return SizedBox(
         height: 50,
         width: double.infinity,
-        child: ListTile(
-          key: Key("search_mail_app_bar"),
-          leading: IconButton(onPressed: null, icon: AppBarIcons.search(context: context)),
-          title: TextField(
-            autofocus: true,
-            decoration: InputDecoration.collapsed(
-              hintText: S.of(context).messages_list_app_bar_search,
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: AppBarIcons.search(context: context),
             ),
-            textInputAction: TextInputAction.search,
-            onChanged: _getMessages,
-            controller: widget.searchCtrl,
-          ),
-          trailing: IconButton(
-            icon: AppBarIcons.close(context: context),
-            onPressed: () {
-              setState(() {
-                widget.searchCtrl.clear();
-                widget.onCancel();
-              });
-              widget.onSearch(null);
-            },
-          ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: TextField(
+                  autofocus: true,
+                  decoration: InputDecoration.collapsed(
+                    hintText: S.of(context).messages_list_app_bar_search,
+                  ),
+                  textInputAction: TextInputAction.search,
+                  onChanged: _getMessages,
+                  controller: widget.searchCtrl,
+                ),
+              ),
+            ),
+            IconButton(
+              icon: AppBarIcons.close(context: context),
+              onPressed: () {
+                setState(() {
+                  widget.searchCtrl.clear();
+                  widget.onCancel();
+                });
+                widget.onSearch(null);
+              },
+            ),
+          ],
         ),
       );
     } else {

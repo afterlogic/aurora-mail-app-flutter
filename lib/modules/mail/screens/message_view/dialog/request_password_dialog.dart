@@ -18,31 +18,36 @@ class _RequestPasswordDialogState extends BState<RequestPasswordDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(S.of(context).label_pgp_decrypt),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Form(
-              key: _formKey,
-              child: TextFormField(
-                controller: _passCtrl,
-                validator: (v) =>
-                    validateInput(context, v, [ValidationType.empty]),
-                decoration: InputDecoration(
-                    labelText: S.of(context).login_input_password,
-                    suffix: IconButton(
-                      icon: Icon(
-                        _obscurePass ? Icons.visibility : Icons.visibility_off,
-                      ),
-                      onPressed: () {
-                        _obscurePass = !_obscurePass;
-                        setState(() {});
-                      },
-                    )),
-                obscureText: _obscurePass,
-              ),
-            )
-          ],
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Form(
+                key: _formKey,
+                child: TextFormField(
+                  controller: _passCtrl,
+                  validator: (v) =>
+                      validateInput(context, v, [ValidationType.empty]),
+                  decoration: InputDecoration(
+                      labelText: S.of(context).login_input_password,
+                      suffix: IconButton(
+                        icon: Icon(
+                          _obscurePass
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          _obscurePass = !_obscurePass;
+                          setState(() {});
+                        },
+                      )),
+                  obscureText: _obscurePass,
+                ),
+              )
+            ],
+          ),
         ),
       ),
       actions: <Widget>[

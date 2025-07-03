@@ -2,6 +2,7 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/utils/input_utils.dart';
 import 'package:flutter/material.dart';
 
 class KeyRequestDialog extends StatefulWidget {
@@ -41,31 +42,37 @@ class _KeyRequestDialogState extends BState<KeyRequestDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final maxDialogWidth = screenWidth > 600 ? 400.0 : screenWidth * 0.9;
+
     return AlertDialog(
       title: Text(S.of(context).label_encryption_password_for_pgp_key),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Form(
-            key: formKey,
-            child: TextFormField(
-              validator: (v) {
-                if (v.isEmpty) {
-                  return S.of(context).error_password_is_empty;
-                }
-                if (error != null) {
-                  final _error = error;
-                  error = null;
-                  return _error;
-                }
-                return null;
-              },
-              decoration: InputDecoration(
+      content: SizedBox(
+        width: maxDialogWidth,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Form(
+              key: formKey,
+              child: InputUtils.buildUnlymeTextFormField(
+                controller: passCtrl,
                 labelText: S.of(context).login_input_password,
-                helperText: '',
-                suffix: GestureDetector(
+                obscureText: _obscure,
+                validator: (v) {
+                  if (v.isEmpty) {
+                    return S.of(context).error_password_is_empty;
+                  }
+                  if (error != null) {
+                    final _error = error;
+                    error = null;
+                    return _error;
+                  }
+                  return null;
+                },
+                suffixIcon: GestureDetector(
                   child: Icon(
                     _obscure ? Icons.visibility : Icons.visibility_off,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                   onTap: () {
                     _obscure = !_obscure;
@@ -73,11 +80,9 @@ class _KeyRequestDialogState extends BState<KeyRequestDialog> {
                   },
                 ),
               ),
-              controller: passCtrl,
-              obscureText: _obscure,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       actions: <Widget>[
         progress

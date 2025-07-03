@@ -5,6 +5,7 @@ import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_state.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
@@ -97,6 +98,38 @@ class MailAppBarState extends BState<MailAppBar> {
     return folder.displayName(context);
   }
 
+  Widget _buildTitle(BuildContext context, MailState state) {
+    final theme = Theme.of(context);
+
+    if (state is FoldersLoaded) {
+      final isStarred = state.filter == MessagesFilter.starred;
+      final mainTitle = S.of(context).messages_list_app_bar_mail;
+      final subTitle = isStarred
+          ? S.of(context).folders_starred
+          : _getTitle(context, state.selectedFolder);
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(mainTitle),
+          SizedBox(height: 3.0),
+          Text(
+            subTitle,
+            style: TextStyle(
+                fontSize: theme.textTheme.bodySmall.fontSize,
+                fontWeight: FontWeight.w400),
+          ),
+        ],
+      );
+    } else if (state is FoldersLoading) {
+      return Text(S.of(context).messages_list_app_bar_loading_folders);
+    } else if (state is FoldersEmpty) {
+      return Text(S.of(context).folders_empty);
+    } else {
+      return Text(S.of(context).messages_list_app_bar_mail);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!widget.enable) {
@@ -135,7 +168,6 @@ class MailAppBarState extends BState<MailAppBar> {
   }
 
   Widget _buildDefaultAppBar() {
-    final theme = Theme.of(context);
     if (!widget.isAppBar) {
       return Row(
         children: <Widget>[
@@ -145,10 +177,9 @@ class MailAppBarState extends BState<MailAppBar> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 28, top: 6),
+                  padding: const EdgeInsets.only(left: 16),
                   child: AppBarIcons.search(
                     context: context,
-                    color: theme.disabledColor,
                   ),
                 ),
               ),
@@ -162,14 +193,17 @@ class MailAppBarState extends BState<MailAppBar> {
         ],
       );
     }
+    final isTablet = LayoutConfig.of(context).isTablet;
     return AMAppBar(
       key: Key("default_mail_app_bar"),
       backgroundColor: AppColor.appBarBackground,
       shadow: BoxShadow(color: Colors.transparent),
-      leading: IconButton(
-        icon: AppBarIcons.burger(context: context),
-        onPressed: () => Scaffold.of(context).openDrawer(),
-      ),
+      leading: isTablet
+          ? null
+          : IconButton(
+              icon: AppBarIcons.burger(context: context),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            ),
       title: BlocBuilder<MailBloc, MailState>(
         bloc: _mailBloc,
         buildWhen: (_, state) =>
@@ -177,17 +211,7 @@ class MailAppBarState extends BState<MailAppBar> {
             state is FoldersLoading ||
             state is FoldersEmpty,
         builder: (_, state) {
-          if (state is FoldersLoaded) {
-            return Text(state.filter == MessagesFilter.starred
-                ? S.of(context).folders_starred
-                : _getTitle(context, state.selectedFolder));
-          } else if (state is FoldersLoading) {
-            return Text(S.of(context).messages_list_app_bar_loading_folders);
-          } else if (state is FoldersEmpty) {
-            return Text(S.of(context).folders_empty);
-          } else {
-            return SizedBox();
-          }
+          return _buildTitle(context, state);
         },
       ),
       actions: widget.enable

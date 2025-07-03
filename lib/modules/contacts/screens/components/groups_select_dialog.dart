@@ -43,39 +43,45 @@ class _GroupsSelectDialogState extends State<GroupsSelectDialog> {
 
     return AlertDialog(
       title: Text(S.of(context).contacts_group_add_to_group),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: List.generate(
-          widget.options.length,
-          (i) => InkWell(
-            onTap: () => onTap(widget.options[i]),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        right: 16, bottom: 6, left: 8, top: 6),
-                    child: Row(
-                      children: [
-                        Icon(MdiIcons.pound, color: widget.options[i] == selectedGroup
-                        ? selectedColor
-                          : null,),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        Text(
-                          widget.options[i].name,
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: widget.options[i] == selectedGroup
-                                  ? selectedColor
-                                  : null),
-                        ),
-                      ],
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(
+            widget.options.length,
+            (i) => InkWell(
+              onTap: () => onTap(widget.options[i]),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          right: 16, bottom: 6, left: 8, top: 6),
+                      child: Row(
+                        children: [
+                          Icon(
+                            MdiIcons.pound,
+                            color: widget.options[i] == selectedGroup
+                                ? selectedColor
+                                : null,
+                          ),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          Text(
+                            widget.options[i].name,
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: widget.options[i] == selectedGroup
+                                    ? selectedColor
+                                    : null),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -89,8 +95,12 @@ class _GroupsSelectDialogState extends State<GroupsSelectDialog> {
           ),
         ),
         TextButton(
-          child: Text(S.of(context).add, style: selectedGroup == null
-              ? TextStyle(color: Theme.of(context).disabledColor): null,),
+          child: Text(
+            S.of(context).add,
+            style: selectedGroup == null
+                ? TextStyle(color: Theme.of(context).disabledColor)
+                : null,
+          ),
           onPressed: selectedGroup == null
               ? null
               : () => Navigator.pop(

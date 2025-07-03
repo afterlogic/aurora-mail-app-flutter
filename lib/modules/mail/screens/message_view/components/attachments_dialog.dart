@@ -32,14 +32,17 @@ class _AttachmentsDialogState extends BState<AttachmentsDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(S.of(context).messages_view_tab_attachments),
-      content: AMDialogList(
-        children: widget.attachments.map((attachment) {
-          if (attachment.isInline) {
-            return SizedBox();
-          } else {
-            return Attachment(attachment);
-          }
-        }).toList(),
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
+        child: AMDialogList(
+          children: widget.attachments.map((attachment) {
+            if (attachment.isInline) {
+              return SizedBox();
+            } else {
+              return Attachment(attachment);
+            }
+          }).toList(),
+        ),
       ),
       actions: <Widget>[
         TextButton(

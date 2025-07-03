@@ -117,9 +117,166 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutConfig.of(context).isTablet
+        ? buildTablet(context)
+        : buildPhone(context);
+  }
+
+  Widget buildTablet(BuildContext context) {
     final config = LayoutConfig.of(context);
-    final isTablet = config.isTablet;
-    Widget body = BlocListener(
+    Widget body = _buildContactsBody();
+
+    return Scaffold(
+      appBar: ContactsAppBar(
+        controller: selectionController,
+        enable: false,
+      ),
+      bottomNavigationBar:
+          MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.contacts),
+      body: Column(
+        children: [
+          if (BuildProperty.useAppBarDivider)
+            Container(
+              height: 1,
+              color: AppColor.appBarDivider,
+            ),
+          Expanded(
+            child: Row(
+              children: [
+                ClipRRect(
+                  child: SizedBox(
+                    width: 304,
+                    child: Scaffold(
+                      body: DecoratedBox(
+                          position: DecorationPosition.foreground,
+                          decoration: BoxDecoration(
+                              border: Border(right: BorderSide(width: 0.2))),
+                          child: ContactsDrawer()),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  child: ClipRRect(
+                    child: Scaffold(
+                      body: DecoratedBox(
+                        position: DecorationPosition.foreground,
+                        decoration: BoxDecoration(
+                            border: selectedWidget == null &&
+                                    config.columnCount >= 3
+                                ? null
+                                : Border(right: BorderSide(width: 0.2))),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 50,
+                              child: ContactsAppBar(
+                                isAppBar: false,
+                              ),
+                            ),
+                            Divider(height: 1),
+                            Expanded(child: body),
+                          ],
+                        ),
+                      ),
+                      floatingActionButtonLocation:
+                          FloatingActionButtonLocation.endFloat,
+                      floatingActionButton:
+                          BlocBuilder<ContactsBloc, ContactsState>(
+                        buildWhen: (prev, current) =>
+                            (prev.selectedStorage != current.selectedStorage) ||
+                            (prev.selectedGroup != current.selectedGroup),
+                        builder: (context, state) {
+                          return _checkIfContactCanBeAdded(state)
+                              ? AMFloatingActionButton(
+                                  child: IconTheme(
+                                    data: AppTheme.floatIconTheme,
+                                    child: Icon(BuildProperty
+                                            .usePlusIconForActionButtons
+                                        ? Icons.add
+                                        : MdiIcons.accountPlusOutline),
+                                  ),
+                                  shadow: BuildProperty
+                                          .disableShadowFloatingActionButton
+                                      ? null
+                                      : BoxShadow(),
+                                  onPressed: () => Navigator.pushNamed(
+                                    context,
+                                    ContactEditRoute.name,
+                                    arguments: ContactEditScreenArgs(
+                                        pgpSettingsBloc,
+                                        bloc: contactsBloc),
+                                  ),
+                                )
+                              : SizedBox.shrink();
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                if (selectedWidget != null && config.columnCount >= 3)
+                  Flexible(
+                    child: ClipRRect(child: selectedWidget),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildPhone(BuildContext context) {
+    Widget body = _buildContactsBody();
+
+    return Scaffold(
+      appBar: ContactsAppBar(
+        controller: selectionController,
+      ),
+      drawer: ContactsDrawer(),
+      body: Column(
+        children: [
+          if (BuildProperty.useAppBarDivider)
+            Container(
+              height: 1,
+              color: AppColor.appBarDivider,
+            ),
+          Expanded(child: body),
+        ],
+      ),
+      bottomNavigationBar:
+          MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.contacts),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: BlocBuilder<ContactsBloc, ContactsState>(
+        buildWhen: (prev, current) =>
+            (prev.selectedStorage != current.selectedStorage) ||
+            (prev.selectedGroup != current.selectedGroup),
+        builder: (context, state) {
+          return _checkIfContactCanBeAdded(state) && !selectionController.enable
+              ? AMFloatingActionButton(
+                  child: IconTheme(
+                    data: AppTheme.floatIconTheme,
+                    child: Icon(BuildProperty.usePlusIconForActionButtons
+                        ? Icons.add
+                        : MdiIcons.accountPlusOutline),
+                  ),
+                  shadow: BuildProperty.disableShadowFloatingActionButton
+                      ? null
+                      : BoxShadow(),
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    ContactEditRoute.name,
+                    arguments: ContactEditScreenArgs(pgpSettingsBloc,
+                        bloc: contactsBloc),
+                  ),
+                )
+              : SizedBox.shrink();
+        },
+      ),
+    );
+  }
+
+  Widget _buildContactsBody() {
+    return BlocListener(
       bloc: pgpSettingsBloc,
       listener: (BuildContext context, state) {
         if (state is SelectKeyForImport) {
@@ -164,142 +321,6 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
             );
           }),
         ),
-      ),
-    );
-    if (isTablet) {
-      body = Scaffold(
-        appBar: ContactsAppBar(
-          controller: selectionController,
-          enable: false,
-        ),
-        body: Row(
-          children: [
-            ClipRRect(
-              child: SizedBox(
-                width: 304,
-                child: Scaffold(
-                  body: DecoratedBox(
-                      position: DecorationPosition.foreground,
-                      decoration: BoxDecoration(
-                          border: Border(right: BorderSide(width: 0.2))),
-                      child: ContactsDrawer()),
-                ),
-              ),
-            ),
-            Flexible(
-              child: ClipRRect(
-                child: Scaffold(
-                  body: DecoratedBox(
-                    position: DecorationPosition.foreground,
-                    decoration: BoxDecoration(
-                        border:
-                            selectedWidget == null && config.columnCount >= 3
-                                ? null
-                                : Border(right: BorderSide(width: 0.2))),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 50,
-                          child: ContactsAppBar(
-                            isAppBar: false,
-                          ),
-                        ),
-                        Divider(height: 1),
-                        Expanded(child: body),
-                      ],
-                    ),
-                  ),
-                  floatingActionButtonLocation:
-                      FloatingActionButtonLocation.endFloat,
-                  floatingActionButton:
-                      BlocBuilder<ContactsBloc, ContactsState>(
-                    buildWhen: (prev, current) =>
-                        (prev.selectedStorage != current.selectedStorage) ||
-                        (prev.selectedGroup != current.selectedGroup),
-                    builder: (context, state) {
-                      return _checkIfContactCanBeAdded(state)
-                          ? AMFloatingActionButton(
-                              child: IconTheme(
-                                data: AppTheme.floatIconTheme,
-                                child: Icon(
-                                    BuildProperty.usePlusIconForActionButtons
-                                        ? Icons.add
-                                        : MdiIcons.accountPlusOutline),
-                              ),
-                              shadow: BuildProperty
-                                      .disableShadowFloatingActionButton
-                                  ? null
-                                  : BoxShadow(),
-                              onPressed: () => Navigator.pushNamed(
-                                context,
-                                ContactEditRoute.name,
-                                arguments: ContactEditScreenArgs(
-                                    pgpSettingsBloc,
-                                    bloc: contactsBloc),
-                              ),
-                            )
-                          : SizedBox.shrink();
-                    },
-                  ),
-                ),
-              ),
-            ),
-            if (selectedWidget != null && config.columnCount >= 3)
-              Flexible(
-                child: ClipRRect(child: selectedWidget),
-              ),
-          ],
-        ),
-      );
-    }
-    return Scaffold(
-      appBar: isTablet
-          ? null
-          : ContactsAppBar(
-              controller: selectionController,
-            ),
-      drawer: isTablet ? null : ContactsDrawer(),
-      body: isTablet
-          ? body
-          : Column(
-              children: [
-                if (BuildProperty.useAppBarDivider)
-                  Container(
-                    height: 1,
-                    color: AppColor.appBarDivider,
-                  ),
-                Expanded(child: body),
-              ],
-            ),
-      bottomNavigationBar:
-          MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.contacts),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: BlocBuilder<ContactsBloc, ContactsState>(
-        buildWhen: (prev, current) =>
-            (prev.selectedStorage != current.selectedStorage) ||
-            (prev.selectedGroup != current.selectedGroup),
-        builder: (context, state) {
-          return _checkIfContactCanBeAdded(state) &&
-                  !(isTablet || selectionController.enable)
-              ? AMFloatingActionButton(
-                  child: IconTheme(
-                    data: AppTheme.floatIconTheme,
-                    child: Icon(BuildProperty.usePlusIconForActionButtons
-                        ? Icons.add
-                        : MdiIcons.accountPlusOutline),
-                  ),
-                  shadow: BuildProperty.disableShadowFloatingActionButton
-                      ? null
-                      : BoxShadow(),
-                  onPressed: () => Navigator.pushNamed(
-                    context,
-                    ContactEditRoute.name,
-                    arguments: ContactEditScreenArgs(pgpSettingsBloc,
-                        bloc: contactsBloc),
-                  ),
-                )
-              : SizedBox.shrink();
-        },
       ),
     );
   }
