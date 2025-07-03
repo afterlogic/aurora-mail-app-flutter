@@ -233,16 +233,6 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     }
   }
 
-//  String _formatTo(Message message) {
-//    final items = Mail.getToForDisplay(
-//        context, message.toInJson, BlocProvider.of<AuthBloc>(context).currentAccount.email);
-//
-//    if (items.isEmpty) {
-//      return S.of(context).messages_no_receivers);
-//    } else {
-//      return items.join(" | ");
-//    }
-//  }
   void _showError(ErrorToShow error, BuildContext context,
       {bool isError = false, Map<String, String> arg}) {
     showErrorSnack(
@@ -254,8 +244,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     );
   }
 
-  void _showSnack(String msg, BuildContext context,
-      {bool isError = false}) {
+  void _showSnack(String msg, BuildContext context, {bool isError = false}) {
     showSnack(
       context: context,
       scaffoldState: Scaffold.of(context),
@@ -294,18 +283,22 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
                                 : S.of(context).label_pgp_not_verified)
                             : (state.verified
                                 ? S.of(context).label_pgp_decrypted_and_verified
-                                : S.of(context).label_pgp_decrypted_but_not_verified),
+                                : S
+                                    .of(context)
+                                    .label_pgp_decrypted_but_not_verified),
                         context);
                   }
                   if (state is DownloadStarted) {
                     _showSnack(
-                      S.of(context).messages_attachment_downloading(state.fileName),
+                      S
+                          .of(context)
+                          .messages_attachment_downloading(state.fileName),
                       context,
                     );
                   }
-                  if(state is SuccessChangedInviteStatus) {
+                  if (state is SuccessChangedInviteStatus) {
                     _showSnack(
-                     'Invitation status was updated successfully',
+                      'Invitation status was updated successfully',
                       context,
                     );
                   }
@@ -326,7 +319,9 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
                       );
                     } else {
                       _showSnack(
-                        S.of(context).messages_attachment_download_success(state.path),
+                        S
+                            .of(context)
+                            .messages_attachment_download_success(state.path),
                         context,
                       );
                     }

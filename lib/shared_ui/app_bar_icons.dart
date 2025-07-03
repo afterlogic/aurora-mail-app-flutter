@@ -1,5 +1,7 @@
 //@dart=2.9
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/res/icons/app_assets.dart';
+import 'package:aurora_mail/shared_ui/svg_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:theme/app_color.dart';
@@ -7,10 +9,11 @@ import 'package:theme/app_color.dart';
 class AppBarIcons {
   // burger icon
   static Widget burger({BuildContext context, Color color, double size}) {
-    final iconColor = color ?? (Theme.of(context).brightness == Brightness.light 
-        ? AppColor.appBarIconLight 
-        : AppColor.appBarIconDark);
-    
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
     if (BuildProperty.useCustomAppBarIcons) {
       return SvgPicture.asset(
         '${BuildProperty.image_dir}/m-app-bar/burger.svg',
@@ -24,10 +27,11 @@ class AppBarIcons {
 
   // search
   static Widget search({BuildContext context, Color color, double size}) {
-    final iconColor = color ?? (Theme.of(context).brightness == Brightness.light 
-        ? AppColor.appBarIconLight 
-        : AppColor.appBarIconDark);
-    
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
     if (BuildProperty.useCustomAppBarIcons) {
       return SvgPicture.asset(
         '${BuildProperty.image_dir}/m-app-bar/search.svg',
@@ -41,10 +45,11 @@ class AppBarIcons {
 
   // close
   static Widget close({BuildContext context, Color color, double size}) {
-    final iconColor = color ?? (Theme.of(context).brightness == Brightness.light 
-        ? AppColor.appBarIconLight 
-        : AppColor.appBarIconDark);
-    
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
     if (BuildProperty.useCustomAppBarIcons) {
       return SvgPicture.asset(
         '${BuildProperty.image_dir}/m-app-bar/close.svg',
@@ -58,10 +63,11 @@ class AppBarIcons {
 
   // back
   static Widget back({BuildContext context, Color color, double size}) {
-    final iconColor = color ?? (Theme.of(context).brightness == Brightness.light 
-        ? AppColor.appBarIconLight 
-        : AppColor.appBarIconDark);
-    
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
     if (BuildProperty.useCustomAppBarIcons) {
       return SvgPicture.asset(
         '${BuildProperty.image_dir}/m-app-bar/back.svg',
@@ -75,10 +81,11 @@ class AppBarIcons {
 
   // info
   static Widget info({BuildContext context, Color color, double size}) {
-    final iconColor = color ?? (Theme.of(context).brightness == Brightness.light 
-        ? AppColor.appBarIconLight 
-        : AppColor.appBarIconDark);
-    
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
     if (BuildProperty.useCustomAppBarIcons) {
       return SvgPicture.asset(
         '${BuildProperty.image_dir}/m-app-bar/info.svg',
@@ -92,10 +99,11 @@ class AppBarIcons {
 
   // send
   static Widget send({BuildContext context, Color color, double size}) {
-    final iconColor = color ?? (Theme.of(context).brightness == Brightness.light 
-        ? AppColor.appBarIconLight 
-        : AppColor.appBarIconDark);
-    
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
     if (BuildProperty.useCustomAppBarIcons) {
       return SvgPicture.asset(
         '${BuildProperty.image_dir}/m-app-bar/send.svg',
@@ -109,10 +117,11 @@ class AppBarIcons {
 
   // menu
   static Widget menu({BuildContext context, Color color, double size}) {
-    final iconColor = color ?? (Theme.of(context).brightness == Brightness.light 
-        ? AppColor.appBarIconLight 
-        : AppColor.appBarIconDark);
-    
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
     if (BuildProperty.useCustomAppBarIcons) {
       return SvgPicture.asset(
         '${BuildProperty.image_dir}/m-app-bar/menu.svg',
@@ -126,10 +135,11 @@ class AppBarIcons {
 
   // drafts
   static Widget drafts({BuildContext context, Color color, double size}) {
-    final iconColor = color ?? (Theme.of(context).brightness == Brightness.light 
-        ? AppColor.appBarIconLight 
-        : AppColor.appBarIconDark);
-    
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
     if (BuildProperty.useCustomAppBarIcons) {
       return SvgPicture.asset(
         '${BuildProperty.image_dir}/m-app-bar/drafts.svg',
@@ -143,10 +153,11 @@ class AppBarIcons {
 
   // edit
   static Widget edit({BuildContext context, Color color, double size}) {
-    final iconColor = color ?? (Theme.of(context).brightness == Brightness.light 
-        ? AppColor.appBarIconLight 
-        : AppColor.appBarIconDark);
-    
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
     if (BuildProperty.useCustomAppBarIcons) {
       return SvgPicture.asset(
         '${BuildProperty.image_dir}/m-app-bar/menu-edit.svg',
@@ -160,10 +171,11 @@ class AppBarIcons {
 
   // delete
   static Widget delete({BuildContext context, Color color, double size}) {
-    final iconColor = color ?? (Theme.of(context).brightness == Brightness.light 
-        ? AppColor.appBarIconLight 
-        : AppColor.appBarIconDark);
-    
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
     if (BuildProperty.useCustomAppBarIcons) {
       return SvgPicture.asset(
         '${BuildProperty.image_dir}/m-app-bar/menu-delete.svg',
@@ -173,5 +185,168 @@ class AppBarIcons {
       );
     }
     return Icon(Icons.delete_outline, size: size, color: iconColor);
+  }
+
+  // reply
+  static Widget reply({BuildContext context, Color color, double size}) {
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
+    if (BuildProperty.useCustomAppBarIcons) {
+      return SvgPicture.asset(
+        '${BuildProperty.image_dir}/m-app-bar/menu-share.svg',
+        width: 24.0,
+        height: 24.0,
+        color: iconColor,
+      );
+    }
+    return Icon(Icons.reply, size: size, color: iconColor);
+  }
+
+  // reply_all
+  static Widget replyAll({BuildContext context, Color color, double size}) {
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
+    if (BuildProperty.useCustomAppBarIcons) {
+      return SvgPicture.asset(
+        '${BuildProperty.image_dir}/m-app-bar/menu-share.svg',
+        width: 24.0,
+        height: 24.0,
+        color: iconColor,
+      );
+    }
+    return Icon(Icons.reply_all, size: size, color: iconColor);
+  }
+
+  // forward
+  static Widget forward({BuildContext context, Color color, double size}) {
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
+    if (BuildProperty.useCustomAppBarIcons) {
+      return SvgPicture.asset(
+        '${BuildProperty.image_dir}/m-app-bar/menu-forward.svg',
+        width: 24.0,
+        height: 24.0,
+        color: iconColor,
+      );
+    }
+    return Icon(Icons.forward, size: size, color: iconColor);
+  }
+
+  // move
+  static Widget move({BuildContext context, Color color, double size}) {
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
+    if (BuildProperty.useCustomAppBarIcons) {
+      return SvgPicture.asset(
+        '${BuildProperty.image_dir}/m-app-bar/menu-move-to-folder.svg',
+        width: 24.0,
+        height: 24.0,
+        color: iconColor,
+      );
+    }
+    return Icon(Icons.folder_open, size: size, color: iconColor);
+  }
+
+  // headers
+  static Widget headers({BuildContext context, Color color, double size}) {
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
+    if (BuildProperty.useCustomAppBarIcons) {
+      return SvgPicture.asset(
+        '${BuildProperty.image_dir}/m-app-bar/menu-view-message-headers.svg',
+        width: 24.0,
+        height: 24.0,
+        color: iconColor,
+      );
+    }
+    return Icon(Icons.code, size: size, color: iconColor);
+  }
+
+  // forward_as_attachment
+  static Widget forwardAsAttachment(
+      {BuildContext context, Color color, double size}) {
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
+    if (BuildProperty.useCustomAppBarIcons) {
+      return SvgPicture.asset(
+        '${BuildProperty.image_dir}/m-app-bar/menu-froward-as-attachment.svg',
+        width: 24.0,
+        height: 24.0,
+        color: iconColor,
+      );
+    }
+    return Icon(Icons.forward, size: size, color: iconColor);
+  }
+
+  // resend
+  static Widget resend({BuildContext context, Color color, double size}) {
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
+    if (BuildProperty.useCustomAppBarIcons) {
+      return SvgPicture.asset(
+        '${BuildProperty.image_dir}/m-app-bar/menu-resend.svg',
+        width: 24.0,
+        height: 24.0,
+        color: iconColor,
+      );
+    }
+    return Icon(Icons.send, size: size, color: iconColor);
+  }
+
+  // spam
+  static Widget spam({BuildContext context, Color color, double size}) {
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
+    if (BuildProperty.useCustomAppBarIcons) {
+      return SvgPicture.asset(
+        '${BuildProperty.image_dir}/m-app-bar/spam.svg',
+        width: 24.0,
+        height: 24.0,
+        color: iconColor,
+      );
+    }
+    return SvgIcon(AppAssets.spam);
+  }
+
+  // not-spam
+  static Widget not_spam({BuildContext context, Color color, double size}) {
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
+    if (BuildProperty.useCustomAppBarIcons) {
+      return SvgPicture.asset(
+        '${BuildProperty.image_dir}/m-app-bar/not-spam.svg',
+        width: 24.0,
+        height: 24.0,
+        color: iconColor,
+      );
+    }
+    return SvgIcon(AppAssets.not_spam);
   }
 }

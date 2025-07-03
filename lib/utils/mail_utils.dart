@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/build_property.dart';
+import 'package:theme/app_color.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
@@ -163,7 +164,7 @@ class MailUtils {
       }
 
       return findFirstText(document.body) ?? '';
-    } catch (e, st) {
+    } catch (e) {
       logger.log(
         'extractFirstContent for note error: $e',
       );
@@ -346,7 +347,8 @@ class MailUtils {
         outline: 0;
       }
       .email-content {
-        background-color: white;
+        ${BuildProperty.useCustomInputStyles ? '' : 'background-color: white;'}
+        ${BuildProperty.useCustomInputStyles ? 'border: 1px solid ${theme.dividerColor.toHex()};' : ''}
         word-break: break-word;
         overflow-x: scroll;
         flex: 1;
@@ -551,7 +553,7 @@ class MailUtils {
         outline: 0;
       }
       .email-content {
-        background-color: white;
+        ${BuildProperty.useCustomInputStyles ? '' : 'background-color: white;'}
         word-break: break-word;
         overflow-x: scroll;
         flex: 1;

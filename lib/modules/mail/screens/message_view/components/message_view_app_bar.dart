@@ -3,11 +3,11 @@ import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
 import 'package:aurora_mail/res/icons/app_assets.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/shared_ui/svg_icon.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:theme/app_color.dart';
 
 enum MailViewAppBarAction {
@@ -64,24 +64,29 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
             return AMAppBar(
               backgroundColor: AppColor.appBarBackground,
               shadow: BoxShadow(color: Colors.transparent),
+              leading: IconButton(
+                icon: AppBarIcons.back(context: context),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
               actions: folderType == null
                   ? []
                   : [
                       if (![FolderType.sent, FolderType.drafts]
                           .contains(folderType))
                         IconButton(
-                          icon: Icon(Icons.reply),
+                          icon: AppBarIcons.reply(context: context),
                           tooltip: S.of(context).messages_reply,
                           onPressed: () => onAppBarActionSelected(
                               MailViewAppBarAction.reply),
                         ),
                       IconButton(
-                        icon: Icon(Icons.delete_outline),
+                        icon: AppBarIcons.delete(context: context),
                         tooltip: S.of(context).btn_delete,
                         onPressed: () =>
                             onAppBarActionSelected(MailViewAppBarAction.delete),
                       ),
                       PopupMenuButton<MailViewAppBarAction>(
+                        icon: AppBarIcons.menu(context: context),
                         onSelected: onAppBarActionSelected,
                         itemBuilder: (BuildContext context) => [
                           if (![FolderType.sent, FolderType.drafts]
@@ -89,12 +94,7 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                             PopupMenuItem(
                               value: MailViewAppBarAction.replyToAll,
                               child: ListTile(
-                                leading: Icon(
-                                  Icons.reply_all,
-                                  color: theme.brightness == Brightness.light
-                                      ? Colors.black
-                                      : null,
-                                ),
+                                leading: AppBarIcons.replyAll(context: context),
                                 title: Text(S.of(context).messages_reply_all),
                               ),
                             ),
@@ -102,12 +102,7 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                             PopupMenuItem(
                               value: MailViewAppBarAction.forward,
                               child: ListTile(
-                                leading: Icon(
-                                  MdiIcons.share,
-                                  color: theme.brightness == Brightness.light
-                                      ? Colors.black
-                                      : null,
-                                ),
+                                leading: AppBarIcons.forward(context: context),
                                 title: Text(S.of(context).messages_forward),
                               ),
                             ),
@@ -119,12 +114,7 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                             PopupMenuItem(
                               value: MailViewAppBarAction.toSpam,
                               child: ListTile(
-                                leading: SvgIcon(
-                                  AppAssets.spam,
-                                  color: theme.brightness == Brightness.light
-                                      ? Colors.black
-                                      : null,
-                                ),
+                                leading: AppBarIcons.spam(context: context),
                                 title: Text(S.of(context).btn_to_spam),
                               ),
                             ),
@@ -132,12 +122,7 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                             PopupMenuItem(
                               value: MailViewAppBarAction.notSpam,
                               child: ListTile(
-                                leading: SvgIcon(
-                                  AppAssets.not_spam,
-                                  color: theme.brightness == Brightness.light
-                                      ? Colors.black
-                                      : null,
-                                ),
+                                leading: AppBarIcons.not_spam(context: context),
                                 title: Text(S.of(context).btn_not_spam),
                               ),
                             ),
@@ -145,24 +130,14 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                             PopupMenuItem(
                               value: MailViewAppBarAction.resend,
                               child: ListTile(
-                                leading: SvgIcon(
-                                  AppAssets.resend,
-                                  color: theme.brightness == Brightness.light
-                                      ? Colors.black
-                                      : null,
-                                ),
+                                leading: AppBarIcons.resend(context: context),
                                 title: Text(S.of(context).btn_message_resend),
                               ),
                             ),
                           PopupMenuItem(
                             value: MailViewAppBarAction.move,
                             child: ListTile(
-                              leading: Icon(
-                                MdiIcons.fileMove,
-                                color: theme.brightness == Brightness.light
-                                    ? Colors.black
-                                    : null,
-                              ),
+                              leading: AppBarIcons.move(context: context),
                               title: Text(
                                   S.of(context).label_message_move_to_folder),
                             ),
@@ -170,24 +145,14 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                           PopupMenuItem(
                             value: MailViewAppBarAction.showHeaders,
                             child: ListTile(
-                              leading: Icon(
-                                Icons.code,
-                                color: theme.brightness == Brightness.light
-                                    ? Colors.black
-                                    : null,
-                              ),
+                              leading: AppBarIcons.headers(context: context),
                               title: Text(S.of(context).label_message_headers),
                             ),
                           ),
                           PopupMenuItem(
                             value: MailViewAppBarAction.forwardAsAttachment,
                             child: ListTile(
-                              leading: Icon(
-                                Icons.forward,
-                                color: theme.brightness == Brightness.light
-                                    ? Colors.black
-                                    : null,
-                              ),
+                              leading: AppBarIcons.forwardAsAttachment(context: context),
                               title: Text(
                                   S.of(context).label_forward_as_attachment),
                             ),

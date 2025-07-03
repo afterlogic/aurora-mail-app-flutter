@@ -45,10 +45,6 @@ class FreqSelectionDialog extends StatelessWidget {
         TextButton(
           child: Text(
             S.of(context).btn_cancel,
-            style: TextStyle(
-                color: theme.brightness == Brightness.light
-                    ? theme.primaryColor
-                    : null),
           ),
           onPressed: Navigator.of(context).pop,
         ),

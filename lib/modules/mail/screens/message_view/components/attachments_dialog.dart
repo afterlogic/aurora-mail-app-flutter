@@ -45,10 +45,6 @@ class _AttachmentsDialogState extends BState<AttachmentsDialog> {
         TextButton(
           child: Text(
             S.of(context).btn_close,
-            style: TextStyle(
-                color: theme.brightness == Brightness.light
-                    ? theme.primaryColor
-                    : null),
           ),
           onPressed: () => Navigator.pop(context, false),
         ),
