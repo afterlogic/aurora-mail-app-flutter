@@ -2,9 +2,7 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
-import 'package:aurora_mail/res/icons/app_assets.dart';
 import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
-import 'package:aurora_mail/shared_ui/svg_icon.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,7 +58,6 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
           buildWhen: (_, newS) => newS is FolderTypeState,
           builder: (context, state) {
             final folderType = state is FolderTypeState ? state.type : null;
-            final theme = Theme.of(context);
             return AMAppBar(
               backgroundColor: AppColor.appBarBackground,
               shadow: BoxShadow(color: Colors.transparent),
@@ -152,7 +149,8 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                           PopupMenuItem(
                             value: MailViewAppBarAction.forwardAsAttachment,
                             child: ListTile(
-                              leading: AppBarIcons.forwardAsAttachment(context: context),
+                              leading: AppBarIcons.forwardAsAttachment(
+                                  context: context),
                               title: Text(
                                   S.of(context).label_forward_as_attachment),
                             ),

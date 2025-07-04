@@ -6,14 +6,13 @@ import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/dialog/move_message.dart';
-import 'package:aurora_mail/res/icons/app_assets.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
-import 'package:aurora_mail/shared_ui/svg_icon.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:theme/app_color.dart';
 
 class SelectAppBar extends StatefulWidget {
   final SelectionController<int, Message> controller;
@@ -63,46 +62,26 @@ class _SelectAppBarState extends BState<SelectAppBar> {
                   FolderType.spam
                 ].contains(folderType))
                   IconButton(
-                    icon: SvgIcon(
-                      AppAssets.spam,
-                    ),
+                    icon: AppBarIcons.spam(context: context),
                     onPressed: () => _spam(true),
                   ),
                 if (FolderType.spam == folderType)
                   IconButton(
-                    icon: SvgIcon(
-                      AppAssets.not_spam,
-                    ),
+                    icon: AppBarIcons.not_spam(context: context),
                     onPressed: () => _spam(false),
                   ),
                 IconButton(
-                  icon: Icon(
-                    MdiIcons.fileMove,
-                  ),
+                  icon: AppBarIcons.move(context: context),
                   onPressed: _move,
                 ),
                 IconButton(
-                  icon: Icon(Icons.delete_outline),
+                  icon: AppBarIcons.delete(context: context),
                   onPressed: _delete,
                 ),
               ];
-        if (!widget.isAppBar) {
-          return ListTile(
-            leading: IconButton(
-              icon: Icon(
-                Icons.close,
-              ),
-              onPressed: () => widget.controller.enable = false,
-            ),
-            title: Text(widget.controller.selected.length.toString()),
-            trailing: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: actions,
-            ),
-          );
-        }
-        return AppBar(
+        return AMAppBar(
+          backgroundColor: AppColor.appBarBackground,
+          shadow: BoxShadow(color: Colors.transparent),
           leading: IconButton(
             icon: Icon(
               Icons.close,

@@ -81,11 +81,13 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
     final _mainInfo = _buildInfos([
       _buildInfoItem(
         icon: MdiIcons.accountGroup,
+        iconName: 'group',
         label: S.of(context).contacts_view_section_group_name,
         v: g.name,
       ),
       _buildInfoItem(
         icon: Icons.alternate_email,
+        iconName: 'email',
         label: S.of(context).contacts_view_email,
         v: g.email,
         action: InfoAction.email,
@@ -93,36 +95,43 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
       ),
       _buildInfoItem(
         icon: MdiIcons.domain,
+        iconName: 'company',
         label: S.of(context).contacts_view_company,
         v: g.company,
       ),
       _buildInfoItem(
         icon: MdiIcons.earth,
+        iconName: 'country',
         label: S.of(context).contacts_view_country,
         v: g.country,
       ),
       _buildInfoItem(
         icon: MdiIcons.map,
+        iconName: 'state',
         label: S.of(context).contacts_view_province,
         v: g.state,
       ),
       _buildInfoItem(
         icon: MdiIcons.homeCityOutline,
+        iconName: 'city',
         label: S.of(context).contacts_view_city,
         v: g.city,
       ),
       _buildInfoItem(
         icon: MdiIcons.mapMarkerOutline,
+        iconName: 'address',
         label: S.of(context).contacts_view_street_address,
         v: g.street,
       ),
       _buildInfoItem(
         icon: MdiIcons.postOutline,
+        iconName: 'zip',
         label: S.of(context).contacts_view_zip,
         v: g.zip,
       ),
       _buildInfoItem(
         icon: MdiIcons.phone,
+        iconName: 'phone',
         label: S.of(context).contacts_view_phone,
         v: g.phone,
         action: InfoAction.call,
@@ -130,11 +139,13 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
       ),
       _buildInfoItem(
         icon: MdiIcons.fax,
+        iconName: 'fax',
         label: S.of(context).contacts_view_fax,
         v: g.fax,
       ),
       _buildInfoItem(
         icon: MdiIcons.web,
+        iconName: 'web-page',
         label: S.of(context).contacts_view_web_page,
         v: g.web,
         action: InfoAction.visitWebsite,
@@ -176,12 +187,14 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
     @required IconData icon,
     @required String label,
     @required String v,
+    String iconName,
     InfoAction action = InfoAction.none,
     void Function() cb,
   }) {
     if (v.isNotEmpty) {
       return ContactsInfoItem(
         icon: icon,
+        iconName: iconName,
         label: label,
         value: v,
         cb: cb,

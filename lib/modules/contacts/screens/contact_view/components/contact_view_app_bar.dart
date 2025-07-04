@@ -102,14 +102,14 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
             icon: Icons.attach_file,
             text: S.of(context).contacts_view_app_bar_attach,
             value: ContactViewAppBarAction.attach,
-            customIconPath: 'menu-attach.svg',
+            customIconPath: 'menu-send.svg',
           ),
           if (allowEdit)
             _buildMenuItem(
               icon: Icons.edit,
               text: S.of(context).contacts_view_app_bar_edit_contact,
               value: ContactViewAppBarAction.edit,
-              customIconPath: 'menu-edit.svg',
+              customIconPath: 'menu-edit-underline.svg',
             ),
           _buildMenuItem(
             icon: MdiIcons.fileMove,

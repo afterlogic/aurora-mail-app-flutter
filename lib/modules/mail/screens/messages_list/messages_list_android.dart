@@ -20,6 +20,7 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/components/messag
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/stream_pagination_list.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/dialog/advanced_search.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -726,10 +727,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.delete_forever,
-              color: Theme.of(context).primaryColor,
-            ),
+            AppBarIcons.deleteEmpty(context: context),
             const SizedBox(
               width: 8,
             ),

@@ -169,6 +169,24 @@ class AppBarIcons {
     return Icon(Icons.edit, size: size, color: iconColor);
   }
 
+  // edit-underline
+  static Widget editUnderline({BuildContext context, Color color, double size}) {
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
+    if (BuildProperty.useCustomAppBarIcons) {
+      return SvgPicture.asset(
+        '${BuildProperty.image_dir}/m-app-bar/menu-edit-underline.svg',
+        width: 24.0,
+        height: 24.0,
+        color: iconColor,
+      );
+    }
+    return Icon(Icons.edit, size: size, color: iconColor);
+  }
+
   // delete
   static Widget delete({BuildContext context, Color color, double size}) {
     final iconColor = color ??
@@ -187,6 +205,24 @@ class AppBarIcons {
     return Icon(Icons.delete_outline, size: size, color: iconColor);
   }
 
+  // delete
+  static Widget deleteEmpty({BuildContext context, Color color, double size}) {
+    final iconColor = color ??
+        (Theme.of(context).brightness == Brightness.light
+            ? AppColor.appBarIconLight
+            : AppColor.appBarIconDark);
+
+    if (BuildProperty.useCustomAppBarIcons) {
+      return SvgPicture.asset(
+        '${BuildProperty.image_dir}/m-app-bar/menu-delete-empty.svg',
+        width: 24.0,
+        height: 24.0,
+        color: iconColor,
+      );
+    }
+    return Icon(Icons.delete_forever, size: size, color: iconColor);
+  }
+
   // reply
   static Widget reply({BuildContext context, Color color, double size}) {
     final iconColor = color ??
@@ -196,7 +232,7 @@ class AppBarIcons {
 
     if (BuildProperty.useCustomAppBarIcons) {
       return SvgPicture.asset(
-        '${BuildProperty.image_dir}/m-app-bar/menu-share.svg',
+        '${BuildProperty.image_dir}/m-app-bar/menu-forward.svg',
         width: 24.0,
         height: 24.0,
         color: iconColor,
@@ -214,7 +250,7 @@ class AppBarIcons {
 
     if (BuildProperty.useCustomAppBarIcons) {
       return SvgPicture.asset(
-        '${BuildProperty.image_dir}/m-app-bar/menu-share.svg',
+        '${BuildProperty.image_dir}/m-app-bar/menu-reply-to-all.svg',
         width: 24.0,
         height: 24.0,
         color: iconColor,
@@ -287,7 +323,7 @@ class AppBarIcons {
 
     if (BuildProperty.useCustomAppBarIcons) {
       return SvgPicture.asset(
-        '${BuildProperty.image_dir}/m-app-bar/menu-froward-as-attachment.svg',
+        '${BuildProperty.image_dir}/m-app-bar/menu-attach.svg',
         width: 24.0,
         height: 24.0,
         color: iconColor,
@@ -323,7 +359,7 @@ class AppBarIcons {
 
     if (BuildProperty.useCustomAppBarIcons) {
       return SvgPicture.asset(
-        '${BuildProperty.image_dir}/m-app-bar/spam.svg',
+        '${BuildProperty.image_dir}/m-app-bar/menu-spam.svg',
         width: 24.0,
         height: 24.0,
         color: iconColor,
@@ -341,7 +377,7 @@ class AppBarIcons {
 
     if (BuildProperty.useCustomAppBarIcons) {
       return SvgPicture.asset(
-        '${BuildProperty.image_dir}/m-app-bar/not-spam.svg',
+        '${BuildProperty.image_dir}/m-app-bar/menu-not-spam.svg',
         width: 24.0,
         height: 24.0,
         color: iconColor,

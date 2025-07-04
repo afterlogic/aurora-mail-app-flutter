@@ -5,10 +5,13 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_mode
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/components/groups_select_dialog.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
+import 'package:aurora_ui_kit/components/am_app_bar.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:theme/app_color.dart';
 
 class SelectAppBar extends StatelessWidget {
   final SelectionController<String, Contact> controller;
@@ -22,9 +25,12 @@ class SelectAppBar extends StatelessWidget {
       buildWhen: (prev, current) => prev.selectedGroup != current.selectedGroup,
       builder: (context, state) {
         final areContactsCanBeDeleted = _checkIfContactsCanBeDeleted(
-            state.storages.firstWhereOrNull((e) => e.name == state.selectedStorage),
+            state.storages
+                .firstWhereOrNull((e) => e.name == state.selectedStorage),
             context);
-        return AppBar(
+        return AMAppBar(
+          backgroundColor: AppColor.appBarBackground,
+          shadow: BoxShadow(color: Colors.transparent),
           leading: IconButton(
             icon: Icon(
               Icons.close,
@@ -34,16 +40,17 @@ class SelectAppBar extends StatelessWidget {
           title: Text(controller.selected.length.toString()),
           actions: [
             IconButton(
-              icon: Icon(Icons.drive_file_move_outline),
+              icon: AppBarIcons.move(context: context),
               onPressed: () => _moveToGroup(context),
             ),
-            if (state.selectedGroup != null) IconButton(
-              icon: Icon(Icons.folder_delete_outlined),
-              onPressed: () => _removeFromGroup(context),
-            ),
+            if (state.selectedGroup != null)
+              IconButton(
+                icon: AppBarIcons.deleteEmpty(context: context),
+                onPressed: () => _removeFromGroup(context),
+              ),
             if (state.selectedGroup == null && areContactsCanBeDeleted)
               IconButton(
-                icon: Icon(Icons.delete_outline),
+                icon: AppBarIcons.delete(context: context),
                 onPressed: () => _deleteContacts(context),
               ),
           ],
@@ -54,7 +61,7 @@ class SelectAppBar extends StatelessWidget {
 
   bool _checkIfContactsCanBeDeleted(
       ContactsStorage? storage, BuildContext context) {
-    if (storage == null){
+    if (storage == null) {
       return false;
     }
     final authBlocState = BlocProvider.of<AuthBloc>(context).currentUser;

@@ -170,6 +170,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
                             SizedBox(
                               height: 50,
                               child: ContactsAppBar(
+                                controller: selectionController,
                                 isAppBar: false,
                               ),
                             ),

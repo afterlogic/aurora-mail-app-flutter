@@ -37,33 +37,19 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import 'attachments_dialog.dart';
 
+// ignore: unused_element
 class _Attendee {
   const _Attendee({this.email, this.displayName});
   final String email;
   final String displayName;
 
+  // ignore: unused_element
   factory _Attendee.fromJson(Map<String, dynamic> json) {
     return _Attendee(
         email: json["Email"] as String,
         displayName: json["DisplayName"] as String);
   }
 }
-
-// class _ExtendedForEvent{
-//   // Attendee: null
-//   // [{DisplayName: "vasil@afterlogic.com", Email: "vasil@afterlogic.com"}]
-//   final List<_Attendee> attendeeList;
-//   CalendarId: ""
-//   Description: "111"
-//   File: "ef3618d2c03cfd5c132d55de84e9c871.ics"
-//   Location: "222"
-//   Organizer: {DisplayName: "", Email: "test@afterlogic.com"}
-//   Sequence: 1
-//   Summary: "test"
-//   Type: "REQUEST"
-//   Uid: "0d39c75b-d6dd-42d3-ab32-595c08857b46"
-//   When: "Tue, Aug 20, 2024"
-// }
 
 class ExpandedEventWebViewActions {
   static const DROPDOWN_CLICKED =
@@ -153,7 +139,7 @@ class MessageWebViewState extends BState<MessageWebView> {
       );
     _controller.addJavaScriptChannel(ExpandedEventWebViewActions.CHANNEL,
         onMessageReceived: (message) {
-      if(_selectedCalendar == null) return;
+      if (_selectedCalendar == null) return;
       if (message.message.startsWith(ExpandedEventWebViewActions.ACCEPT)) {
         print(message.message);
         BlocProvider.of<MessageViewBloc>(context).add(ChangeEventInviteStatus(

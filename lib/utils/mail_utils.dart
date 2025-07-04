@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/build_property.dart';
-import 'package:theme/app_color.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
@@ -289,6 +288,7 @@ class MailUtils {
   static String wrapInHtmlEditor(
       BuildContext context, String text, bool isHtml, bool removeForcedHeight) {
     final theme = Theme.of(context);
+    final paddingBottom = MediaQuery.of(context).padding.bottom;
     return "<!doctype html>" +
         """
 <html lang="en">
@@ -299,12 +299,12 @@ class MailUtils {
       html, body {
         margin: 0;
         overflow-x: hidden;
-        padding: ${BuildProperty.useCustomInputStyles ? '8px' : '10px'};
+        padding: ${BuildProperty.useFlatDesign ? '8px' : '10px'};
         color:${_getWebColor(DefaultTextStyle.of(context).style.color)};
         background: ${_getWebColor(theme.scaffoldBackgroundColor)};
       }
       .input-area {
-        ${BuildProperty.useCustomInputStyles ? 'background: rgba(245, 245, 245, 0.5); border: 1px solid #EBEBEB; border-radius: 8px; min-height: 200px; padding: 16px; box-sizing: border-box;' : ''}
+        ${BuildProperty.useFlatDesign ? 'background: rgba(245, 245, 245, 0.5); border: 1px solid #EBEBEB; border-radius: 8px; min-height: 200px; padding: 16px; box-sizing: border-box;' : ''}
       }
       .input-area:focus {
         outline: none;
@@ -346,12 +346,9 @@ class MailUtils {
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         outline: 0;
       }
-      .email-content {
-        ${BuildProperty.useCustomInputStyles ? '' : 'background-color: white;'}
-        ${BuildProperty.useCustomInputStyles ? 'border: 1px solid ${theme.dividerColor.toHex()};' : ''}
-        word-break: break-word;
-        overflow-x: scroll;
-        flex: 1;
+      .attachments {
+        margin-top: 20px;
+        padding-bottom: ${paddingBottom}px;
       }
       .attachment {
         display: flex;
@@ -508,11 +505,15 @@ class MailUtils {
       .primary-color {
         color:${accentColor};
       }
-      .attachments, .email-head, .email-content {
+      .attachments, .email-head {
         padding: 18px;
       }
       .email-head, .attachments {
         ${_getDarkStyles(context, showLightEmail)}
+      }
+      .email-content {
+        background-color: ${BuildProperty.useFlatDesign ? '#F0F0F0' : 'white'};
+        padding: 18px 18px 18px 18px;
       }
       body {
         font-family: sans-serif;
@@ -551,12 +552,6 @@ class MailUtils {
       .icon-btn {
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         outline: 0;
-      }
-      .email-content {
-        ${BuildProperty.useCustomInputStyles ? '' : 'background-color: white;'}
-        word-break: break-word;
-        overflow-x: scroll;
-        flex: 1;
       }
       .attachments {
         margin-top: 20px;
@@ -677,11 +672,11 @@ class MailUtils {
           document.getElementById('stared-btn').addEventListener('click', function (event) {
                 let elem=event.target
                 if (elem.classList.contains("is-starred")) {
-                    elem.innerHTML = "&#9734;"
+                    elem.innerHTML = `${_getInactiveStarIcon()}`;
                     elem.classList.remove("is-starred");
-                       elem.href="${MessageWebViewActions.ACTION + MessageWebViewActions.SET_NOT_STARRED}"
+                    elem.href="${MessageWebViewActions.ACTION + MessageWebViewActions.SET_NOT_STARRED}"
                 } else {
-                    elem.innerHTML = "&#9733;" 
+                    elem.innerHTML = `${_getActiveStarIcon()}`;
                     elem.classList.add("is-starred");
                     elem.href="${MessageWebViewActions.ACTION + MessageWebViewActions.SET_STARRED}"
                 }
@@ -790,10 +785,19 @@ class MailUtils {
           </h1>
           <a id="stared-btn" class="stared${isStarred ? " is-starred" : ""}" href='${MessageWebViewActions.ACTION + (isStarred ? MessageWebViewActions.SET_NOT_STARRED : MessageWebViewActions.SET_STARRED)}' style='text-decoration: none; font-size: 24px; line-height: 1.2;'>${isStarred ? _getActiveStarIcon() : _getInactiveStarIcon()}</a>
         </div>
-        <div style="clear: both;height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>
       </div>
-      <div class="selectable email-content">$body</div>
-      ${attachments.isNotEmpty ? '<div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>' : ""}
+      ${_hasValidContent(body) ? '''
+      <div class="selectable email-content">
+        <div style="height: 1px; background-color: black; opacity: 0.05; margin: -18px -18px 18px -18px;"></div>
+        $body
+      </div>
+      ''' : (attachments.isNotEmpty ? '''
+      <div class="selectable email-content" style="padding: 8px 18px;">
+        <div style="height: 1px; background-color: black; opacity: 0.05; margin: -8px -18px 8px -18px;"></div>
+        <div style="color: #888; font-style: italic; font-size: 14px;">Это письмо содержит только вложения</div>
+      </div>
+      ''' : '')}
+      ${attachments.isNotEmpty ? '<div style="height: 1px; background-color: black; opacity: 0.05; margin: 0;"></div>' : ""}
       <div class="attachments">
         ${attachments.where((element) => !element.isInline).map((a) => _getAttachment(context, a)).toList().join()}
       </div>
@@ -801,6 +805,19 @@ class MailUtils {
   </body>
 </html>
     """;
+  }
+
+  static bool _hasValidContent(String content) {
+    if (content == null || content.trim().isEmpty) return false;
+
+    // Убираем HTML теги и проверяем, есть ли реальный контент
+    final plainText = content
+        .replaceAll(RegExp(r'<[^>]*>'), '') // Убираем все HTML теги
+        .replaceAll(
+            RegExp(r'\s+'), ' ') // Заменяем множественные пробелы на один
+        .trim();
+
+    return plainText.isNotEmpty;
   }
 
   static String _getDarkStyles(BuildContext context, bool showLightEmail) {
@@ -930,13 +947,15 @@ class MailUtils {
     <path fill="$color" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
 </svg>""";
 
-  static String _getActiveStarIcon() =>
-      """<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M7.15316 3.40838C8.41981 1.13613 9.05314 0 10 0C10.9469 0 11.5802 1.13612 12.8468 3.40837L13.1745 3.99623C13.5345 4.64193 13.7144 4.96479 13.9951 5.17781C14.2757 5.39083 14.6251 5.4699 15.3241 5.62805L15.9605 5.77203C18.4201 6.32856 19.65 6.60682 19.9426 7.54773C20.2352 8.48864 19.3968 9.46907 17.7199 11.4299L17.2861 11.9372C16.8096 12.4944 16.5713 12.773 16.4641 13.1177C16.357 13.4624 16.393 13.8341 16.465 14.5776L16.5306 15.2544C16.7841 17.8706 16.9109 19.1787 16.1449 19.7602C15.3788 20.3417 14.2273 19.8115 11.9243 18.7512L11.3285 18.4768C10.6741 18.1755 10.3469 18.0248 10 18.0248C9.65315 18.0248 9.32593 18.1755 8.67149 18.4768L8.07567 18.7512C5.77268 19.8115 4.62118 20.3417 3.85515 19.7602C3.08912 19.1787 3.21588 17.8706 3.4694 15.2544L3.53498 14.5776C3.60703 13.8341 3.64305 13.4624 3.53586 13.1177C3.42868 12.773 3.19043 12.4944 2.71392 11.9372L2.2801 11.4299C0.603249 9.46907 -0.235175 8.48864 0.057421 7.54773C0.350017 6.60682 1.57986 6.32856 4.03954 5.77203L4.67589 5.62805C5.37485 5.4699 5.72433 5.39083 6.00494 5.17781C6.28555 4.96479 6.46553 4.64194 6.82547 3.99623L7.15316 3.40838Z" fill="#F0B942"/>
-</svg>""";
+  static String _getActiveStarIcon() => '''
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.15316 5.40838C10.4198 3.13613 11.0531 2 12 2C12.9469 2 13.5802 3.13612 14.8468 5.40837L15.1745 5.99623C15.5345 6.64193 15.7144 6.96479 15.9951 7.17781C16.2757 7.39083 16.6251 7.4699 17.3241 7.62805L17.9605 7.77203C20.4201 8.32856 21.65 8.60682 21.9426 9.54773C22.2352 10.4886 21.3968 11.4691 19.7199 13.4299L19.2861 13.9372C18.8096 14.4944 18.5713 14.773 18.4641 15.1177C18.357 15.4624 18.393 15.8341 18.465 16.5776L18.5306 17.2544C18.7841 19.8706 18.9109 21.1787 18.1449 21.7602C17.3788 22.3417 16.2273 21.8115 13.9243 20.7512L13.3285 20.4768C12.6741 20.1755 12.3469 20.0248 12 20.0248C11.6531 20.0248 11.3259 20.1755 10.6715 20.4768L10.0757 20.7512C7.77268 21.8115 6.62118 22.3417 5.85515 21.7602C5.08912 21.1787 5.21588 19.8706 5.4694 17.2544L5.53498 16.5776C5.60703 15.8341 5.64305 15.4624 5.53586 15.1177C5.42868 14.773 5.19043 14.4944 4.71392 13.9372L4.2801 13.4299C2.60325 11.4691 1.76482 10.4886 2.05742 9.54773C2.35002 8.60682 3.57986 8.32856 6.03954 7.77203L6.67589 7.62805C7.37485 7.4699 7.72433 7.39083 8.00494 7.17781C8.28555 6.96479 8.46553 6.64194 8.82547 5.99623L9.15316 5.40838Z" fill="#F0B942"/>
+        </svg>
+      ''';
 
-  static String _getInactiveStarIcon() =>
-      """<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M9.15316 5.40838C10.4198 3.13613 11.0531 2 12 2C12.9469 2 13.5802 3.13612 14.8468 5.40837L15.1745 5.99623C15.5345 6.64193 15.7144 6.96479 15.9951 7.17781C16.2757 7.39083 16.6251 7.4699 17.3241 7.62805L17.9605 7.77203C20.4201 8.32856 21.65 8.60682 21.9426 9.54773C22.2352 10.4886 21.3968 11.4691 19.7199 13.4299L19.2861 13.9372C18.8096 14.4944 18.5713 14.773 18.4641 15.1177C18.357 15.4624 18.393 15.8341 18.465 16.5776L18.5306 17.2544C18.7841 19.8706 18.9109 21.1787 18.1449 21.7602C17.3788 22.3417 16.2273 21.8115 13.9243 20.7512L13.3285 20.4768C12.6741 20.1755 12.3469 20.0248 12 20.0248C11.6531 20.0248 11.3259 20.1755 10.6715 20.4768L10.0757 20.7512C7.77268 21.8115 6.62118 22.3417 5.85515 21.7602C5.08912 21.1787 5.21588 19.8706 5.4694 17.2544L5.53498 16.5776C5.60703 15.8341 5.64305 15.4624 5.53586 15.1177C5.42868 14.773 5.19043 14.4944 4.71392 13.9372L4.2801 13.4299C2.60325 11.4691 1.76482 10.4886 2.05742 9.54773C2.35002 8.60682 3.57986 8.32856 6.03954 7.77203L6.67589 7.62805C7.37485 7.4699 7.72433 7.39083 8.00494 7.17781C8.28555 6.96479 8.46553 6.64194 8.82547 5.99623L9.15316 5.40838Z" stroke="#6F788D" stroke-width="1.5"/>
-</svg>""";
+  static String _getInactiveStarIcon() => '''
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.15316 5.40838C10.4198 3.13613 11.0531 2 12 2C12.9469 2 13.5802 3.13612 14.8468 5.40837L15.1745 5.99623C15.5345 6.64193 15.7144 6.96479 15.9951 7.17781C16.2757 7.39083 16.6251 7.4699 17.3241 7.62805L17.9605 7.77203C20.4201 8.32856 21.65 8.60682 21.9426 9.54773C22.2352 10.4886 21.3968 11.4691 19.7199 13.4299L19.2861 13.9372C18.8096 14.4944 18.5713 14.773 18.4641 15.1177C18.357 15.4624 18.393 15.8341 18.465 16.5776L18.5306 17.2544C18.7841 19.8706 18.9109 21.1787 18.1449 21.7602C17.3788 22.3417 16.2273 21.8115 13.9243 20.7512L13.3285 20.4768C12.6741 20.1755 12.3469 20.0248 12 20.0248C11.6531 20.0248 11.3259 20.1755 10.6715 20.4768L10.0757 20.7512C7.77268 21.8115 6.62118 22.3417 5.85515 21.7602C5.08912 21.1787 5.21588 19.8706 5.4694 17.2544L5.53498 16.5776C5.60703 15.8341 5.64305 15.4624 5.53586 15.1177C5.42868 14.773 5.19043 14.4944 4.71392 13.9372L4.2801 13.4299C2.60325 11.4691 1.76482 10.4886 2.05742 9.54773C2.35002 8.60682 3.57986 8.32856 6.03954 7.77203L6.67589 7.62805C7.37485 7.4699 7.72433 7.39083 8.00494 7.17781C8.28555 6.96479 8.46553 6.64194 8.82547 5.99623L9.15316 5.40838Z" stroke="#6F788D" stroke-width="1.5"/>
+        </svg>
+      ''';
 }

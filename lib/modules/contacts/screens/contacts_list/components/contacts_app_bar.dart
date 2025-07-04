@@ -62,7 +62,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: Duration(milliseconds: 250),
-      child: widget.controller?.enable == true
+      child: widget.controller?.enable == true && widget.enable
           ? SelectAppBar(widget.controller, _contactsBloc)
           : _mode == ContactAppBarMode.search && widget.enable
               ? SearchBar(
