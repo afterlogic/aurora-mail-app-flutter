@@ -86,6 +86,12 @@ class ComposeWebViewController {
     }
   }
 
+  Future<void> scrollToTop() async {
+    if (_webViewController != null) {
+      await _webViewController.runJavaScript("window.scrollTo(0, 0)");
+    }
+  }
+
   setIsHtml(bool html) async {
     _isHtml = html;
     if (_webViewController != null) {

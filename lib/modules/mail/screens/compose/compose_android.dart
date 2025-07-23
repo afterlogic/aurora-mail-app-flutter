@@ -70,6 +70,7 @@ class ComposeAndroid extends StatefulWidget {
 
 class _ComposeAndroidState extends BState<ComposeAndroid>
     with NotSavedChangesMixin {
+  
   Aliases alias;
   AccountIdentity identity;
   ComposeBloc _bloc;
@@ -898,17 +899,20 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
         .contains(_encryptType);
     final config = LayoutConfig.of(context);
     final isTablet = config.isTablet && config.columnCount >= 3;
-    Widget _done(FocusNode node) {
-      return TextButton(
-        child: Text(
-          S.of(context).btn_done,
-          style: theme.textTheme.bodyText2.copyWith(color: Colors.black),
-        ),
-        onPressed: node.unfocus,
-      );
-    }
+
+    // Not used
+    // Widget _done(FocusNode node) {
+    //   return TextButton(
+    //     child: Text(
+    //       S.of(context).btn_done,
+    //       style: theme.textTheme.bodyText2.copyWith(color: Colors.black),
+    //     ),
+    //     onPressed: node.unfocus,
+    //   );
+    // }
 
     Widget body = WebViewWrap(
+      
       simplified: widget.composeAction is OpenFromNotes,
       topWidget: Container(
         child: Column(
@@ -1043,7 +1047,10 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                 Icons.arrow_back_rounded,
                 color: Colors.white,
               )),
-          onPressed: fun,
+          onPressed: () {
+            fun();
+            _bodyTextCtrl.scrollToTop();
+          },
         ),
       ),
       webView: ComposeWebView(

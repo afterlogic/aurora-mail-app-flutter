@@ -85,7 +85,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                               ),
                               Expanded(
                                   child: Text(
-                                PushNotificationsManager.instance.token,
+                                PushNotificationsManager.instance.token ?? "N/A",
                                 textAlign: TextAlign.right,
                               )),
                               IconButton(
@@ -93,7 +93,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                                 onPressed: () {
                                   Clipboard.setData(ClipboardData(
                                       text: PushNotificationsManager
-                                          .instance.token));
+                                          .instance.token ?? ""));
                                   showSnack(
                                     isError: false,
                                     context: context,
@@ -118,7 +118,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                               ),
                               Expanded(
                                   child: Text(
-                                PushNotificationsManager.instance.deviceId,
+                                PushNotificationsManager.instance.deviceId ?? "N/A",
                                 textAlign: TextAlign.right,
                               )),
                               IconButton(
@@ -126,7 +126,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                                 onPressed: () {
                                   Clipboard.setData(ClipboardData(
                                       text: PushNotificationsManager
-                                          .instance.deviceId));
+                                          .instance.deviceId ?? ""));
                                   showSnack(
                                     isError: false,
                                     context: context,

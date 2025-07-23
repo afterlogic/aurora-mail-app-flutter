@@ -7,7 +7,6 @@ class WebViewWrap extends StatefulWidget {
   final Widget webView;
   final Widget Function(VoidCallback) closeWebView;
   final Widget topWidget;
-
   const WebViewWrap({
     Key key,
     this.webView,
