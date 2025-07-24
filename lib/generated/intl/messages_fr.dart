@@ -817,10 +817,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Statut de stockage du jeton"),
         "label_token_successful":
             MessageLookupByLibrary.simpleMessage("Réussi"),
+        "login_continue": MessageLookupByLibrary.simpleMessage("Continuer"),
         "login_input_email": MessageLookupByLibrary.simpleMessage("E-mail"),
         "login_input_host": MessageLookupByLibrary.simpleMessage("Hôte"),
         "login_input_password":
             MessageLookupByLibrary.simpleMessage("Mot de passe"),
+        "login_no_account_yet":
+            MessageLookupByLibrary.simpleMessage("Pas encore de compte ? "),
+        "login_register_now":
+            MessageLookupByLibrary.simpleMessage("S\'inscrire maintenant"),
+        "login_sign_in": MessageLookupByLibrary.simpleMessage("Se connecter"),
         "login_to_continue": MessageLookupByLibrary.simpleMessage(
             "Connectez-vous pour continuer"),
         "message_lifetime":

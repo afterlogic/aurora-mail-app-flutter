@@ -836,10 +836,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Token-Speicherstatus"),
         "label_token_successful":
             MessageLookupByLibrary.simpleMessage("Erfolgreich"),
+        "login_continue": MessageLookupByLibrary.simpleMessage("Weiter"),
         "login_input_email": MessageLookupByLibrary.simpleMessage("E-Mail"),
         "login_input_host": MessageLookupByLibrary.simpleMessage("Host"),
         "login_input_password":
             MessageLookupByLibrary.simpleMessage("Passwort"),
+        "login_no_account_yet":
+            MessageLookupByLibrary.simpleMessage("Noch kein Konto? "),
+        "login_register_now":
+            MessageLookupByLibrary.simpleMessage("Jetzt registrieren"),
+        "login_sign_in": MessageLookupByLibrary.simpleMessage("Anmelden"),
         "login_to_continue":
             MessageLookupByLibrary.simpleMessage("Anmelden um fortzufahren"),
         "message_lifetime":

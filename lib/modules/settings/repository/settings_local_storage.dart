@@ -51,9 +51,13 @@ class SettingsLocalStorage {
     return prefs.setBool(is24, value);
   }
 
-  void setLanguage(String languageString) async {
+  void setLanguage(String? languageString) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(language, languageString);
+    if (languageString == null) {
+      prefs.remove(language);
+    } else {
+      prefs.setString(language, languageString);
+    }
   }
 
   Future<String?> getLanguage() async {

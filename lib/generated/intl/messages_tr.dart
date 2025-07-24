@@ -793,9 +793,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Token saklama durumu"),
         "label_token_successful":
             MessageLookupByLibrary.simpleMessage("Başarılı"),
+        "login_continue": MessageLookupByLibrary.simpleMessage("Devam et"),
         "login_input_email": MessageLookupByLibrary.simpleMessage("E-posta"),
         "login_input_host": MessageLookupByLibrary.simpleMessage("Sunucu"),
         "login_input_password": MessageLookupByLibrary.simpleMessage("Şifre"),
+        "login_no_account_yet":
+            MessageLookupByLibrary.simpleMessage("Henüz hesabınız yok mu? "),
+        "login_register_now":
+            MessageLookupByLibrary.simpleMessage("Şimdi kayıt ol"),
+        "login_sign_in": MessageLookupByLibrary.simpleMessage("Giriş yap"),
         "login_to_continue": MessageLookupByLibrary.simpleMessage(
             "Devam etmek için giriş yapın"),
         "message_lifetime":

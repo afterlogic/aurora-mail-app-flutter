@@ -72,4 +72,13 @@ class Language {
       return new Language(decoded["name"] as String, decoded["tag"] as String);
     }
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Language && other.tag == tag && other.name == name;
+  }
+
+  @override
+  int get hashCode => tag.hashCode ^ name.hashCode;
 }

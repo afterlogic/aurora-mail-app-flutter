@@ -1,17 +1,17 @@
 //@dart=2.9
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
-import 'package:aurora_mail/modules/auth/screens/fido_auth/fido_auth_route.dart';
-import 'package:aurora_mail/modules/auth/screens/trust_device/trust_device_route.dart';
-import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
+import 'package:aurora_mail/modules/auth/screens/fido_auth/fido_auth_route.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/host_input_formatter.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
+import 'package:aurora_mail/modules/auth/screens/trust_device/trust_device_route.dart';
 import 'package:aurora_mail/modules/auth/screens/two_factor_auth/two_factor_auth_route.dart';
 import 'package:aurora_mail/modules/auth/screens/upgrade_plan/upgrade_plan_route.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
@@ -24,7 +24,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -306,7 +305,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              'Sign in',
+                              S.of(context).login_sign_in,
                               textAlign: TextAlign.left,
                               style: theme.textTheme.titleLarge.copyWith(
                                 fontSize: 24.0,
@@ -382,7 +381,9 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                                 child: Text(
                                     widget.isDialog
                                         ? S.of(context).btn_add_account
-                                        : 'Continue', //S.of(context).btn_login,
+                                        : S
+                                            .of(context)
+                                            .login_continue, //S.of(context).btn_login,
                                     style: TextStyle(color: Colors.white)),
                                 isLoading: loading,
                                 onPressed: () => _login(context),
@@ -411,7 +412,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          'Not account yet? ',
+          S.of(context).login_no_account_yet,
           style: TextStyle(
             color: Color(0xFF041844),
             fontSize: 18.0,
@@ -419,7 +420,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
         ),
         GestureDetector(
           child: Text(
-            'Register now',
+            S.of(context).login_register_now,
             style: TextStyle(
               color: Color(0xFF3975B5),
               fontSize: 18.0,

@@ -809,9 +809,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Статус сохранения токена"),
         "label_token_successful":
             MessageLookupByLibrary.simpleMessage("Успешно"),
+        "login_continue": MessageLookupByLibrary.simpleMessage("Продолжить"),
         "login_input_email": MessageLookupByLibrary.simpleMessage("Почта"),
         "login_input_host": MessageLookupByLibrary.simpleMessage("Домен"),
         "login_input_password": MessageLookupByLibrary.simpleMessage("Пароль"),
+        "login_no_account_yet":
+            MessageLookupByLibrary.simpleMessage("Еще нет аккаунта? "),
+        "login_register_now":
+            MessageLookupByLibrary.simpleMessage("Зарегистрироваться"),
+        "login_sign_in": MessageLookupByLibrary.simpleMessage("Войти"),
         "login_to_continue":
             MessageLookupByLibrary.simpleMessage("Войдите в аккаунт"),
         "message_lifetime":

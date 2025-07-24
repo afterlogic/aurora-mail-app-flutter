@@ -2190,6 +2190,46 @@ class S {
     );
   }
 
+  /// `Sign in`
+  String get login_sign_in {
+    return Intl.message(
+      'Sign in',
+      name: 'login_sign_in',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue`
+  String get login_continue {
+    return Intl.message(
+      'Continue',
+      name: 'login_continue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not account yet? `
+  String get login_no_account_yet {
+    return Intl.message(
+      'Not account yet? ',
+      name: 'login_no_account_yet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Register now`
+  String get login_register_now {
+    return Intl.message(
+      'Register now',
+      name: 'login_register_now',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Delete`
   String get btn_delete {
     return Intl.message(

@@ -36,8 +36,8 @@ class LanguageSelectionDialog extends StatelessWidget {
                   title: Text(lang == null
                       ? S.of(context).settings_language_system
                       : lang.name),
-                  value: lang?.tag,
-                  groupValue: selectedItem?.tag,
+                  value: lang?.tag ?? 'system',
+                  groupValue: selectedItem?.tag ?? 'system',
                   onChanged: (val) {
                     onItemSelected(lang);
                     Navigator.pop(context);

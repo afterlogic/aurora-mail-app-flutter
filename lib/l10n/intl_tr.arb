@@ -494,5 +494,9 @@
     "calendar_subscribe_ical_feed": "iCal akışına abone ol",
     "calendar_ical_url_label": "iCal URL",
     "calendar_color_label": "Renk",
-    "calendar_validation_enter_text": "Lütfen metin girin"
+    "calendar_validation_enter_text": "Lütfen metin girin",
+    "login_sign_in": "Giriş yap",
+    "login_continue": "Devam et",
+    "login_no_account_yet": "Henüz hesabınız yok mu? ",
+    "login_register_now": "Şimdi kayıt ol"
 }

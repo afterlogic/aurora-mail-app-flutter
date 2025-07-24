@@ -16,7 +16,7 @@ class LoginGradient extends StatelessWidget {
       decoration: BuildProperty.useBackgroundImage != null
         ? BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(BuildProperty.image_dir + '/login_background.png'),
+            image: AssetImage(BuildProperty.image_dir + '/login_background.jpg'),
             fit: BoxFit.cover,
           ),
         )
