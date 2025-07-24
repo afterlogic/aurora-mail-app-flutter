@@ -18,6 +18,7 @@ import 'package:aurora_mail/modules/calendar/ui/widgets/activity/editable_recurr
 import 'package:aurora_mail/modules/calendar/ui/widgets/activity/editable_reminders_section.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/activity/main_info.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/activity/section_divider.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
@@ -170,9 +171,13 @@ class _TaskCreationPageState extends State<TaskCreationPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AMAppBar(
-        title: Text(_selectedTask == null ? 'Create Task' : 'Edit Task'),
+        title: Text(_selectedTask == null ? S.of(context).calendar_create_task_title : S.of(context).calendar_edit_task_title),
         backgroundColor: AppColor.appBarBackground,
         shadow: BoxShadow(color: Colors.transparent),
+        leading: IconButton(
+          icon: AppBarIcons.back(context: context),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         actions: [
           TextButton(
               onPressed: () {
@@ -183,7 +188,7 @@ class _TaskCreationPageState extends State<TaskCreationPage> {
                   showErrorSnack(
                       context: context,
                       scaffoldState: _scaffoldKey.currentState,
-                      msg: ErrorToShow.message('Please select calendar'));
+                      msg: ErrorToShow.message(S.of(context).calendar_please_select_calendar));
                   return;
                 }
                 if (_selectedTask == null) {

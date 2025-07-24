@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:linkwell/linkwell.dart';
 import 'package:aurora_mail/utils/input_utils.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 
 class MainInfo extends StatelessWidget {
   final String? title;
@@ -37,7 +38,7 @@ class MainInfo extends StatelessWidget {
               InputUtils.buildUnlymeTextFormField(
                 controller: titleController!,
                 focusNode: titleFocus!,
-                labelText: 'Title',
+                labelText: S.of(context).calendar_input_title,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter text';
@@ -57,7 +58,7 @@ class MainInfo extends StatelessWidget {
               InputUtils.buildUnlymeTextFormField(
                 controller: descriptionController!,
                 focusNode: descriptionFocus!,
-                labelText: 'Description',
+                labelText: S.of(context).calendar_input_description,
                 keyboardType: TextInputType.multiline,
                 enabled: true,
                 validator: null,
@@ -72,7 +73,7 @@ class MainInfo extends StatelessWidget {
               InputUtils.buildUnlymeTextFormField(
                 controller: locationController!,
                 focusNode: locationFocus!,
-                labelText: 'Location',
+                labelText: S.of(context).calendar_input_location,
                 keyboardType: TextInputType.multiline,
                 enabled: true,
                 validator: null,
@@ -84,7 +85,7 @@ class MainInfo extends StatelessWidget {
             ]
           : [
               if (title?.isNotEmpty ?? false) ...[
-                Text('Title', style: TextStyle(color: Colors.grey)),
+                Text(S.of(context).calendar_input_title, style: TextStyle(color: Colors.grey)),
                 const SizedBox(
                   height: 4,
                 ),
@@ -94,7 +95,7 @@ class MainInfo extends StatelessWidget {
                 ),
               ],
               if (description?.isNotEmpty ?? false) ...[
-                Text('Description', style: TextStyle(color: Colors.grey)),
+                Text(S.of(context).calendar_input_description, style: TextStyle(color: Colors.grey)),
                 const SizedBox(
                   height: 4,
                 ),
@@ -104,7 +105,7 @@ class MainInfo extends StatelessWidget {
                 ),
               ],
               if (description?.isNotEmpty ?? false) ...[
-                Text('Location', style: TextStyle(color: Colors.grey)),
+                Text(S.of(context).calendar_input_location, style: TextStyle(color: Colors.grey)),
                 const SizedBox(
                   height: 4,
                 ),

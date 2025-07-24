@@ -177,15 +177,34 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
     @required Widget iconWidget,
     @required ContactsState state,
   }) {
+    String displayName;
+
+    if (s.displayName != null &&
+        s.displayName.length > 6 &&
+        s.displayName.substring(0, 6) == 'LABEL_') {
+      displayName =
+          getStorageName(s.displayName.substring(6), context) ?? s.displayName;
+    } else {
+      // Use localized names for standard storage types
+      switch (s.id) {
+        case StorageNames.personal:
+          displayName = S.of(context).contacts_drawer_storage_personal;
+          break;
+        case StorageNames.shared:
+          displayName = S.of(context).contacts_drawer_storage_shared;
+          break;
+        case StorageNames.team:
+          displayName = S.of(context).contacts_drawer_storage_team;
+          break;
+        default:
+          displayName = s.displayName ?? s.name;
+          break;
+      }
+    }
+
     return ListTile(
       leading: iconWidget,
-      title: Text(
-        s.displayName.length > 6 && s.displayName.substring(0, 6) == 'LABEL_'
-            ? getStorageName(s.displayName.substring(6), context)
-            : s.displayName == null
-                ? s.name
-                : s.displayName.toString(),
-      ),
+      title: Text(displayName),
       selected: s.id == state.selectedStorage,
       onTap: () {
         contactsBloc.add(SelectStorageGroup(storage: s));

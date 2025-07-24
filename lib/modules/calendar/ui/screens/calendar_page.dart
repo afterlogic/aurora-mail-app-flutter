@@ -161,28 +161,28 @@ class _CalendarPageState extends State<CalendarPage>
                             child: Row(
                               children: [
                                 CalendarTab(
-                                    title: 'Month',
+                                    title: S.of(context).calendar_tab_month,
                                     controller: _tabController,
                                     index: 0),
                                 const SizedBox(
                                   width: 16,
                                 ),
                                 CalendarTab(
-                                    title: 'Week',
+                                    title: S.of(context).calendar_tab_week,
                                     controller: _tabController,
                                     index: 1),
                                 const SizedBox(
                                   width: 16,
                                 ),
                                 CalendarTab(
-                                    title: 'Day',
+                                    title: S.of(context).calendar_tab_day,
                                     controller: _tabController,
                                     index: 2),
                                 const SizedBox(
                                   width: 16,
                                 ),
                                 CalendarTab(
-                                    title: 'Tasks',
+                                    title: S.of(context).calendar_tab_tasks,
                                     controller: _tabController,
                                     index: 3),
                                 const SizedBox(
@@ -303,7 +303,7 @@ class _CalendarPageState extends State<CalendarPage>
                                             'event', Icons.event),
                                         SizedBox(width: 8),
                                         Text(
-                                          'Create event',
+                                          S.of(context).calendar_create_event,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: const Color(0xFF031743),
@@ -327,7 +327,7 @@ class _CalendarPageState extends State<CalendarPage>
                                               BorderRadius.circular(8),
                                         ),
                                         child: Text(
-                                          'Create event',
+                                          S.of(context).calendar_create_event,
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 14,
@@ -411,7 +411,7 @@ class _CalendarPageState extends State<CalendarPage>
                                             'task', Icons.add_task),
                                         SizedBox(width: 8),
                                         Text(
-                                          'Create task',
+                                          S.of(context).calendar_create_task,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: const Color(0xFF031743),
@@ -435,7 +435,7 @@ class _CalendarPageState extends State<CalendarPage>
                                               BorderRadius.circular(8),
                                         ),
                                         child: Text(
-                                          'Create task',
+                                          S.of(context).calendar_create_task,
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 14,

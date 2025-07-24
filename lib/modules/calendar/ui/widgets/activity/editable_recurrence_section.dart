@@ -1,3 +1,4 @@
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/days_of_week.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/every_week_frequency.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/recurrence_mode.dart';
@@ -66,10 +67,10 @@ class EditableRecurrenceSection extends StatelessWidget {
                 },
                 child: selectedUntilDate == null
                     ? Text(
-                        'Always',
+                        S.of(context).calendar_always,
                       )
                     : Text(
-                        'until ${DateFormat('yyyy/MM/dd').format(selectedUntilDate!)}'),
+                        '${S.of(context).calendar_until} ${DateFormat('yyyy/MM/dd').format(selectedUntilDate!)}'),
               ),
           ],
         ),

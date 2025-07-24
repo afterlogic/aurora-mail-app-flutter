@@ -25,11 +25,10 @@ class CalendarRepositoryImpl implements CalendarRepository {
   late final CalendarNetworkService _network;
   late final CalendarDbService _db;
 
-  CalendarRepositoryImpl({
-    required this.user,
-    required AppDatabase appDB,
-    Logger? repositoryLogger
-  }) {
+  CalendarRepositoryImpl(
+      {required this.user,
+      required AppDatabase appDB,
+      Logger? repositoryLogger}) {
     final module = new WebMailApi(
       moduleName: WebMailModules.calendar,
       hostname: user.hostname,
@@ -67,7 +66,8 @@ class CalendarRepositoryImpl implements CalendarRepository {
       notUpdatedEvents =
           await _db.getNotUpdatedEvents(offset: null, limit: limit);
     }
-    _logger.log('EVENTS SYNC PROCESS IS OVER, ITERATIONS COUNT: $iterationsCount WITH LIMIT: $limit');
+    _logger.log(
+        'EVENTS SYNC PROCESS IS OVER, ITERATIONS COUNT: $iterationsCount WITH LIMIT: $limit');
   }
 
   @override
@@ -257,7 +257,8 @@ class CalendarRepositoryImpl implements CalendarRepository {
   }
 
   @override
-  Future<Activity> updateActivity(Activity activity, String originalCalendarId) {
+  Future<Activity> updateActivity(
+      Activity activity, String originalCalendarId) {
     return _network.updateActivity(activity, originalCalendarId);
   }
 

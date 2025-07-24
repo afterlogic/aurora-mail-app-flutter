@@ -1,17 +1,17 @@
 import 'dart:async';
 
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/month_event_marker.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/week_event_marker.dart';
+import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:calendar_view/calendar_view.dart' as CV;
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-
-import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 
 class DayView extends StatefulWidget {
   const DayView({super.key});
@@ -74,10 +74,10 @@ class _DayViewState extends State<DayView> {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           showLiveTimeLineInAllDays: true,
           fullDayTitle: Container(
-            decoration: BoxDecoration( border: Border(bottom: border)),
+            decoration: BoxDecoration(border: Border(bottom: border)),
             child: Center(
               child: Text(
-                'All day',
+                S.current.calendar_input_all_day,
               ),
             ),
             // constraints: BoxConstraints(minHeight: 60, maxHeight: 100),
@@ -90,7 +90,8 @@ class _DayViewState extends State<DayView> {
           scrollOffset: 480.0, // 8h * 60min * heightPerMinute
           heightPerMinute: 1,
           showHalfHours: false,
-          headerStyle: CV.HeaderStyle( // current day switcher
+          headerStyle: CV.HeaderStyle(
+            // current day switcher
             leftIcon: Icon(
               Icons.chevron_left,
               size: 30,
@@ -100,48 +101,51 @@ class _DayViewState extends State<DayView> {
               size: 30,
             ),
             headerPadding: EdgeInsets.only(top: 12, bottom: 16),
-            headerTextStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
-            decoration: BoxDecoration(color: null, border: Border(bottom: border)),
+            headerTextStyle:
+                TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+            decoration:
+                BoxDecoration(color: null, border: Border(bottom: border)),
           ),
-          hourIndicatorSettings: CV.HourIndicatorSettings( // Grid lines color
-              color: Theme.of(context).dividerColor,
+          hourIndicatorSettings: CV.HourIndicatorSettings(
+            // Grid lines color
+            color: Theme.of(context).dividerColor,
             offset: 5, // offset between hour labels and the grid
           ),
           dateStringBuilder: (date, {secondaryDate}) =>
               DateFormat('y MMM d').format(date),
           timeStringBuilder: (date, {secondaryDate}) {
-            String sTimeFormat = ((settingsState as SettingsLoaded).is24 ? 'HH:mm' : 'h a');
+            String sTimeFormat =
+                ((settingsState as SettingsLoaded).is24 ? 'HH:mm' : 'h a');
             return DateFormat(sTimeFormat).format(date);
           },
-          eventTileBuilder: (
-              DateTime date,
+          eventTileBuilder: (DateTime date,
               List<CV.CalendarEventData<Object?>> events,
               Rect boundary,
               DateTime startDuration,
               DateTime endDuration) {
             return WeekEventMarker(
-              event: (events as List<CV.CalendarEventData<ViewEvent?>>)[0].event,
+              event:
+                  (events as List<CV.CalendarEventData<ViewEvent?>>)[0].event,
               currentDate: date,
             );
           },
           fullDayEventBuilder:
               (List<CV.CalendarEventData<Object?>> events, DateTime date) {
             return ConstrainedBox(
-              constraints: const BoxConstraints(
-                  minHeight: 40,
-                  maxHeight: 100
-              ),
+              constraints: const BoxConstraints(minHeight: 40, maxHeight: 100),
               child: Container(
-                padding:  EdgeInsets.only(top: 1),
+                padding: EdgeInsets.only(top: 1),
                 transform: Matrix4.translationValues(-0.5, 0, 0),
-                decoration: BoxDecoration( border: Border(left: border, bottom: border)),
+                decoration:
+                    BoxDecoration(border: Border(left: border, bottom: border)),
                 child: ListView.builder(
                   itemCount: events.length,
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
                   itemBuilder: (context, index) => InkWell(
                     onTap: () {
-                      final event = (events as List<CV.CalendarEventData<ViewEvent?>>)[index];
+                      final event = (events
+                          as List<CV.CalendarEventData<ViewEvent?>>)[index];
                       BlocProvider.of<EventsBloc>(context)
                           .add(SelectEvent(event.event));
                       Navigator.of(context).pushNamed(
@@ -149,7 +153,9 @@ class _DayViewState extends State<DayView> {
                       );
                     },
                     child: MonthEventMarker(
-                      event: (events as List<CV.CalendarEventData<ViewEvent?>>)[index].event,
+                      event: (events
+                              as List<CV.CalendarEventData<ViewEvent?>>)[index]
+                          .event,
                       currentDate: date,
                       addLeftBorder: false,
                       forceTitleRender: true,
@@ -165,14 +171,14 @@ class _DayViewState extends State<DayView> {
             );
           },
           controller: _controller,
-          onPageChange: (date, pageIndex) => _bloc.add(SelectDate(date, isDayMode: true)),
+          onPageChange: (date, pageIndex) =>
+              _bloc.add(SelectDate(date, isDayMode: true)),
           onEventTap:
               (List<CV.CalendarEventData<Object?>> events, DateTime date) {
-            final event = (events as List<CV.CalendarEventData<ViewEvent?>>)
-                .firstOrNull;
+            final event =
+                (events as List<CV.CalendarEventData<ViewEvent?>>).firstOrNull;
             if (event == null) return;
-            BlocProvider.of<EventsBloc>(context)
-                .add(SelectEvent(event.event));
+            BlocProvider.of<EventsBloc>(context).add(SelectEvent(event.event));
             Navigator.of(context).pushNamed(
               EventViewPage.name,
             );

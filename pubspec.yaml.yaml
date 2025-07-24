@@ -152,6 +152,7 @@ dev_dependencies:
       ref: master
 
   flutter_launcher_icons: ^0.11.0
+  intl_utils: ^2.7.0
 #  localizator: ^0.4.2
 
 #dependency_overrides:

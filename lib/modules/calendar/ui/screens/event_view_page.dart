@@ -32,7 +32,8 @@ class EventViewPage extends StatelessWidget {
         Navigator.of(context).pushNamed(EventCreationPage.name);
         break;
       case EventViewAppBarAction.delete:
-        CalendarConfirmDialog.show(context, title: 'Delete event')
+        CalendarConfirmDialog.show(context,
+                title: S.of(context).calendar_delete_event_title)
             .then((value) {
           if (value != true) return;
           BlocProvider.of<EventsBloc>(context).add(DeleteEvent());
@@ -83,9 +84,13 @@ class EventViewPage extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           appBar: AMAppBar(
-            title: Text('Event'),
+            title: Text(S.of(context).calendar_event_title),
             backgroundColor: AppColor.appBarBackground,
             shadow: BoxShadow(color: Colors.transparent),
+            leading: IconButton(
+              icon: AppBarIcons.back(context: context),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
             actions: state.notificationSyncStatus.isLoading ? null : actions,
           ),
           body: state.notificationSyncStatus.isLoading

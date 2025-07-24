@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/base_calendar_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/participant_card.dart';
@@ -61,7 +62,7 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
     final dropDownWidth = screenWidth / 1.25;
 
     return BaseCalendarDialog(
-      title: 'Share calendar',
+      title: S.of(context).calendar_sharing_title,
       content: SizedBox(
         height: 200,
         width: screenWidth,
@@ -145,7 +146,9 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
                                           final displayName = e ==
                                                   ParticipantAll
                                                       .addAllIdentifier
-                                              ? 'All'
+                                              ? S
+                                                  .of(context)
+                                                  .calendar_sharing_all
                                               : MailUtils
                                                   .displayNameFromFriendly(e);
 
@@ -197,7 +200,7 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
                                                   TextInputType.emailAddress,
                                               decoration:
                                                   InputDecoration.collapsed(
-                                                hintText: 'Add',
+                                                hintText: S.of(context).add,
                                               ),
                                               onChanged: (value) {
                                                 if (emails.isNotEmpty &&
@@ -297,7 +300,7 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
           onPressed: () {
             Navigator.of(context).pop(_participants);
           },
-          child: Text('Save'),
+          child: Text(S.of(context).save),
         ),
       ],
     );

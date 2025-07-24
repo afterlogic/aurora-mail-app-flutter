@@ -34,6 +34,10 @@ class Language {
         return "English";
       case "tr":
         return "Türkçe";
+      case "fr":
+        return "Français";
+      case "de":
+        return "Deutsch";
       default:
         return "UNKNOWN_LANGUAGE";
     }

@@ -31,7 +31,9 @@ class TaskViewPage extends StatelessWidget {
         Navigator.of(context).pushNamed(TaskCreationPage.name);
         break;
       case EventViewAppBarAction.delete:
-        CalendarConfirmDialog.show(context, title: 'Delete task').then((value) {
+        CalendarConfirmDialog.show(context,
+                title: S.of(context).calendar_delete_task_title)
+            .then((value) {
           if (value != true) return;
           BlocProvider.of<TasksBloc>(context).add(DeleteTask());
           Navigator.of(context).pop();
@@ -81,9 +83,13 @@ class TaskViewPage extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           appBar: AMAppBar(
-            title: Text('Task'),
+            title: Text(S.of(context).calendar_task_title),
             backgroundColor: AppColor.appBarBackground,
             shadow: BoxShadow(color: Colors.transparent),
+            leading: IconButton(
+              icon: AppBarIcons.back(context: context),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
             actions: state.notificationSyncStatus.isLoading ? null : actions,
           ),
           body: state.notificationSyncStatus.isLoading

@@ -1,7 +1,6 @@
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/date_time_tile.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/section_with_icon.dart';
-import 'package:aurora_mail/utils/error_to_show.dart';
-import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
 
 class EditableDateInfo extends StatelessWidget {
@@ -38,7 +37,7 @@ class EditableDateInfo extends StatelessWidget {
           Row(
             children: [
               Text(
-                'All day',
+                S.current.calendar_input_all_day,
               ),
               const Spacer(),
               Checkbox(

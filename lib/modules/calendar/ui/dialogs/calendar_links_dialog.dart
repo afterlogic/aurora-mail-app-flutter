@@ -1,3 +1,4 @@
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/base_calendar_dialog.dart';
@@ -36,7 +37,7 @@ class _CalendarLinksDialogState extends State<CalendarLinksDialog> {
       backgroundColor: Colors.transparent,
       body: BaseCalendarDialog(
         removeContentPadding: true,
-        title: 'Get a link',
+        title: S.of(context).calendar_drawer_get_link,
         content: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: BlocBuilder<CalendarsBloc, CalendarsState>(
@@ -100,9 +101,11 @@ class _CalendarLinksDialogState extends State<CalendarLinksDialog> {
                           const SizedBox(
                             width: 8,
                           ),
-                          Text(
-                            'Get a public link to the calendar',
-                            style: TextStyle(fontSize: 14),
+                          Expanded(
+                            child: Text(
+                              S.of(context).calendar_get_public_link,
+                              style: TextStyle(fontSize: 14),
+                            ),
                           ),
                         ],
                       ),

@@ -1,3 +1,4 @@
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
@@ -54,7 +55,7 @@ class EventCard extends StatelessWidget {
                           ? DateFormat('HH:mm')
                           : DateFormat("hh:mm a");
                   return event.allDay == true
-                      ? Text('All day',
+                      ? Text(S.current.calendar_input_all_day,
                           style: TextStyle(
                             color: Color.fromRGBO(150, 148, 148, 1),
                           ))

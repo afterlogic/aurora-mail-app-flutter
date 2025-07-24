@@ -79,7 +79,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('My calendars',
+                          Text(S.of(context).calendar_drawer_my_calendars,
                               style: TextStyle(color: theme.primaryColor)),
                           IconButton(
                               padding: EdgeInsets.zero,
@@ -259,7 +259,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
             iconName: 'get-a-link',
             folder: 'calendar',
           ),
-          titleBuilder: (ctx) => 'Get a link',
+          titleBuilder: (ctx) => S.of(context).calendar_drawer_get_link,
           onTap: (ctx, ViewCalendar calendar) {
             CalendarLinksDialog.show(ctx, calendarId: calendar.id);
           },

@@ -10,6 +10,7 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/compose_type_ahead.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/fit_text_field.dart';
+import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
@@ -62,15 +63,16 @@ class _AttendeesPageState extends State<AttendeesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AMAppBar(
-        title: Text('Add attendee'),
+        title: Text(S.of(context).calendar_add_attendee_title),
         backgroundColor: AppColor.appBarBackground,
         shadow: BoxShadow(color: Colors.transparent),
         actions: [
-          TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(S.of(context).btn_back))
+          IconButton(
+            icon: AppBarIcons.back(context: context),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
         ],
       ),
       body: SingleChildScrollView(
@@ -90,7 +92,9 @@ class _AttendeesPageState extends State<AttendeesPage> {
                     return Column(
                       children: [
                         const SizedBox(height: 8),
-                        Text('Organizer: ${state.selectedEvent!.owner!}',
+                        Text(
+                            S.of(context).calendar_organizer_label(
+                                state.selectedEvent!.owner!),
                             style: TextStyle(color: Colors.grey)),
                       ],
                     );

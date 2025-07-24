@@ -1,4 +1,5 @@
 // import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/tasks/tasks_bloc.dart';
 // import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/activity_filter_dialog.dart';
@@ -32,10 +33,9 @@ class _TasksViewState extends State<TasksView> {
           padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24),
           child: Row(
             children: [
-              const Text(
-                'Tasks',
-                style:
-                    TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              Text(
+                S.current.calendar_tab_tasks,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
               ),
               const Spacer(),
               BlocBuilder<TasksBloc, TasksState>(

@@ -103,11 +103,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
             Text(S.of(context).contacts),
             SizedBox(height: 3.0),
             Text(
-              selectedStorage.displayName.length > 6 &&
-                      selectedStorage.displayName.substring(0, 6) == 'LABEL_'
-                  ? getStorageName(
-                      selectedStorage.displayName.substring(6), context)
-                  : selectedStorage.displayName,
+              _getLocalizedStorageName(selectedStorage.displayName),
               style: TextStyle(
                   fontSize: theme.textTheme.bodySmall.fontSize,
                   fontWeight: FontWeight.w400),
@@ -222,6 +218,29 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
             : null,
       );
     });
+  }
+
+  String _getLocalizedStorageName(String displayName) {
+    // Handle LABEL_ prefixed storage names
+    if (displayName.startsWith('LABEL_')) {
+      final storageName = getStorageName(displayName.substring(6), context);
+      if (storageName != null) return storageName;
+    }
+    
+    // Handle English storage names from server
+    switch (displayName) {
+      case "Personal":
+        return getStorageName("STORAGE_PERSONAL", context) ?? displayName;
+      case "Team":
+        return getStorageName("STORAGE_TEAM", context) ?? displayName;
+      case "Shared":
+      case "Shared with all":
+        return getStorageName("STORAGE_SHARED", context) ?? displayName;
+      case "All":
+        return getStorageName("STORAGE_ALL", context) ?? displayName;
+      default:
+        return displayName;
+    }
   }
 }
 

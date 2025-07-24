@@ -20,61 +20,65 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ru';
 
-  static String m0(emails) => "Скрытая копия: ${emails}";
+  static String m0(organizer) => "Организатор: ${organizer}";
 
-  static String m1(emails) => "Копия: ${emails}";
+  static String m1(emails) => "Скрытая копия: ${emails}";
 
-  static String m2(emails) => "От: ${emails}";
+  static String m2(emails) => "Копия: ${emails}";
 
-  static String m3(date) => "Отправлено: ${date}";
+  static String m3(emails) => "От: ${emails}";
 
-  static String m4(subject) => "Тема: ${subject}";
+  static String m4(date) => "Отправлено: ${date}";
 
-  static String m5(emails) => "Кому: ${emails}";
+  static String m5(subject) => "Тема: ${subject}";
 
-  static String m6(time, from) => "В ${time}, ${from} написал(а):";
+  static String m6(emails) => "Кому: ${emails}";
 
-  static String m7(contact) => "Вы действительно хотите удалить ${contact}?";
+  static String m7(time, from) => "В ${time}, ${from} написал(а):";
 
-  static String m8(group) =>
+  static String m8(contact) => "Вы действительно хотите удалить ${contact}?";
+
+  static String m9(group) =>
       "Вы действительно хотите удалить ${group}? Контакты этой группы удалены не будут.";
 
-  static String m9(contact, storage) =>
+  static String m10(contact, storage) =>
       "${contact} скоро появится в хранилище ${storage}";
 
-  static String m10(users) => "Ключи для пользователя ${users} не найдены";
+  static String m11(users) => "Ключи для пользователя ${users} не найдены";
 
-  static String m11(folder) =>
+  static String m12(name) => "Вы уверены, что хотите удалить файл ${name}?";
+
+  static String m13(folder) =>
       "Вы уверены, что хотите удалить все сообщение в папке ${folder}?";
 
-  static String m12(user) =>
+  static String m14(user) =>
       "Вы действительно хотите удалить OpenPGP key для ${user}?";
 
-  static String m13(path) => "Загруженно в ${path}";
-
-  static String m14(path) => "Файл загружен в: ${path}";
-
-  static String m15(fileName) => "Загрузка ${fileName}...";
+  static String m15(path) => "Загруженно в ${path}";
 
   static String m16(path) => "Файл загружен в: ${path}";
 
   static String m17(fileName) => "Загрузка ${fileName}...";
 
-  static String m18(subject) => "Вы уверены, что хотите удалить ${subject}?";
+  static String m18(path) => "Файл загружен в: ${path}";
 
-  static String m19(version) => "Версия ${version}";
+  static String m19(fileName) => "Загрузка ${fileName}...";
 
-  static String m20(account) =>
+  static String m20(subject) => "Вы уверены, что хотите удалить ${subject}?";
+
+  static String m21(version) => "Версия ${version}";
+
+  static String m22(account) =>
       "Вы действительно хотите выйти из аккаунта ${account} и удалить его?";
 
-  static String m21(sender, link, message_password, lifeTime, now) =>
-      "Hello,\n${sender} user sent you a self-destructing secure email.\nYou can read it by the following link:\n${link}\n${message_password}The message will be accessible for ${lifeTime} starting from ${now}";
+  static String m23(sender, link, message_password, lifeTime, now) =>
+      "Здравствуйте,\nПользователь ${sender} отправил вам самоуничтожающееся защищенное письмо.\nВы можете прочитать его по следующей ссылке:\n${link}\n${message_password}Сообщение будет доступно в течение ${lifeTime} начиная с ${now}";
 
-  static String m22(password) =>
-      "The message is password-protected. The password is: ${password}\n";
+  static String m24(password) =>
+      "Сообщение защищено паролем. Пароль: ${password}\n";
 
-  static String m23(daysCount) =>
-      "Don\'t ask again on this device for ${daysCount} days";
+  static String m25(daysCount) =>
+      "Не спрашивать снова на этом устройстве в течение ${daysCount} дней";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -84,7 +88,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "app_title": MessageLookupByLibrary.simpleMessage("Mail Client"),
         "btn_add_account":
             MessageLookupByLibrary.simpleMessage("Добавить аккаунт"),
-        "btn_back": MessageLookupByLibrary.simpleMessage("Back"),
+        "btn_back": MessageLookupByLibrary.simpleMessage("Назад"),
         "btn_cancel": MessageLookupByLibrary.simpleMessage("Отмена"),
         "btn_close": MessageLookupByLibrary.simpleMessage("Закрыть"),
         "btn_contact_delete_key":
@@ -99,21 +103,21 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn_download": MessageLookupByLibrary.simpleMessage("Скачать"),
         "btn_exit": MessageLookupByLibrary.simpleMessage("Выйти"),
         "btn_hide_details":
-            MessageLookupByLibrary.simpleMessage("Hide details"),
+            MessageLookupByLibrary.simpleMessage("Скрыть детали"),
         "btn_log_delete_all":
-            MessageLookupByLibrary.simpleMessage("Delete all"),
+            MessageLookupByLibrary.simpleMessage("Удалить все"),
         "btn_login": MessageLookupByLibrary.simpleMessage("Войти"),
         "btn_login_back_to_login":
-            MessageLookupByLibrary.simpleMessage("Back to login"),
+            MessageLookupByLibrary.simpleMessage("Вернуться к входу"),
         "btn_message_advanced_search":
             MessageLookupByLibrary.simpleMessage("Расширенный поиск"),
         "btn_message_empty_spam_folder":
             MessageLookupByLibrary.simpleMessage("Очистить Спам"),
         "btn_message_empty_trash_folder":
             MessageLookupByLibrary.simpleMessage("Очистить Корзину"),
-        "btn_message_move": MessageLookupByLibrary.simpleMessage("Move"),
+        "btn_message_move": MessageLookupByLibrary.simpleMessage("Переместить"),
         "btn_message_resend": MessageLookupByLibrary.simpleMessage("Повторить"),
-        "btn_not_spam": MessageLookupByLibrary.simpleMessage("Not spam"),
+        "btn_not_spam": MessageLookupByLibrary.simpleMessage("Не спам"),
         "btn_ok": MessageLookupByLibrary.simpleMessage("Ок"),
         "btn_pgp_check_keys":
             MessageLookupByLibrary.simpleMessage("Проверить ключи"),
@@ -137,31 +141,102 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn_pgp_import_selected_key":
             MessageLookupByLibrary.simpleMessage("Импортировать выбранные"),
         "btn_pgp_sign_or_encrypt":
-            MessageLookupByLibrary.simpleMessage("Sign/Encrypt"),
+            MessageLookupByLibrary.simpleMessage("Подписать/Зашифровать"),
         "btn_pgp_undo_pgp":
             MessageLookupByLibrary.simpleMessage("Отменить PGP"),
         "btn_php_send_all":
             MessageLookupByLibrary.simpleMessage("Отправить всё"),
-        "btn_read": MessageLookupByLibrary.simpleMessage("Read"),
+        "btn_read": MessageLookupByLibrary.simpleMessage("Прочитанные"),
         "btn_resend_push_token":
-            MessageLookupByLibrary.simpleMessage("Resend Push Token"),
+            MessageLookupByLibrary.simpleMessage("Переслать Push токен"),
         "btn_save": MessageLookupByLibrary.simpleMessage("Сохранить"),
         "btn_self_destructing":
-            MessageLookupByLibrary.simpleMessage("Self-destructing"),
+            MessageLookupByLibrary.simpleMessage("Самоуничтожающееся"),
         "btn_share": MessageLookupByLibrary.simpleMessage("Поделиться"),
         "btn_show_all": MessageLookupByLibrary.simpleMessage("Показать все"),
         "btn_show_details":
-            MessageLookupByLibrary.simpleMessage("Show details"),
+            MessageLookupByLibrary.simpleMessage("Показать детали"),
         "btn_show_email_in_light_theme": MessageLookupByLibrary.simpleMessage(
             "Показать светлый вариант письма"),
         "btn_to_spam": MessageLookupByLibrary.simpleMessage("Спам"),
-        "btn_unread": MessageLookupByLibrary.simpleMessage("Unread"),
-        "btn_vcf_import": MessageLookupByLibrary.simpleMessage("Import"),
+        "btn_unread": MessageLookupByLibrary.simpleMessage("Непрочитанные"),
+        "btn_vcf_import": MessageLookupByLibrary.simpleMessage("Импорт"),
         "btn_verify_pin":
             MessageLookupByLibrary.simpleMessage("Подтвердите PIN"),
         "button_pgp_verify_sign":
             MessageLookupByLibrary.simpleMessage("Проверить"),
         "calendar": MessageLookupByLibrary.simpleMessage("Календарь"),
+        "calendar_add_attendee_title":
+            MessageLookupByLibrary.simpleMessage("Добавить участника"),
+        "calendar_always": MessageLookupByLibrary.simpleMessage("Всегда"),
+        "calendar_before": MessageLookupByLibrary.simpleMessage("до"),
+        "calendar_create_event":
+            MessageLookupByLibrary.simpleMessage("Создать событие"),
+        "calendar_create_event_title":
+            MessageLookupByLibrary.simpleMessage("Создать событие"),
+        "calendar_create_task":
+            MessageLookupByLibrary.simpleMessage("Создать задачу"),
+        "calendar_create_task_title":
+            MessageLookupByLibrary.simpleMessage("Создать задачу"),
+        "calendar_delete_event_title":
+            MessageLookupByLibrary.simpleMessage("Удалить событие"),
+        "calendar_delete_task_title":
+            MessageLookupByLibrary.simpleMessage("Удалить задачу"),
+        "calendar_drawer_get_link":
+            MessageLookupByLibrary.simpleMessage("Получить ссылку"),
+        "calendar_drawer_my_calendars":
+            MessageLookupByLibrary.simpleMessage("Мои календари"),
+        "calendar_edit_event_title":
+            MessageLookupByLibrary.simpleMessage("Редактировать событие"),
+        "calendar_edit_task_title":
+            MessageLookupByLibrary.simpleMessage("Редактировать задачу"),
+        "calendar_event_title": MessageLookupByLibrary.simpleMessage("Событие"),
+        "calendar_filter_all": MessageLookupByLibrary.simpleMessage("Все"),
+        "calendar_filter_completed":
+            MessageLookupByLibrary.simpleMessage("Завершенные"),
+        "calendar_filter_data": MessageLookupByLibrary.simpleMessage("Данные"),
+        "calendar_filter_has_date":
+            MessageLookupByLibrary.simpleMessage("Имеет дату"),
+        "calendar_filter_task_status":
+            MessageLookupByLibrary.simpleMessage("Статус задачи"),
+        "calendar_filter_title": MessageLookupByLibrary.simpleMessage("Фильтр"),
+        "calendar_filter_uncompleted":
+            MessageLookupByLibrary.simpleMessage("Незавершенные"),
+        "calendar_filter_without_date":
+            MessageLookupByLibrary.simpleMessage("Без даты"),
+        "calendar_get_public_link": MessageLookupByLibrary.simpleMessage(
+            "Получить публичную ссылку на календарь"),
+        "calendar_input_all_day":
+            MessageLookupByLibrary.simpleMessage("Весь день"),
+        "calendar_input_attendees":
+            MessageLookupByLibrary.simpleMessage("Участники"),
+        "calendar_input_description":
+            MessageLookupByLibrary.simpleMessage("Описание"),
+        "calendar_input_location":
+            MessageLookupByLibrary.simpleMessage("Местоположение"),
+        "calendar_input_reminders":
+            MessageLookupByLibrary.simpleMessage("Напоминания"),
+        "calendar_input_title":
+            MessageLookupByLibrary.simpleMessage("Название"),
+        "calendar_organizer_label": m0,
+        "calendar_please_select_calendar": MessageLookupByLibrary.simpleMessage(
+            "Пожалуйста, выберите календарь"),
+        "calendar_read_permission":
+            MessageLookupByLibrary.simpleMessage("чтение"),
+        "calendar_select_calendar":
+            MessageLookupByLibrary.simpleMessage("Выберите календарь"),
+        "calendar_selected_calendar_not_found":
+            MessageLookupByLibrary.simpleMessage(
+                "Выбранный календарь не найден"),
+        "calendar_sharing_all": MessageLookupByLibrary.simpleMessage("Все"),
+        "calendar_sharing_title":
+            MessageLookupByLibrary.simpleMessage("Поделиться календарем"),
+        "calendar_tab_day": MessageLookupByLibrary.simpleMessage("День"),
+        "calendar_tab_month": MessageLookupByLibrary.simpleMessage("Месяц"),
+        "calendar_tab_tasks": MessageLookupByLibrary.simpleMessage("Задачи"),
+        "calendar_tab_week": MessageLookupByLibrary.simpleMessage("Неделя"),
+        "calendar_task_title": MessageLookupByLibrary.simpleMessage("Задача"),
+        "calendar_until": MessageLookupByLibrary.simpleMessage("до"),
         "clear_cache_during_logout": MessageLookupByLibrary.simpleMessage(
             "Очистить локальный кэш и сохранённые ключи"),
         "compose_body_placeholder":
@@ -171,20 +246,20 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Сохранить изменения в черновиках?"),
         "compose_discard_save_dialog_title":
             MessageLookupByLibrary.simpleMessage("Сбросить изменения"),
-        "compose_forward_bcc": m0,
+        "compose_forward_bcc": m1,
         "compose_forward_body_original_message":
             MessageLookupByLibrary.simpleMessage(
                 "---- Оригинал сообщения ----"),
-        "compose_forward_cc": m1,
-        "compose_forward_from": m2,
-        "compose_forward_sent": m3,
-        "compose_forward_subject": m4,
-        "compose_forward_to": m5,
-        "compose_reply_body_title": m6,
+        "compose_forward_cc": m2,
+        "compose_forward_from": m3,
+        "compose_forward_sent": m4,
+        "compose_forward_subject": m5,
+        "compose_forward_to": m6,
+        "compose_reply_body_title": m7,
         "contacts": MessageLookupByLibrary.simpleMessage("Контакты"),
         "contacts_add":
             MessageLookupByLibrary.simpleMessage("Добавить контакт"),
-        "contacts_delete_desc_with_name": m7,
+        "contacts_delete_desc_with_name": m8,
         "contacts_delete_selected": MessageLookupByLibrary.simpleMessage(
             "Вы действительно хотите удалить выбранные контакты?"),
         "contacts_delete_title":
@@ -215,7 +290,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Добавить группу"),
         "contacts_group_add_to_group":
             MessageLookupByLibrary.simpleMessage("Добавить в группу"),
-        "contacts_group_delete_desc_with_name": m8,
+        "contacts_group_delete_desc_with_name": m9,
         "contacts_group_delete_title":
             MessageLookupByLibrary.simpleMessage("Удалить группу"),
         "contacts_group_edit":
@@ -244,7 +319,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Убрать контакты из группы"),
         "contacts_remove_selected": MessageLookupByLibrary.simpleMessage(
             "Вы действительно хотите убрать выбранные контакты из группы?"),
-        "contacts_shared_message": m9,
+        "contacts_shared_message": m10,
         "contacts_view_address": MessageLookupByLibrary.simpleMessage("Адрес"),
         "contacts_view_app_bar_attach":
             MessageLookupByLibrary.simpleMessage("Переслать"),
@@ -313,6 +388,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Группы"),
         "contacts_view_section_home":
             MessageLookupByLibrary.simpleMessage("Дом"),
+        "contacts_view_section_key":
+            MessageLookupByLibrary.simpleMessage("Ключ"),
         "contacts_view_section_other_info":
             MessageLookupByLibrary.simpleMessage("Прочее"),
         "contacts_view_section_personal":
@@ -327,7 +404,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Веб сайт"),
         "contacts_view_zip": MessageLookupByLibrary.simpleMessage("Индекс"),
         "debug_hint_log_delete_record": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to delete the file?"),
+            "Вы уверены, что хотите удалить файл?"),
         "error_compose_no_receivers":
             MessageLookupByLibrary.simpleMessage("Укажите получателей"),
         "error_compose_wait_attachments": MessageLookupByLibrary.simpleMessage(
@@ -367,11 +444,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "error_login_no_accounts": MessageLookupByLibrary.simpleMessage(
             "У данного пользователя нет почтовых аккаунтов"),
         "error_message_not_found":
-            MessageLookupByLibrary.simpleMessage("Message not found"),
-        "error_no_pgp_key":
-            MessageLookupByLibrary.simpleMessage("No PGP public key was found"),
+            MessageLookupByLibrary.simpleMessage("Сообщение не найдено"),
+        "error_no_pgp_key": MessageLookupByLibrary.simpleMessage(
+            "Публичный ключ PGP не найден"),
         "error_password_is_empty":
-            MessageLookupByLibrary.simpleMessage("password is empty"),
+            MessageLookupByLibrary.simpleMessage("пароль пустой"),
         "error_pgp_can_not_decrypt":
             MessageLookupByLibrary.simpleMessage("Не удалось дешифровать."),
         "error_pgp_invalid_key_or_password":
@@ -382,7 +459,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Ключи не найдены"),
         "error_pgp_need_contact_for_encrypt": MessageLookupByLibrary.simpleMessage(
             "Чтобы зашифровать сообщение нужно указать хотя бы одного получателя."),
-        "error_pgp_not_found_keys_for": m10,
+        "error_pgp_not_found_keys_for": m11,
         "error_pgp_select_recipient":
             MessageLookupByLibrary.simpleMessage("Выберите получателя"),
         "error_server_access_denied":
@@ -500,31 +577,33 @@ class MessageLookup extends MessageLookupByLibrary {
         "error_server_voice_not_allowed":
             MessageLookupByLibrary.simpleMessage("Голос не разрешен"),
         "error_timeout": MessageLookupByLibrary.simpleMessage(
-            "Can\'t connect to the server"),
+            "Не удается подключиться к серверу"),
         "error_unknown":
             MessageLookupByLibrary.simpleMessage("Неизвестная ошибка"),
         "error_user_already_logged": MessageLookupByLibrary.simpleMessage(
             "Это пользователь уже авторизирован"),
-        "fido_btn_try_again": MessageLookupByLibrary.simpleMessage("Try again"),
-        "fido_btn_use_key":
-            MessageLookupByLibrary.simpleMessage("Use security key"),
+        "fido_btn_try_again":
+            MessageLookupByLibrary.simpleMessage("Попробовать снова"),
+        "fido_btn_use_key": MessageLookupByLibrary.simpleMessage(
+            "Использовать ключ безопасности"),
         "fido_error_hint": MessageLookupByLibrary.simpleMessage(
-            "Try using your security key again or try another way to verify it\'s you"),
-        "fido_error_invalid_key":
-            MessageLookupByLibrary.simpleMessage("Invalid security key"),
+            "Попробуйте использовать ваш ключ безопасности снова или попробуйте другой способ подтверждения"),
+        "fido_error_invalid_key": MessageLookupByLibrary.simpleMessage(
+            "Недействительный ключ безопасности"),
         "fido_error_title":
-            MessageLookupByLibrary.simpleMessage("There was a problem"),
+            MessageLookupByLibrary.simpleMessage("Возникла проблема"),
         "fido_hint_follow_the_instructions":
             MessageLookupByLibrary.simpleMessage(
-                "Please follow the instructions in the popup dialog"),
+                "Пожалуйста, следуйте инструкциям во всплывающем диалоге"),
         "fido_label_connect_your_key": MessageLookupByLibrary.simpleMessage(
-            "Please scan your security key or insert it to the device"),
-        "fido_label_success": MessageLookupByLibrary.simpleMessage("Success"),
-        "fido_label_touch_your_key":
-            MessageLookupByLibrary.simpleMessage("Touch you security key"),
+            "Пожалуйста, отсканируйте ваш ключ безопасности или вставьте его в устройство"),
+        "fido_label_success": MessageLookupByLibrary.simpleMessage("Успешно"),
+        "fido_label_touch_your_key": MessageLookupByLibrary.simpleMessage(
+            "Коснитесь вашего ключа безопасности"),
         "folders_drafts": MessageLookupByLibrary.simpleMessage("Черновики"),
         "folders_empty": MessageLookupByLibrary.simpleMessage("Нет папок"),
         "folders_inbox": MessageLookupByLibrary.simpleMessage("Входящие"),
+        "folders_notes": MessageLookupByLibrary.simpleMessage("Заметки"),
         "folders_sent": MessageLookupByLibrary.simpleMessage("Отправленные"),
         "folders_spam": MessageLookupByLibrary.simpleMessage("Спам"),
         "folders_starred": MessageLookupByLibrary.simpleMessage("Отмеченные"),
@@ -538,17 +617,18 @@ class MessageLookup extends MessageLookupByLibrary {
         "hint_2fa": MessageLookupByLibrary.simpleMessage(
             "Ваш аккаунт защищён\nдвухфакторной аутентификацией.\nУкажите PIN код."),
         "hint_auto_encrypt_messages": MessageLookupByLibrary.simpleMessage(
-            "If you want messages to this contact to be automatically encrypted and/or signed, check the boxes below. Please note that these messages will be converted to plain text. Attachments will not be encrypted."),
+            "Если вы хотите, чтобы сообщения этому контакту автоматически шифровались и/или подписывались, отметьте поля ниже. Обратите внимание, что эти сообщения будут преобразованы в простой текст. Вложения не будут зашифрованы."),
         "hint_confirm_exit": MessageLookupByLibrary.simpleMessage(
             "Вы уверены что хотите выйти?"),
         "hint_log_delete_all": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to delete all logs"),
+            "Вы уверены, что хотите удалить все логи?"),
+        "hint_log_delete_record": m12,
         "hint_login_upgrade_your_plan": MessageLookupByLibrary.simpleMessage(
-            "Mobile apps are not allowed in your account."),
-        "hint_message_empty_folder": m11,
+            "Мобильные приложения не разрешены в вашем аккаунте."),
+        "hint_message_empty_folder": m13,
         "hint_pgp_already_have_keys": MessageLookupByLibrary.simpleMessage(
             "Ключи, которые уже есть в системе, выделены серым цветом."),
-        "hint_pgp_delete_user_key_confirm": m12,
+        "hint_pgp_delete_user_key_confirm": m14,
         "hint_pgp_existed_keys": MessageLookupByLibrary.simpleMessage(
             "Ключи, которые уже есть в системе, и не будут импортированы"),
         "hint_pgp_external_private_keys": MessageLookupByLibrary.simpleMessage(
@@ -563,27 +643,27 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Эти ключи будут экспортированны в контакты"),
         "hint_pgp_message_automatically_encrypt":
             MessageLookupByLibrary.simpleMessage(
-                "The message will be automatically encrypted and/or signed for contacts with OpenPgp keys.\n OpenPGP supports plain text only. All the formatting will be removed before encryption."),
+                "Сообщение будет автоматически зашифровано и/или подписано для контактов с ключами OpenPgp.\n OpenPGP поддерживает только простой текст. Все форматирование будет удалено перед шифрованием."),
         "hint_pgp_share_warning": MessageLookupByLibrary.simpleMessage(
             "Вы собираетесь поделиться своим закрытым PGP-ключом. Закрытый ключ должен храниться только у владельца. Продолжить?"),
         "hint_pgp_your_keys":
             MessageLookupByLibrary.simpleMessage("Ваши ключи"),
         "hint_self_destructing_encrypt_with_key":
             MessageLookupByLibrary.simpleMessage(
-                "Selected recipient has PGP public key. The message can be encrypted using this key."),
+                "У выбранного получателя есть публичный ключ PGP. Сообщение может быть зашифровано с использованием этого ключа."),
         "hint_self_destructing_encrypt_with_not_key":
             MessageLookupByLibrary.simpleMessage(
-                "Selected recipient has no PGP public key. The key-based encryption is not allowed"),
+                "У выбранного получателя нет публичного ключа PGP. Шифрование на основе ключа не разрешено"),
         "hint_self_destructing_password_coppied_to_clipboard":
             MessageLookupByLibrary.simpleMessage("Пароль скопирован"),
         "hint_self_destructing_sent_password_using_different_channel":
             MessageLookupByLibrary.simpleMessage(
-                "The password must be sent using a different channel.\nStore the password somewhere. You will not be able to recover it otherwise."),
+                "Пароль должен быть отправлен по другому каналу.\nСохраните пароль где-нибудь. Иначе вы не сможете его восстановить."),
         "hint_self_destructing_supports_plain_text_only":
             MessageLookupByLibrary.simpleMessage(
-                "The self-descructing secure emails support plain text only. All the formatting will be removed. Also, attachments cannot be encrypted and will be removed from the message."),
-        "hint_vcf_import":
-            MessageLookupByLibrary.simpleMessage("Import contact from vcf?"),
+                "Самоуничтожающиеся защищенные письма поддерживают только простой текст. Все форматирование будет удалено. Также вложения не могут быть зашифрованы и будут удалены из сообщения."),
+        "hint_vcf_import": MessageLookupByLibrary.simpleMessage(
+            "Импортировать контакт из vcf?"),
         "input_2fa_pin": MessageLookupByLibrary.simpleMessage("PIN"),
         "input_message_search_since":
             MessageLookupByLibrary.simpleMessage("От"),
@@ -591,37 +671,38 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Текст"),
         "input_message_search_till": MessageLookupByLibrary.simpleMessage("До"),
         "input_self_destructing_add_digital_signature":
-            MessageLookupByLibrary.simpleMessage("Add digital signature"),
+            MessageLookupByLibrary.simpleMessage("Добавить цифровую подпись"),
         "input_self_destructing_key_based_encryption":
-            MessageLookupByLibrary.simpleMessage("Key-based"),
+            MessageLookupByLibrary.simpleMessage("На основе ключа"),
         "input_self_destructing_password_based_encryption":
-            MessageLookupByLibrary.simpleMessage("Password-based"),
+            MessageLookupByLibrary.simpleMessage("На основе пароля"),
         "label_contact_pgp_settings":
-            MessageLookupByLibrary.simpleMessage("PGP Settings"),
+            MessageLookupByLibrary.simpleMessage("Настройки PGP"),
         "label_contact_select_key":
             MessageLookupByLibrary.simpleMessage("Выберите ключ"),
         "label_contact_with_not_name":
-            MessageLookupByLibrary.simpleMessage("No name"),
+            MessageLookupByLibrary.simpleMessage("Без имени"),
         "label_contacts_were_imported_successfully":
             MessageLookupByLibrary.simpleMessage(
-                "Contacts imported successfully"),
+                "Контакты успешно импортированы"),
         "label_device_id_copied_to_clip_board":
             MessageLookupByLibrary.simpleMessage(
-                "Device id copied to clipboard"),
+                "ID устройства скопирован в буфер обмена"),
         "label_device_identifier":
-            MessageLookupByLibrary.simpleMessage("Device identifier"),
-        "label_discard_not_saved_changes":
-            MessageLookupByLibrary.simpleMessage("Discard not saved changes?"),
+            MessageLookupByLibrary.simpleMessage("Идентификатор устройства"),
+        "label_discard_not_saved_changes": MessageLookupByLibrary.simpleMessage(
+            "Отменить несохраненные изменения?"),
         "label_enable_uploaded_message_counter":
-            MessageLookupByLibrary.simpleMessage("Counter of uploaded message"),
+            MessageLookupByLibrary.simpleMessage(
+                "Счетчик загруженных сообщений"),
         "label_encryption_password_for_pgp_key":
             MessageLookupByLibrary.simpleMessage(
-                "Required password for PGP key"),
+                "Требуется пароль для ключа PGP"),
         "label_forward_as_attachment":
-            MessageLookupByLibrary.simpleMessage("Forward as attachment"),
+            MessageLookupByLibrary.simpleMessage("Переслать как вложение"),
         "label_length": MessageLookupByLibrary.simpleMessage("Длина"),
         "label_message_advanced_search":
-            MessageLookupByLibrary.simpleMessage("Advanced search"),
+            MessageLookupByLibrary.simpleMessage("Расширенный поиск"),
         "label_message_headers":
             MessageLookupByLibrary.simpleMessage("Заголовки письма"),
         "label_message_move_to":
@@ -631,7 +712,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "label_message_yesterday":
             MessageLookupByLibrary.simpleMessage("Вчера"),
         "label_notifications_settings":
-            MessageLookupByLibrary.simpleMessage("Notifications"),
+            MessageLookupByLibrary.simpleMessage("Уведомления"),
         "label_pgp_all_public_key":
             MessageLookupByLibrary.simpleMessage("Все публичные ключи"),
         "label_pgp_contact_public_keys":
@@ -644,8 +725,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "label_pgp_decrypted_but_not_verified":
             MessageLookupByLibrary.simpleMessage(
                 "Сообщение успешно дешифровано, но не проверено."),
-        "label_pgp_downloading_to": m13,
-        "label_pgp_encrypt": MessageLookupByLibrary.simpleMessage("Encrypt"),
+        "label_pgp_downloading_to": m15,
+        "label_pgp_encrypt":
+            MessageLookupByLibrary.simpleMessage("Зашифровать"),
         "label_pgp_import_key":
             MessageLookupByLibrary.simpleMessage("Импорт ключей"),
         "label_pgp_key_with_not_name":
@@ -653,13 +735,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "label_pgp_not_verified":
             MessageLookupByLibrary.simpleMessage("Сообщение не проверено."),
         "label_pgp_private_key":
-            MessageLookupByLibrary.simpleMessage("Private key"),
+            MessageLookupByLibrary.simpleMessage("Приватный ключ"),
         "label_pgp_private_keys":
-            MessageLookupByLibrary.simpleMessage("Private keys"),
+            MessageLookupByLibrary.simpleMessage("Приватные ключи"),
         "label_pgp_public_key":
-            MessageLookupByLibrary.simpleMessage("Public key"),
+            MessageLookupByLibrary.simpleMessage("Публичный ключ"),
         "label_pgp_public_keys":
-            MessageLookupByLibrary.simpleMessage("Public keys"),
+            MessageLookupByLibrary.simpleMessage("Публичные ключи"),
         "label_pgp_settings": MessageLookupByLibrary.simpleMessage("OpenPGP"),
         "label_pgp_share_warning":
             MessageLookupByLibrary.simpleMessage("Предупреждение"),
@@ -669,34 +751,34 @@ class MessageLookup extends MessageLookupByLibrary {
         "label_pgp_verified": MessageLookupByLibrary.simpleMessage(
             "Сообщение успешно проверено."),
         "label_record_log_in_background":
-            MessageLookupByLibrary.simpleMessage("Record log in background"),
+            MessageLookupByLibrary.simpleMessage("Записывать лог в фоне"),
         "label_self_destructing": MessageLookupByLibrary.simpleMessage(
-            "Send a self-destructing secure email"),
+            "Отправить самоуничтожающееся защищенное письмо"),
         "label_self_destructing_key_based_encryption_used":
             MessageLookupByLibrary.simpleMessage(
-                "The Key-based encryption will be used."),
+                "Будет использовано шифрование на основе ключа."),
         "label_self_destructing_not_sign_data":
-            MessageLookupByLibrary.simpleMessage("Will not sign the data."),
+            MessageLookupByLibrary.simpleMessage("Данные не будут подписаны."),
         "label_self_destructing_password_based_encryption_used":
             MessageLookupByLibrary.simpleMessage(
-                "The Password-based encryption will be used."),
+                "Будет использовано шифрование на основе пароля."),
         "label_self_destructing_sign_data":
             MessageLookupByLibrary.simpleMessage(
-                "Will sign the data with your private key."),
+                "Данные будут подписаны вашим приватным ключом."),
         "label_show_debug_view":
-            MessageLookupByLibrary.simpleMessage("Show debug view"),
-        "label_token_failed": MessageLookupByLibrary.simpleMessage("Failed"),
+            MessageLookupByLibrary.simpleMessage("Показать отладочный вид"),
+        "label_token_failed": MessageLookupByLibrary.simpleMessage("Неудачно"),
         "label_token_storing_status":
-            MessageLookupByLibrary.simpleMessage("Token storing status"),
+            MessageLookupByLibrary.simpleMessage("Статус сохранения токена"),
         "label_token_successful":
-            MessageLookupByLibrary.simpleMessage("Successful"),
+            MessageLookupByLibrary.simpleMessage("Успешно"),
         "login_input_email": MessageLookupByLibrary.simpleMessage("Почта"),
         "login_input_host": MessageLookupByLibrary.simpleMessage("Домен"),
         "login_input_password": MessageLookupByLibrary.simpleMessage("Пароль"),
         "login_to_continue":
             MessageLookupByLibrary.simpleMessage("Войдите в аккаунт"),
         "message_lifetime":
-            MessageLookupByLibrary.simpleMessage("Message lifetime"),
+            MessageLookupByLibrary.simpleMessage("Время жизни сообщения"),
         "messages_always_show_images": MessageLookupByLibrary.simpleMessage(
             "Всегда показывать изображения в сообщениях от данного отправителя."),
         "messages_attachment_delete":
@@ -707,16 +789,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Отменить загрузку"),
         "messages_attachment_download_failed":
             MessageLookupByLibrary.simpleMessage("Ошибка загрузки"),
-        "messages_attachment_download_success": m14,
-        "messages_attachment_downloading": m15,
+        "messages_attachment_download_success": m16,
+        "messages_attachment_downloading": m17,
         "messages_attachment_upload":
             MessageLookupByLibrary.simpleMessage("Загрузить файл"),
         "messages_attachment_upload_cancel":
             MessageLookupByLibrary.simpleMessage("Отменить загрузку"),
         "messages_attachment_upload_failed":
             MessageLookupByLibrary.simpleMessage("Загрузка не удалась"),
-        "messages_attachment_upload_success": m16,
-        "messages_attachment_uploading": m17,
+        "messages_attachment_upload_success": m18,
+        "messages_attachment_uploading": m19,
         "messages_attachments_empty":
             MessageLookupByLibrary.simpleMessage("Нет вложений"),
         "messages_bcc": MessageLookupByLibrary.simpleMessage("Скрытая копия"),
@@ -725,7 +807,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Вы уверены, что хотите удалить это сообщение?"),
         "messages_delete_desc_with_count": MessageLookupByLibrary.simpleMessage(
             "Вы уверены, что хотите удалить эти сообщения?"),
-        "messages_delete_desc_with_subject": m18,
+        "messages_delete_desc_with_subject": m20,
         "messages_delete_title":
             MessageLookupByLibrary.simpleMessage("Удалить сообщение"),
         "messages_delete_title_with_count":
@@ -777,19 +859,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_permission_to_local_storage": MessageLookupByLibrary.simpleMessage(
             "Нет разрешения для доступа к файлам. Проверьте настройки на вашем устройстве."),
         "remove": MessageLookupByLibrary.simpleMessage("Удалить"),
+        "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
         "save_changes_question":
             MessageLookupByLibrary.simpleMessage("Сохранить изменения?"),
         "self_destructing_life_time_day":
-            MessageLookupByLibrary.simpleMessage("24 hours"),
+            MessageLookupByLibrary.simpleMessage("24 часа"),
         "self_destructing_life_time_days_3":
-            MessageLookupByLibrary.simpleMessage("72 hours"),
+            MessageLookupByLibrary.simpleMessage("72 часа"),
         "self_destructing_life_time_days_7":
-            MessageLookupByLibrary.simpleMessage("7 days"),
+            MessageLookupByLibrary.simpleMessage("7 дней"),
         "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
         "settings_24_time_format":
             MessageLookupByLibrary.simpleMessage("24 часовой формат времени"),
         "settings_about": MessageLookupByLibrary.simpleMessage("О приложении"),
-        "settings_about_app_version": m19,
+        "settings_about_app_version": m21,
         "settings_about_privacy_policy":
             MessageLookupByLibrary.simpleMessage("Политика конфиденциальности"),
         "settings_about_terms_of_service":
@@ -798,7 +881,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Добавить новый аккаунт"),
         "settings_accounts_delete":
             MessageLookupByLibrary.simpleMessage("Удалить аккаунт"),
-        "settings_accounts_delete_description": m20,
+        "settings_accounts_delete_description": m22,
         "settings_accounts_manage":
             MessageLookupByLibrary.simpleMessage("Управление аккаунтами"),
         "settings_accounts_relogin":
@@ -847,36 +930,37 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("6 месяцев"),
         "settings_sync_period_years1":
             MessageLookupByLibrary.simpleMessage("1 год"),
-        "template_self_destructing_message": m21,
-        "template_self_destructing_message_password": m22,
+        "template_self_destructing_message": m23,
+        "template_self_destructing_message_password": m24,
         "template_self_destructing_message_title":
             MessageLookupByLibrary.simpleMessage(
-                "The secure message was shared with you"),
+                "С вами поделились защищенным сообщением"),
         "tfa_btn_other_options":
-            MessageLookupByLibrary.simpleMessage("Other options"),
-        "tfa_btn_use_auth_app":
-            MessageLookupByLibrary.simpleMessage("Use Authenticator app"),
+            MessageLookupByLibrary.simpleMessage("Другие варианты"),
+        "tfa_btn_use_auth_app": MessageLookupByLibrary.simpleMessage(
+            "Использовать приложение аутентификатор"),
         "tfa_btn_use_backup_code":
-            MessageLookupByLibrary.simpleMessage("Use Backup code"),
-        "tfa_btn_use_security_key":
-            MessageLookupByLibrary.simpleMessage("Use your Security key"),
-        "tfa_button_continue": MessageLookupByLibrary.simpleMessage("Continue"),
-        "tfa_check_box_trust_device": m23,
-        "tfa_error_invalid_backup_code":
-            MessageLookupByLibrary.simpleMessage("Invalid backup code"),
+            MessageLookupByLibrary.simpleMessage("Использовать резервный код"),
+        "tfa_btn_use_security_key": MessageLookupByLibrary.simpleMessage(
+            "Использовать ваш ключ безопасности"),
+        "tfa_button_continue":
+            MessageLookupByLibrary.simpleMessage("Продолжить"),
+        "tfa_check_box_trust_device": m25,
+        "tfa_error_invalid_backup_code": MessageLookupByLibrary.simpleMessage(
+            "Недействительный резервный код"),
         "tfa_hint_step": MessageLookupByLibrary.simpleMessage(
-            "This extra step is intended to confirm it’s really you trying to sign in"),
+            "Этот дополнительный шаг предназначен для подтверждения того, что это действительно вы пытаетесь войти"),
         "tfa_input_backup_code":
-            MessageLookupByLibrary.simpleMessage("Backup code"),
+            MessageLookupByLibrary.simpleMessage("Резервный код"),
         "tfa_input_hint_code_from_app": MessageLookupByLibrary.simpleMessage(
-            "Specify verification code from the Authenticator app"),
+            "Укажите код подтверждения из приложения аутентификатор"),
         "tfa_label":
-            MessageLookupByLibrary.simpleMessage("Two Factor Verification"),
+            MessageLookupByLibrary.simpleMessage("Двухфакторная проверка"),
         "tfa_label_enter_backup_code": MessageLookupByLibrary.simpleMessage(
-            "Enter one of your 8-character backup codes"),
-        "tfa_label_hint_security_options":
-            MessageLookupByLibrary.simpleMessage("Security options available"),
+            "Введите один из ваших 8-символьных резервных кодов"),
+        "tfa_label_hint_security_options": MessageLookupByLibrary.simpleMessage(
+            "Доступные варианты безопасности"),
         "tfa_label_trust_device":
-            MessageLookupByLibrary.simpleMessage("You\'re all set")
+            MessageLookupByLibrary.simpleMessage("Все готово")
       };
 }

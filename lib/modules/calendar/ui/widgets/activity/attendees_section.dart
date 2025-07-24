@@ -1,3 +1,4 @@
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/attendee.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/attendee_card.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class AttendeesSection extends StatelessWidget {
               width: 8,
             ),
             Text(
-              'Attendees',
+              S.current.calendar_add_attendee_title,
             ),
             const Spacer(),
           ],

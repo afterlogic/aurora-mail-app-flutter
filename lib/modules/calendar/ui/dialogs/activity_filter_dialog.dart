@@ -34,7 +34,7 @@ class _ActivityFilterDialogState extends State<ActivityFilterDialog> {
   @override
   Widget build(BuildContext context) {
     return BaseCalendarDialog(
-      title: 'Filter',
+      title: S.of(context).calendar_filter_title,
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -42,7 +42,7 @@ class _ActivityFilterDialogState extends State<ActivityFilterDialog> {
           Padding(
             padding: const EdgeInsets.only(left: 8.0, bottom: 4.0),
             child: Text(
-              'Data',
+              S.of(context).calendar_filter_data,
               style: TextStyle(color: Colors.grey),
             ),
           ),
@@ -50,7 +50,7 @@ class _ActivityFilterDialogState extends State<ActivityFilterDialog> {
             (e) => RadioListTile<ActivityDateFilter>(
               contentPadding: EdgeInsets.zero,
               visualDensity: VisualDensity.compact,
-              title: Text(e.buildString),
+              title: Text(e.buildString(context)),
               value: e,
               groupValue: _selectedDateFilter,
               onChanged: (value) {
@@ -64,7 +64,7 @@ class _ActivityFilterDialogState extends State<ActivityFilterDialog> {
           Padding(
             padding: const EdgeInsets.only(left: 8.0, bottom: 4.0),
             child: Text(
-              'Task status',
+              S.of(context).calendar_filter_task_status,
               style: TextStyle(color: Colors.grey),
             ),
           ),
@@ -72,7 +72,7 @@ class _ActivityFilterDialogState extends State<ActivityFilterDialog> {
             (e) => RadioListTile<ActivityStatusFilter>(
               contentPadding: EdgeInsets.zero,
               visualDensity: VisualDensity.compact,
-              title: Text(e.buildString),
+              title: Text(e.buildString(context)),
               value: e,
               groupValue: _selectedStatusFilter,
               onChanged: (value) {
@@ -98,27 +98,27 @@ class _ActivityFilterDialogState extends State<ActivityFilterDialog> {
 }
 
 extension _ActivityDateFilterStringBuilder on ActivityDateFilter {
-  String get buildString {
+  String buildString(BuildContext context) {
     switch (this) {
       case ActivityDateFilter.hasDate:
-        return 'Has a date';
+        return S.of(context).calendar_filter_has_date;
       case ActivityDateFilter.withoutDate:
-        return 'Without date';
+        return S.of(context).calendar_filter_without_date;
       case ActivityDateFilter.all:
-        return 'All';
+        return S.of(context).calendar_filter_all;
     }
   }
 }
 
 extension _ActivityStatusFilterStringBuilder on ActivityStatusFilter {
-  String get buildString {
+  String buildString(BuildContext context) {
     switch (this) {
       case ActivityStatusFilter.all:
-        return 'All';
+        return S.of(context).calendar_filter_all;
       case ActivityStatusFilter.completed:
-        return 'Completed';
+        return S.of(context).calendar_filter_completed;
       case ActivityStatusFilter.uncompleted:
-        return 'Uncompleted';
+        return S.of(context).calendar_filter_uncompleted;
 
     }
   }

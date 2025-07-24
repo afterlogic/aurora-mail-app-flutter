@@ -114,6 +114,8 @@ class Folder {
         return S.of(context).folders_spam;
       case FolderType.trash:
         return S.of(context).folders_trash;
+      case FolderType.notes:
+        return S.of(context).folders_notes;
       default:
         if (!full) {
           return name;

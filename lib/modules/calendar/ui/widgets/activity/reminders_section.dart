@@ -1,3 +1,4 @@
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/reminders_option.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/section_with_icon.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class RemindersSection extends StatelessWidget {
                 children: [
                   if (reminders?.isEmpty ?? true)
                     Text(
-                      'Reminders',
+                      S.current.calendar_input_reminders,
                     ),
                   ...?reminders
                       ?.map((e) => Padding(

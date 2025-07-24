@@ -1,9 +1,8 @@
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/attendee.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/activity/add_icon.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/attendee_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 class EditableAttendeesSection extends StatelessWidget {
   final Set<Attendee> attendees;
@@ -31,13 +30,15 @@ class EditableAttendeesSection extends StatelessWidget {
               width: 8,
             ),
             Text(
-              'Attendees',
+              S.current.calendar_add_attendee_title,
             ),
             const Spacer(),
             GestureDetector(onTap: onAddPressed, child: const AddIcon()),
           ],
         ),
-        const SizedBox(height: 16,),
+        const SizedBox(
+          height: 16,
+        ),
         Wrap(runSpacing: 4, spacing: 4, children: [
           ...attendees.map(
             (e) => LayoutBuilder(builder: (context, constraints) {

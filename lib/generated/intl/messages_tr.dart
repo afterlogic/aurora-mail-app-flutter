@@ -20,62 +20,67 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'tr';
 
-  static String m0(emails) => "BCC: ${emails}";
+  static String m0(organizer) => "Organizatör: ${organizer}";
 
-  static String m1(emails) => "CC: ${emails}";
+  static String m1(emails) => "BCC: ${emails}";
 
-  static String m2(emails) => "Gönderen: ${emails}";
+  static String m2(emails) => "CC: ${emails}";
 
-  static String m3(date) => "Gönderildi: ${date}";
+  static String m3(emails) => "Gönderen: ${emails}";
 
-  static String m4(subject) => "Konu: ${subject}";
+  static String m4(date) => "Gönderildi: ${date}";
 
-  static String m5(emails) => "Alıcı: ${emails}";
+  static String m5(subject) => "Konu: ${subject}";
 
-  static String m6(time, from) => "${time},tarihinde ${from} yazdı:";
+  static String m6(emails) => "Alıcı: ${emails}";
 
-  static String m7(contact) => "${contact} silmek istediğinize emin misiniz?";
+  static String m7(time, from) => "${time},tarihinde ${from} yazdı:";
 
-  static String m8(group) =>
+  static String m8(contact) => "${contact} silmek istediğinize emin misiniz?";
+
+  static String m9(group) =>
       " ${group} silmek istediğinize emin misiniz? Gruptaki kişiler silinmeyecektir.";
 
-  static String m9(contact, storage) =>
+  static String m10(contact, storage) =>
       "${contact} kişisi birazdan ${storage} alanında görünür olacak. ";
 
-  static String m10(users) =>
+  static String m11(users) =>
       "${users} kullanıcısı için özel anahtar bulunamadı.";
 
-  static String m11(folder) =>
+  static String m12(name) =>
+      "${name} dosyasını silmek istediğinize emin misiniz?";
+
+  static String m13(folder) =>
       "${folder} dosyasındaki tüm iletileri silmek istediğinize emin misiniz?";
 
-  static String m12(user) =>
+  static String m14(user) =>
       "${user} kullanıcısı için OpenPGP anahtarını silmek istediğinize emin misiniz?";
 
-  static String m13(path) => "İndiriliyor: ${path}";
+  static String m15(path) => "İndiriliyor: ${path}";
 
-  static String m14(path) => "Dosya şuraya indirildi: ${path}";
+  static String m16(path) => "Dosya şuraya indirildi: ${path}";
 
-  static String m15(fileName) => "${fileName} indiriliyor ...";
+  static String m17(fileName) => "${fileName} indiriliyor ...";
 
-  static String m16(path) => "Dosya şuraya yüklendi: ${path}";
+  static String m18(path) => "Dosya şuraya yüklendi: ${path}";
 
-  static String m17(fileName) => "${fileName} yükleniyor ...";
+  static String m19(fileName) => "${fileName} yükleniyor ...";
 
-  static String m18(subject) => "${subject} silmek istediğinize emin misiniz?";
+  static String m20(subject) => "${subject} silmek istediğinize emin misiniz?";
 
-  static String m19(version) => " ${version} versiyonu";
+  static String m21(version) => " ${version} versiyonu";
 
-  static String m20(account) =>
+  static String m22(account) =>
       " ${account} hesabını silmek istediğinize emin misiniz?";
 
-  static String m21(sender, link, message_password, lifeTime, now) =>
+  static String m23(sender, link, message_password, lifeTime, now) =>
       "Merhaba,\n${sender} kullanıcısı size kendini yok eden güvenli bir e-posta gönderdi.\nLink üzerinden okuyabilirsiniz:\n${link}\n${message_password} İleti ${now} itibariyle ${lifeTime} süre için erişilebilir olacaktır";
 
-  static String m22(password) =>
+  static String m24(password) =>
       "Bu ileti şifre korumalıdır. \nŞifre: ${password}";
 
-  static String m23(daysCount) =>
-      "Don\'t ask again on this device for ${daysCount} days";
+  static String m25(daysCount) =>
+      "Bu cihazda ${daysCount} gün boyunca tekrar sorma";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -84,7 +89,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Zaten bir genel veya özel anahtarınız var"),
         "app_title": MessageLookupByLibrary.simpleMessage("E-posta Okuyucu"),
         "btn_add_account": MessageLookupByLibrary.simpleMessage("Hesap ekle"),
-        "btn_back": MessageLookupByLibrary.simpleMessage("Back"),
+        "btn_back": MessageLookupByLibrary.simpleMessage("Geri"),
         "btn_cancel": MessageLookupByLibrary.simpleMessage("Iptal"),
         "btn_close": MessageLookupByLibrary.simpleMessage("Kapat"),
         "btn_contact_delete_key":
@@ -99,9 +104,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn_download": MessageLookupByLibrary.simpleMessage("İndir"),
         "btn_exit": MessageLookupByLibrary.simpleMessage("Çıkış"),
         "btn_hide_details":
-            MessageLookupByLibrary.simpleMessage("Hide details"),
+            MessageLookupByLibrary.simpleMessage("Ayrıntıları gizle"),
         "btn_log_delete_all":
-            MessageLookupByLibrary.simpleMessage("Delete all"),
+            MessageLookupByLibrary.simpleMessage("Tümünü sil"),
         "btn_login": MessageLookupByLibrary.simpleMessage("Oturum aç"),
         "btn_login_back_to_login":
             MessageLookupByLibrary.simpleMessage("Giriş ekranına geri dön"),
@@ -111,14 +116,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Spam\'i boşalt"),
         "btn_message_empty_trash_folder":
             MessageLookupByLibrary.simpleMessage("Çöp kutusunu boşalt"),
-        "btn_message_move": MessageLookupByLibrary.simpleMessage("Move"),
+        "btn_message_move": MessageLookupByLibrary.simpleMessage("Taşı"),
         "btn_message_resend":
             MessageLookupByLibrary.simpleMessage("Tekrar gönder"),
-        "btn_not_spam": MessageLookupByLibrary.simpleMessage("Not spam"),
+        "btn_not_spam": MessageLookupByLibrary.simpleMessage("Spam değil"),
         "btn_ok": MessageLookupByLibrary.simpleMessage("Tamam"),
         "btn_pgp_check_keys":
             MessageLookupByLibrary.simpleMessage("Anahtarları kontrol et"),
-        "btn_pgp_decrypt": MessageLookupByLibrary.simpleMessage("Decrypt"),
+        "btn_pgp_decrypt":
+            MessageLookupByLibrary.simpleMessage("Şifresini Çöz"),
         "btn_pgp_download_all":
             MessageLookupByLibrary.simpleMessage("Tümünü indir"),
         "btn_pgp_encrypt": MessageLookupByLibrary.simpleMessage("Şifrele"),
@@ -143,26 +149,96 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("PGP\'yi geri al"),
         "btn_php_send_all":
             MessageLookupByLibrary.simpleMessage("Tümünü gönder"),
-        "btn_read": MessageLookupByLibrary.simpleMessage("Read"),
+        "btn_read": MessageLookupByLibrary.simpleMessage("Okunmuş"),
         "btn_resend_push_token":
-            MessageLookupByLibrary.simpleMessage("Resend Push Token"),
+            MessageLookupByLibrary.simpleMessage("Push Token\'ı Tekrar Gönder"),
         "btn_save": MessageLookupByLibrary.simpleMessage("Kaydet"),
         "btn_self_destructing":
             MessageLookupByLibrary.simpleMessage("Kendini yok etme"),
         "btn_share": MessageLookupByLibrary.simpleMessage("Paylaş"),
         "btn_show_all": MessageLookupByLibrary.simpleMessage("Hepsini göster"),
         "btn_show_details":
-            MessageLookupByLibrary.simpleMessage("Show details"),
+            MessageLookupByLibrary.simpleMessage("Ayrıntıları göster"),
         "btn_show_email_in_light_theme": MessageLookupByLibrary.simpleMessage(
             "E-postayı açık temada göster"),
         "btn_to_spam": MessageLookupByLibrary.simpleMessage("Spam\'e taşı"),
-        "btn_unread": MessageLookupByLibrary.simpleMessage("Unread"),
+        "btn_unread": MessageLookupByLibrary.simpleMessage("Okunmamış"),
         "btn_vcf_import": MessageLookupByLibrary.simpleMessage("İçe aktar"),
         "btn_verify_pin":
             MessageLookupByLibrary.simpleMessage("PIN\'i doğrula"),
         "button_pgp_verify_sign":
             MessageLookupByLibrary.simpleMessage("Doğrula"),
         "calendar": MessageLookupByLibrary.simpleMessage("Calendar"),
+        "calendar_add_attendee_title":
+            MessageLookupByLibrary.simpleMessage("Katılımcı ekle"),
+        "calendar_always": MessageLookupByLibrary.simpleMessage("Her zaman"),
+        "calendar_before": MessageLookupByLibrary.simpleMessage("önce"),
+        "calendar_create_event":
+            MessageLookupByLibrary.simpleMessage("Etkinlik oluştur"),
+        "calendar_create_event_title":
+            MessageLookupByLibrary.simpleMessage("Etkinlik Oluştur"),
+        "calendar_create_task":
+            MessageLookupByLibrary.simpleMessage("Görev oluştur"),
+        "calendar_create_task_title":
+            MessageLookupByLibrary.simpleMessage("Görev Oluştur"),
+        "calendar_delete_event_title":
+            MessageLookupByLibrary.simpleMessage("Etkinliği sil"),
+        "calendar_delete_task_title":
+            MessageLookupByLibrary.simpleMessage("Görevi sil"),
+        "calendar_drawer_get_link":
+            MessageLookupByLibrary.simpleMessage("Bağlantı al"),
+        "calendar_drawer_my_calendars":
+            MessageLookupByLibrary.simpleMessage("Takvimlerim"),
+        "calendar_edit_event_title":
+            MessageLookupByLibrary.simpleMessage("Etkinliği Düzenle"),
+        "calendar_edit_task_title":
+            MessageLookupByLibrary.simpleMessage("Görevi Düzenle"),
+        "calendar_event_title":
+            MessageLookupByLibrary.simpleMessage("Etkinlik"),
+        "calendar_filter_all": MessageLookupByLibrary.simpleMessage("Tümü"),
+        "calendar_filter_completed":
+            MessageLookupByLibrary.simpleMessage("Tamamlanmış"),
+        "calendar_filter_data": MessageLookupByLibrary.simpleMessage("Veri"),
+        "calendar_filter_has_date":
+            MessageLookupByLibrary.simpleMessage("Tarihi var"),
+        "calendar_filter_task_status":
+            MessageLookupByLibrary.simpleMessage("Görev durumu"),
+        "calendar_filter_title": MessageLookupByLibrary.simpleMessage("Filtre"),
+        "calendar_filter_uncompleted":
+            MessageLookupByLibrary.simpleMessage("Tamamlanmamış"),
+        "calendar_filter_without_date":
+            MessageLookupByLibrary.simpleMessage("Tarihsiz"),
+        "calendar_get_public_link": MessageLookupByLibrary.simpleMessage(
+            "Takvim için genel bağlantı al"),
+        "calendar_input_all_day":
+            MessageLookupByLibrary.simpleMessage("Tüm gün"),
+        "calendar_input_attendees":
+            MessageLookupByLibrary.simpleMessage("Katılımcılar"),
+        "calendar_input_description":
+            MessageLookupByLibrary.simpleMessage("Açıklama"),
+        "calendar_input_location":
+            MessageLookupByLibrary.simpleMessage("Konum"),
+        "calendar_input_reminders":
+            MessageLookupByLibrary.simpleMessage("Hatırlatıcılar"),
+        "calendar_input_title": MessageLookupByLibrary.simpleMessage("Başlık"),
+        "calendar_organizer_label": m0,
+        "calendar_please_select_calendar":
+            MessageLookupByLibrary.simpleMessage("Lütfen takvim seçin"),
+        "calendar_read_permission":
+            MessageLookupByLibrary.simpleMessage("okuma"),
+        "calendar_select_calendar":
+            MessageLookupByLibrary.simpleMessage("Takvim seçin"),
+        "calendar_selected_calendar_not_found":
+            MessageLookupByLibrary.simpleMessage("Seçilen takvim bulunamadı"),
+        "calendar_sharing_all": MessageLookupByLibrary.simpleMessage("Tümü"),
+        "calendar_sharing_title":
+            MessageLookupByLibrary.simpleMessage("Takvimi paylaş"),
+        "calendar_tab_day": MessageLookupByLibrary.simpleMessage("Gün"),
+        "calendar_tab_month": MessageLookupByLibrary.simpleMessage("Ay"),
+        "calendar_tab_tasks": MessageLookupByLibrary.simpleMessage("Görevler"),
+        "calendar_tab_week": MessageLookupByLibrary.simpleMessage("Hafta"),
+        "calendar_task_title": MessageLookupByLibrary.simpleMessage("Görev"),
+        "calendar_until": MessageLookupByLibrary.simpleMessage("kadar"),
         "clear_cache_during_logout": MessageLookupByLibrary.simpleMessage(
             "Yerel önbelleği ve kayıtlı anahtarları Temizle"),
         "compose_body_placeholder":
@@ -172,18 +248,18 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Değişiklikleri taslaklara Kaydet?"),
         "compose_discard_save_dialog_title":
             MessageLookupByLibrary.simpleMessage("Değişiklikleri iptal et"),
-        "compose_forward_bcc": m0,
+        "compose_forward_bcc": m1,
         "compose_forward_body_original_message":
             MessageLookupByLibrary.simpleMessage("---- Orijinal İleti ----"),
-        "compose_forward_cc": m1,
-        "compose_forward_from": m2,
-        "compose_forward_sent": m3,
-        "compose_forward_subject": m4,
-        "compose_forward_to": m5,
-        "compose_reply_body_title": m6,
+        "compose_forward_cc": m2,
+        "compose_forward_from": m3,
+        "compose_forward_sent": m4,
+        "compose_forward_subject": m5,
+        "compose_forward_to": m6,
+        "compose_reply_body_title": m7,
         "contacts": MessageLookupByLibrary.simpleMessage("Kişiler"),
         "contacts_add": MessageLookupByLibrary.simpleMessage("Kişi ekle"),
-        "contacts_delete_desc_with_name": m7,
+        "contacts_delete_desc_with_name": m8,
         "contacts_delete_selected": MessageLookupByLibrary.simpleMessage(
             "Are you sure you want to delete selected contacts?"),
         "contacts_delete_title":
@@ -213,7 +289,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "contacts_group_add": MessageLookupByLibrary.simpleMessage("Grup ekle"),
         "contacts_group_add_to_group":
             MessageLookupByLibrary.simpleMessage("Add to group"),
-        "contacts_group_delete_desc_with_name": m8,
+        "contacts_group_delete_desc_with_name": m9,
         "contacts_group_delete_title":
             MessageLookupByLibrary.simpleMessage("Grubu sil"),
         "contacts_group_edit":
@@ -241,7 +317,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Remove contacts from group"),
         "contacts_remove_selected": MessageLookupByLibrary.simpleMessage(
             "Are you sure you want to remove selected contacts from group?"),
-        "contacts_shared_message": m9,
+        "contacts_shared_message": m10,
         "contacts_view_address": MessageLookupByLibrary.simpleMessage("Adres"),
         "contacts_view_app_bar_attach":
             MessageLookupByLibrary.simpleMessage("Gönder"),
@@ -310,6 +386,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Gruplar"),
         "contacts_view_section_home":
             MessageLookupByLibrary.simpleMessage("Ana Sayfa"),
+        "contacts_view_section_key":
+            MessageLookupByLibrary.simpleMessage("Anahtar"),
         "contacts_view_section_other_info":
             MessageLookupByLibrary.simpleMessage("Diğer"),
         "contacts_view_section_personal":
@@ -323,7 +401,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Web Sayfası"),
         "contacts_view_zip": MessageLookupByLibrary.simpleMessage("Posta Kodu"),
         "debug_hint_log_delete_record": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to delete the file?"),
+            "Dosyayı silmek istediğinize emin misiniz?"),
         "error_compose_no_receivers":
             MessageLookupByLibrary.simpleMessage("Lütfen alıcı ekleyin"),
         "error_compose_wait_attachments": MessageLookupByLibrary.simpleMessage(
@@ -363,11 +441,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "error_login_no_accounts": MessageLookupByLibrary.simpleMessage(
             "Bu kullanıcının e-posta hesabı yok"),
         "error_message_not_found":
-            MessageLookupByLibrary.simpleMessage("Message not found"),
-        "error_no_pgp_key":
-            MessageLookupByLibrary.simpleMessage("No PGP public key was found"),
+            MessageLookupByLibrary.simpleMessage("İleti bulunamadı"),
+        "error_no_pgp_key": MessageLookupByLibrary.simpleMessage(
+            "PGP ortak anahtarı bulunamadı"),
         "error_password_is_empty":
-            MessageLookupByLibrary.simpleMessage("password is empty"),
+            MessageLookupByLibrary.simpleMessage("şifre boş"),
         "error_pgp_can_not_decrypt": MessageLookupByLibrary.simpleMessage(
             "İletinin şifresi çözülemiyor."),
         "error_pgp_invalid_key_or_password":
@@ -380,7 +458,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "error_pgp_need_contact_for_encrypt":
             MessageLookupByLibrary.simpleMessage(
                 "İletinizi şifrelemek için en az bir alıcı belirtmeniz gerekli."),
-        "error_pgp_not_found_keys_for": m10,
+        "error_pgp_not_found_keys_for": m11,
         "error_pgp_select_recipient":
             MessageLookupByLibrary.simpleMessage("Alıcı seç"),
         "error_server_access_denied":
@@ -495,32 +573,34 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Kullanıcıya izin verilmiyor"),
         "error_server_voice_not_allowed":
             MessageLookupByLibrary.simpleMessage("Ses\'e izin verilmiyor"),
-        "error_timeout": MessageLookupByLibrary.simpleMessage(
-            "Can\'t connect to the server"),
+        "error_timeout":
+            MessageLookupByLibrary.simpleMessage("Sunucuya bağlanılamıyor"),
         "error_unknown":
             MessageLookupByLibrary.simpleMessage("Bilinmeyen hata"),
         "error_user_already_logged": MessageLookupByLibrary.simpleMessage(
-            "This user is already logged in"),
-        "fido_btn_try_again": MessageLookupByLibrary.simpleMessage("Try again"),
+            "Bu kullanıcı zaten giriş yapmış"),
+        "fido_btn_try_again":
+            MessageLookupByLibrary.simpleMessage("Tekrar dene"),
         "fido_btn_use_key":
-            MessageLookupByLibrary.simpleMessage("Use security key"),
+            MessageLookupByLibrary.simpleMessage("Güvenlik anahtarını kullan"),
         "fido_error_hint": MessageLookupByLibrary.simpleMessage(
-            "Try using your security key again or try another way to verify it\'s you"),
+            "Güvenlik anahtarınızı tekrar kullanmayı deneyin veya kimliğinizi doğrulamanın başka bir yolunu deneyin"),
         "fido_error_invalid_key":
-            MessageLookupByLibrary.simpleMessage("Invalid security key"),
+            MessageLookupByLibrary.simpleMessage("Geçersiz güvenlik anahtarı"),
         "fido_error_title":
-            MessageLookupByLibrary.simpleMessage("There was a problem"),
+            MessageLookupByLibrary.simpleMessage("Bir sorun oluştu"),
         "fido_hint_follow_the_instructions":
             MessageLookupByLibrary.simpleMessage(
-                "Please follow the instructions in the popup dialog"),
+                "Lütfen açılır penceredeki talimatları izleyin"),
         "fido_label_connect_your_key": MessageLookupByLibrary.simpleMessage(
-            "Please scan your security key or insert it to the device"),
-        "fido_label_success": MessageLookupByLibrary.simpleMessage("Success"),
-        "fido_label_touch_your_key":
-            MessageLookupByLibrary.simpleMessage("Touch you security key"),
+            "Lütfen güvenlik anahtarınızı tarayın veya cihaza takın"),
+        "fido_label_success": MessageLookupByLibrary.simpleMessage("Başarılı"),
+        "fido_label_touch_your_key": MessageLookupByLibrary.simpleMessage(
+            "Güvenlik anahtarınıza dokunun"),
         "folders_drafts": MessageLookupByLibrary.simpleMessage("Taslaklar"),
         "folders_empty": MessageLookupByLibrary.simpleMessage("Klasör yok"),
         "folders_inbox": MessageLookupByLibrary.simpleMessage("Gelen Kutusu"),
+        "folders_notes": MessageLookupByLibrary.simpleMessage("Notlar"),
         "folders_sent": MessageLookupByLibrary.simpleMessage("Gönderilen"),
         "folders_spam": MessageLookupByLibrary.simpleMessage("Spam"),
         "folders_starred": MessageLookupByLibrary.simpleMessage("Yıldızlı"),
@@ -534,17 +614,18 @@ class MessageLookup extends MessageLookupByLibrary {
         "hint_2fa": MessageLookupByLibrary.simpleMessage(
             "Hesabınız iki faktörlü kimlik doğrulamayla korunuyor. \nLütfen PIN kodu girin."),
         "hint_auto_encrypt_messages": MessageLookupByLibrary.simpleMessage(
-            "If you want messages to this contact to be automatically encrypted and/or signed, check the boxes below. Please note that these messages will be converted to plain text. Attachments will not be encrypted."),
+            "Bu kişiye gönderilen iletilerin otomatik olarak şifrelenmesini ve/veya imzalanmasını istiyorsanız, aşağıdaki kutuları işaretleyin. Bu iletilerin düz metne dönüştürüleceğini unutmayın. Ekler şifrelenmeyecektir."),
         "hint_confirm_exit": MessageLookupByLibrary.simpleMessage(
             "Çıkmak istediğinize emin misiniz?"),
         "hint_log_delete_all": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to delete all logs"),
+            "Tüm günlükleri silmek istediğinize emin misiniz?"),
+        "hint_log_delete_record": m12,
         "hint_login_upgrade_your_plan": MessageLookupByLibrary.simpleMessage(
             "Faturalandırma planınızda mobil uygulamalara izin verilmiyor."),
-        "hint_message_empty_folder": m11,
+        "hint_message_empty_folder": m13,
         "hint_pgp_already_have_keys": MessageLookupByLibrary.simpleMessage(
             "Sistemde zaten bulunan anahtarlar gri işaretlenmiştir."),
-        "hint_pgp_delete_user_key_confirm": m12,
+        "hint_pgp_delete_user_key_confirm": m14,
         "hint_pgp_existed_keys": MessageLookupByLibrary.simpleMessage(
             "Zaten sistemde olan anahtarlar içe aktarılmayacak"),
         "hint_pgp_external_private_keys": MessageLookupByLibrary.simpleMessage(
@@ -559,7 +640,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Bu anahtarlar kişilere aktarılacak"),
         "hint_pgp_message_automatically_encrypt":
             MessageLookupByLibrary.simpleMessage(
-                "The message will be automatically encrypted and/or signed for contacts with OpenPgp keys.\n OpenPGP supports plain text only. All the formatting will be removed before encryption."),
+                "OpenPgp anahtarları olan kişiler için ileti otomatik olarak şifrelenecek ve/veya imzalanacaktır.\n OpenPGP yalnızca düz metni destekler. Tüm biçimlendirme şifrelemeden önce kaldırılacaktır."),
         "hint_pgp_share_warning": MessageLookupByLibrary.simpleMessage(
             "Özel PGP anahtarınızı paylaşacaksınız. Anahtar 3. taraflar ile paylaşılmamalıdır. Devam etmek istiyor musunuz?"),
         "hint_pgp_your_keys":
@@ -594,28 +675,28 @@ class MessageLookup extends MessageLookupByLibrary {
         "input_self_destructing_password_based_encryption":
             MessageLookupByLibrary.simpleMessage("Şifre bazlı"),
         "label_contact_pgp_settings":
-            MessageLookupByLibrary.simpleMessage("PGP Settings"),
+            MessageLookupByLibrary.simpleMessage("PGP Ayarları"),
         "label_contact_select_key":
             MessageLookupByLibrary.simpleMessage("Anahtar Seç"),
         "label_contact_with_not_name":
-            MessageLookupByLibrary.simpleMessage("No name"),
+            MessageLookupByLibrary.simpleMessage("İsim yok"),
         "label_contacts_were_imported_successfully":
             MessageLookupByLibrary.simpleMessage(
-                "Contacts imported successfully"),
+                "Kişiler başarıyla içe aktarıldı"),
         "label_device_id_copied_to_clip_board":
             MessageLookupByLibrary.simpleMessage(
-                "Device id copied to clipboard"),
+                "Cihaz kimliği panoya kopyalandı"),
         "label_device_identifier":
-            MessageLookupByLibrary.simpleMessage("Device identifier"),
-        "label_discard_not_saved_changes":
-            MessageLookupByLibrary.simpleMessage("Discard not saved changes?"),
+            MessageLookupByLibrary.simpleMessage("Cihaz tanımlayıcısı"),
+        "label_discard_not_saved_changes": MessageLookupByLibrary.simpleMessage(
+            "Kaydedilmemiş değişiklikler iptal edilsin mi?"),
         "label_enable_uploaded_message_counter":
-            MessageLookupByLibrary.simpleMessage("Counter of uploaded message"),
+            MessageLookupByLibrary.simpleMessage("Yüklenen ileti sayacı"),
         "label_encryption_password_for_pgp_key":
             MessageLookupByLibrary.simpleMessage(
-                "Required password for PGP key"),
+                "PGP anahtarı için gerekli şifre"),
         "label_forward_as_attachment":
-            MessageLookupByLibrary.simpleMessage("Forward as attachment"),
+            MessageLookupByLibrary.simpleMessage("Ek olarak ilet"),
         "label_length": MessageLookupByLibrary.simpleMessage("Uzunluk"),
         "label_message_advanced_search":
             MessageLookupByLibrary.simpleMessage("Gelişmiş arama"),
@@ -626,7 +707,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Klasöre taşı"),
         "label_message_yesterday": MessageLookupByLibrary.simpleMessage("Dün"),
         "label_notifications_settings":
-            MessageLookupByLibrary.simpleMessage("Notifications"),
+            MessageLookupByLibrary.simpleMessage("Bildirimler"),
         "label_pgp_all_public_key":
             MessageLookupByLibrary.simpleMessage("Tüm ortak anahtarlar"),
         "label_pgp_contact_public_keys":
@@ -639,14 +720,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "label_pgp_decrypted_but_not_verified":
             MessageLookupByLibrary.simpleMessage(
                 "İletinin şifresi başarıyla çözüldü ancak doğrulanmadı."),
-        "label_pgp_downloading_to": m13,
-        "label_pgp_encrypt": MessageLookupByLibrary.simpleMessage("Encrypt"),
+        "label_pgp_downloading_to": m15,
+        "label_pgp_encrypt": MessageLookupByLibrary.simpleMessage("Şifrele"),
         "label_pgp_import_key":
             MessageLookupByLibrary.simpleMessage("Anahtarları içe aktar"),
         "label_pgp_key_with_not_name":
             MessageLookupByLibrary.simpleMessage("İsim yok"),
         "label_pgp_not_verified":
-            MessageLookupByLibrary.simpleMessage("Message wasn\'t verified."),
+            MessageLookupByLibrary.simpleMessage("İleti doğrulanmadı."),
         "label_pgp_private_key":
             MessageLookupByLibrary.simpleMessage("Özel anahtar"),
         "label_pgp_private_keys":
@@ -661,10 +742,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "label_pgp_sign": MessageLookupByLibrary.simpleMessage("İmzala"),
         "label_pgp_sign_or_encrypt":
             MessageLookupByLibrary.simpleMessage("Open PGP İmzala/Şifrele"),
-        "label_pgp_verified": MessageLookupByLibrary.simpleMessage(
-            "Message was successfully verified."),
+        "label_pgp_verified":
+            MessageLookupByLibrary.simpleMessage("İleti başarıyla doğrulandı."),
         "label_record_log_in_background":
-            MessageLookupByLibrary.simpleMessage("Record log in background"),
+            MessageLookupByLibrary.simpleMessage("Arka planda günlük kaydet"),
         "label_self_destructing": MessageLookupByLibrary.simpleMessage(
             "Kendini yok eden güvenli bir e-posta gönder"),
         "label_self_destructing_key_based_encryption_used":
@@ -678,13 +759,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "label_self_destructing_sign_data":
             MessageLookupByLibrary.simpleMessage(
                 "Veri özel anahtarınızla imzalanacak."),
-        "label_show_debug_view":
-            MessageLookupByLibrary.simpleMessage("Show debug view"),
-        "label_token_failed": MessageLookupByLibrary.simpleMessage("Failed"),
+        "label_show_debug_view": MessageLookupByLibrary.simpleMessage(
+            "Hata ayıklama görünümünü göster"),
+        "label_token_failed": MessageLookupByLibrary.simpleMessage("Başarısız"),
         "label_token_storing_status":
-            MessageLookupByLibrary.simpleMessage("Token storing status"),
+            MessageLookupByLibrary.simpleMessage("Token saklama durumu"),
         "label_token_successful":
-            MessageLookupByLibrary.simpleMessage("Successful"),
+            MessageLookupByLibrary.simpleMessage("Başarılı"),
         "login_input_email": MessageLookupByLibrary.simpleMessage("E-posta"),
         "login_input_host": MessageLookupByLibrary.simpleMessage("Sunucu"),
         "login_input_password": MessageLookupByLibrary.simpleMessage("Şifre"),
@@ -702,16 +783,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("İndirmeyi iptal et"),
         "messages_attachment_download_failed":
             MessageLookupByLibrary.simpleMessage("İndirme işlemi başarısız"),
-        "messages_attachment_download_success": m14,
-        "messages_attachment_downloading": m15,
+        "messages_attachment_download_success": m16,
+        "messages_attachment_downloading": m17,
         "messages_attachment_upload":
             MessageLookupByLibrary.simpleMessage("Dosya yükle"),
         "messages_attachment_upload_cancel":
             MessageLookupByLibrary.simpleMessage("Yüklemeyi iptal et"),
         "messages_attachment_upload_failed":
             MessageLookupByLibrary.simpleMessage("Yükleme işlemi başarısız"),
-        "messages_attachment_upload_success": m16,
-        "messages_attachment_uploading": m17,
+        "messages_attachment_upload_success": m18,
+        "messages_attachment_uploading": m19,
         "messages_attachments_empty":
             MessageLookupByLibrary.simpleMessage("Ek yok"),
         "messages_bcc": MessageLookupByLibrary.simpleMessage("BCC"),
@@ -720,7 +801,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Bu iletiyi silmek istediğinden emin misin?"),
         "messages_delete_desc_with_count": MessageLookupByLibrary.simpleMessage(
             "Bu iletiyi silmek istediğinize emin misiniz?"),
-        "messages_delete_desc_with_subject": m18,
+        "messages_delete_desc_with_subject": m20,
         "messages_delete_title":
             MessageLookupByLibrary.simpleMessage("İletiyi sil"),
         "messages_delete_title_with_count":
@@ -772,6 +853,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_permission_to_local_storage": MessageLookupByLibrary.simpleMessage(
             "Yerel depolamaya erişim izni yok. Cihazınızın ayarlarını kontrol edin."),
         "remove": MessageLookupByLibrary.simpleMessage("Remove"),
+        "save": MessageLookupByLibrary.simpleMessage("Kaydet"),
         "save_changes_question":
             MessageLookupByLibrary.simpleMessage("Save changes?"),
         "self_destructing_life_time_day":
@@ -784,7 +866,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings_24_time_format":
             MessageLookupByLibrary.simpleMessage("24 saat formatı"),
         "settings_about": MessageLookupByLibrary.simpleMessage("Hakkında"),
-        "settings_about_app_version": m19,
+        "settings_about_app_version": m21,
         "settings_about_privacy_policy":
             MessageLookupByLibrary.simpleMessage("Gizlilik Politikası"),
         "settings_about_terms_of_service":
@@ -793,7 +875,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Yeni hesap ekle"),
         "settings_accounts_delete":
             MessageLookupByLibrary.simpleMessage("Hesabı sil"),
-        "settings_accounts_delete_description": m20,
+        "settings_accounts_delete_description": m22,
         "settings_accounts_manage":
             MessageLookupByLibrary.simpleMessage("Hesapları yönet"),
         "settings_accounts_relogin":
@@ -842,36 +924,36 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("6 ay"),
         "settings_sync_period_years1":
             MessageLookupByLibrary.simpleMessage("1 yıl"),
-        "template_self_destructing_message": m21,
-        "template_self_destructing_message_password": m22,
+        "template_self_destructing_message": m23,
+        "template_self_destructing_message_password": m24,
         "template_self_destructing_message_title":
             MessageLookupByLibrary.simpleMessage(
                 "Güvenli ileti sizinle paylaşıldı"),
         "tfa_btn_other_options":
-            MessageLookupByLibrary.simpleMessage("Other options"),
-        "tfa_btn_use_auth_app":
-            MessageLookupByLibrary.simpleMessage("Use Authenticator app"),
+            MessageLookupByLibrary.simpleMessage("Diğer seçenekler"),
+        "tfa_btn_use_auth_app": MessageLookupByLibrary.simpleMessage(
+            "Kimlik doğrulayıcı uygulamasını kullan"),
         "tfa_btn_use_backup_code":
-            MessageLookupByLibrary.simpleMessage("Use Backup code"),
-        "tfa_btn_use_security_key":
-            MessageLookupByLibrary.simpleMessage("Use your Security key"),
-        "tfa_button_continue": MessageLookupByLibrary.simpleMessage("Continue"),
-        "tfa_check_box_trust_device": m23,
+            MessageLookupByLibrary.simpleMessage("Yedek kod kullan"),
+        "tfa_btn_use_security_key": MessageLookupByLibrary.simpleMessage(
+            "Güvenlik anahtarınızı kullanın"),
+        "tfa_button_continue": MessageLookupByLibrary.simpleMessage("Devam et"),
+        "tfa_check_box_trust_device": m25,
         "tfa_error_invalid_backup_code":
-            MessageLookupByLibrary.simpleMessage("Invalid backup code"),
+            MessageLookupByLibrary.simpleMessage("Geçersiz yedek kod"),
         "tfa_hint_step": MessageLookupByLibrary.simpleMessage(
-            "This extra step is intended to confirm it’s really you trying to sign in"),
+            "Bu ek adım, giriş yapmaya çalışanın gerçekten siz olduğunuzu doğrulamak için tasarlanmıştır"),
         "tfa_input_backup_code":
-            MessageLookupByLibrary.simpleMessage("Backup code"),
+            MessageLookupByLibrary.simpleMessage("Yedek kod"),
         "tfa_input_hint_code_from_app": MessageLookupByLibrary.simpleMessage(
-            "Specify verification code from the Authenticator app"),
+            "Kimlik doğrulayıcı uygulamasından doğrulama kodunu belirtin"),
         "tfa_label":
-            MessageLookupByLibrary.simpleMessage("Two Factor Verification"),
+            MessageLookupByLibrary.simpleMessage("İki Faktörlü Doğrulama"),
         "tfa_label_enter_backup_code": MessageLookupByLibrary.simpleMessage(
-            "Enter one of your 8-character backup codes"),
+            "8 karakterli yedek kodlarınızdan birini girin"),
         "tfa_label_hint_security_options":
-            MessageLookupByLibrary.simpleMessage("Security options available"),
+            MessageLookupByLibrary.simpleMessage("Mevcut güvenlik seçenekleri"),
         "tfa_label_trust_device":
-            MessageLookupByLibrary.simpleMessage("You\'re all set")
+            MessageLookupByLibrary.simpleMessage("Her şey hazır")
       };
 }

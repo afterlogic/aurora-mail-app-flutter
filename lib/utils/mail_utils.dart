@@ -680,7 +680,7 @@ class MailUtils {
             <script>      
                 document.addEventListener('DOMContentLoaded', function () {
                   document.getElementById('stared-btn').addEventListener('click', function (event) {
-                        let elem=event.target
+                        let elem = event.currentTarget; // Используем currentTarget вместо target
                         if (elem.classList.contains("is-starred")) {
                             elem.innerHTML = `${_getInactiveStarIcon()}`;
                             elem.classList.remove("is-starred");
@@ -693,7 +693,7 @@ class MailUtils {
                     }, false);
                     document.getElementById('info-btn').addEventListener('click', function (event) {
                         event.preventDefault();
-                        let elem=event.target
+                        let elem = event.currentTarget; // Используем currentTarget вместо target
                         if (elem.classList.contains("is-visible")) {
                             elem.innerHTML ="${S.of(context).btn_show_details}";
                         } else {

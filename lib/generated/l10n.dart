@@ -190,6 +190,246 @@ class S {
     );
   }
 
+  /// `Notes`
+  String get folders_notes {
+    return Intl.message(
+      'Notes',
+      name: 'folders_notes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My calendars`
+  String get calendar_drawer_my_calendars {
+    return Intl.message(
+      'My calendars',
+      name: 'calendar_drawer_my_calendars',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get a link`
+  String get calendar_drawer_get_link {
+    return Intl.message(
+      'Get a link',
+      name: 'calendar_drawer_get_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get a public link to the calendar`
+  String get calendar_get_public_link {
+    return Intl.message(
+      'Get a public link to the calendar',
+      name: 'calendar_get_public_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Month`
+  String get calendar_tab_month {
+    return Intl.message(
+      'Month',
+      name: 'calendar_tab_month',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Week`
+  String get calendar_tab_week {
+    return Intl.message(
+      'Week',
+      name: 'calendar_tab_week',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Day`
+  String get calendar_tab_day {
+    return Intl.message(
+      'Day',
+      name: 'calendar_tab_day',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tasks`
+  String get calendar_tab_tasks {
+    return Intl.message(
+      'Tasks',
+      name: 'calendar_tab_tasks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Share calendar`
+  String get calendar_sharing_title {
+    return Intl.message(
+      'Share calendar',
+      name: 'calendar_sharing_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All`
+  String get calendar_sharing_all {
+    return Intl.message(
+      'All',
+      name: 'calendar_sharing_all',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save`
+  String get save {
+    return Intl.message(
+      'Save',
+      name: 'save',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create event`
+  String get calendar_create_event {
+    return Intl.message(
+      'Create event',
+      name: 'calendar_create_event',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create task`
+  String get calendar_create_task {
+    return Intl.message(
+      'Create task',
+      name: 'calendar_create_task',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Event`
+  String get calendar_event_title {
+    return Intl.message(
+      'Event',
+      name: 'calendar_event_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Task`
+  String get calendar_task_title {
+    return Intl.message(
+      'Task',
+      name: 'calendar_task_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create Event`
+  String get calendar_create_event_title {
+    return Intl.message(
+      'Create Event',
+      name: 'calendar_create_event_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Event`
+  String get calendar_edit_event_title {
+    return Intl.message(
+      'Edit Event',
+      name: 'calendar_edit_event_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create Task`
+  String get calendar_create_task_title {
+    return Intl.message(
+      'Create Task',
+      name: 'calendar_create_task_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Task`
+  String get calendar_edit_task_title {
+    return Intl.message(
+      'Edit Task',
+      name: 'calendar_edit_task_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete event`
+  String get calendar_delete_event_title {
+    return Intl.message(
+      'Delete event',
+      name: 'calendar_delete_event_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete task`
+  String get calendar_delete_task_title {
+    return Intl.message(
+      'Delete task',
+      name: 'calendar_delete_task_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add attendee`
+  String get calendar_add_attendee_title {
+    return Intl.message(
+      'Add attendee',
+      name: 'calendar_add_attendee_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Organizer: {organizer}`
+  String calendar_organizer_label(Object organizer) {
+    return Intl.message(
+      'Organizer: $organizer',
+      name: 'calendar_organizer_label',
+      desc: '',
+      args: [organizer],
+    );
+  }
+
+  /// `Please select calendar`
+  String get calendar_please_select_calendar {
+    return Intl.message(
+      'Please select calendar',
+      name: 'calendar_please_select_calendar',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Reply`
   String get messages_reply {
     return Intl.message(
@@ -660,7 +900,7 @@ class S {
     );
   }
 
-  /// `Message text...`
+  /// `Message`
   String get compose_body_placeholder {
     return Intl.message(
       'Message',
@@ -4053,6 +4293,16 @@ class S {
     );
   }
 
+  /// `Are you sure you want to delete the file {name}?`
+  String hint_log_delete_record(Object name) {
+    return Intl.message(
+      'Are you sure you want to delete the file $name?',
+      name: 'hint_log_delete_record',
+      desc: '',
+      args: [name],
+    );
+  }
+
   /// `Are you sure you want to delete the file?`
   String get debug_hint_log_delete_record {
     return Intl.message(
@@ -4382,6 +4632,206 @@ class S {
       args: [],
     );
   }
+
+  /// `Title`
+  String get calendar_input_title {
+    return Intl.message(
+      'Title',
+      name: 'calendar_input_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Description`
+  String get calendar_input_description {
+    return Intl.message(
+      'Description',
+      name: 'calendar_input_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location`
+  String get calendar_input_location {
+    return Intl.message(
+      'Location',
+      name: 'calendar_input_location',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All day`
+  String get calendar_input_all_day {
+    return Intl.message(
+      'All day',
+      name: 'calendar_input_all_day',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reminders`
+  String get calendar_input_reminders {
+    return Intl.message(
+      'Reminders',
+      name: 'calendar_input_reminders',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Attendees`
+  String get calendar_input_attendees {
+    return Intl.message(
+      'Attendees',
+      name: 'calendar_input_attendees',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Filter`
+  String get calendar_filter_title {
+    return Intl.message(
+      'Filter',
+      name: 'calendar_filter_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Data`
+  String get calendar_filter_data {
+    return Intl.message(
+      'Data',
+      name: 'calendar_filter_data',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Task status`
+  String get calendar_filter_task_status {
+    return Intl.message(
+      'Task status',
+      name: 'calendar_filter_task_status',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Has a date`
+  String get calendar_filter_has_date {
+    return Intl.message(
+      'Has a date',
+      name: 'calendar_filter_has_date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Without date`
+  String get calendar_filter_without_date {
+    return Intl.message(
+      'Without date',
+      name: 'calendar_filter_without_date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All`
+  String get calendar_filter_all {
+    return Intl.message(
+      'All',
+      name: 'calendar_filter_all',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Completed`
+  String get calendar_filter_completed {
+    return Intl.message(
+      'Completed',
+      name: 'calendar_filter_completed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Uncompleted`
+  String get calendar_filter_uncompleted {
+    return Intl.message(
+      'Uncompleted',
+      name: 'calendar_filter_uncompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Always`
+  String get calendar_always {
+    return Intl.message(
+      'Always',
+      name: 'calendar_always',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `until`
+  String get calendar_until {
+    return Intl.message(
+      'until',
+      name: 'calendar_until',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `before`
+  String get calendar_before {
+    return Intl.message(
+      'before',
+      name: 'calendar_before',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `read`
+  String get calendar_read_permission {
+    return Intl.message(
+      'read',
+      name: 'calendar_read_permission',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select calendar`
+  String get calendar_select_calendar {
+    return Intl.message(
+      'Select calendar',
+      name: 'calendar_select_calendar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Selected calendar not found`
+  String get calendar_selected_calendar_not_found {
+    return Intl.message(
+      'Selected calendar not found',
+      name: 'calendar_selected_calendar_not_found',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
@@ -4390,6 +4840,8 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'de'),
+      Locale.fromSubtags(languageCode: 'fr'),
       Locale.fromSubtags(languageCode: 'ru'),
       Locale.fromSubtags(languageCode: 'tr'),
     ];
