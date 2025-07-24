@@ -31,7 +31,7 @@ class _CalendarCreationDialogState extends State<CalendarCreationDialog> {
 
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter text';
+      return S.of(context).calendar_validation_enter_text;
     }
     return null;
   }
@@ -70,7 +70,7 @@ class _CalendarCreationDialogState extends State<CalendarCreationDialog> {
     return Form(
       key: _formKey,
       child: BaseCalendarDialog(
-        title: 'Create calendar',
+        title: S.of(context).calendar_create_title,
         actions: [
           TextButton(
             onPressed: () {
@@ -91,13 +91,13 @@ class _CalendarCreationDialogState extends State<CalendarCreationDialog> {
           children: [
             InputUtils.buildUnlymeTextFormField(
               controller: _nameController,
-              labelText: 'Calendar name',
+              labelText: S.of(context).calendar_name_label,
               validator: _validator,
             ),
             SizedBox(height: 16),
             InputUtils.buildUnlymeTextFormField(
               controller: _descriptionController,
-              labelText: 'Description',
+              labelText: S.of(context).calendar_description_label,
             ),
             SizedBox(height: 16),
             GestureDetector(
@@ -123,7 +123,7 @@ class _CalendarCreationDialogState extends State<CalendarCreationDialog> {
                   const SizedBox(
                     width: 16,
                   ),
-                  Text('Subscribe to iCal feed'),
+                  Text(S.of(context).calendar_subscribe_ical_feed),
                 ],
               ),
             ),
@@ -132,11 +132,11 @@ class _CalendarCreationDialogState extends State<CalendarCreationDialog> {
               InputUtils.buildUnlymeTextFormField(
                   controller: _iCalController,
                   validator: _subscribeToIcalFeed ? _validator : null,
-                  labelText: 'iCal URL'),
+                  labelText: S.of(context).calendar_ical_url_label),
             ],
             SizedBox(height: 16),
-            const Text(
-              'Color',
+            Text(
+              S.of(context).calendar_color_label,
             ),
             SizedBox(height: 16),
             ColorSelectionField(

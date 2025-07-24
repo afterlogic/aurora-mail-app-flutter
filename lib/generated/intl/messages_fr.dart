@@ -20,68 +20,68 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'fr';
 
-  static String m0(organizer) => "Organisateur : ${organizer}";
+  static String m1(organizer) => "Organisateur : ${organizer}";
 
-  static String m1(emails) => "BCC : ${emails}";
+  static String m3(emails) => "BCC : ${emails}";
 
-  static String m2(emails) => "CC : ${emails}";
+  static String m4(emails) => "CC : ${emails}";
 
-  static String m3(emails) => "De : ${emails}";
+  static String m5(emails) => "De : ${emails}";
 
-  static String m4(date) => "Envoyé : ${date}";
+  static String m6(date) => "Envoyé : ${date}";
 
-  static String m5(subject) => "Objet : ${subject}";
+  static String m7(subject) => "Objet : ${subject}";
 
-  static String m6(emails) => "À : ${emails}";
+  static String m8(emails) => "À : ${emails}";
 
-  static String m7(time, from) => "Le ${time}, ${from} a écrit :";
+  static String m9(time, from) => "Le ${time}, ${from} a écrit :";
 
-  static String m8(contact) =>
+  static String m10(contact) =>
       "Êtes-vous sûr de vouloir supprimer ${contact} ?";
 
-  static String m9(group) =>
+  static String m11(group) =>
       "Êtes-vous sûr de vouloir supprimer ${group} ? Les contacts de ce groupe ne seront pas supprimés.";
 
-  static String m10(contact, storage) =>
+  static String m12(contact, storage) =>
       "${contact} apparaîtra bientôt dans le stockage ${storage}";
 
-  static String m11(users) =>
+  static String m13(users) =>
       "Aucune clé privée trouvée pour l\'utilisateur ${users}.";
 
-  static String m12(name) =>
+  static String m14(name) =>
       "Êtes-vous sûr de vouloir supprimer le fichier ${name} ?";
 
-  static String m13(folder) =>
+  static String m15(folder) =>
       "Êtes-vous sûr de vouloir supprimer tous les messages du dossier ${folder} ?";
 
-  static String m14(user) =>
+  static String m16(user) =>
       "Êtes-vous sûr de vouloir supprimer la clé OpenPGP pour ${user} ?";
 
-  static String m15(path) => "Téléchargement vers ${path}";
+  static String m17(path) => "Téléchargement vers ${path}";
 
-  static String m16(path) => "Fichier téléchargé dans : ${path}";
+  static String m18(path) => "Fichier téléchargé dans : ${path}";
 
-  static String m17(fileName) => "Téléchargement de ${fileName}...";
+  static String m19(fileName) => "Téléchargement de ${fileName}...";
 
-  static String m18(path) => "Fichier téléversé dans : ${path}";
+  static String m20(path) => "Fichier téléversé dans : ${path}";
 
-  static String m19(fileName) => "Téléversement de ${fileName}...";
+  static String m21(fileName) => "Téléversement de ${fileName}...";
 
-  static String m20(subject) =>
+  static String m22(subject) =>
       "Êtes-vous sûr de vouloir supprimer ${subject} ?";
 
-  static String m21(version) => "Version ${version}";
+  static String m23(version) => "Version ${version}";
 
-  static String m22(account) =>
+  static String m24(account) =>
       "Êtes-vous sûr de vouloir vous déconnecter et supprimer ${account} ?";
 
-  static String m23(sender, link, message_password, lifeTime, now) =>
+  static String m25(sender, link, message_password, lifeTime, now) =>
       "Bonjour,\nL\'utilisateur ${sender} vous a envoyé un e-mail sécurisé auto-destructeur.\nVous pouvez le lire en utilisant le lien suivant :\n${link}\n${message_password}Le message sera accessible pendant ${lifeTime} à partir de ${now}";
 
-  static String m24(password) =>
+  static String m26(password) =>
       "Le message est protégé par mot de passe. Le mot de passe est : ${password}\n";
 
-  static String m25(daysCount) =>
+  static String m27(daysCount) =>
       "Ne plus demander sur cet appareil pendant ${daysCount} jours";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -173,6 +173,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Ajouter un participant"),
         "calendar_always": MessageLookupByLibrary.simpleMessage("Toujours"),
         "calendar_before": MessageLookupByLibrary.simpleMessage("avant"),
+        "calendar_color_label": MessageLookupByLibrary.simpleMessage("Couleur"),
         "calendar_create_event":
             MessageLookupByLibrary.simpleMessage("Créer un événement"),
         "calendar_create_event_title":
@@ -181,10 +182,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Créer une tâche"),
         "calendar_create_task_title":
             MessageLookupByLibrary.simpleMessage("Créer une tâche"),
+        "calendar_create_title":
+            MessageLookupByLibrary.simpleMessage("Créer un calendrier"),
+        "calendar_delete_calendar":
+            MessageLookupByLibrary.simpleMessage("Supprimer le calendrier"),
         "calendar_delete_event_title":
             MessageLookupByLibrary.simpleMessage("Supprimer l\'événement"),
         "calendar_delete_task_title":
             MessageLookupByLibrary.simpleMessage("Supprimer la tâche"),
+        "calendar_description_label":
+            MessageLookupByLibrary.simpleMessage("Description"),
         "calendar_drawer_get_link":
             MessageLookupByLibrary.simpleMessage("Obtenir un lien"),
         "calendar_drawer_my_calendars":
@@ -193,6 +200,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Modifier l\'événement"),
         "calendar_edit_task_title":
             MessageLookupByLibrary.simpleMessage("Modifier la tâche"),
+        "calendar_edit_title":
+            MessageLookupByLibrary.simpleMessage("Modifier le calendrier"),
         "calendar_event_title":
             MessageLookupByLibrary.simpleMessage("Événement"),
         "calendar_filter_all": MessageLookupByLibrary.simpleMessage("Tous"),
@@ -210,6 +219,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Sans date"),
         "calendar_get_public_link": MessageLookupByLibrary.simpleMessage(
             "Obtenir un lien public vers le calendrier"),
+        "calendar_ical_url_label":
+            MessageLookupByLibrary.simpleMessage("URL iCal"),
+        "calendar_import_ics_file":
+            MessageLookupByLibrary.simpleMessage("Importer un fichier ICS"),
         "calendar_input_all_day":
             MessageLookupByLibrary.simpleMessage("Toute la journée"),
         "calendar_input_attendees":
@@ -221,7 +234,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "calendar_input_reminders":
             MessageLookupByLibrary.simpleMessage("Rappels"),
         "calendar_input_title": MessageLookupByLibrary.simpleMessage("Titre"),
-        "calendar_organizer_label": m0,
+        "calendar_name_label":
+            MessageLookupByLibrary.simpleMessage("Nom du calendrier"),
+        "calendar_organizer_label": m1,
         "calendar_please_select_calendar": MessageLookupByLibrary.simpleMessage(
             "Veuillez sélectionner un calendrier"),
         "calendar_read_permission":
@@ -231,15 +246,27 @@ class MessageLookup extends MessageLookupByLibrary {
         "calendar_selected_calendar_not_found":
             MessageLookupByLibrary.simpleMessage(
                 "Calendrier sélectionné introuvable"),
+        "calendar_shared_with_all":
+            MessageLookupByLibrary.simpleMessage("Partagé avec tous"),
+        "calendar_shared_with_me":
+            MessageLookupByLibrary.simpleMessage("Partagé avec moi"),
         "calendar_sharing_all": MessageLookupByLibrary.simpleMessage("Tous"),
         "calendar_sharing_title":
             MessageLookupByLibrary.simpleMessage("Partager le calendrier"),
+        "calendar_subscribe_ical_feed":
+            MessageLookupByLibrary.simpleMessage("S\'abonner au flux iCal"),
         "calendar_tab_day": MessageLookupByLibrary.simpleMessage("Jour"),
         "calendar_tab_month": MessageLookupByLibrary.simpleMessage("Mois"),
         "calendar_tab_tasks": MessageLookupByLibrary.simpleMessage("Tâches"),
         "calendar_tab_week": MessageLookupByLibrary.simpleMessage("Semaine"),
         "calendar_task_title": MessageLookupByLibrary.simpleMessage("Tâche"),
+        "calendar_unsubscribe":
+            MessageLookupByLibrary.simpleMessage("Se désabonner"),
+        "calendar_unsubscribe_from_calendar":
+            MessageLookupByLibrary.simpleMessage("Se désabonner du calendrier"),
         "calendar_until": MessageLookupByLibrary.simpleMessage("jusqu\'à"),
+        "calendar_validation_enter_text":
+            MessageLookupByLibrary.simpleMessage("Veuillez saisir du texte"),
         "clear_cache_during_logout": MessageLookupByLibrary.simpleMessage(
             "Supprimer les données en cache et les clés"),
         "compose_body_placeholder":
@@ -249,19 +276,19 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Sauvegarder les modifications dans les brouillons ?"),
         "compose_discard_save_dialog_title":
             MessageLookupByLibrary.simpleMessage("Ignorer les modifications"),
-        "compose_forward_bcc": m1,
+        "compose_forward_bcc": m3,
         "compose_forward_body_original_message":
             MessageLookupByLibrary.simpleMessage("---- Message original ----"),
-        "compose_forward_cc": m2,
-        "compose_forward_from": m3,
-        "compose_forward_sent": m4,
-        "compose_forward_subject": m5,
-        "compose_forward_to": m6,
-        "compose_reply_body_title": m7,
+        "compose_forward_cc": m4,
+        "compose_forward_from": m5,
+        "compose_forward_sent": m6,
+        "compose_forward_subject": m7,
+        "compose_forward_to": m8,
+        "compose_reply_body_title": m9,
         "contacts": MessageLookupByLibrary.simpleMessage("Contacts"),
         "contacts_add":
             MessageLookupByLibrary.simpleMessage("Ajouter un contact"),
-        "contacts_delete_desc_with_name": m8,
+        "contacts_delete_desc_with_name": m10,
         "contacts_delete_selected": MessageLookupByLibrary.simpleMessage(
             "Êtes-vous sûr de vouloir supprimer les contacts sélectionnés ?"),
         "contacts_delete_title":
@@ -293,7 +320,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Ajouter un groupe"),
         "contacts_group_add_to_group":
             MessageLookupByLibrary.simpleMessage("Ajouter au groupe"),
-        "contacts_group_delete_desc_with_name": m9,
+        "contacts_group_delete_desc_with_name": m11,
         "contacts_group_delete_title":
             MessageLookupByLibrary.simpleMessage("Supprimer le groupe"),
         "contacts_group_edit":
@@ -322,7 +349,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Supprimer les contacts du groupe"),
         "contacts_remove_selected": MessageLookupByLibrary.simpleMessage(
             "Êtes-vous sûr de vouloir supprimer les contacts sélectionnés du groupe ?"),
-        "contacts_shared_message": m10,
+        "contacts_shared_message": m12,
         "contacts_view_address":
             MessageLookupByLibrary.simpleMessage("Adresse"),
         "contacts_view_app_bar_attach":
@@ -469,7 +496,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Clés non trouvées"),
         "error_pgp_need_contact_for_encrypt": MessageLookupByLibrary.simpleMessage(
             "Pour chiffrer votre message, vous devez spécifier au moins un destinataire."),
-        "error_pgp_not_found_keys_for": m11,
+        "error_pgp_not_found_keys_for": m13,
         "error_pgp_select_recipient": MessageLookupByLibrary.simpleMessage(
             "Sélectionner le destinataire"),
         "error_server_access_denied":
@@ -639,13 +666,13 @@ class MessageLookup extends MessageLookupByLibrary {
             "Êtes-vous sûr de vouloir quitter ?"),
         "hint_log_delete_all": MessageLookupByLibrary.simpleMessage(
             "Êtes-vous sûr de vouloir supprimer tous les journaux ?"),
-        "hint_log_delete_record": m12,
+        "hint_log_delete_record": m14,
         "hint_login_upgrade_your_plan": MessageLookupByLibrary.simpleMessage(
             "Les applications mobiles ne sont pas autorisées dans votre compte."),
-        "hint_message_empty_folder": m13,
+        "hint_message_empty_folder": m15,
         "hint_pgp_already_have_keys": MessageLookupByLibrary.simpleMessage(
             "Les clés qui sont déjà dans le système sont grisées."),
-        "hint_pgp_delete_user_key_confirm": m14,
+        "hint_pgp_delete_user_key_confirm": m16,
         "hint_pgp_existed_keys": MessageLookupByLibrary.simpleMessage(
             "Les clés qui sont déjà dans le système ne seront pas importées"),
         "hint_pgp_external_private_keys": MessageLookupByLibrary.simpleMessage(
@@ -744,7 +771,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "label_pgp_decrypted_but_not_verified":
             MessageLookupByLibrary.simpleMessage(
                 "Le message a été déchiffré avec succès mais n\'a pas été vérifié."),
-        "label_pgp_downloading_to": m15,
+        "label_pgp_downloading_to": m17,
         "label_pgp_encrypt": MessageLookupByLibrary.simpleMessage("Chiffrer"),
         "label_pgp_import_key":
             MessageLookupByLibrary.simpleMessage("Importer les clés"),
@@ -808,16 +835,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Annuler le téléchargement"),
         "messages_attachment_download_failed":
             MessageLookupByLibrary.simpleMessage("Échec du téléchargement"),
-        "messages_attachment_download_success": m16,
-        "messages_attachment_downloading": m17,
+        "messages_attachment_download_success": m18,
+        "messages_attachment_downloading": m19,
         "messages_attachment_upload":
             MessageLookupByLibrary.simpleMessage("Téléverser une pièce jointe"),
         "messages_attachment_upload_cancel":
             MessageLookupByLibrary.simpleMessage("Annuler le téléversement"),
         "messages_attachment_upload_failed":
             MessageLookupByLibrary.simpleMessage("Échec du téléversement"),
-        "messages_attachment_upload_success": m18,
-        "messages_attachment_uploading": m19,
+        "messages_attachment_upload_success": m20,
+        "messages_attachment_uploading": m21,
         "messages_attachments_empty":
             MessageLookupByLibrary.simpleMessage("Aucune pièce jointe"),
         "messages_bcc": MessageLookupByLibrary.simpleMessage("BCC"),
@@ -826,7 +853,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Êtes-vous sûr de vouloir supprimer ce message ?"),
         "messages_delete_desc_with_count": MessageLookupByLibrary.simpleMessage(
             "Êtes-vous sûr de vouloir supprimer ces messages ?"),
-        "messages_delete_desc_with_subject": m20,
+        "messages_delete_desc_with_subject": m22,
         "messages_delete_title":
             MessageLookupByLibrary.simpleMessage("Supprimer le message"),
         "messages_delete_title_with_count":
@@ -892,7 +919,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings_24_time_format":
             MessageLookupByLibrary.simpleMessage("Format 24 heures"),
         "settings_about": MessageLookupByLibrary.simpleMessage("À propos"),
-        "settings_about_app_version": m21,
+        "settings_about_app_version": m23,
         "settings_about_privacy_policy": MessageLookupByLibrary.simpleMessage(
             "Politique de confidentialité"),
         "settings_about_terms_of_service":
@@ -901,7 +928,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Ajouter un nouveau compte"),
         "settings_accounts_delete":
             MessageLookupByLibrary.simpleMessage("Supprimer le compte"),
-        "settings_accounts_delete_description": m22,
+        "settings_accounts_delete_description": m24,
         "settings_accounts_manage":
             MessageLookupByLibrary.simpleMessage("Gérer les comptes"),
         "settings_accounts_relogin":
@@ -952,8 +979,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("6 mois"),
         "settings_sync_period_years1":
             MessageLookupByLibrary.simpleMessage("1 an"),
-        "template_self_destructing_message": m23,
-        "template_self_destructing_message_password": m24,
+        "template_self_destructing_message": m25,
+        "template_self_destructing_message_password": m26,
         "template_self_destructing_message_title":
             MessageLookupByLibrary.simpleMessage(
                 "Le message sécurisé a été partagé avec vous"),
@@ -967,7 +994,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Utiliser votre clé de sécurité"),
         "tfa_button_continue":
             MessageLookupByLibrary.simpleMessage("Continuer"),
-        "tfa_check_box_trust_device": m25,
+        "tfa_check_box_trust_device": m27,
         "tfa_error_invalid_backup_code":
             MessageLookupByLibrary.simpleMessage("Code de sauvegarde invalide"),
         "tfa_hint_step": MessageLookupByLibrary.simpleMessage(

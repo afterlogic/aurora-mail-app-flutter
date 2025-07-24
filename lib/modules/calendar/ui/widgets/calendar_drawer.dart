@@ -128,7 +128,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                         padding: const EdgeInsets.symmetric(
                                 horizontal: _horizontalHeaderPadding)
                             .copyWith(top: 16, bottom: 4),
-                        child: Text('Shared with me',
+                        child: Text(S.of(context).calendar_shared_with_me,
                             style: TextStyle(color: theme.primaryColor)),
                       ),
                     if (sharedCalendars?.isNotEmpty ?? false)
@@ -157,7 +157,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                         padding: const EdgeInsets.symmetric(
                                 horizontal: _horizontalHeaderPadding)
                             .copyWith(top: 16, bottom: 4),
-                        child: Text('Shared with all',
+                        child: Text(S.of(context).calendar_shared_with_all,
                             style: TextStyle(color: theme.primaryColor)),
                       ),
                     if (sharedToAllCalendars?.isNotEmpty ?? false)
@@ -287,7 +287,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
             iconName: 'download',
             folder: 'calendar',
           ),
-          titleBuilder: (ctx) => 'Import ICS file',
+          titleBuilder: (ctx) => S.of(ctx).calendar_import_ics_file,
           onTap: (ctx, ViewCalendar calendar) async {
             final user = BlocProvider.of<AuthBloc>(ctx).currentUser;
             await downloadFromUrl(
@@ -303,22 +303,23 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
             iconName: 'unsubscribe',
             folder: 'calendar',
           ),
-          titleBuilder: (ctx) => 'Unsubscribe from calendar',
+          titleBuilder: (ctx) => S.of(ctx).calendar_unsubscribe_from_calendar,
           onTap: (ctx, ViewCalendar calendar) {
             CalendarConfirmDialog.show(ctx,
-                    title: 'Unsubscribe',
+                    title: S.of(ctx).calendar_unsubscribe,
                     actions: [
                       TextButton(
                         child: Text(S.of(context).btn_cancel),
                         onPressed: () => Navigator.pop(context, false),
                       ),
                       TextButton(
-                        child: Text("Unsubscribe"),
+                        child: Text(S.of(ctx).calendar_unsubscribe),
                         onPressed: () => Navigator.pop(context, true),
                       ),
                     ],
-                    confirmMessage:
-                        "Are you sure you want to unsubscribe from calendar ${calendar.name}?")
+                    confirmMessage: S
+                        .of(ctx)
+                        .calendar_unsubscribe_confirm_message(calendar.name))
                 .then((value) {
               if (value != true) return;
               BlocProvider.of<CalendarsBloc>(ctx)
@@ -356,7 +357,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
                   final result = await showDialog<DiscardChangesOption>(
                     context: context,
                     builder: (_) => DiscardChangesDialog(
-                      content: Text('Save changes?'),
+                      content: Text(S.of(context).calendar_save_changes_question),
                     ),
                   );
                   if (result == null) return;
@@ -392,9 +393,10 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
           titleBuilder: (ctx) => S.of(ctx).btn_delete,
           onTap: (ctx, ViewCalendar calendar) {
             CalendarConfirmDialog.show(ctx,
-                    title: 'Delete calendar',
-                    confirmMessage:
-                        "Are you sure you want to delete calendar ${calendar.name}?")
+                    title: S.of(ctx).calendar_delete_calendar,
+                    confirmMessage: S
+                        .of(ctx)
+                        .calendar_delete_confirm_message(calendar.name))
                 .then((value) {
               if (value != true) return;
               BlocProvider.of<CalendarsBloc>(ctx).add(DeleteCalendar(calendar));
@@ -544,7 +546,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
                                   widget.calendar.sharedToAllAccess == 2)) &&
                           widget.showPermission)
                         Text(
-                          'read',
+                          S.of(context).calendar_read_permission,
                           style:
                               TextStyle(color: Color(0xFFB6B5B5), fontSize: 14),
                         ),

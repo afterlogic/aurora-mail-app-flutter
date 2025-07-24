@@ -4813,6 +4813,86 @@ class S {
     );
   }
 
+  /// `Create calendar`
+  String get calendar_create_title {
+    return Intl.message(
+      'Create calendar',
+      name: 'calendar_create_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit calendar`
+  String get calendar_edit_title {
+    return Intl.message(
+      'Edit calendar',
+      name: 'calendar_edit_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calendar name`
+  String get calendar_name_label {
+    return Intl.message(
+      'Calendar name',
+      name: 'calendar_name_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Description`
+  String get calendar_description_label {
+    return Intl.message(
+      'Description',
+      name: 'calendar_description_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subscribe to iCal feed`
+  String get calendar_subscribe_ical_feed {
+    return Intl.message(
+      'Subscribe to iCal feed',
+      name: 'calendar_subscribe_ical_feed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `iCal URL`
+  String get calendar_ical_url_label {
+    return Intl.message(
+      'iCal URL',
+      name: 'calendar_ical_url_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Color`
+  String get calendar_color_label {
+    return Intl.message(
+      'Color',
+      name: 'calendar_color_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter text`
+  String get calendar_validation_enter_text {
+    return Intl.message(
+      'Please enter text',
+      name: 'calendar_validation_enter_text',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Select calendar`
   String get calendar_select_calendar {
     return Intl.message(
@@ -4830,6 +4910,96 @@ class S {
       name: 'calendar_selected_calendar_not_found',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Shared with me`
+  String get calendar_shared_with_me {
+    return Intl.message(
+      'Shared with me',
+      name: 'calendar_shared_with_me',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shared with all`
+  String get calendar_shared_with_all {
+    return Intl.message(
+      'Shared with all',
+      name: 'calendar_shared_with_all',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import ICS file`
+  String get calendar_import_ics_file {
+    return Intl.message(
+      'Import ICS file',
+      name: 'calendar_import_ics_file',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unsubscribe from calendar`
+  String get calendar_unsubscribe_from_calendar {
+    return Intl.message(
+      'Unsubscribe from calendar',
+      name: 'calendar_unsubscribe_from_calendar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unsubscribe`
+  String get calendar_unsubscribe {
+    return Intl.message(
+      'Unsubscribe',
+      name: 'calendar_unsubscribe',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete calendar`
+  String get calendar_delete_calendar {
+    return Intl.message(
+      'Delete calendar',
+      name: 'calendar_delete_calendar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save changes?`
+  String get calendar_save_changes_question {
+    return Intl.message(
+      'Save changes?',
+      name: 'calendar_save_changes_question',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to unsubscribe from calendar {calendarName}?`
+  String calendar_unsubscribe_confirm_message(Object calendarName) {
+    return Intl.message(
+      'Are you sure you want to unsubscribe from calendar $calendarName?',
+      name: 'calendar_unsubscribe_confirm_message',
+      desc: '',
+      args: [calendarName],
+    );
+  }
+
+  /// `Are you sure you want to delete calendar {calendarName}?`
+  String calendar_delete_confirm_message(String calendarName) {
+    return Intl.message(
+      'Are you sure you want to delete calendar $calendarName?',
+      name: 'calendar_delete_confirm_message',
+      desc: '',
+      args: [calendarName],
     );
   }
 }

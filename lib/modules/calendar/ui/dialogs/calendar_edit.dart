@@ -32,7 +32,7 @@ class _CalendarEditDialogState extends State<CalendarEditDialog> {
 
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter text';
+      return S.of(context).calendar_validation_enter_text;
     }
     return null;
   }
@@ -70,7 +70,7 @@ class _CalendarEditDialogState extends State<CalendarEditDialog> {
     return Form(
       key: _formKey,
       child: BaseCalendarDialog(
-        title: 'Edit calendar',
+        title: S.of(context).calendar_edit_title,
         actions: [
           TextButton(
             onPressed: () {
@@ -92,21 +92,21 @@ class _CalendarEditDialogState extends State<CalendarEditDialog> {
           children: [
             InputUtils.buildUnlymeTextFormField(
               controller: _nameController,
-              labelText: 'Calendar name',
+              labelText: S.of(context).calendar_name_label,
               validator: _validator,
             ),
             SizedBox(height: 16),
             InputUtils.buildUnlymeTextFormField(
               controller: _descriptionController,
-              labelText: 'Description',
+              labelText: S.of(context).calendar_description_label,
             ),
             SizedBox(height: 16),
             if(widget.calendar.isSubscribed)InputUtils.buildUnlymeTextFormField(
                 controller: _iCalController,
-                labelText: 'iCal URL'),
+                labelText: S.of(context).calendar_ical_url_label),
             SizedBox(height: 16),
-            const Text(
-              'Color',
+            Text(
+              S.of(context).calendar_color_label,
             ),
             SizedBox(height: 16),
             ColorSelectionField(

@@ -330,7 +330,7 @@ class MailUtils {
               }
               .input-area:empty::before {
                 ${useCustomBuildStyles ? '''
-                content: "Message";
+                content: "${S.of(context).compose_body_placeholder}";
                 color: #6F788D;
                 position: absolute;
                 pointer-events: none;
