@@ -38,6 +38,8 @@ class Language {
         return "Français";
       case "de":
         return "Deutsch";
+      case 'it':
+        return "Italiano";
       default:
         return "UNKNOWN_LANGUAGE";
     }

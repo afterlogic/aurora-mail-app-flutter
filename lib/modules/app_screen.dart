@@ -29,19 +29,19 @@ import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/user_app_data_singleton.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:drift/drift.dart';
 import 'package:receive_sharing/recive_sharing.dart';
 import 'package:theme/app_theme.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
-import 'route_generator.dart';
 import 'auth/blocs/auth_bloc/bloc.dart';
 import 'auth/screens/login/login_route.dart';
 import 'dialog_wrap.dart';
+import 'route_generator.dart';
 
 final routeObserver = RouteObserver();
 
@@ -208,7 +208,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
           if (state is InitializedUserAndAccounts) {
             if (state.user == null) {
               /// SnackBar doesn't work in here because it disappear after some time
-              
+
               // _scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
               //   content: Text(
               //     'Authentication error! Please login to continue.',
@@ -237,10 +237,8 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                       onPressed: () {
                         _navigateToLogin();
                       },
-                      child: Text(
-                        'Re-login',
-                        style: TextStyle(color: Colors.white)
-                      ),
+                      child: Text('Re-login',
+                          style: TextStyle(color: Colors.white)),
                     ),
                   ],
                 ),
@@ -343,18 +341,11 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                           onGenerateRoute: RouteGenerator.onGenerateRoute,
                           theme: theme ?? AppTheme.light,
                           darkTheme: theme ?? AppTheme.dark,
-                          // themeMode: ThemeMode.light,
                           localizationsDelegates: [
                             GlobalMaterialLocalizations.delegate,
                             GlobalWidgetsLocalizations.delegate,
                             GlobalCupertinoLocalizations.delegate,
                             S.delegate,
-                            // LocalizationI18nDelegate(
-                            //   forcedLocale: supportedLocales.contains(
-                            //           settingsState.language?.toLocale())
-                            //       ? settingsState.language?.toLocale()
-                            //       : null,
-                            // ),
                           ],
                           supportedLocales: BuildProperty.supportLanguage
                               .split(",")
