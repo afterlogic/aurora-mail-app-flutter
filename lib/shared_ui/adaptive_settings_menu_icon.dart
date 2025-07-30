@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:theme/app_color.dart';
 
+/// EN: Icon for settings menu
+/// RU: Иконка для меню настроек
 class AdaptiveSettingsMenuIcon extends StatelessWidget {
   final IconData defaultIcon; // Стандартная иконка MDI
   final String iconName; // Имя иконки для SVG файлов (без расширения)

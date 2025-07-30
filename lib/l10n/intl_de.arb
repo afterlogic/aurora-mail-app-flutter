@@ -497,5 +497,6 @@
 	"calendar_subscribe_ical_feed": "iCal-Feed abonnieren",
 	"calendar_ical_url_label": "iCal URL",
 	"calendar_color_label": "Farbe",
-	"calendar_validation_enter_text": "Bitte geben Sie Text ein"
+	"calendar_validation_enter_text": "Bitte geben Sie Text ein",
+	"settings_delete_account": "Konto löschen"
 }

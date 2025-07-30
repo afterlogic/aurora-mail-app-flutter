@@ -921,6 +921,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Light"),
         "settings_dark_theme_system":
             MessageLookupByLibrary.simpleMessage("System theme"),
+        "settings_delete_account":
+            MessageLookupByLibrary.simpleMessage("Delete account"),
         "settings_language": MessageLookupByLibrary.simpleMessage("Language"),
         "settings_language_system":
             MessageLookupByLibrary.simpleMessage("System language"),

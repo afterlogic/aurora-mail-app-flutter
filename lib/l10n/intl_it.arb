@@ -504,5 +504,6 @@
 				"type": "String"
 			}
 		}
-	}
+	},
+	"settings_delete_account": "Elimina account"
 }

@@ -498,5 +498,6 @@
   "calendar_subscribe_ical_feed": "S'abonner au flux iCal",
   "calendar_ical_url_label": "URL iCal",
   "calendar_color_label": "Couleur",
-  "calendar_validation_enter_text": "Veuillez saisir du texte"
+  "calendar_validation_enter_text": "Veuillez saisir du texte",
+  "settings_delete_account": "Supprimer le compte"
 }

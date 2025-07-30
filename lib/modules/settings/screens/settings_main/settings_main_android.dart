@@ -25,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:theme/app_color.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsMainAndroid extends StatefulWidget {
   @override
@@ -202,6 +203,20 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             onTap: () => navigator().setRoot(DebugRoute.name),
           ),
         if (showDebug) _buildDivider(),
+        if (BuildProperty.deleteAccountLink?.isNotEmpty == true)
+          ListTile(
+            leading: AdaptiveSettingsMenuIcon(
+              defaultIcon: Icons.delete_outline,
+              iconName: 'delete-account',
+              color: theme.primaryColor,
+              background: iconBG,
+            ),
+            title: Text(S.current.settings_delete_account),
+            trailing: _buildTrailingArrow(),
+            onTap: () => launchUrl(Uri.parse(BuildProperty.deleteAccountLink)),
+          ),
+        if (BuildProperty.deleteAccountLink?.isNotEmpty == true)
+          _buildDivider(),
         if (!BuildProperty.multiUserEnable)
           ListTile(
             leading: AdaptiveSettingsMenuIcon(

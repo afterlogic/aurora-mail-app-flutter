@@ -5042,6 +5042,16 @@ class S {
       args: [calendarName],
     );
   }
+
+  /// `Delete account`
+  String get settings_delete_account {
+    return Intl.message(
+      'Delete account',
+      name: 'settings_delete_account',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
