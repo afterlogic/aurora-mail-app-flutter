@@ -84,51 +84,59 @@ class MailBottomAppBar extends StatelessWidget {
         color: AppColor.bottomNavigationBackground,
         padding: padding,
         child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-            AdaptiveBottomBarButton(
-              mdiIcon: MdiIcons.email,
-              iconName: 'mail',
-              label: S.of(context).messages_list_app_bar_mail,
-              isActive: selectedRoute == MailBottomAppBarRoutes.mail,
-              activeColor: activeColor,
-              inactiveColor: inactiveColor,
-              onPressed: () => _openMail(context),
-          iconSize: iconSize,
-            ),
-            AdaptiveBottomBarButton(
-              mdiIcon: MdiIcons.cardAccountMail,
-              iconName: 'contacts',
-              label: S.of(context).messages_list_app_bar_contacts,
-              isActive: selectedRoute == MailBottomAppBarRoutes.contacts,
-              activeColor: activeColor,
-              inactiveColor: inactiveColor,
-              onPressed: () => _openContacts(context),
-          iconSize: iconSize,
-        ),
-            if (isCalendarExist)
-              AdaptiveBottomBarButton(
-                mdiIcon: MdiIcons.calendar,
-                iconName: 'calendar',
-                label: S.of(context).calendar,
-                isActive: selectedRoute == MailBottomAppBarRoutes.calendar,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Expanded(
+              child: AdaptiveBottomBarButton(
+                mdiIcon: MdiIcons.email,
+                iconName: 'mail',
+                label: S.of(context).messages_list_app_bar_mail,
+                isActive: selectedRoute == MailBottomAppBarRoutes.mail,
                 activeColor: activeColor,
                 inactiveColor: inactiveColor,
-                onPressed: () => _openCalendar(context),
-          iconSize: iconSize,
+                onPressed: () => _openMail(context),
+                iconSize: iconSize,
               ),
-            AdaptiveBottomBarButton(
-              mdiIcon: MdiIcons.cog,
-              iconName: 'settings',
-              label: S.of(context).messages_list_app_bar_settings,
-              isActive: selectedRoute == MailBottomAppBarRoutes.settings,
-              activeColor: activeColor,
-              inactiveColor: inactiveColor,
-              onPressed: () => _openSettings(context),
-          iconSize: iconSize,
-        ),
-      ],
-    ));
+            ),
+            Expanded(
+              child: AdaptiveBottomBarButton(
+                mdiIcon: MdiIcons.cardAccountMail,
+                iconName: 'contacts',
+                label: S.of(context).messages_list_app_bar_contacts,
+                isActive: selectedRoute == MailBottomAppBarRoutes.contacts,
+                activeColor: activeColor,
+                inactiveColor: inactiveColor,
+                onPressed: () => _openContacts(context),
+                iconSize: iconSize,
+              ),
+            ),
+            if (isCalendarExist)
+              Expanded(
+                child: AdaptiveBottomBarButton(
+                  mdiIcon: MdiIcons.calendar,
+                  iconName: 'calendar',
+                  label: S.of(context).calendar,
+                  isActive: selectedRoute == MailBottomAppBarRoutes.calendar,
+                  activeColor: activeColor,
+                  inactiveColor: inactiveColor,
+                  onPressed: () => _openCalendar(context),
+                  iconSize: iconSize,
+                ),
+              ),
+            Expanded(
+              child: AdaptiveBottomBarButton(
+                mdiIcon: MdiIcons.cog,
+                iconName: 'settings',
+                label: S.of(context).messages_list_app_bar_settings,
+                isActive: selectedRoute == MailBottomAppBarRoutes.settings,
+                activeColor: activeColor,
+                inactiveColor: inactiveColor,
+                onPressed: () => _openSettings(context),
+                iconSize: iconSize,
+              ),
+            ),
+          ],
+        ));
     if (isTablet) {
       row = Row(
         children: [

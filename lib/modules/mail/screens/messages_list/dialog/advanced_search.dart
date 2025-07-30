@@ -171,12 +171,12 @@ class AdvancedSearchState extends State<AdvancedSearch> {
                       setState(() {});
                     },
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      withAttachment = !withAttachment;
-                      setState(() {});
-                    },
-                    child: Expanded(
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        withAttachment = !withAttachment;
+                        setState(() {});
+                      },
                       child: Text(
                         S.of(context).messages_view_tab_attachments,
                         style: TextStyle(
