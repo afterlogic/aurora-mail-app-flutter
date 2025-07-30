@@ -152,7 +152,7 @@ class WebMailApi {
         if (res["ErrorCode"] == 4002) {
           res["ErrorCode"] = 102;
         }
-        if (res["ErrorCode"] == 102) {
+        if (res["ErrorCode"] == 101 || res["ErrorCode"] == 102) {
           _authErrorStreamCtrl.add(res["ErrorCode"]);
         }
         throw WebMailApiError(res);
@@ -195,8 +195,8 @@ class WebMailApi {
         return res["Result"];
     } else {
       onError?.call("$id\n${responseBody}");
-      if (res["ErrorCode"] == 102 || res["ErrorCode"] == 108) {
-        _authErrorStreamCtrl.add(102);
+      if (res["ErrorCode"] == 101|| res["ErrorCode"] == 102 || res["ErrorCode"] == 108) {
+        _authErrorStreamCtrl.add(res["ErrorCode"]);
       }
       throw WebMailApiError(res);
     }
