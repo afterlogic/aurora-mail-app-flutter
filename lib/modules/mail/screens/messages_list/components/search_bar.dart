@@ -73,7 +73,7 @@ class SearchBarState extends BState<SearchBar> {
               ),
             ),
             IconButton(
-              icon: AppBarIcons.close(context: context),
+              icon: Icon(Icons.close),
               onPressed: () {
                 setState(() {
                   widget.searchCtrl.clear();
@@ -107,7 +107,7 @@ class SearchBarState extends BState<SearchBar> {
         shadow: BoxShadow(color: Colors.transparent),
         actions: <Widget>[
           IconButton(
-            icon: AppBarIcons.close(context: context),
+            icon: Icon(Icons.close),
             onPressed: () {
               setState(() {
                 widget.searchCtrl.clear();
