@@ -2,6 +2,7 @@
 appName: ''
 version: 1.0.0
 
+#Platform IDs
 #Android App ID
 _appId: ''
 #iOS Team ID
@@ -9,19 +10,13 @@ _iosDeveloperId: ''
 #iOS App Group ID
 _appleGroupId: ''
 
-#Android splash screen
-background_color: '#FFFFFF'
-useBackgroundImage: false
-splashGradientTop: '#FFFFFF'
-splashGradientBottom: '#FFFFFF'
-splashGradientTopDark: '#000000'
-splashGradientBottomDark: '#000000'
-
+#Links & URLs
 autodiscover_url: 'https://{domain}/aurora-autodiscover.json?email={email}'
 privacyPolicy: ''
 termsOfService: ''
 registrationLink: ''
 
+#Localization
 supportLanguage: 'en,tr,ru'
 
 #App settings
@@ -49,10 +44,28 @@ supportAllowAccess: false
 #useYubiKit: true
 #yubico_flutter_lib: "git: https://github.com/afterlogic/yubico_flutter"
 
+#UI Customization
+#Android splash screen
+background_color: '#FFFFFF'
+useBackgroundImage: false
+splashGradientTop: '#FFFFFF'
+splashGradientBottom: '#FFFFFF'
+splashGradientTopDark: '#000000'
+splashGradientBottomDark: '#000000'
+
+#Theme selection
+showThemeSelection: true # show theme selection in settings
+
+#AppBar customization
+useAppBarDivider: false # add divider line under AppBar
+
 #Custom floating action button
 # true and false values are inverted
 disableShadowFloatingActionButton: false # disable shadow for floating action button
 disableScreenShadowFloatingActionButton: false # disable shadow for floating action button on screen
+
+#Action button icons
+usePlusIconForActionButtons: false # use plus icon for floating action buttons
 
 #Custom Drawer
 useDrawerGradient: true # use gradient for drawer
@@ -81,12 +94,3 @@ useCustomSettingsIcons: false # use custom settings menu icons
 useSettingsMenuDivider: false # use dividers between settings menu items
 useSettingsMenuTrailingArrow: false # use trailing arrows in settings menu
 useCustomSettingsColors: false # use custom colors for settings menu
-
-#AppBar customization
-useAppBarDivider: false # add divider line under AppBar
-
-#Theme selection
-showThemeSelection: true # show theme selection in settings
-
-#Action button icons
-usePlusIconForActionButtons: false # use plus icon for floating action buttons

@@ -9,12 +9,6 @@ class AppTheme {
       color: AppColor.primary,
     ),
     primaryColor: AppColor.primary,
-    inputDecorationTheme: InputDecorationTheme(
-        floatingLabelStyle: TextStyle(color: AppColor.primary)),
-    textButtonTheme: TextButtonThemeData(
-        style: ButtonStyle(
-      foregroundColor: MaterialStateProperty.all(AppColor.primary),
-    )),
     textSelectionTheme: TextSelectionThemeData(
       selectionColor: AppColor.accent,
       selectionHandleColor: AppColor.accent,
@@ -26,18 +20,9 @@ class AppTheme {
         secondary: AppColor.primary,
         background: Color(0xFFe6ebf0),
         brightness: Brightness.light),
-    buttonTheme: _buttonTheme,
-    dialogTheme: _dialogTheme,
-    snackBarTheme: SnackBarThemeData(
-        behavior: SnackBarBehavior.floating,
-        insetPadding: EdgeInsets.all(6),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        backgroundColor: Colors.green),
-    splashFactory: InkRipple.splashFactory,
-    disabledColor: Colors.black.withOpacity(0.4),
     scaffoldBackgroundColor: Colors.white,
-//    iconTheme: IconThemeData(color: AppColor.primary),
+    disabledColor: Colors.black.withOpacity(0.4),
+    splashFactory: InkRipple.splashFactory,
     textTheme: TextTheme(
       headlineMedium: TextStyle(
         color: Colors.black,
@@ -75,17 +60,14 @@ class AppTheme {
         ),
       ).titleLarge,
     ),
-    floatingActionButtonTheme: _floatTheme,
-  );
-
-  static final dark = ThemeData(
-    textSelectionTheme: TextSelectionThemeData(
-      selectionColor: AppColor.accent,
-      selectionHandleColor: AppColor.accent,
-      cursorColor: AppColor.accent,
-    ),
-    primaryColor: AppColor.primary,
     buttonTheme: _buttonTheme,
+    textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+      foregroundColor: MaterialStateProperty.all(AppColor.primary),
+    )),
+    floatingActionButtonTheme: _floatTheme,
+    inputDecorationTheme: InputDecorationTheme(
+        floatingLabelStyle: TextStyle(color: AppColor.primary)),
     dialogTheme: _dialogTheme,
     snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
@@ -93,12 +75,15 @@ class AppTheme {
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         backgroundColor: Colors.green),
-    inputDecorationTheme: InputDecorationTheme(
-        floatingLabelStyle: TextStyle(color: AppColor.primary)),
-    textButtonTheme: TextButtonThemeData(
-        style: ButtonStyle(
-      foregroundColor: MaterialStateProperty.all(AppColor.primary),
-    )),
+  );
+
+  static final dark = ThemeData(
+    primaryColor: AppColor.primary,
+    textSelectionTheme: TextSelectionThemeData(
+      selectionColor: AppColor.accent,
+      selectionHandleColor: AppColor.accent,
+      cursorColor: AppColor.accent,
+    ),
     colorScheme: ColorScheme.fromSeed(
         seedColor: AppColor.primary,
         secondary: AppColor.primary,
@@ -106,11 +91,9 @@ class AppTheme {
         error: AppColor.warning,
         background: Color(0xFFe6ebf0),
         brightness: Brightness.dark),
-
-//    iconTheme: IconThemeData(color: AppColor.primary),
-    splashFactory: InkRipple.splashFactory,
-    disabledColor: Colors.white.withOpacity(0.4),
     scaffoldBackgroundColor: Color(0xFF1A1A1A),
+    disabledColor: Colors.white.withOpacity(0.4),
+    splashFactory: InkRipple.splashFactory,
     textTheme: TextTheme(
       headlineMedium: TextStyle(
         color: Colors.white,
@@ -148,8 +131,22 @@ class AppTheme {
         ),
       ).titleLarge,
     ),
+    buttonTheme: _buttonTheme,
+    textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+      foregroundColor: MaterialStateProperty.all(AppColor.primary),
+    )),
     floatingActionButtonTheme: _floatTheme,
     bottomAppBarTheme: BottomAppBarTheme(color: Colors.black),
+    inputDecorationTheme: InputDecorationTheme(
+        floatingLabelStyle: TextStyle(color: AppColor.primary)),
+    dialogTheme: _dialogTheme,
+    snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        insetPadding: EdgeInsets.all(6),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        backgroundColor: Colors.green),
   );
 
   static final ThemeData? login = null;
@@ -161,8 +158,8 @@ class AppTheme {
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
     titleTextStyle: TextStyle(
       fontSize: 20,
-      fontWeight: FontWeight.w500,
-      color: AppColor.appBarText, // Используем цвет текста из AppColor
+      fontWeight: FontWeight.w600,
+      color: AppColor.appBarText, // Using text color from AppColor
     ),
   );
 

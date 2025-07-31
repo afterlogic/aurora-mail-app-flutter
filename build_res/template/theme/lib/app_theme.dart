@@ -11,16 +11,14 @@ class AppTheme {
       cursorColor: AppColor.accent,
     ),
     accentColor: AppColor.accent,
-    buttonColor: AppColor.accent,
-    buttonTheme: _buttonTheme,
-    dialogTheme: _dialogTheme,
-    selectedRowColor: Color(0xFFe2e7ec),
-    backgroundColor: Color(0xFFe6ebf0),
-    splashFactory: InkRipple.splashFactory,
     brightness: Brightness.light,
-    disabledColor: Colors.black.withOpacity(0.4),
+    backgroundColor: Color(0xFFe6ebf0),
     scaffoldBackgroundColor: Colors.white,
-//    iconTheme: IconThemeData(color: AppColor.primary),
+    selectedRowColor: Color(0xFFe2e7ec),
+    disabledColor: Colors.black.withOpacity(0.4),
+    splashFactory: InkRipple.splashFactory,
+    toggleableActiveColor: AppColor.primary,
+    // iconTheme: IconThemeData(color: AppColor.primary),
     textTheme: TextTheme(
       headline4: TextStyle(
         color: Colors.black,
@@ -46,28 +44,28 @@ class AppTheme {
         ),
       ),
     ),
+    buttonColor: AppColor.accent,
+    buttonTheme: _buttonTheme,
     floatingActionButtonTheme: _floatTheme,
-    toggleableActiveColor: AppColor.primary,
+    dialogTheme: _dialogTheme,
   );
 
   static final dark = ThemeData(
+    primaryColor: AppColor.primary,
     textSelectionTheme: TextSelectionThemeData(
       selectionColor: AppColor.accent,
       selectionHandleColor: AppColor.accent,
       cursorColor: AppColor.accent,
     ),
-    primaryColor: AppColor.primary,
     accentColor: AppColor.accent,
-    buttonColor: AppColor.accent,
-    buttonTheme: _buttonTheme,
-    dialogTheme: _dialogTheme,
-    selectedRowColor: Colors.black,
-    backgroundColor: Color(0xFFe6ebf0),
-//    iconTheme: IconThemeData(color: AppColor.primary),
-    splashFactory: InkRipple.splashFactory,
     brightness: Brightness.dark,
-    disabledColor: Colors.white.withOpacity(0.4),
+    backgroundColor: Color(0xFFe6ebf0),
     scaffoldBackgroundColor: Color(0xFF1A1A1A),
+    selectedRowColor: Colors.black,
+    disabledColor: Colors.white.withOpacity(0.4),
+    splashFactory: InkRipple.splashFactory,
+    toggleableActiveColor: AppColor.primary,
+    // iconTheme: IconThemeData(color: AppColor.primary),
     textTheme: TextTheme(
       headline4: TextStyle(
         color: Colors.white,
@@ -93,9 +91,11 @@ class AppTheme {
         ),
       ),
     ),
+    buttonColor: AppColor.accent,
+    buttonTheme: _buttonTheme,
     floatingActionButtonTheme: _floatTheme,
     bottomAppBarColor: Colors.black,
-    toggleableActiveColor: AppColor.primary,
+    dialogTheme: _dialogTheme,
   );
 
   static final ThemeData login = null;
@@ -108,7 +108,7 @@ class AppTheme {
     titleTextStyle: TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.w500,
-      color: AppColor.appBarText, // Используем цвет текста из AppColor
+      color: AppColor.appBarText, // Using text color from AppColor
     ),
   );
 

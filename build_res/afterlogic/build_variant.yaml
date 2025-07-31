@@ -2,6 +2,7 @@
 appName: 'Aurora Mail'
 version: 2.4.0
 
+#Platform IDs
 #Android App ID
 _appId: 'com.afterlogic.aurora.mail'
 #iOS Team ID
@@ -9,19 +10,14 @@ _iosDeveloperId: 'J7AW6VHJK4'
 #iOS App Group ID
 _appleGroupId: 'group.com.afterlogic.aurora'
 
-#Android splash screen
-background_color: '#FFFFFF'
-useBackgroundImage: false
-splashGradientTop: '#FFFFFF'
-splashGradientBottom: '#FFFFFF'
-splashGradientTopDark: '#000000'
-splashGradientBottomDark: '#000000'
-
+#Links & URLs
 autodiscover_url: 'https://{domain}/aurora-autodiscover.json?email={email}'
 privacyPolicy: 'https://afterlogic.com/privacy-policy'
 termsOfService: ''
 registrationLink: ''
+deleteAccountLink: ''
 
+#Localization
 supportLanguage: 'en'
 
 #App settings
@@ -47,15 +43,35 @@ supportAllowAccess: true
 #useYubiKit: true
 #yubico_flutter_lib: "git: https://github.com/afterlogic/yubico_flutter"
 
+#UI Customization
+#Android splash screen
+background_color: '#FFFFFF'
+useBackgroundImage: false
+splashGradientTop: '#FFFFFF'
+splashGradientBottom: '#FFFFFF'
+splashGradientTopDark: '#000000'
+splashGradientBottomDark: '#000000'
+
+#Theme selection
+showThemeSelection: true # show theme selection in settings
+
+#AppBar customization
+useAppBarDivider: false # add divider line under AppBar
+useCustomAppBarIcons: false # use custom SVG icons in AppBar (burger, search, back/close)
+
 #Custom floating action button
 # true and false values are inverted
 disableShadowFloatingActionButton: false # disable shadow for floating action button
 disableScreenShadowFloatingActionButton: false # disable shadow for floating action button on screen
 
+#Action button icons
+usePlusIconForActionButtons: false # use plus icon for floating action buttons
+
 #Custom Drawer
 useDrawerGradient: false # use gradient for drawer
 useCustomDrawerIcons: false # use custom drawer folder icons
 useCustomDrawerIconColors: false # use custom colors for drawer icons
+hideCalendarImportICSFile: false # hide import ICS file option
 
 #Custom contacts
 useContactsRoundIcons: false # use round contact icons
@@ -78,13 +94,3 @@ useCustomSettingsIcons: false # use custom settings menu icons
 useSettingsMenuDivider: false # use dividers between settings menu items
 useSettingsMenuTrailingArrow: false # use trailing arrows in settings menu
 useCustomSettingsColors: false # use custom colors for settings menu
-
-#AppBar customization
-useAppBarDivider: false # add divider line under AppBar
-useCustomAppBarIcons: false # use custom SVG icons in AppBar (burger, search, back/close)
-
-#Theme selection
-showThemeSelection: true # show theme selection in settings
-
-#Action button icons
-usePlusIconForActionButtons: false # use plus icon for floating action buttons
