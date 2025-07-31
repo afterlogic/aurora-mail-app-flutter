@@ -1,30 +1,42 @@
-#Variables
+# ===================================================================
+# App Info
+# ===================================================================
 appName: 'Aurora Mail'
 version: 2.4.0
 
-#Platform IDs
-#Android App ID
+# ===================================================================
+# App IDs
+# ===================================================================
+# Android App ID
 _appId: 'com.afterlogic.aurora.mail'
-#iOS Team ID
+# iOS Team ID
 _iosDeveloperId: 'J7AW6VHJK4'
-#iOS App Group ID
+# iOS App Group ID
 _appleGroupId: 'group.com.afterlogic.aurora'
 
-#Links & URLs
+# ===================================================================
+# URLs & Links
+# ===================================================================
 autodiscover_url: 'https://{domain}/aurora-autodiscover.json?email={email}'
 privacyPolicy: 'https://afterlogic.com/privacy-policy'
 termsOfService: ''
 registrationLink: ''
 deleteAccountLink: ''
 
-#Localization
+# ===================================================================
+# Localization
+# ===================================================================
 supportLanguage: 'en'
 
-#App settings
+# ===================================================================
+# App Settings
+# ===================================================================
 syncPeriod: 'Period.months6'
 mailMessagesChunkSize: 50
 
-#App features list
+# ===================================================================
+# Feature Flags & App Settings
+# ===================================================================
 backgroundSync: true
 cryptoEnable: true
 expandMessageThread: false
@@ -39,12 +51,16 @@ selfDestructingEmail: false
 useMainLogo: false
 supportAllowAccess: true
 
-#FIDO Security key settings
+# ===================================================================
+# FIDO Security key settings
+# ===================================================================
 #useYubiKit: true
 #yubico_flutter_lib: "git: https://github.com/afterlogic/yubico_flutter"
 
-#UI Customization
-#Android splash screen
+# ===================================================================
+# UI Customization
+# ===================================================================
+# Android splash screen
 background_color: '#FFFFFF'
 useBackgroundImage: false
 splashGradientTop: '#FFFFFF'
@@ -52,44 +68,45 @@ splashGradientBottom: '#FFFFFF'
 splashGradientTopDark: '#000000'
 splashGradientBottomDark: '#000000'
 
-#Theme selection
+# Theme selection
 showThemeSelection: true # show theme selection in settings
 
-#AppBar customization
+# AppBar customization
 useAppBarDivider: false # add divider line under AppBar
 useCustomAppBarIcons: false # use custom SVG icons in AppBar (burger, search, back/close)
 
-#Custom floating action button
+# Custom floating action button
 # true and false values are inverted
 disableShadowFloatingActionButton: false # disable shadow for floating action button
 disableScreenShadowFloatingActionButton: false # disable shadow for floating action button on screen
 
-#Action button icons
+# Action button icons
 usePlusIconForActionButtons: false # use plus icon for floating action buttons
 
-#Custom Drawer
+# Custom Drawer
 useDrawerGradient: false # use gradient for drawer
 useCustomDrawerIcons: false # use custom drawer folder icons
 useCustomDrawerIconColors: false # use custom colors for drawer icons
 hideCalendarImportICSFile: false # hide import ICS file option
 
-#Custom contacts
+# Custom contacts
 useContactsRoundIcons: false # use round contact icons
 useContactsDivider: false # use dividers between contacts
 useCustomContactIcons: false # use custom SVG icons for contact details
-#Custom mail
+
+# Custom mail
 useMailDivider: false # use dividers between mail messages
 useCustomStarIcons: false # use custom star icons for mail
 
-#Custom input styles (for special Container components only)
+# Custom input styles (for special Container components only)
 useCustomInputStyles: false # use custom input styles for special components
 
-#Custom bottom bar
+# Custom bottom bar
 useCustomBottomBarIcons: false # use custom bottom bar icons
 showBottomBarLabels: false # show bottom bar labels
 useCustomBottomBarColors: false # use custom bottom bar colors (only for dark theme)
 
-#Custom settings
+# Custom settings
 useCustomSettingsIcons: false # use custom settings menu icons
 useSettingsMenuDivider: false # use dividers between settings menu items
 useSettingsMenuTrailingArrow: false # use trailing arrows in settings menu
