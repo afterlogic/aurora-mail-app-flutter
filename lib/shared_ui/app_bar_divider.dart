@@ -2,8 +2,8 @@ import 'package:aurora_mail/build_property.dart';
 import 'package:flutter/material.dart';
 import 'package:theme/app_color.dart';
 
-/// Утилитная функция для добавления divider под AppBar
-/// только для билда unlyme
+/// Utility function for adding divider under AppBar
+/// only for the unlyme build
 Widget buildAppBarWithDivider({
   required PreferredSizeWidget appBar,
   required Widget body,
@@ -29,8 +29,8 @@ Widget buildAppBarWithDivider({
   );
 }
 
-/// Утилитная функция для получения Column с divider
-/// используется когда AppBar встроен в Column вместо Scaffold
+/// Utility function for getting Column with divider
+/// it is used when the AppBar is embedded in a Column instead of a Scaffold.
 Widget buildBodyWithAppBarDivider({required Widget body}) {
   if (!BuildProperty.useAppBarDivider) {
     return body;

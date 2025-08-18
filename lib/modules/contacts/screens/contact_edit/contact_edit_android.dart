@@ -595,7 +595,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Row(
           children: [
-            // Dropdown для выбора типа email (слева)
+            // Dropdown to select the email type (on the left)
             Expanded(
               flex: 1,
               child: InputUtils.buildUnlymeDropdownFormField<int>(
@@ -621,7 +621,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
               ),
             ),
             SizedBox(width: 8.0),
-            // Текстовое поле для email (справа)
+            // Email text field (on the right)
             Expanded(
               flex: 2,
               child: InputUtils.buildUnlymeTextFormField(
@@ -647,7 +647,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Row(
           children: [
-            // Dropdown для выбора типа телефона (слева)
+            // Dropdown to select the phone type (on the left)
             Expanded(
               flex: 1,
               child: InputUtils.buildUnlymeDropdownFormField<int>(
@@ -673,7 +673,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
               ),
             ),
             SizedBox(width: 8.0),
-            // Текстовое поле для телефона (справа)
+            // The text field for the phone (on the right)
             Expanded(
               flex: 2,
               child: InputUtils.buildUnlymeTextFormField(
@@ -698,7 +698,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Row(
           children: [
-            // Dropdown для выбора типа адреса (слева)
+            // Dropdown to select the type of address (on the left)
             Expanded(
               flex: 1,
               child: InputUtils.buildUnlymeDropdownFormField<int>(
@@ -722,7 +722,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
               ),
             ),
             SizedBox(width: 8.0),
-            // Текстовое поле для адреса (справа)
+            // The text field for the address (on the right)
             Expanded(
               flex: 2,
               child: InputUtils.buildUnlymeTextFormField(

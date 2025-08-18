@@ -6,13 +6,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:theme/app_color.dart';
 
 /// EN: Icon for settings menu
-/// RU: Иконка для меню настроек
 class AdaptiveSettingsMenuIcon extends StatelessWidget {
-  final IconData defaultIcon; // Стандартная иконка MDI
-  final String iconName; // Имя иконки для SVG файлов (без расширения)
-  final Color color; // Цвет иконки
-  final Color background; // Цвет фона
-  final String iconFolder; // Папка с иконками (menu, common, etc.)
+  final IconData defaultIcon; // The standard MDI icon
+  final String iconName; // Icon name for SVG files (without extension)
+  final Color color; // Icon color
+  final Color background; // Background color
+  final String iconFolder; // Folder with icons (menu, common, etc.)
 
   const AdaptiveSettingsMenuIcon({
     Key key,
@@ -20,14 +19,14 @@ class AdaptiveSettingsMenuIcon extends StatelessWidget {
     @required this.iconName,
     @required this.color,
     @required this.background,
-    this.iconFolder = 'menu', // по умолчанию menu
+    this.iconFolder = 'menu', // default mail for backward compatibility
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // Определяем цвет для кастомных иконок
+    // Defining the color for custom icons
     Color iconColor = color;
     if (BuildProperty.useCustomSettingsColors) {
       final isDarkTheme = theme.brightness == Brightness.dark;
@@ -35,7 +34,7 @@ class AdaptiveSettingsMenuIcon extends StatelessWidget {
           isDarkTheme ? AppColor.settingsIconDark : AppColor.settingsIconLight;
     }
 
-    // Если есть кастомная иконка для данного билд-варианта, используем SVG
+    // If there is a custom icon for this build option, use SVG
     if (BuildProperty.useCustomSettingsIcons) {
       final iconPath =
           '${BuildProperty.image_dir}/settings/${iconFolder}/${iconName}.svg';
@@ -50,7 +49,7 @@ class AdaptiveSettingsMenuIcon extends StatelessWidget {
             height: 24,
             color: iconColor,
             placeholderBuilder: (context) {
-              // Fallback к стандартной иконке, если SVG не найден
+              // Fallback to the standard icon if SVG is not found
               return Icon(
                 defaultIcon,
                 color: iconColor,
@@ -61,7 +60,7 @@ class AdaptiveSettingsMenuIcon extends StatelessWidget {
         ),
       );
     } else {
-      // Используем стандартную иконку
+      // We use the standard icon
       return AMCircleIcon(
         defaultIcon,
         color: color,

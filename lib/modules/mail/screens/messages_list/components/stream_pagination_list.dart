@@ -172,11 +172,11 @@ class _ListPartWidgetState extends State<_ListPartWidget> {
           return SizedBox.shrink();
         }
       }
-      // Строим список с divider'ами между элементами
+      // Building a list with dividers between the elements
       final widgets = <Widget>[];
       for (int i = 0; i < messages.length; i++) {
         widgets.add(widget.builder(context, messages[i]));
-        // Добавляем divider после каждого элемента, кроме последнего
+        // Adding a divider after each element except the last one
         if (i < messages.length - 1) {
           widgets.add(Divider(
             height: 0.0,

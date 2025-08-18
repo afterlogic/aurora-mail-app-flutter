@@ -57,10 +57,10 @@ class MailBottomAppBar extends StatelessWidget {
     final isCalendarExist =
         BlocProviderExtensions.tryOf<CalendarsBloc>(context) != null;
 
-    // Определяем цвета для иконок
+    // Defining colors for icons
     Color activeColor, inactiveColor;
     if (BuildProperty.useCustomBottomBarColors) {
-      // Используем кастомные цвета в зависимости от темы
+      // We use custom colors depending on the theme.
       final isDarkTheme = theme.brightness == Brightness.dark;
       if (isDarkTheme) {
         activeColor = AppColor.bottomBarIconActiveDark;
@@ -70,12 +70,12 @@ class MailBottomAppBar extends StatelessWidget {
         inactiveColor = AppColor.bottomBarIconLight;
       }
     } else {
-      // Используем стандартные цвета темы
+      // We use standard theme colors.
       activeColor = theme.primaryColor;
       inactiveColor = theme.disabledColor;
     }
 
-    // Определяем отступы в зависимости от того, показываются ли подписи
+    // We determine the margins depending on whether the captions are displayed.
     final padding = BuildProperty.showBottomBarLabels
         ? EdgeInsets.symmetric(horizontal: 0, vertical: 8)
         : EdgeInsets.symmetric(horizontal: 0, vertical: 6);

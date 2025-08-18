@@ -8,7 +8,7 @@ class GradientDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Используем новую настройку специально для градиента drawer'а
+    // Using a new setting specifically for the drawer gradient
     final bool useGradient = BuildProperty.useDrawerGradient == true;
 
     return Drawer(
@@ -23,7 +23,7 @@ class GradientDrawer extends StatelessWidget {
               ),
               child: child,
             )
-          : child, // Обычный белый фон для других сборок
+          : child, // The usual white background for other builds
     );
   }
 }

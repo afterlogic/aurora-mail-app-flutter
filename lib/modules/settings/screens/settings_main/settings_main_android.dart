@@ -54,7 +54,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
 
   // Custom divider for settings menu
   Widget _buildDivider() {
-    // Показываем разделитель только если используются кастомные иконки
+    // Show the separator only if custom icons are used.
     if (BuildProperty.useSettingsMenuDivider) {
       return Divider(height: 1, thickness: 0.5, color: Colors.grey[300]);
     }
@@ -63,9 +63,9 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
 
   // Custom trailing arrow for settings menu
   Widget _buildTrailingArrow() {
-    // Показываем стрелку только если используются кастомные иконки
+    // Show the arrow only if custom icons are used.
     if (BuildProperty.useSettingsMenuTrailingArrow) {
-      // Определяем цвет стрелки
+      // Determining the color of the arrow
       Color arrowColor = theme.primaryColor;
       if (BuildProperty.useCustomSettingsColors) {
         final isDarkTheme = theme.brightness == Brightness.dark;

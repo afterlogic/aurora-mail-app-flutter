@@ -10,12 +10,12 @@ class Star extends StatefulWidget {
   final bool enabled;
   final Function(bool) onPressed;
 
-  const Star(
-      {Key key,
-      @required this.value,
-      this.enabled = true,
-      @required this.onPressed})
-      : super(key: key);
+  const Star({
+    Key key,
+    @required this.value,
+    this.enabled = true,
+    @required this.onPressed,
+  }) : super(key: key);
 
   @override
   _StarState createState() => _StarState();
@@ -64,7 +64,7 @@ class _StarState extends BState<Star> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // Определяем цвета в зависимости от темы
+    // Define colors depending on the theme.
     final starActiveColor = AppColor.starActive;
     final starInactiveColor = theme.brightness == Brightness.light
         ? AppColor.starInactiveLight
@@ -77,7 +77,8 @@ class _StarState extends BState<Star> with TickerProviderStateMixin {
           padding: EdgeInsets.zero,
           icon: BuildProperty.useCustomStarIcons
               ? SvgIcon(
-                  '${BuildProperty.image_dir}/mail/star.active.svg', // Залитая активная звезда
+                  // Filled active star
+                  '${BuildProperty.image_dir}/mail/star.active.svg',
                   color: starActiveColor,
                 )
               : Icon(Icons.star, color: starActiveColor),
@@ -91,12 +92,13 @@ class _StarState extends BState<Star> with TickerProviderStateMixin {
           padding: EdgeInsets.zero,
           icon: BuildProperty.useCustomStarIcons
               ? SvgIcon(
-                  '${BuildProperty.image_dir}/mail/star.svg', // Контур неактивной звезды
+                  // Outline of an inactive star
+                  '${BuildProperty.image_dir}/mail/star.svg',
                   color:
                       widget.enabled ? starInactiveColor : theme.disabledColor,
                 )
               : Icon(
-                  Icons.star_border, // Возвращаем контур для базовой звезды
+                  Icons.star_border, // Returning the outline for the base star
                   color:
                       widget.enabled ? starInactiveColor : theme.disabledColor,
                 ),

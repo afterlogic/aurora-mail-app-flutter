@@ -58,7 +58,7 @@ class AdvancedSearchState extends State<AdvancedSearch> {
           textCtrl = TextEditingController(text: item.value);
           break;
         case SearchPattern.Attachment:
-          // Игнорируем attachment text, используем только checkbox
+          // Ignore the attachment text, use only the checkbox
           break;
       }
     });

@@ -5,11 +5,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:theme/app_color.dart';
 
 class AdaptiveDrawerIcon extends StatelessWidget {
-  final IconData defaultIcon; // Стандартная иконка
-  final String iconName; // Имя иконки для SVG файлов (без расширения)
-  final Color color; // Цвет иконки
-  final double size; // Размер иконки
-  final String folder; // Папка с иконками (mail, contacts, etc.)
+  final IconData defaultIcon; // Standard icon
+  final String iconName; // Icon name for SVG files (without extension)
+  final Color color; // Icon color
+  final double size; // Icon size
+  final String folder; // Folder with icons (mail, contacts, etc.)
 
   const AdaptiveDrawerIcon({
     Key key,
@@ -17,30 +17,30 @@ class AdaptiveDrawerIcon extends StatelessWidget {
     @required this.iconName,
     this.color,
     this.size = 24.0,
-    this.folder = 'mail', // по умолчанию mail для обратной совместимости
+    this.folder = 'mail', // default mail for backward compatibility
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // Определяем цвет иконки
+    // Defining the icon color
     Color iconColor;
     if (color != null) {
-      // Если цвет явно передан, используем его
+      // If the color is explicitly passed, we use it.
       iconColor = color;
     } else if (BuildProperty.useCustomDrawerIconColors) {
-      // Если включены кастомные цвета drawer, используем AppColor
+      // If custom drawer colors are enabled, use AppColor.
       iconColor = theme.brightness == Brightness.light
           ? AppColor.drawerIconLight
           : AppColor.drawerIconDark;
     } else {
-      // Иначе используем цвет из темы
+      // Otherwise, we'll use the color from the theme.
       final IconThemeData iconTheme = IconTheme.of(context);
       iconColor = iconTheme.color;
     }
 
-    // Если включены кастомные иконки для drawer, используем SVG
+    // If custom icons for drawer are enabled, we use SVG
     if (BuildProperty.useCustomDrawerIcons) {
       final iconPath =
           '${BuildProperty.image_dir}/drawer/${folder}/${iconName}.svg';
@@ -51,7 +51,7 @@ class AdaptiveDrawerIcon extends StatelessWidget {
         height: size,
         color: iconColor,
         placeholderBuilder: (context) {
-          // Fallback к стандартной иконке, если SVG не найден
+          // Fallback to the standard icon if SVG is not found
           return Icon(
             defaultIcon,
             color: iconColor,
@@ -60,7 +60,7 @@ class AdaptiveDrawerIcon extends StatelessWidget {
         },
       );
     } else {
-      // Используем стандартную иконку
+      // Using the standard icon
       return Icon(
         defaultIcon,
         color: iconColor,

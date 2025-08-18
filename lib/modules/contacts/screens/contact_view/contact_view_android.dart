@@ -468,51 +468,51 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
     final keyInfo = pgpKey == null
         ? null
         : _buildInfos([
-              InkWell(
-                onTap: pgpKey == null
-                    ? null
-                    : () {
-                        Navigator.pushNamed(
-                          context,
-                          PgpKeyRoute.name,
-                          arguments: PgpKeyRouteArg(
-                              pgpKey, null, true, pgpSettingsBloc),
-                        );
-                      },
-                child: _buildInfoItem(
-                  icon: MdiIcons.key,
-                  iconName: 'key',
-                  label: S.of(context).label_pgp_public_key,
-                  v: pgpKey == null
-                      ? ""
-                      : pgpKey.formatName() +
-                          "\n${pgpKey.key?.length != null ? "(${pgpKey.length}-bit," : "("} ${pgpKey.isPrivate ? "private" : "public"})",
-                ),
+            InkWell(
+              onTap: pgpKey == null
+                  ? null
+                  : () {
+                      Navigator.pushNamed(
+                        context,
+                        PgpKeyRoute.name,
+                        arguments:
+                            PgpKeyRouteArg(pgpKey, null, true, pgpSettingsBloc),
+                      );
+                    },
+              child: _buildInfoItem(
+                icon: MdiIcons.key,
+                iconName: 'key',
+                label: S.of(context).label_pgp_public_key,
+                v: pgpKey == null
+                    ? ""
+                    : pgpKey.formatName() +
+                        "\n${pgpKey.key?.length != null ? "(${pgpKey.length}-bit," : "("} ${pgpKey.isPrivate ? "private" : "public"})",
               ),
-              if (c.storage == StorageNames.team) ...[
-                ContactCheckBox(
-                  S.of(context).label_pgp_sign,
-                  c.autoSign,
-                  (v) {
-                    print(v);
-                    pgpSettingsBloc.add(UpdateKeyFlags(
-                        contact: c,
-                        pgpSignMessages: v,
-                        pgpEncryptMessages: c.autoEncrypt ?? false));
-                  },
-                ),
-                ContactCheckBox(
-                  S.of(context).label_pgp_encrypt,
-                  c.autoEncrypt,
-                  (v) {
-                    pgpSettingsBloc.add(UpdateKeyFlags(
-                        contact: c,
-                        pgpEncryptMessages: v,
-                        pgpSignMessages: c.autoSign ?? false));
-                  },
-                ),
-              ]
-            ]);
+            ),
+            if (c.storage == StorageNames.team) ...[
+              ContactCheckBox(
+                S.of(context).label_pgp_sign,
+                c.autoSign,
+                (v) {
+                  print(v);
+                  pgpSettingsBloc.add(UpdateKeyFlags(
+                      contact: c,
+                      pgpSignMessages: v,
+                      pgpEncryptMessages: c.autoEncrypt ?? false));
+                },
+              ),
+              ContactCheckBox(
+                S.of(context).label_pgp_encrypt,
+                c.autoEncrypt,
+                (v) {
+                  pgpSettingsBloc.add(UpdateKeyFlags(
+                      contact: c,
+                      pgpEncryptMessages: v,
+                      pgpSignMessages: c.autoSign ?? false));
+                },
+              ),
+            ]
+          ]);
 
     List<Widget> _buildGroups(List<String> groupUUIDs) {
       final widgets = <Widget>[];
@@ -630,7 +630,9 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
                       style: sectionTitleTheme,
                     ),
                   ),
-                if (BuildProperty.cryptoEnable && keyInfo != null && BuildProperty.useContactsDivider)
+                if (BuildProperty.cryptoEnable &&
+                    keyInfo != null &&
+                    BuildProperty.useContactsDivider)
                   Divider(),
                 if (BuildProperty.cryptoEnable && keyInfo != null) ...keyInfo,
                 if (groupInfo.isNotEmpty)
@@ -715,7 +717,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
     final result = <Widget>[];
     for (int i = 0; i < filteredWidgets.length; i++) {
       result.add(filteredWidgets[i]);
-      // Добавляем divider после каждого элемента, кроме последнего
+      // Adding a divider after each element except the last one
       if (i < filteredWidgets.length - 1) {
         result.add(Divider());
       }

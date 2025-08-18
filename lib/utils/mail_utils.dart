@@ -680,7 +680,7 @@ class MailUtils {
             <script>      
                 document.addEventListener('DOMContentLoaded', function () {
                   document.getElementById('stared-btn').addEventListener('click', function (event) {
-                        let elem = event.currentTarget; // Используем currentTarget вместо target
+                        let elem = event.currentTarget; // Using currentTarget instead of target
                         if (elem.classList.contains("is-starred")) {
                             elem.innerHTML = `${_getInactiveStarIcon()}`;
                             elem.classList.remove("is-starred");
@@ -693,7 +693,7 @@ class MailUtils {
                     }, false);
                     document.getElementById('info-btn').addEventListener('click', function (event) {
                         event.preventDefault();
-                        let elem = event.currentTarget; // Используем currentTarget вместо target
+                        let elem = event.currentTarget; // Using currentTarget instead of target
                         if (elem.classList.contains("is-visible")) {
                             elem.innerHTML ="${S.of(context).btn_show_details}";
                         } else {
@@ -799,7 +799,7 @@ class MailUtils {
               ''' : (attachments.isNotEmpty ? '''
               <div class="selectable email-content" style="padding: 8px 18px;">
                 <div style="height: 1px; background-color: black; opacity: 0.05; margin: -8px -18px 8px -18px;"></div>
-                <div style="color: #888; font-style: italic; font-size: 14px;">Это письмо содержит только вложения</div>
+                <div style="color: #888; font-style: italic; font-size: 14px;">This email contains only attachments</div>
               </div>
               ''' : '')}
               ${attachments.isNotEmpty ? '<div style="height: 1px; background-color: black; opacity: 0.05; margin: 0;"></div>' : ""}
@@ -815,11 +815,10 @@ class MailUtils {
   static bool _hasValidContent(String content) {
     if (content == null || content.trim().isEmpty) return false;
 
-    // Убираем HTML теги и проверяем, есть ли реальный контент
+    // Remove the HTML tags and check if there is real content.
     final plainText = content
-        .replaceAll(RegExp(r'<[^>]*>'), '') // Убираем все HTML теги
-        .replaceAll(
-            RegExp(r'\s+'), ' ') // Заменяем множественные пробелы на один
+        .replaceAll(RegExp(r'<[^>]*>'), '') // Remove all HTML tags
+        .replaceAll(RegExp(r'\s+'), ' ') // Replace multiple spaces with one
         .trim();
 
     return plainText.isNotEmpty;

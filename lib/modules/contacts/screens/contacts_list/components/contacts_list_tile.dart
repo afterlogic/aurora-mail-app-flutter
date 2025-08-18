@@ -94,7 +94,8 @@ class _ContactsListTileState extends State<ContactsListTile> {
 
     return ListTile(
       contentPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-      horizontalTitleGap: 8.0, // Уменьшаем отступ между кружком и текстом
+      // Reducing the indentation between the circle and the text
+      horizontalTitleGap: 8.0,
       leading: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -204,9 +205,8 @@ class _ContactsListTileState extends State<ContactsListTile> {
 
     Widget contactTile = DecoratedBox(
       decoration: BoxDecoration(
-        color: selected
-            ? Theme.of(context).highlightColor.withOpacity(0.1)
-            : null,
+        color:
+            selected ? Theme.of(context).highlightColor.withOpacity(0.1) : null,
       ),
       child: InkWell(
         onLongPress: changeEnable,
@@ -247,7 +247,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
       ),
     );
 
-    // Добавляем divider если включён
+    // Adding a divider if enabled
     if (BuildProperty.useContactsDivider) {
       return Column(
         children: [

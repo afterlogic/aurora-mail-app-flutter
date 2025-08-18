@@ -27,7 +27,7 @@ class AdaptiveBottomBarButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Создаем фиксированный контейнер для иконки
+    // Creating a fixed container for the icon
     final iconWidget = Container(
       width: iconSize,
       height: iconSize,
@@ -42,12 +42,12 @@ class AdaptiveBottomBarButton extends StatelessWidget {
       ),
     );
 
-    // Если включены подписи у иконок
+    // If icon labels are enabled
     if (BuildProperty.showBottomBarLabels) {
       return InkWell(
         onTap: onPressed,
         child: Container(
-          width: 80.0, // Фиксированная ширина для всей кнопки
+          width: 80.0, // Fixed width for the entire button
           padding: EdgeInsets.symmetric(vertical: 6.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -55,14 +55,14 @@ class AdaptiveBottomBarButton extends StatelessWidget {
               iconWidget,
               SizedBox(height: 4.0),
               Container(
-                height: 16.0, // Фиксированная высота для текста
+                height: 16.0, // Fixed height for text
                 alignment: Alignment.center,
                 child: Text(
                   label,
                   style: TextStyle(
                     fontSize: 12.0,
                     color: isActive ? activeColor : inactiveColor,
-                    fontWeight: FontWeight.normal, // Всегда одинаковый вес
+                    fontWeight: FontWeight.normal, // Always the same weight
                   ),
                   textAlign: TextAlign.center,
                   maxLines: 1,
@@ -74,9 +74,9 @@ class AdaptiveBottomBarButton extends StatelessWidget {
         ),
       );
     } else {
-      // Обычная кнопка без подписи - фиксированный размер
+      // A regular button without a signature is a fixed size.
       return Container(
-        width: iconSize + 16.0, // Размер иконки + отступы IconButton
+        width: iconSize + 16.0, // Icon size + IconButton margins
         height: iconSize + 16.0,
         child: IconButton(
           icon: iconWidget,

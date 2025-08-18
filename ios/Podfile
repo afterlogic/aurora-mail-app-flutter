@@ -47,7 +47,7 @@ post_install do |installer|
     target.build_configurations.each do |config|
       config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
       
-      # Отключаем строгие проверки для всех таргетов
+      # Disabling strict checks for all targets
       config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
       config.build_settings['CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS'] = 'NO'
       config.build_settings['CLANG_WARN_DOCUMENTATION_COMMENTS'] = 'NO'
@@ -55,7 +55,7 @@ post_install do |installer|
       config.build_settings['GCC_WARN_INHIBIT_ALL_WARNINGS'] = 'YES'
       config.build_settings['ENABLE_BITCODE'] = 'NO'
       
-      # Специальные настройки только для Firebase плагинов Flutter (не для самого Firebase SDK)
+      # Special settings only for Firebase Flutter plugins (not for the Firebase SDK itself)
       if target.name.include?('firebase_') && !target.name.include?('Firebase')
         config.build_settings['DEFINES_MODULE'] = 'NO'
       end

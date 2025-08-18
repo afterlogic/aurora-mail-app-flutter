@@ -27,7 +27,7 @@ class AdaptiveActionButton extends StatelessWidget {
                 width: 24.0,
                 height: 24.0,
                 color: Colors.white,
-                // Если иконка не найдена, показываем fallback
+                // If the icon is not found, we show the fallback
                 placeholderBuilder: (context) => Icon(
                   fallbackIcon,
                   color: Colors.white,

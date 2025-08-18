@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:theme/app_color.dart';
 
 class InputUtils {
-  /// Возвращает InputDecoration с unlyme стилями если useCustomInputStyles = true
+  /// Returns InputDecoration with unlyme styles if useCustomInputStyles = true
   static InputDecoration getUnlymeInputDecoration({
     String? labelText,
     String? hintText,
@@ -45,14 +45,14 @@ class InputUtils {
     );
   }
 
-  /// Создает кастомную секцию (заголовок раздела) для unlyme темы
+  /// Creates a custom section (section header) for the unlyme theme
   static Widget buildUnlymeSection({
     required BuildContext context,
     required String title,
     TextStyle? textStyle,
   }) {
     if (!BuildProperty.useCustomInputStyles) {
-      // Стандартный ContactTile
+      // Standard ContactTile
       return Padding(
         padding: const EdgeInsets.only(top: 32.0),
         child: ListTile(
@@ -64,7 +64,7 @@ class InputUtils {
       );
     }
 
-    // Кастомный стиль для unlyme
+    // Custom style for unlyme
     return Container(
       margin: EdgeInsets.only(top: 24.0, bottom: 8.0),
       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
@@ -85,7 +85,7 @@ class InputUtils {
     );
   }
 
-  /// Обертка для TextField с unlyme стилями
+  /// A wrapper for a TextField with unlyme styles
   static Widget buildUnlymeTextField({
     required TextEditingController controller,
     String? labelText,
@@ -116,7 +116,7 @@ class InputUtils {
     );
   }
 
-  /// Обертка для TextFormField с unlyme стилями
+  /// Wrapper for TextFormField with unlyme styles
   static Widget buildUnlymeTextFormField({
     required TextEditingController controller,
     String? labelText,
@@ -149,7 +149,7 @@ class InputUtils {
     );
   }
 
-  /// Создает контейнер с кастомным стилем для группировки инпутов
+  /// Creates a container with a custom style for grouping inputs
   static Widget buildUnlymeInputGroup({
     required List<Widget> children,
     EdgeInsets? padding,
@@ -177,7 +177,7 @@ class InputUtils {
     );
   }
 
-  /// Создает кастомный DropdownButtonFormField с unlyme стилями
+  /// Creates a custom DropdownButtonFormField with unlyme styles
   static Widget buildUnlymeDropdownFormField<T>({
     required T? value,
     required List<T> items,
@@ -257,7 +257,7 @@ class InputUtils {
     );
   }
 
-  /// Создает кастомный DropdownButton с unlyme стилями (без формы)
+  /// Creates a custom DropDownButton with unlyme styles (without a form)
   static Widget buildUnlymeDropdown<T>({
     required T? value,
     required List<T> items,
@@ -320,7 +320,7 @@ class InputUtils {
     );
   }
 
-  /// Создает кастомный ContactPrimaryInput с unlyme стилями
+  /// Creates a custom ContactPrimaryInput with anonymous styles
   static Widget buildUnlymePrimaryInput<T>({
     required String label,
     required void Function(T?) onChanged,
@@ -331,7 +331,7 @@ class InputUtils {
     TextInputType? keyboardType,
   }) {
     if (!BuildProperty.useCustomInputStyles) {
-      // Стандартный стиль
+      // Standard style
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
         child: InputDecorator(
@@ -375,7 +375,7 @@ class InputUtils {
       );
     }
 
-    // Кастомный unlyme стиль
+    // Custom unlyme style
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       padding: const EdgeInsets.all(16.0),
@@ -454,7 +454,7 @@ class InputUtils {
     );
   }
 
-  /// Создает кастомный Date Picker с unlyme стилями
+  /// Creates a custom Date Picker with unlyme styles
   static Widget buildUnlymeDatePicker({
     required BuildContext context,
     required TextEditingController controller,
@@ -519,7 +519,7 @@ class InputUtils {
     );
   }
 
-  /// Создает кастомный Date Picker с unlyme стилями используя InputDecorator
+  /// Creates a custom Date Picker with anonymous styles using InputDecorator
   static Widget buildUnlymeInputDecorator({
     required BuildContext context,
     required String labelText,

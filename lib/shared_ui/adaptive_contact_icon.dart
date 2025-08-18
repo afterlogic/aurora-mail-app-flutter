@@ -27,7 +27,7 @@ class AdaptiveContactIcon extends StatelessWidget {
         width: size ?? 24.0,
         height: size ?? 24.0,
         color: color ?? Theme.of(context).primaryColor,
-        // Если иконка не найдена, показываем fallback
+        // If the icon is not found, we show the fallback
         placeholderBuilder: (context) => Icon(
           fallbackIcon,
           color: color ?? Theme.of(context).primaryColor,

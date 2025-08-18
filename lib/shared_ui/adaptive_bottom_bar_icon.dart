@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AdaptiveBottomBarIcon extends StatelessWidget {
-  final IconData mdiIcon; // Стандартная иконка MDI
-  final String iconName; // Имя иконки для SVG файлов (без расширения)
-  final bool isActive; // Активна ли иконка
-  final Color activeColor; // Цвет активной иконки
-  final Color inactiveColor; // Цвет неактивной иконки
-  final double size; // Размер иконки
+  final IconData mdiIcon; // The standard MDI icon
+  final String iconName; // Icon name for SVG files (without extension)
+  final bool isActive; // Is the icon active
+  final Color activeColor; // The color of the active icon
+  final Color inactiveColor; // The color of the inactive icon
+  final double size; // Icon Size
 
   const AdaptiveBottomBarIcon({
     Key key,
@@ -23,7 +23,7 @@ class AdaptiveBottomBarIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Если включены кастомные иконки, используем SVG
+    // If custom icons are enabled, use SVG
     if (BuildProperty.useCustomBottomBarIcons) {
       final iconPath = isActive
           ? 'build_res/unlyme/image/bottom-app-bar/${iconName}.active.svg'
@@ -48,7 +48,7 @@ class AdaptiveBottomBarIcon extends StatelessWidget {
         ),
       );
     } else {
-      // Используем стандартные MDI иконки с цветовым окрашиванием
+      // We use standard MDI icons with color coloring
       return Icon(
         mdiIcon,
         color: isActive ? activeColor : inactiveColor,
