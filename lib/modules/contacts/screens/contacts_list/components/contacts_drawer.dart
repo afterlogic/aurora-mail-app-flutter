@@ -135,7 +135,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
               return _buildStorageTile(
                   iconWidget: AdaptiveDrawerIcon(
                     defaultIcon: WebMailIcons.shared_with_all,
-                    iconName: 'shared',
+                    iconName: 'shared-with-all',
                     folder: 'contacts',
                   ),
                   s: s,
