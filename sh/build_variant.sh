@@ -10,7 +10,7 @@ if [ -f "$1" ]; then
     fvm flutter pub run build_variant $1
     fvm flutter pub get
 		fvm flutter pub run intl_utils:generate
-    fvm flutter pub run flutter_launcher_icons:main
+    fvm flutter pub run flutter_launcher_icons
 else
     printf $RED"No build_variant.yaml file is found. Abborting.\n"$NC
 fi
