@@ -31,7 +31,6 @@ import 'package:aurora_mail/utils/user_app_data_singleton.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:receive_sharing/recive_sharing.dart';
@@ -368,6 +367,14 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                                   ? CalendarRoute.name
                                   : MessagesListRoute.name,
                           navigatorObservers: [routeObserver],
+                          builder: (context, child) {
+                            return MediaQuery(
+                              data: MediaQuery.of(context).copyWith(
+                                textScaleFactor: 1.0,
+                              ),
+                              child: child ?? const SizedBox.shrink(),
+                            );
+                          },
                         ),
                       );
                     } else {
