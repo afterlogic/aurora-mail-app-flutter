@@ -36,11 +36,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m9(time, from) => "Le ${time}, ${from} a écrit :";
 
-  static String m10(contact) =>
-      "Êtes-vous sûr de vouloir supprimer ${contact} ?";
+  static String m10(contact) => "Voulez-vous vraiment supprimer ${contact} ?";
 
   static String m11(group) =>
-      "Êtes-vous sûr de vouloir supprimer ${group} ? Les contacts de ce groupe ne seront pas supprimés.";
+      "Voulez-vous vraiment supprimer ${group} ? Les contacts de ce groupe ne seront pas supprimés.";
 
   static String m12(contact, storage) =>
       "${contact} apparaîtra bientôt dans le stockage ${storage}";
@@ -49,13 +48,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Aucune clé privée trouvée pour l\'utilisateur ${users}.";
 
   static String m14(name) =>
-      "Êtes-vous sûr de vouloir supprimer le fichier ${name} ?";
+      "Voulez-vous vraiment supprimer le fichier ${name} ?";
 
   static String m15(folder) =>
-      "Êtes-vous sûr de vouloir supprimer tous les messages du dossier ${folder} ?";
+      "Voulez-vous vraiment supprimer tous les messages du dossier ${folder} ?";
 
   static String m16(user) =>
-      "Êtes-vous sûr de vouloir supprimer la clé OpenPGP pour ${user} ?";
+      "Voulez-vous vraiment supprimer la clé OpenPGP pour ${user} ?";
 
   static String m17(path) => "Téléchargement vers ${path}";
 
@@ -63,17 +62,16 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m19(fileName) => "Téléchargement de ${fileName}...";
 
-  static String m20(path) => "Fichier téléversé dans : ${path}";
+  static String m20(path) => "Fichier importé dans : ${path}";
 
-  static String m21(fileName) => "Téléversement de ${fileName}...";
+  static String m21(fileName) => "Importer de ${fileName}...";
 
-  static String m22(subject) =>
-      "Êtes-vous sûr de vouloir supprimer ${subject} ?";
+  static String m22(subject) => "Voulez-vous vraiment supprimer ${subject} ?";
 
   static String m23(version) => "Version ${version}";
 
   static String m24(account) =>
-      "Êtes-vous sûr de vouloir vous déconnecter et supprimer ${account} ?";
+      "Voulez-vous vraiment déconnecter et supprimer ${account} ?";
 
   static String m25(sender, link, message_password, lifeTime, now) =>
       "Bonjour,\nL\'utilisateur ${sender} vous a envoyé un e-mail sécurisé auto-destructeur.\nVous pouvez le lire en utilisant le lien suivant :\n${link}\n${message_password}Le message sera accessible pendant ${lifeTime} à partir de ${now}";
@@ -153,7 +151,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn_read": MessageLookupByLibrary.simpleMessage("Lu"),
         "btn_resend_push_token":
             MessageLookupByLibrary.simpleMessage("Renvoyer le jeton push"),
-        "btn_save": MessageLookupByLibrary.simpleMessage("Sauvegarder"),
+        "btn_save": MessageLookupByLibrary.simpleMessage("Enregistrer"),
         "btn_self_destructing":
             MessageLookupByLibrary.simpleMessage("Auto-destructeur"),
         "btn_share": MessageLookupByLibrary.simpleMessage("Partager"),
@@ -273,7 +271,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Message"),
         "compose_discard_save_dialog_description":
             MessageLookupByLibrary.simpleMessage(
-                "Sauvegarder les modifications dans les brouillons ?"),
+                "Enregistrer les modifications dans les brouillons ?"),
         "compose_discard_save_dialog_title":
             MessageLookupByLibrary.simpleMessage("Ignorer les modifications"),
         "compose_forward_bcc": m3,
@@ -290,7 +288,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Ajouter un contact"),
         "contacts_delete_desc_with_name": m10,
         "contacts_delete_selected": MessageLookupByLibrary.simpleMessage(
-            "Êtes-vous sûr de vouloir supprimer les contacts sélectionnés ?"),
+            "Voulez-vous vraiment supprimer les contacts sélectionnés ?"),
         "contacts_delete_title":
             MessageLookupByLibrary.simpleMessage("Supprimer le contact"),
         "contacts_delete_title_plural":
@@ -312,7 +310,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "contacts_edit_cancel": MessageLookupByLibrary.simpleMessage(
             "Annuler la modification du contact"),
         "contacts_edit_save": MessageLookupByLibrary.simpleMessage(
-            "Sauvegarder les modifications"),
+            "Enregistrer les modifications"),
         "contacts_email_empty":
             MessageLookupByLibrary.simpleMessage("Aucune adresse e-mail"),
         "contacts_empty": MessageLookupByLibrary.simpleMessage("Aucun contact"),
@@ -348,7 +346,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "contacts_remove_from_group": MessageLookupByLibrary.simpleMessage(
             "Supprimer les contacts du groupe"),
         "contacts_remove_selected": MessageLookupByLibrary.simpleMessage(
-            "Êtes-vous sûr de vouloir supprimer les contacts sélectionnés du groupe ?"),
+            "Voulez-vous vraiment supprimer les contacts sélectionnés du groupe ?"),
         "contacts_shared_message": m12,
         "contacts_view_address":
             MessageLookupByLibrary.simpleMessage("Adresse"),
@@ -440,7 +438,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "contacts_view_zip":
             MessageLookupByLibrary.simpleMessage("Code postal"),
         "debug_hint_log_delete_record": MessageLookupByLibrary.simpleMessage(
-            "Êtes-vous sûr de vouloir supprimer le fichier ?"),
+            "Voulez-vous vraiment supprimer le fichier ?"),
         "error_compose_no_receivers": MessageLookupByLibrary.simpleMessage(
             "Veuillez fournir des destinataires"),
         "error_compose_wait_attachments": MessageLookupByLibrary.simpleMessage(
@@ -663,9 +661,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "hint_auto_encrypt_messages": MessageLookupByLibrary.simpleMessage(
             "Si vous voulez que les messages à ce contact soient automatiquement chiffrés et/ou signés, cochez les cases ci-dessous. Veuillez noter que ces messages seront convertis en texte brut. Les pièces jointes ne seront pas chiffrées."),
         "hint_confirm_exit": MessageLookupByLibrary.simpleMessage(
-            "Êtes-vous sûr de vouloir quitter ?"),
+            "Voulez-vous vraiment quitter ?"),
         "hint_log_delete_all": MessageLookupByLibrary.simpleMessage(
-            "Êtes-vous sûr de vouloir supprimer tous les journaux ?"),
+            "Voulez-vous vraiment supprimer tous les journaux ?"),
         "hint_log_delete_record": m14,
         "hint_login_upgrade_your_plan": MessageLookupByLibrary.simpleMessage(
             "Les applications mobiles ne sont pas autorisées dans votre compte."),
@@ -844,11 +842,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "messages_attachment_download_success": m18,
         "messages_attachment_downloading": m19,
         "messages_attachment_upload":
-            MessageLookupByLibrary.simpleMessage("Téléverser une pièce jointe"),
+            MessageLookupByLibrary.simpleMessage("Importer une pièce jointe"),
         "messages_attachment_upload_cancel":
-            MessageLookupByLibrary.simpleMessage("Annuler le téléversement"),
+            MessageLookupByLibrary.simpleMessage("Annuler l\'importation"),
         "messages_attachment_upload_failed":
-            MessageLookupByLibrary.simpleMessage("Échec du téléversement"),
+            MessageLookupByLibrary.simpleMessage("Échec de l\'importation"),
         "messages_attachment_upload_success": m20,
         "messages_attachment_uploading": m21,
         "messages_attachments_empty":
@@ -856,9 +854,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "messages_bcc": MessageLookupByLibrary.simpleMessage("BCC"),
         "messages_cc": MessageLookupByLibrary.simpleMessage("CC"),
         "messages_delete_desc": MessageLookupByLibrary.simpleMessage(
-            "Êtes-vous sûr de vouloir supprimer ce message ?"),
+            "Voulez-vous vraiment supprimer ce message ?"),
         "messages_delete_desc_with_count": MessageLookupByLibrary.simpleMessage(
-            "Êtes-vous sûr de vouloir supprimer ces messages ?"),
+            "Voulez-vous vraiment supprimer ces messages ?"),
         "messages_delete_desc_with_subject": m22,
         "messages_delete_title":
             MessageLookupByLibrary.simpleMessage("Supprimer le message"),
@@ -891,7 +889,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "messages_reply_all":
             MessageLookupByLibrary.simpleMessage("Répondre à tous"),
         "messages_saved_in_drafts": MessageLookupByLibrary.simpleMessage(
-            "Message sauvegardé dans les brouillons"),
+            "Message enregistré dans les brouillons"),
         "messages_sending":
             MessageLookupByLibrary.simpleMessage("Envoi du message..."),
         "messages_show_details":
@@ -914,7 +912,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "remove": MessageLookupByLibrary.simpleMessage("Supprimer"),
         "save": MessageLookupByLibrary.simpleMessage("Enregistrer"),
         "save_changes_question": MessageLookupByLibrary.simpleMessage(
-            "Sauvegarder les modifications ?"),
+            "Enregistrer les modifications ?"),
         "self_destructing_life_time_day":
             MessageLookupByLibrary.simpleMessage("24 heures"),
         "self_destructing_life_time_days_3":
@@ -954,11 +952,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings_language_system":
             MessageLookupByLibrary.simpleMessage("Langue du système"),
         "settings_sync":
-            MessageLookupByLibrary.simpleMessage("Synchronisation"),
-        "settings_sync_frequency": MessageLookupByLibrary.simpleMessage(
-            "Fréquence de synchronisation"),
+            MessageLookupByLibrary.simpleMessage("Nouvelles données"),
+        "settings_sync_frequency":
+            MessageLookupByLibrary.simpleMessage("Mise à jour"),
         "settings_sync_frequency_daily":
-            MessageLookupByLibrary.simpleMessage("quotidien"),
+            MessageLookupByLibrary.simpleMessage("tout les jours"),
         "settings_sync_frequency_hours1":
             MessageLookupByLibrary.simpleMessage("1 heure"),
         "settings_sync_frequency_hours2":
@@ -968,15 +966,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings_sync_frequency_minutes5":
             MessageLookupByLibrary.simpleMessage("5 minutes"),
         "settings_sync_frequency_monthly":
-            MessageLookupByLibrary.simpleMessage("mensuel"),
+            MessageLookupByLibrary.simpleMessage("toutes les mois"),
         "settings_sync_frequency_never":
             MessageLookupByLibrary.simpleMessage("jamais"),
         "settings_sync_frequency_weekly":
-            MessageLookupByLibrary.simpleMessage("hebdomadaire"),
+            MessageLookupByLibrary.simpleMessage("toutes les semaines"),
         "settings_sync_frequency_yearly":
-            MessageLookupByLibrary.simpleMessage("annuel"),
+            MessageLookupByLibrary.simpleMessage("tout les ans"),
         "settings_sync_period":
-            MessageLookupByLibrary.simpleMessage("Période de synchronisation"),
+            MessageLookupByLibrary.simpleMessage("Afficher pour"),
         "settings_sync_period_all_time":
             MessageLookupByLibrary.simpleMessage("tout le temps"),
         "settings_sync_period_months1":
@@ -1018,6 +1016,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "tfa_label_hint_security_options": MessageLookupByLibrary.simpleMessage(
             "Options de sécurité disponibles"),
         "tfa_label_trust_device":
-            MessageLookupByLibrary.simpleMessage("Vous êtes prêt")
+            MessageLookupByLibrary.simpleMessage("Vous êtes prêt"),
+        "week_titles":
+            MessageLookupByLibrary.simpleMessage("Lu,Ma,Me,Je,Ve,Sa,Di")
       };
 }

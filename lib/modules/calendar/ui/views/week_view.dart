@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
@@ -7,13 +8,12 @@ import 'package:aurora_mail/modules/calendar/ui/widgets/month_event_marker.dart'
 import 'package:aurora_mail/modules/calendar/ui/widgets/week_event_marker.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
 import 'package:aurora_mail/modules/calendar/utils/week_mode_utils.dart';
+import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:calendar_view/calendar_view.dart' as CV;
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-
-import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 
 class WeekView extends StatefulWidget {
   const WeekView({super.key});
@@ -23,9 +23,8 @@ class WeekView extends StatefulWidget {
 }
 
 class _WeekViewState extends State<WeekView> {
-  final List<String> weekTitles = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-  final CV.EventController<WeekViewVisible> _controller =
-      CV.EventController<WeekViewVisible>();
+  List<String> weekTitles = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+  final CV.EventController<WeekViewVisible> _controller = CV.EventController<WeekViewVisible>();
   late final EventsBloc _eventsBloc;
   late final StreamSubscription _subscription;
 
@@ -35,6 +34,12 @@ class _WeekViewState extends State<WeekView> {
     _eventsBloc = BlocProvider.of<EventsBloc>(context);
     _onStateChange(_eventsBloc.state);
     _subscription = _eventsBloc.stream.listen(_onStateChange);
+  }
+
+  @override
+  void didChangeDependencies() {
+    weekTitles = S.of(context).week_titles.split(',');
+    super.didChangeDependencies();
   }
 
   @override
@@ -83,27 +88,26 @@ class _WeekViewState extends State<WeekView> {
               ),
             ),
             child: Center(
-              child: Text(
-                date.weekOfYear.toString(),
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)
-              ),
+              child: Text(date.weekOfYear.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
             ),
           ),
-          hourIndicatorSettings: CV.HourIndicatorSettings( // Grid lines color
+          hourIndicatorSettings: CV.HourIndicatorSettings(
+            // Grid lines color
             color: Theme.of(context).dividerColor,
             offset: 5, // offset between hour labels and the grid
           ),
-          fullDayHeaderTitle: 'All day',
+          fullDayHeaderTitle: S.of(context).calendar_input_all_day,
           showLiveTimeLineInAllDays: true,
-          liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
-              color: Theme.of(context).primaryColor, height: 2),
+          liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(color: Theme.of(context).primaryColor, height: 2),
           initialDay: state.selectedDate,
           keepScrollOffset: true,
           showVerticalLines: true,
-          scrollOffset: 480.0, // 8h * 60min * heightPerMinute
+          scrollOffset: 480.0,
+          // 8h * 60min * heightPerMinute
           heightPerMinute: 1,
           showHalfHours: false,
-          headerStyle: CV.HeaderStyle( // current week switcher
+          headerStyle: CV.HeaderStyle(
+            // current week switcher
             leftIcon: Icon(
               Icons.chevron_left,
               size: 30,
@@ -116,18 +120,18 @@ class _WeekViewState extends State<WeekView> {
             headerTextStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
             decoration: BoxDecoration(color: null, border: Border(bottom: border)),
           ),
-          headerStringBuilder: (date, {secondaryDate}) =>
-              DateFormat('yMMM').format(date),
+          headerStringBuilder: (date, {secondaryDate}) => DateFormat('yMMM').format(date),
           timeLineStringBuilder: (date, {secondaryDate}) {
             String sTimeFormat = ((settingsState as SettingsLoaded).is24 ? 'HH:mm' : 'h a');
             return DateFormat(sTimeFormat).format(date);
           },
-          weekDayBuilder: (date) { // week days header
+          weekDayBuilder: (date) {
+            // week days header
             return Container(
               decoration: BoxDecoration(
                 border: Border(
-                    right: border,
-                  ),
+                  right: border,
+                ),
               ),
               child: Center(
                 child: Column(
@@ -137,60 +141,48 @@ class _WeekViewState extends State<WeekView> {
                     Text(
                       weekTitles[date.weekday - 1],
                       style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.w700),
+                        fontSize: 16,
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     const SizedBox(
                       height: 2,
                     ),
-                    Text(date.day.toString(),
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w400)),
+                    Text(date.day.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
                   ],
                 ),
               ),
             );
           },
-          fullDayEventBuilder:
-              (List<CV.CalendarEventData<Object?>> events, DateTime date) {
+          fullDayEventBuilder: (List<CV.CalendarEventData<Object?>> events, DateTime date) {
             return Column(
               children: events.reversed
                   .map((e) => MonthEventMarker(
-                      event: (e as CV.CalendarEventData<WeekViewVisible>).event is ViewEvent
-                          ? e.event as ViewEvent
-                          : null,
-                      currentDate: date,
-                      addLeftBorder: true,
-                      eventGap: 2,
-                      height: 18,
-                      isWeekAllDay: true,
-                      innerPaddingValue: 1
-
-
-                    ))
+                        event: (e as CV.CalendarEventData<WeekViewVisible>).event is ViewEvent
+                            ? e.event as ViewEvent
+                            : null,
+                        currentDate: date,
+                        addLeftBorder: true,
+                        eventGap: 2,
+                        height: 18,
+                        isWeekAllDay: true,
+                        innerPaddingValue: 1,
+                      ))
                   .toList(),
             );
           },
-          eventTileBuilder: (
-              DateTime date,
-              List<CV.CalendarEventData<Object?>> events,
-              Rect boundary,
-              DateTime startDuration,
-              DateTime endDuration) {
+          eventTileBuilder: (DateTime date, List<CV.CalendarEventData<Object?>> events, Rect boundary,
+              DateTime startDuration, DateTime endDuration) {
             return WeekEventMarker(
               event: (events as List<CV.CalendarEventData<WeekViewVisible>>)[0].event as ViewEvent,
               currentDate: date,
             );
           },
           controller: _controller,
-          onPageChange: (date, pageIndex) =>
-              _eventsBloc.add(SelectDate(date, isWeekMode: true)),
-          onEventTap:
-              (List<CV.CalendarEventData<Object?>> events, DateTime date) {
-            final event =
-                (events as List<CV.CalendarEventData<WeekViewVisible>>)
-                    .firstOrNull;
+          onPageChange: (date, pageIndex) => _eventsBloc.add(SelectDate(date, isWeekMode: true)),
+          onEventTap: (List<CV.CalendarEventData<Object?>> events, DateTime date) {
+            final event = (events as List<CV.CalendarEventData<WeekViewVisible>>).firstOrNull;
             if (event == null || event.event is EmptyViewEvent) return;
             _eventsBloc.add(SelectEvent(event.event as ViewEvent));
             Navigator.of(context).pushNamed(
@@ -243,12 +235,8 @@ class _WeekViewState extends State<WeekView> {
             title: event!.title,
             date: date,
             endDate: date,
-            startTime: event.startDate.isAtSameDay(date)
-              ? event.startDate
-              : date.copyWith(hour: 0, minute: 1),
-            endTime: event.endDate.isAtSameDay(date)
-              ? event.endDate
-              : date.copyWith(hour: 23, minute: 59),
+            startTime: event.startDate.isAtSameDay(date) ? event.startDate : date.copyWith(hour: 0, minute: 1),
+            endTime: event.endDate.isAtSameDay(date) ? event.endDate : date.copyWith(hour: 23, minute: 59),
             color: event.color,
           ),
         );

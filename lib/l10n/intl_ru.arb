@@ -498,5 +498,6 @@
 	"calendar_ical_url_label": "iCal URL",
 	"calendar_color_label": "Цвет",
 	"calendar_validation_enter_text": "Пожалуйста, введите текст",
-	"settings_delete_account": "Удалить аккаунт"
+	"settings_delete_account": "Удалить аккаунт",
+	"week_titles": "Пн,Вт,Ср,Чт,Пт,Сб,Вс"
 }

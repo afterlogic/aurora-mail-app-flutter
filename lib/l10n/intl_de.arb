@@ -498,5 +498,6 @@
 	"calendar_ical_url_label": "iCal URL",
 	"calendar_color_label": "Farbe",
 	"calendar_validation_enter_text": "Bitte geben Sie Text ein",
-	"settings_delete_account": "Konto löschen"
+	"settings_delete_account": "Konto löschen",
+	"week_titles": "Mo,Di,Mi,Do,Fr,Sa,So"
 }

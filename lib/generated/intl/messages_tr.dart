@@ -989,6 +989,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "tfa_label_hint_security_options":
             MessageLookupByLibrary.simpleMessage("Mevcut güvenlik seçenekleri"),
         "tfa_label_trust_device":
-            MessageLookupByLibrary.simpleMessage("Her şey hazır")
+            MessageLookupByLibrary.simpleMessage("Her şey hazır"),
+        "week_titles":
+            MessageLookupByLibrary.simpleMessage("Pt,Sa,Ça,Pe,Cu,Ct,Pz")
       };
 }

@@ -5052,6 +5052,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Mo,Tu,We,Th,Fr,Sa,Su`
+  String get week_titles {
+    return Intl.message(
+      'Mo,Tu,We,Th,Fr,Sa,Su',
+      name: 'week_titles',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

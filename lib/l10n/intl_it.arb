@@ -505,5 +505,6 @@
 			}
 		}
 	},
-	"settings_delete_account": "Elimina account"
+	"settings_delete_account": "Elimina account",
+	"week_titles": "Lu,Ma,Me,Gi,Ve,Sa,Do"
 }

@@ -1018,6 +1018,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "tfa_label_hint_security_options": MessageLookupByLibrary.simpleMessage(
             "Opzioni di sicurezza disponibili"),
         "tfa_label_trust_device":
-            MessageLookupByLibrary.simpleMessage("Tutto pronto")
+            MessageLookupByLibrary.simpleMessage("Tutto pronto"),
+        "week_titles":
+            MessageLookupByLibrary.simpleMessage("Lu,Ma,Me,Gi,Ve,Sa,Do")
       };
 }

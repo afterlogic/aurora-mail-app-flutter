@@ -499,5 +499,6 @@
 	"login_continue": "Devam et",
 	"login_no_account_yet": "Henüz hesabınız yok mu? ",
 	"login_register_now": "Şimdi kayıt ol",
-	"settings_delete_account": "Hesabı sil"
+	"settings_delete_account": "Hesabı sil",
+	"week_titles": "Pt,Sa,Ça,Pe,Cu,Ct,Pz"
 }
