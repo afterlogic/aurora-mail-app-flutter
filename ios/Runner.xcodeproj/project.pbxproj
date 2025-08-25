@@ -275,7 +275,7 @@
 					};
 					DB8E5D4E2440825400D721A7 = {
 						CreatedOnToolsVersion = 11.3;
-						DevelopmentTeam = J7AW6VHJK4;
+						DevelopmentTeam = "$(DEVELOPMENT_ID)";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -557,7 +557,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(PRODUCT_BUILD_CODE)";
-				DEVELOPMENT_TEAM = J7AW6VHJK4;
+				DEVELOPMENT_TEAM = "$(DEVELOPMENT_ID)";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -754,7 +754,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(PRODUCT_BUILD_CODE)";
-				DEVELOPMENT_TEAM = J7AW6VHJK4;
+				DEVELOPMENT_TEAM = "$(DEVELOPMENT_ID)";
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -842,7 +842,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(PRODUCT_BUILD_CODE)";
-				DEVELOPMENT_TEAM = J7AW6VHJK4;
+				DEVELOPMENT_TEAM = "$(DEVELOPMENT_ID)";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
