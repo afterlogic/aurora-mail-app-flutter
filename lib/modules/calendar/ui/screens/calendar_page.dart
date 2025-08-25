@@ -196,7 +196,11 @@ class _CalendarPageState extends State<CalendarPage>
                                 controller: _tabController,
                                 physics: const NeverScrollableScrollPhysics(),
                                 children: [
-                                  const MonthView(),
+                                  LayoutBuilder(
+                                    builder: (context, constraints) {
+                                      return MonthView(constraints);
+                                    },
+                                  ),
                                   const WeekView(),
                                   const DayView(),
                                   const TasksView(),

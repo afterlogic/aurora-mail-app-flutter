@@ -1,8 +1,8 @@
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
-import 'package:aurora_mail/modules/calendar/utils/calendar_month_builders_mixin.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/event_card.dart';
+import 'package:aurora_mail/modules/calendar/utils/calendar_month_builders_mixin.dart';
 import 'package:calendar_view/calendar_view.dart' as CV;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +12,12 @@ import 'package:table_calendar/table_calendar.dart';
 enum MonthViewMode { week, short, full }
 
 class MonthView extends StatefulWidget {
-  const MonthView({super.key});
+  final BoxConstraints constraints;
+
+  const MonthView(
+    this.constraints, {
+    super.key,
+  });
 
   @override
   State<MonthView> createState() => _MonthViewState();
@@ -29,9 +34,12 @@ class _MonthViewState extends State<MonthView>
   late final Animation _calendarAnimation;
   late final CalendarsBloc _calendarsBloc;
   late final EventsBloc _eventsBloc;
+
   // final _refreshKey = GlobalKey<RefreshIndicatorState>();
 
   final double _calendarDayTitleHeight = 36;
+  final _minCalendarHeight = 200.0;
+  final _normalCalendarHeight = 350.0;
 
   @override
   initState() {
@@ -41,13 +49,26 @@ class _MonthViewState extends State<MonthView>
 
     _eventListAnimationController = AnimationController(
         duration: const Duration(milliseconds: 200), vsync: this);
+
+    final _minEventListFlex = 0;
+    final _maxEventListFlex = 100;
+
     _eventListAnimation =
-        IntTween(begin: 100, end: 0).animate(_eventListAnimationController);
+        IntTween(begin: _maxEventListFlex, end: _minEventListFlex)
+            .animate(_eventListAnimationController);
     _eventListAnimation.addListener(() => setState(() {}));
     _calendarAnimationController = AnimationController(
         duration: const Duration(milliseconds: 200), vsync: this);
+
+    final maxHeight = widget.constraints.maxHeight;
+    final _minCalendarFlex = (_minCalendarHeight * _maxEventListFlex) /
+        (maxHeight - _minCalendarHeight);
+    final _maxCalendarFlex = (_normalCalendarHeight * _maxEventListFlex) /
+        (maxHeight - _normalCalendarHeight);
+
     _calendarAnimation =
-        IntTween(begin: 140, end: 50).animate(_calendarAnimationController);
+        IntTween(begin: _maxCalendarFlex.toInt(), end: _minCalendarFlex.toInt())
+            .animate(_calendarAnimationController);
     _calendarAnimation.addListener(() {
       setState(() {});
     });
@@ -87,7 +108,7 @@ class _MonthViewState extends State<MonthView>
     return _eventListAnimationController.value == 1.0 ? false : true;
   }
 
- StartingDayOfWeek _getWeekStartDay(int dayCode) {
+  StartingDayOfWeek _getWeekStartDay(int dayCode) {
     switch (dayCode) {
       case 1:
         return StartingDayOfWeek.monday;
@@ -107,7 +128,6 @@ class _MonthViewState extends State<MonthView>
         return StartingDayOfWeek.monday;
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -168,11 +188,9 @@ class _MonthViewState extends State<MonthView>
                         rangeSelectionMode: _rangeSelectionMode,
                         eventLoader: (date) {
                           return state.getEventsForDayFromMap(
-                              date: DateTime(
-                                  date.year, date.month, date.day));
+                              date: DateTime(date.year, date.month, date.day));
                         },
-                        availableGestures:
-                            AvailableGestures.horizontalSwipe,
+                        availableGestures: AvailableGestures.horizontalSwipe,
                         headerStyle: HeaderStyle(
                           formatButtonVisible: false,
                           titleCentered: true,
@@ -200,55 +218,46 @@ class _MonthViewState extends State<MonthView>
                           defaultBuilder: (BuildContext context,
                                   DateTime currentDate,
                                   DateTime selectedDate) =>
-                              defaultDayBuilder(
-                                context,
-                                currentDate,
-                                events: state.getEventsForDayFromMap(date: currentDate),
-                                showEventMarker: _showEventMarkerInShortMode,
-                                cellHeight: _calendarDayTitleHeight
-                              ),
+                              defaultDayBuilder(context, currentDate,
+                                  events: state.getEventsForDayFromMap(
+                                      date: currentDate),
+                                  showEventMarker: _showEventMarkerInShortMode,
+                                  cellHeight: _calendarDayTitleHeight),
                           todayBuilder: (BuildContext context,
                                   DateTime currentDate,
                                   DateTime selectedDate) =>
-                              todayDayBuilder(
-                                context,
-                                currentDate,
-                                events: state.getEventsForDayFromMap(date: currentDate),
-                                showEventMarker: _showEventMarkerInShortMode,
-                                cellHeight: _calendarDayTitleHeight
-                              ),
+                              todayDayBuilder(context, currentDate,
+                                  events: state.getEventsForDayFromMap(
+                                      date: currentDate),
+                                  showEventMarker: _showEventMarkerInShortMode,
+                                  cellHeight: _calendarDayTitleHeight),
                           selectedBuilder: (BuildContext context,
                                   DateTime currentDate,
                                   DateTime selectedDate) =>
-                              selectedDayBuilder(
-                                context,
-                                currentDate,
-                                events: state.getEventsForDayFromMap(date: currentDate),
-                                showEventMarker: _showEventMarkerInShortMode,
-                                cellHeight: _calendarDayTitleHeight
-                              ),
+                              selectedDayBuilder(context, currentDate,
+                                  events: state.getEventsForDayFromMap(
+                                      date: currentDate),
+                                  showEventMarker: _showEventMarkerInShortMode,
+                                  cellHeight: _calendarDayTitleHeight),
                           outsideBuilder: (BuildContext context,
                                   DateTime currentDate,
                                   DateTime selectedDate) =>
-                              outsideDayBuilder(
-                                context,
-                                currentDate,
-                                events: state.getEventsForDayFromMap(date: currentDate),
-                                showEventMarker: _showEventMarkerInShortMode,
-                                cellHeight: _calendarDayTitleHeight
-                              ),
+                              outsideDayBuilder(context, currentDate,
+                                  events: state.getEventsForDayFromMap(
+                                      date: currentDate),
+                                  showEventMarker: _showEventMarkerInShortMode,
+                                  cellHeight: _calendarDayTitleHeight),
                           disabledBuilder: (BuildContext context,
                                   DateTime currentDate,
                                   DateTime selectedDate) =>
-                              disabledDayBuilder(
-                                context,
-                                currentDate,
-                                events: state.getEventsForDayFromMap(date: currentDate),
-                                cellHeight: _calendarDayTitleHeight
-                              ),
+                              disabledDayBuilder(context, currentDate,
+                                  events: state.getEventsForDayFromMap(
+                                      date: currentDate),
+                                  cellHeight: _calendarDayTitleHeight),
                           markerBuilder: (_, __, ___) => SizedBox.shrink(),
                         ),
-                        startingDayOfWeek: _getWeekStartDay(state.firstDayInWeek),
+                        startingDayOfWeek:
+                            _getWeekStartDay(state.firstDayInWeek),
                         calendarStyle: const CalendarStyle(),
                         onDaySelected: _onDaySelected,
                         daysOfWeekHeight: 40,
@@ -260,8 +269,10 @@ class _MonthViewState extends State<MonthView>
                           }
                         },
                         onPageChanged: (focusedDay) {
-                          if (!focusedDay.withoutTime.isAtSameMomentAs(state.selectedDate.withoutTime)) {
-                            _eventsBloc.add(SelectDate(focusedDay, isMonthMode: true));
+                          if (!focusedDay.withoutTime.isAtSameMomentAs(
+                              state.selectedDate.withoutTime)) {
+                            _eventsBloc
+                                .add(SelectDate(focusedDay, isMonthMode: true));
                           }
                         },
                       );
