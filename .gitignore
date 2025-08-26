@@ -24,6 +24,7 @@
 .pub-cache/
 .pub/
 /build/
+/build_artifacts/
 /build_res/**/
 !/build_res/afterlogic/
 !/build_res/template/
