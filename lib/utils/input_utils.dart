@@ -1,6 +1,6 @@
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/shared_ui/asset_svg_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:theme/app_color.dart';
 
 class InputUtils {
@@ -494,24 +494,18 @@ class InputUtils {
             decoration: getUnlymeInputDecoration(
               labelText: labelText,
               suffixIcon: suffixIcon ??
-                  (BuildProperty.useCustomInputStyles
-                      ? Transform.scale(
-                          scale: 0.4,
-                          child: SvgPicture.asset(
-                            '${BuildProperty.image_dir}/contacts/birthday.svg',
-                            width: 20, 
-                            height: 20,
-                            color: AppColor.inputPlaceholder,
-                          ),
-                        )
-                      : Transform.scale(
-                          scale: 0.4,
-                          child: Icon(
-                            Icons.calendar_today,
-                            color: AppColor.inputPlaceholder,
-                            size: 20,
-                          ),
-                        )),
+                  Transform.scale(
+                    scale: 0.4,
+                    child: AssetSvgIcon(
+                      showSvg: true,
+                      svgPath:
+                          '${BuildProperty.image_dir}/contacts/birthday.svg',
+                      iconData: Icons.calendar_today,
+                      width: 20,
+                      height: 20,
+                      color: AppColor.inputPlaceholder,
+                    ),
+                  ),
             ),
           ),
         ),

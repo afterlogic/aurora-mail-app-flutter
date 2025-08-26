@@ -18,6 +18,7 @@ import 'package:aurora_mail/modules/calendar/ui/views/week_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_drawer.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tab.dart';
 import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
+import 'package:aurora_mail/shared_ui/asset_svg_icon.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/extensions/bloc_provider_extensions.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -25,7 +26,6 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
@@ -543,23 +543,16 @@ class _CalendarPageState extends State<CalendarPage>
   }
 
   Widget _buildCalendarIcon(String iconName, IconData fallbackIcon) {
-    if (BuildProperty.useCustomInputStyles) {
-      final iconPath = '${BuildProperty.image_dir}/calendar/$iconName.svg';
-      return SvgPicture.asset(
-        iconPath,
-        width: 28,
-        height: 28,
-        placeholderBuilder: (context) => Icon(
-          fallbackIcon,
-          size: 28,
-          color: const Color(0xFF031743),
-        ),
-      );
-    }
-    return Icon(
-      fallbackIcon,
-      size: 28,
-      color: const Color(0xFF031743),
+    final iconPath = '${BuildProperty.image_dir}/calendar/$iconName.svg';
+    final iconColor = const Color(0xFF031743);
+
+    return AssetSvgIcon(
+      showSvg: BuildProperty.useCustomInputStyles,
+      svgPath: iconPath,
+      iconData: fallbackIcon,
+      width: 28,
+      height: 28,
+      color: iconColor,
     );
   }
 }

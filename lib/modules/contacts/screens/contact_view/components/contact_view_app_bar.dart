@@ -3,11 +3,11 @@ import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
 import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
+import 'package:aurora_mail/shared_ui/asset_svg_icon.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:theme/app_color.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 enum ContactViewAppBarAction {
   attach,
@@ -47,30 +47,27 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     PopupMenuEntry<ContactViewAppBarAction> _buildMenuItem({
-    @required ContactViewAppBarAction value,
-    @required String text,
-    @required IconData icon,
-    String customIconPath,
-  }) {
-    Widget iconWidget;
-    if (BuildProperty.useCustomAppBarIcons && customIconPath != null) {
-      iconWidget = SvgPicture.asset(
-        '${BuildProperty.image_dir}/m-app-bar/$customIconPath',
+      @required ContactViewAppBarAction value,
+      @required String text,
+      @required IconData icon,
+      String customIconPath,
+    }) {
+      final leading = AssetSvgIcon(
+        showSvg: BuildProperty.useCustomAppBarIcons && customIconPath != null,
+        svgPath: '${BuildProperty.image_dir}/m-app-bar/$customIconPath',
+        iconData: icon,
         width: 24.0,
         height: 24.0,
       );
-    } else {
-      iconWidget = Icon(icon);
+
+      return PopupMenuItem(
+        child: ListTile(
+          leading: leading,
+          title: Text(text),
+        ),
+        value: value,
+      );
     }
-    
-    return PopupMenuItem(
-      child: ListTile(
-        leading: iconWidget,
-        title: Text(text),
-      ),
-      value: value,
-    );
-  }
 
     final actions = <Widget>[
       PopupMenuButton(

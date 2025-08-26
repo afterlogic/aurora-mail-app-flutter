@@ -15,7 +15,7 @@ class ContactsInfoItem extends StatelessWidget {
   final String label;
   final String value;
   final InfoAction action;
-  final void Function() cb;
+  final VoidCallback onTap;
 
   ContactsInfoItem({
     @required this.icon,
@@ -23,12 +23,14 @@ class ContactsInfoItem extends StatelessWidget {
     @required this.label,
     @required this.value,
     this.action = InfoAction.none,
-    this.cb,
-  }) : super(key: Key(value));
+    this.onTap,
+  })  : assert(onTap != null),
+        super(key: Key(value));
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Row(
@@ -37,7 +39,7 @@ class ContactsInfoItem extends StatelessWidget {
           SizedBox(width: 16.0),
           iconName?.isNotEmpty == true
               ? AdaptiveContactIcon(
-                  fallbackIcon: icon,
+                  defaultIcon: icon,
                   iconName: iconName,
                   color: theme.primaryColor,
                 )
@@ -72,31 +74,26 @@ class ContactsInfoItem extends StatelessWidget {
   Widget _buildAction() {
     switch (action) {
       case InfoAction.email:
-        assert(cb != null);
         return AdaptiveActionButton(
           fallbackIcon: MdiIcons.emailOutline,
           iconName: 'email',
-          cb: cb,
+          onTap: onTap,
         );
       case InfoAction.call:
-        assert(cb != null);
         return AdaptiveActionButton(
           fallbackIcon: MdiIcons.phone,
           iconName: 'phone',
-          cb: cb,
+          onTap: onTap,
         );
       case InfoAction.visitWebsite:
-        assert(cb != null);
         return AdaptiveActionButton(
           fallbackIcon: MdiIcons.web,
           iconName: 'web-page',
-          cb: cb,
+          onTap: onTap,
         );
       case InfoAction.none:
-        assert(cb == null);
         return SizedBox();
       default:
-        assert(cb == null);
         return SizedBox();
     }
   }

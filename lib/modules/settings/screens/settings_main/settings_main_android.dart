@@ -17,13 +17,13 @@ import 'package:aurora_mail/modules/settings/screens/pgp_settings/pgp_settings_r
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_navigator.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/sync_settings_route.dart';
 import 'package:aurora_mail/shared_ui/adaptive_settings_menu_icon.dart';
+import 'package:aurora_mail/shared_ui/asset_svg_icon.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/shared_ui/optional_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:theme/app_color.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -63,25 +63,23 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
 
   // Custom trailing arrow for settings menu
   Widget _buildTrailingArrow() {
-    // Show the arrow only if custom icons are used.
-    if (BuildProperty.useSettingsMenuTrailingArrow) {
-      // Determining the color of the arrow
-      Color arrowColor = theme.primaryColor;
-      if (BuildProperty.useCustomSettingsColors) {
-        final isDarkTheme = theme.brightness == Brightness.dark;
-        arrowColor = isDarkTheme
-            ? AppColor.settingsArrowDark
-            : AppColor.settingsArrowLight;
-      }
-
-      return SvgPicture.asset(
-        '${BuildProperty.image_dir}/settings/vector.svg',
-        width: 8,
-        height: 16,
-        color: arrowColor,
-      );
+    Color arrowColor = theme.primaryColor;
+    if (BuildProperty.useCustomSettingsColors) {
+      final isDarkTheme = theme.brightness == Brightness.dark;
+      arrowColor = isDarkTheme
+          ? AppColor.settingsArrowDark
+          : AppColor.settingsArrowLight;
     }
-    return null;
+
+    // Show the arrow only if custom icons are used.
+    return AssetSvgIcon(
+      showSvg: BuildProperty.useSettingsMenuTrailingArrow,
+      svgPath: '${BuildProperty.image_dir}/settings/vector.svg',
+      iconData: Icons.arrow_forward_ios,
+      width: 8,
+      height: 16,
+      color: arrowColor,
+    );
   }
 
   @override

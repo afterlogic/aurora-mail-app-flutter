@@ -197,7 +197,7 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
         iconName: iconName,
         label: label,
         value: v,
-        cb: cb,
+        onTap: cb,
         action: action,
       );
     } else {

@@ -33,7 +33,7 @@ class AdaptiveBottomBarButton extends StatelessWidget {
       height: iconSize,
       alignment: Alignment.center,
       child: AdaptiveBottomBarIcon(
-        mdiIcon: mdiIcon,
+        defaultIcon: mdiIcon,
         iconName: iconName,
         isActive: isActive,
         activeColor: activeColor,

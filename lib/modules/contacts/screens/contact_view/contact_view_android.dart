@@ -739,7 +739,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
         iconName: iconName,
         label: label,
         value: v,
-        cb: cb,
+        onTap: cb,
         action: action,
       );
     } else {

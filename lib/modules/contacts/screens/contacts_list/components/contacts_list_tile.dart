@@ -52,25 +52,25 @@ class _ContactsListTileState extends State<ContactsListTile> {
       case StorageNames.personal:
         return AdaptiveContactIcon(
           iconName: 'personal',
-          fallbackIcon: WebMailIcons.personal,
+          defaultIcon: WebMailIcons.personal,
           size: 20.0,
         );
       case StorageNames.shared:
         return AdaptiveContactIcon(
           iconName: 'shared-with-all',
-          fallbackIcon: WebMailIcons.shared_with_all,
+          defaultIcon: WebMailIcons.shared_with_all,
           size: 20.0,
         );
       case StorageNames.team:
         return AdaptiveContactIcon(
           iconName: 'team',
-          fallbackIcon: Icons.business_center,
+          defaultIcon: Icons.business_center,
           size: 20.0,
         );
       default:
         return AdaptiveContactIcon(
           iconName: 'personal',
-          fallbackIcon: WebMailIcons.personal,
+          defaultIcon: WebMailIcons.personal,
           size: 20.0,
         );
     }
@@ -152,7 +152,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
               padding: EdgeInsets.only(right: 4.0),
               child: AdaptiveContactIcon(
                 iconName: 'key',
-                fallbackIcon: MdiIcons.key,
+                defaultIcon: MdiIcons.key,
                 size: 20.0,
               ),
             ),

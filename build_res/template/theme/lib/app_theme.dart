@@ -98,8 +98,8 @@ class AppTheme {
     dialogTheme: _dialogTheme,
   );
 
-  static final ThemeData login = null;
-  static final Color loginTextColor = null;
+  static final ThemeData? login = null;
+  static final Color? loginTextColor = null;
 
   static final floatIconTheme = IconThemeData(color: Colors.white);
 

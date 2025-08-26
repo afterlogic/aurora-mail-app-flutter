@@ -1,18 +1,18 @@
 //@dart=2.9
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/shared_ui/asset_svg_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class AdaptiveActionButton extends StatelessWidget {
   final IconData fallbackIcon;
   final String iconName;
-  final void Function() cb;
+  final VoidCallback onTap;
 
   const AdaptiveActionButton({
-    Key key,
     @required this.fallbackIcon,
     @required this.iconName,
-    @required this.cb,
+    @required this.onTap,
+    Key key,
   }) : super(key: key);
 
   @override
@@ -21,24 +21,16 @@ class AdaptiveActionButton extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
         color: Theme.of(context).primaryColor,
-        child: BuildProperty.useCustomContactIcons
-            ? SvgPicture.asset(
-                '${BuildProperty.image_dir}/contacts/$iconName.svg',
-                width: 24.0,
-                height: 24.0,
-                color: Colors.white,
-                // If the icon is not found, we show the fallback
-                placeholderBuilder: (context) => Icon(
-                  fallbackIcon,
-                  color: Colors.white,
-                ),
-              )
-            : Icon(
-                fallbackIcon,
-                color: Colors.white,
-              ),
+        child: AssetSvgIcon(
+          showSvg: BuildProperty.useCustomContactIcons,
+          svgPath: '${BuildProperty.image_dir}/contacts/$iconName.svg',
+          iconData: fallbackIcon,
+          width: 24.0,
+          height: 24.0,
+          color: Colors.white,
+        ),
       ),
-      onTap: cb,
+      onTap: onTap,
     );
   }
 }

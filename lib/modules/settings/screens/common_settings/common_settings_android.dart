@@ -7,11 +7,11 @@ import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/components/theme_selection_dialog.dart';
 import 'package:aurora_mail/shared_ui/adaptive_settings_menu_icon.dart';
 import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
+import 'package:aurora_mail/shared_ui/asset_svg_icon.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:theme/app_color.dart';
 
 import 'components/language_selection_dialog.dart';
@@ -32,23 +32,22 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
 
   // Custom trailing arrow for common settings
   Widget _buildTrailingArrow() {
-    if (BuildProperty.useSettingsMenuTrailingArrow) {
-      Color arrowColor = theme.primaryColor;
-      if (BuildProperty.useCustomSettingsColors) {
-        final isDarkTheme = theme.brightness == Brightness.dark;
-        arrowColor = isDarkTheme
-            ? AppColor.settingsArrowDark
-            : AppColor.settingsArrowLight;
-      }
-
-      return SvgPicture.asset(
-        '${BuildProperty.image_dir}/settings/vector.svg',
-        width: 8,
-        height: 16,
-        color: arrowColor,
-      );
+    Color arrowColor = theme.primaryColor;
+    if (BuildProperty.useCustomSettingsColors) {
+      final isDarkTheme = theme.brightness == Brightness.dark;
+      arrowColor = isDarkTheme
+          ? AppColor.settingsArrowDark
+          : AppColor.settingsArrowLight;
     }
-    return SizedBox.shrink();
+
+    return AssetSvgIcon(
+      showSvg: BuildProperty.useSettingsMenuTrailingArrow,
+      svgPath: '${BuildProperty.image_dir}/settings/vector.svg',
+      iconData: Icons.arrow_forward_ios,
+      width: 8.0,
+      height: 16.0,
+      color: arrowColor,
+    );
   }
 
   @override

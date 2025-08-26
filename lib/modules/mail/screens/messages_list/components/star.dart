@@ -1,6 +1,6 @@
 //@dart=2.9
 import 'package:aurora_mail/build_property.dart';
-import 'package:aurora_mail/shared_ui/svg_icon.dart';
+import 'package:aurora_mail/shared_ui/asset_svg_icon.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/material.dart';
 import 'package:theme/app_color.dart';
@@ -75,13 +75,12 @@ class _StarState extends BState<Star> with TickerProviderStateMixin {
         scale: 1 + _scaleAnimation.value / 4,
         child: IconButton(
           padding: EdgeInsets.zero,
-          icon: BuildProperty.useCustomStarIcons
-              ? SvgIcon(
-                  // Filled active star
-                  '${BuildProperty.image_dir}/mail/star.active.svg',
-                  color: starActiveColor,
-                )
-              : Icon(Icons.star, color: starActiveColor),
+          icon: AssetSvgIcon(
+            showSvg: BuildProperty.useCustomStarIcons,
+            svgPath: '${BuildProperty.image_dir}/mail/star.active.svg',
+            iconData: Icons.star,
+            color: starActiveColor,
+          ),
           onPressed: widget.enabled ? () => _setStarred(false) : null,
         ),
       );
@@ -90,18 +89,12 @@ class _StarState extends BState<Star> with TickerProviderStateMixin {
         scale: 1 - _scaleAnimation.value / 7,
         child: IconButton(
           padding: EdgeInsets.zero,
-          icon: BuildProperty.useCustomStarIcons
-              ? SvgIcon(
-                  // Outline of an inactive star
-                  '${BuildProperty.image_dir}/mail/star.svg',
-                  color:
-                      widget.enabled ? starInactiveColor : theme.disabledColor,
-                )
-              : Icon(
-                  Icons.star_border, // Returning the outline for the base star
-                  color:
-                      widget.enabled ? starInactiveColor : theme.disabledColor,
-                ),
+          icon: AssetSvgIcon(
+            showSvg: BuildProperty.useCustomStarIcons,
+            svgPath: '${BuildProperty.image_dir}/mail/star.svg',
+            iconData: Icons.star_border,
+            color: widget.enabled ? starInactiveColor : theme.disabledColor,
+          ),
           onPressed: widget.enabled ? () => _setStarred(true) : null,
         ),
       );

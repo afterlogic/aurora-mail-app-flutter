@@ -2,8 +2,9 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:theme/app_color.dart';
+
+import 'asset_svg_icon.dart';
 
 /// EN: Icon for settings menu
 class AdaptiveSettingsMenuIcon extends StatelessWidget {
@@ -14,12 +15,12 @@ class AdaptiveSettingsMenuIcon extends StatelessWidget {
   final String iconFolder; // Folder with icons (menu, common, etc.)
 
   const AdaptiveSettingsMenuIcon({
-    Key key,
     @required this.defaultIcon,
     @required this.iconName,
     @required this.color,
     @required this.background,
     this.iconFolder = 'menu', // default mail for backward compatibility
+    Key key,
   }) : super(key: key);
 
   @override
@@ -34,6 +35,8 @@ class AdaptiveSettingsMenuIcon extends StatelessWidget {
           isDarkTheme ? AppColor.settingsIconDark : AppColor.settingsIconLight;
     }
 
+    final iconSize = 24.0;
+
     // If there is a custom icon for this build option, use SVG
     if (BuildProperty.useCustomSettingsIcons) {
       final iconPath =
@@ -43,29 +46,24 @@ class AdaptiveSettingsMenuIcon extends StatelessWidget {
         width: 40,
         height: 40,
         child: Center(
-          child: SvgPicture.asset(
-            iconPath,
-            width: 24,
-            height: 24,
+          child: AssetSvgIcon(
+            showSvg: true,
+            svgPath: iconPath,
+            iconData: defaultIcon,
+            width: iconSize,
+            height: iconSize,
             color: iconColor,
-            placeholderBuilder: (context) {
-              // Fallback to the standard icon if SVG is not found
-              return Icon(
-                defaultIcon,
-                color: iconColor,
-                size: 24,
-              );
-            },
           ),
         ),
       );
-    } else {
-      // We use the standard icon
-      return AMCircleIcon(
-        defaultIcon,
-        color: color,
-        background: background,
-      );
     }
+
+    // We use the standard icon
+    return AMCircleIcon(
+      defaultIcon,
+      color: color,
+      size: iconSize,
+      background: background,
+    );
   }
 }
