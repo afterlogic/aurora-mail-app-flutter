@@ -11,7 +11,7 @@ class AdaptiveActionButton extends StatelessWidget {
   const AdaptiveActionButton({
     @required this.fallbackIcon,
     @required this.iconName,
-    @required this.onTap,
+    this.onTap,
     Key key,
   }) : super(key: key);
 

@@ -24,8 +24,7 @@ class ContactsInfoItem extends StatelessWidget {
     @required this.value,
     this.action = InfoAction.none,
     this.onTap,
-  })  : assert(onTap != null),
-        super(key: Key(value));
+  }) : super(key: Key(value));
 
   @override
   Widget build(BuildContext context) {
