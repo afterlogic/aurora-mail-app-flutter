@@ -201,7 +201,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             onTap: () => navigator().setRoot(DebugRoute.name),
           ),
         if (showDebug) _buildDivider(),
-        if (BuildProperty.deleteAccountLink?.isNotEmpty == true)
+        if (BuildProperty.deleteAccountLink.isNotEmpty)
           ListTile(
             leading: AdaptiveSettingsMenuIcon(
               defaultIcon: Icons.delete_outline,
@@ -213,8 +213,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             trailing: _buildTrailingArrow(),
             onTap: () => launchUrl(Uri.parse(BuildProperty.deleteAccountLink)),
           ),
-        if (BuildProperty.deleteAccountLink?.isNotEmpty == true)
-          _buildDivider(),
+        if (BuildProperty.deleteAccountLink.isNotEmpty) _buildDivider(),
         if (!BuildProperty.multiUserEnable)
           ListTile(
             leading: AdaptiveSettingsMenuIcon(

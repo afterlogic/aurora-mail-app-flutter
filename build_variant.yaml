@@ -44,16 +44,18 @@ _google_services_dir: '{{_dir}}/crashlytics'
 _google_services: '{{_google_services_dir}}/google-services.json'
 _google_services_ios: '{{_google_services_dir}}/GoogleService-Info.plist'
 
-autodiscover_url: ''
-
 deepLink: '{{packageName}}'
 
 foreground_icon: '{{image_dir}}/icon_foreground.png'
 background_color: '#FFFFFF'
 _theme_module: '{{_dir}}/theme'
 
+autodiscover_url: ''
 privacyPolicy: ''
 termsOfService: ''
+registrationLink: ''
+deleteAccountLink: ''
+
 # enum from package:aurora_mail/modules/settings/models/sync_period.dart
 syncPeriod: 'Period.allTime'
 supportLanguage: 'ru,en,tr'
@@ -71,6 +73,9 @@ pushNotification: true
 backgroundSync: false
 supportAllowAccess: true
 
+# Android splash screen
+useBackgroundImage: false
+
 # fido
 useYubiKit: false
 yubico_flutter_lib: 'path: module/mocks/yubico_flutter'
@@ -86,6 +91,7 @@ disableScreenShadowFloatingActionButton: false # disable shadow for floating act
 useDrawerGradient: true # use gradient for drawer
 useCustomDrawerIcons: true # use custom drawer folder icons
 useCustomDrawerIconColors: true # use custom colors for drawer icons
+hideCalendarImportICSFile: false # hide import ICS file option
 
 #Custom contacts
 useContactsRoundIcons: true # use round contact icons
