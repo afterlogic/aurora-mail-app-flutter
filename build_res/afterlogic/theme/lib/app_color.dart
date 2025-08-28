@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 
 class AppColor {
   // Main palette
-  static const _color = const Color(0xFF009FFF);
-  static const primary = _color;
-  static const primaryVariant = _color;
-  static const secondary = _color;
-  static const secondaryVariant = _color;
-  static const accent = _color;
-  static const accentVariant = _color;
+  static const primary = const Color(0xFF009FFF);
+  static const primaryVariant = primary;
+  static const secondary = primary;
+  static const secondaryVariant = primary;
+  static const accent = primary;
+  static const accentVariant = primary;
   static const surface = Color(0xFFFFFFFF);
   static const warning = Color(0xFFF44336);
 
