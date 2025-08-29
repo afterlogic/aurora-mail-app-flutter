@@ -93,43 +93,48 @@ class MailUtils {
     return null;
   }
 
-  static List<String> getEmails(String emailsInJson,
-      {List<String> exceptEmails}) {
+  static List<String> getEmails(
+    String emailsInJson, {
+    List<String> exceptEmails,
+  }) {
     if (emailsInJson == null) return [];
+
     final emails = json.decode(emailsInJson);
     if (emails == null) return [];
-    final result = [];
-    emails["@Collection"].forEach((t) {
-      final display = t["DisplayName"] as String;
-      final email = t["Email"] as String;
+
+    final result = <String>{};
+    emails["@Collection"].forEach((item) {
+      final display = item["DisplayName"] as String;
+      final email = item["Email"] as String;
 
       if (exceptEmails != null && exceptEmails.contains(email)) return;
 
-      if (display != null && display.isNotEmpty) {
+      if (display != null &&
+          display.isNotEmpty &&
+          display.trim().toLowerCase() != email.trim().toLowerCase()) {
         result.add('"$display" <$email>');
       } else {
         result.add(email);
       }
-    }) as Iterable;
+    });
 
-    result.toSet();
-
-    return new List<String>.from(result);
+    return result.toList();
   }
 
   static String getDisplayName(String senderInJson) {
     if (senderInJson == null) return "";
+
     final sender = json.decode(senderInJson);
     if (sender == null) return "";
-    final mapped =
-        sender["@Collection"].map((t) => t["DisplayName"]) as Iterable;
-    final results = List<String>.from(mapped);
-    if (results.isEmpty || results[0] == null || results[0].isEmpty) {
-      final mapped = sender["@Collection"].map((t) => t["Email"]) as Iterable;
-      final results = List<String>.from(mapped);
-      return results[0];
+
+    final names =
+        sender["@Collection"].map((t) => t["DisplayName"]) as List<String>;
+    if (names.isEmpty || names[0] == null || names[0].isEmpty) {
+      final emails =
+          sender["@Collection"].map((t) => t["Email"]) as List<String>;
+      return emails[0];
     } else {
-      return results[0];
+      return names[0];
     }
   }
 
@@ -475,20 +480,12 @@ class MailUtils {
       is24: true,
     );
     final paddingBottom = MediaQuery.of(context).padding.bottom;
-    List<String> formatContact(String json) {
-      if (json == null) return [];
-      return (jsonDecode(json)["@Collection"] as List)
-          .map((item) => (item["DisplayName"]?.isNotEmpty == true
-              ? ("${item["DisplayName"]} ${item["Email"]}")
-              : item["Email"]) as String)
-          .toList();
-    }
 
-    final from = formatContact(message.fromInJson).join("<br>");
-    final cc = formatContact(message.ccInJson).join("<br>");
-    final to = formatContact(message.toInJson).join("<br>");
-    var toPrimary = (formatContact(message.toInJson)
-          ..addAll(formatContact(message.ccInJson)))
+    final from = getEmails(message.fromInJson).join("<br>");
+    final cc = getEmails(message.ccInJson).join("<br>");
+    final to = getEmails(message.toInJson).join("<br>");
+    var toPrimary = (getEmails(message.toInJson)
+          ..addAll(getEmails(message.ccInJson)))
         .toSet()
         .join("<br>");
     if (toPrimary.isEmpty) {
