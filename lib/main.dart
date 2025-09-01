@@ -41,8 +41,16 @@ void main() async {
 
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
-      androidProvider: AndroidProvider.debug,
-      appleProvider: AppleProvider.debug);
+    androidProvider:
+        kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
+    appleProvider: kDebugMode ? AppleProvider.debug : AppleProvider.deviceCheck,
+  );
+
+  try {
+    final appCheckToken = await FirebaseAppCheck.instance.getToken();
+  } catch (e) {
+    debugPrint('FirebaseAppCheck: $e');
+  }
 
   if (!kDebugMode) {
     FlutterError.onError = (details) {
