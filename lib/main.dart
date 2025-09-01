@@ -12,6 +12,7 @@ import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -37,13 +38,24 @@ void main() async {
     defaultInterceptor: DefaultLoggerInterceptorAdapter(),
   ));
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
-  AppInjector.create();
+  await FirebaseAppCheck.instance.activate(
+      androidProvider: AndroidProvider.debug,
+      appleProvider: AppleProvider.debug);
 
   if (!kDebugMode) {
-    FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    FlutterError.onError = (details) {
+      FirebaseCrashlytics.instance.recordFlutterError(details, fatal: true);
+    };
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
   }
+
+  AppInjector.create();
+
   // ignore: invalid_use_of_protected_member
   DBInstances.appDB.connection.executor.ensureOpen(DBInstances.appDB);
   LoggerStorage()
