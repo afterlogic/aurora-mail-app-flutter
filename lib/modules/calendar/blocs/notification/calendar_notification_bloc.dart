@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/displayable.dart';
@@ -21,16 +19,23 @@ class CalendarNotificationBloc
     on<StartSyncFromNotification>(_onStartSyncFromNotification);
   }
 
-  _onStartSyncFromNotification(StartSyncFromNotification event,
-      Emitter<CalendarNotificationState> emit) async {
-    emit(state.copyWith(notificationSyncStatus: NotificationStatus.loading));
+  _onStartSyncFromNotification(
+    StartSyncFromNotification event,
+    Emitter<CalendarNotificationState> emit,
+  ) async {
+    emit(state.copyWith(
+      notificationSyncStatus: NotificationStatus.loading,
+    ));
     try {
       await _useCase.syncCalendarsWithActivities();
       final selectedEvent = await _useCase.getActivityByUid(
-          calendarId: event.calendarId, activityId: event.activityId);
+        calendarId: event.calendarId,
+        activityId: event.activityId,
+      );
       emit(state.copyWith(
-          activityFromNotification: () => selectedEvent,
-          activityType: () => event.activityType));
+        activityFromNotification: () => selectedEvent,
+        activityType: () => event.activityType,
+      ));
     } catch (e, s) {
       emit(
         state.copyWith(

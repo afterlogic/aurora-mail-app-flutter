@@ -5,11 +5,14 @@ import 'dart:math';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
-import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     hide Message;
 import 'package:notifications_utils/notifications_utils.dart';
 import 'package:package_info/package_info.dart';
+
+const NOTIFICATION_MAIL_CHANNEL_ID = "new_mail";
+const NOTIFICATION_MAIL_CHANNEL_NAME = "New mail";
+const NOTIFICATION_MAIL_CHANNEL_DESCRIPTION = "";
 
 class NotificationManager {
   final plugin = FlutterLocalNotificationsPlugin();
@@ -27,7 +30,7 @@ class NotificationManager {
     _openFromNotification();
   }
 
-  _openFromNotification() async {
+  Future<void> _openFromNotification() async {
     final notification = await plugin.getNotificationAppLaunchDetails();
     if (notification.didNotificationLaunchApp) {
       onSelectNotification(notification.payload);
@@ -35,14 +38,27 @@ class NotificationManager {
   }
 
   Future<void> showMessageNotification(
-      Message message, Account account, User user) async {
+    Message message,
+    Account account,
+    User user,
+  ) async {
     return showNotification(
-        message.fromToDisplay, message.subject, account, user, message.localId);
+      message.fromToDisplay,
+      message.subject,
+      account,
+      user,
+      message.localId,
+    );
   }
 
   Future<void> showNotification(
-      String from, String subject, Account account, User user, int localId,
-      {Map<String, dynamic> forcePayload}) async {
+    String from,
+    String subject,
+    Account account,
+    User user,
+    int localId, {
+    Map<String, dynamic> forcePayload,
+  }) async {
     final packageName = (await PackageInfo.fromPlatform()).packageName;
     bool isFirstNotification = false;
     if (!Platform.isIOS) {
@@ -108,7 +124,3 @@ Future onSelectNotification(String payload) async {
     RouteWrap.notification = json;
   }
 }
-
-const NOTIFICATION_MAIL_CHANNEL_ID = "new_mail";
-const NOTIFICATION_MAIL_CHANNEL_NAME = "New mail";
-const NOTIFICATION_MAIL_CHANNEL_DESCRIPTION = "";

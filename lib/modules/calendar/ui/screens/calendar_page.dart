@@ -34,10 +34,12 @@ class CalendarPageArg {
   final String selectedCalendarId;
   final String selectedActivityId;
   final ActivityType type;
-  CalendarPageArg(
-      {required this.selectedCalendarId,
-      required this.selectedActivityId,
-      required this.type});
+
+  CalendarPageArg({
+    required this.selectedCalendarId,
+    required this.selectedActivityId,
+    required this.type,
+  });
 }
 
 class CalendarPage extends StatefulWidget {
@@ -45,6 +47,7 @@ class CalendarPage extends StatefulWidget {
   static String? selectedActivityId = null;
   static ActivityType? activityType = null;
   final CalendarPageArg? args;
+
   const CalendarPage({super.key, this.args});
 
   @override
@@ -64,18 +67,31 @@ class _CalendarPageState extends State<CalendarPage>
     _overlay = false;
     _calendarsBloc = BlocProvider.of<CalendarsBloc>(context);
     _tabController = TabController(
-        length: 4,
-        vsync: this,
-        initialIndex: _calendarsBloc.state.selectedTabIndex ?? 0);
-    BlocProvider.of<CalendarsBloc>(context).add(GetCalendars());
-    if (widget.args != null) {
+      length: 4,
+      vsync: this,
+      initialIndex: _calendarsBloc.state.selectedTabIndex ?? 0,
+    );
+    _calendarsBloc.add(GetCalendars());
+
+    _openSelectedActivity();
+  }
+
+  void _openSelectedActivity() {
+    final argsType = widget.args?.type;
+    final argsCalendarId = widget.args?.selectedCalendarId;
+    final argsActivityId = widget.args?.selectedActivityId;
+
+    if (argsType != null && argsCalendarId != null && argsActivityId != null) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         BlocProvider.of<CalendarNotificationBloc>(context).add(
-            StartSyncFromNotification(
-                activityType: widget.args!.type,
-                calendarId: widget.args!.selectedCalendarId,
-                activityId: widget.args!.selectedActivityId));
-        switch (widget.args!.type) {
+          StartSyncFromNotification(
+            activityType: argsType,
+            calendarId: argsCalendarId,
+            activityId: argsActivityId,
+          ),
+        );
+
+        switch (argsType) {
           case ActivityType.event:
             Navigator.of(context).pushNamed(EventViewPage.name);
             break;
@@ -84,27 +100,39 @@ class _CalendarPageState extends State<CalendarPage>
             break;
         }
       });
-    } else if (CalendarPage.selectedCalendarId != null &&
-        CalendarPage.activityType != null &&
-        CalendarPage.selectedActivityId != null) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        BlocProvider.of<CalendarNotificationBloc>(context).add(
-            StartSyncFromNotification(
-                activityType: CalendarPage.activityType!,
-                calendarId: CalendarPage.selectedCalendarId!,
-                activityId: CalendarPage.selectedActivityId!));
-        switch (CalendarPage.activityType!) {
-          case ActivityType.event:
-            Navigator.of(context).pushNamed(EventViewPage.name);
-            break;
-          case ActivityType.task:
-            Navigator.of(context).pushNamed(TaskViewPage.name);
-            break;
-        }
-      });
-    } else {
-      BlocProvider.of<EventsBloc>(context).add(const StartSync());
+
+      return;
     }
+
+    final initialType = CalendarPage.activityType;
+    final initialCalendarId = CalendarPage.selectedCalendarId;
+    final initialActivityId = CalendarPage.selectedActivityId;
+    if (initialType != null &&
+        initialCalendarId != null &&
+        initialActivityId != null) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        BlocProvider.of<CalendarNotificationBloc>(context).add(
+          StartSyncFromNotification(
+            activityType: initialType,
+            calendarId: initialCalendarId,
+            activityId: initialActivityId,
+          ),
+        );
+
+        switch (initialType) {
+          case ActivityType.event:
+            Navigator.of(context).pushNamed(EventViewPage.name);
+            break;
+          case ActivityType.task:
+            Navigator.of(context).pushNamed(TaskViewPage.name);
+            break;
+        }
+      });
+
+      return;
+    }
+
+    BlocProvider.of<EventsBloc>(context).add(const StartSync());
   }
 
   @override

@@ -11,10 +11,12 @@ class StartSyncFromNotification extends CalendarNotificationEvent {
   final String calendarId;
   final String activityId;
   final ActivityType activityType;
-  const StartSyncFromNotification(
-      {required this.calendarId,
-      required this.activityId,
-      required this.activityType});
+
+  const StartSyncFromNotification({
+    required this.calendarId,
+    required this.activityId,
+    required this.activityType,
+  });
 
   @override
   List<Object?> get props => [calendarId, activityId, activityType];
