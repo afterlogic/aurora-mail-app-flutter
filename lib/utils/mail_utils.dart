@@ -674,6 +674,9 @@ class MailUtils {
                   border-right: 5px solid transparent;
                   border-top: 5px solid #000;
               }
+              .wrap-it {
+                  word-break: break-word;
+              }
             </style>
             <script>      
                 document.addEventListener('DOMContentLoaded', function () {
@@ -729,8 +732,8 @@ class MailUtils {
               <div class="email-head">
                 <div class="flex" style="width: calc(100vw - 12px * 2)">
                   <div class="flex" style="flex: 1">
-                    <div style="font-size: 18px" class="selectable">${message.fromToDisplay}</div>
-                    <div class="selectable disabled-text">$toPrimary</div>
+                    <div style="font-size: 18px" class="selectable wrap-it">${message.fromToDisplay}</div>
+                    <div class="selectable disabled-text wrap-it">$toPrimary</div>
                       <div class="selectable disabled-text">$shortDate</div>
                     <a style="margin-top: 7px;" class="toggle primary-color" href="#info" id="info-btn">${S.of(context).btn_show_details}</a>
                   </div>
@@ -738,9 +741,9 @@ class MailUtils {
                 </div>
                 </div>
                   <div class="toggle-content flex" id="info">
-                      <div class="row"><a class="details-description">From</a><a class="selectable details-value">$from</a></div>
-                      <div class="row"><a class="details-description">To</a><a class="selectable details-value">$to</a></div>        
-                      ${cc.isNotEmpty ? '<div class="row"><a class="details-description">Cc</a><a class="selectable details-value">$cc</a></div>' : ''}
+                      <div class="row"><a class="details-description">From</a><a class="selectable details-value wrap-it">$from</a></div>
+                      <div class="row"><a class="details-description">To</a><a class="selectable details-value wrap-it">$to</a></div>        
+                      ${cc.isNotEmpty ? '<div class="row"><a class="details-description">Cc</a><a class="selectable details-value wrap-it">$cc</a></div>' : ''}
                       <div class="row"><a class="details-description">Date</a><a class="selectable details-value">$date</a></div>
                   </div>
                   ${extendedEvent == null ? "" : """
@@ -783,7 +786,7 @@ class MailUtils {
                 <div class="email-head" style="padding-top: 0px;">
                 <div style="display: flex; flex-direction: row;justify-content: space-between; padding-top: 24px;">
                   <h1 style="font-size: 24px; font-weight: 500; margin-top: 0px;">
-                    <span style="margin-right: 10px;" class="selectable">${subject}</span>
+                    <span style="margin-right: 10px;" class="selectable wrap-it">${subject}</span>
                     <span style="display: inline-block; font-size: 14px; background: #B6B5B5; ${theme.brightness == Brightness.dark ? 'color: black;' : 'color: white;'} padding: 3px 8px; border-radius: 10px; margin-top: -2px; vertical-align: middle;">${message.folder}</span>
                   </h1>
                   <a id="stared-btn" class="stared${isStarred ? " is-starred" : ""}" href='${MessageWebViewActions.ACTION + (isStarred ? MessageWebViewActions.SET_NOT_STARRED : MessageWebViewActions.SET_STARRED)}' style='text-decoration: none; font-size: 24px; line-height: 1.2;'>${isStarred ? _getActiveStarIcon() : _getInactiveStarIcon()}</a>
