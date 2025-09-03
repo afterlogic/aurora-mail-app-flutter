@@ -500,5 +500,6 @@
   "calendar_color_label": "Couleur",
   "calendar_validation_enter_text": "Veuillez saisir du texte",
   "settings_delete_account": "Supprimer le compte",
-  "week_titles": "Lu,Ma,Me,Je,Ve,Sa,Di"
+  "week_titles": "Lu,Ma,Me,Je,Ve,Sa,Di",
+  "record_not_found": "Entrée introuvable"
 }

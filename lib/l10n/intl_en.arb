@@ -506,5 +506,6 @@
 		}
 	},
 	"settings_delete_account": "Delete account",
-	"week_titles": "Mo,Tu,We,Th,Fr,Sa,Su"
+	"week_titles": "Mo,Tu,We,Th,Fr,Sa,Su",
+	"record_not_found": "The record not found"
 }

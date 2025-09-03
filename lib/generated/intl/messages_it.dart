@@ -912,6 +912,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Corpo del messaggio"),
         "no_permission_to_local_storage": MessageLookupByLibrary.simpleMessage(
             "Nessun permesso per accedere all\'archiviazione locale. Controlla le impostazioni del dispositivo."),
+        "record_not_found":
+            MessageLookupByLibrary.simpleMessage("Record non trovato"),
         "remove": MessageLookupByLibrary.simpleMessage("Rimuovi"),
         "save": MessageLookupByLibrary.simpleMessage("Salva"),
         "save_changes_question":

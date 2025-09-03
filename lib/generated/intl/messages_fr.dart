@@ -909,6 +909,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Corps du message"),
         "no_permission_to_local_storage": MessageLookupByLibrary.simpleMessage(
             "Aucune autorisation d\'accès au stockage local. Vérifiez les paramètres de votre appareil."),
+        "record_not_found":
+            MessageLookupByLibrary.simpleMessage("Entrée introuvable"),
         "remove": MessageLookupByLibrary.simpleMessage("Supprimer"),
         "save": MessageLookupByLibrary.simpleMessage("Enregistrer"),
         "save_changes_question": MessageLookupByLibrary.simpleMessage(

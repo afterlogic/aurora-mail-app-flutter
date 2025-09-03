@@ -506,5 +506,6 @@
 		}
 	},
 	"settings_delete_account": "Elimina account",
-	"week_titles": "Lu,Ma,Me,Gi,Ve,Sa,Do"
+	"week_titles": "Lu,Ma,Me,Gi,Ve,Sa,Do",
+	"record_not_found": "Record non trovato"
 }

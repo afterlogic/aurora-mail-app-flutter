@@ -885,6 +885,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("İleti metni"),
         "no_permission_to_local_storage": MessageLookupByLibrary.simpleMessage(
             "Yerel depolamaya erişim izni yok. Cihazınızın ayarlarını kontrol edin."),
+        "record_not_found":
+            MessageLookupByLibrary.simpleMessage("Kayıt bulunamadı"),
         "remove": MessageLookupByLibrary.simpleMessage("Remove"),
         "save": MessageLookupByLibrary.simpleMessage("Kaydet"),
         "save_changes_question":
