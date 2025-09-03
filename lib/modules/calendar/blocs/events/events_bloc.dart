@@ -33,8 +33,10 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
   /// The same duration is added in calendar useCase implementation
   final extraDuration = Duration(days: 7);
 
-  EventsBloc({required CalendarUseCase useCase, required int firstDayInWeek})
-      : _useCase = useCase,
+  EventsBloc({
+    required CalendarUseCase useCase,
+    required int firstDayInWeek,
+  })  : _useCase = useCase,
         super(
           EventsState(
               startIntervalDate: DateTime.now().firstDayOfMonth,
@@ -55,11 +57,17 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
     on<SelectDate>(_onSelectDate);
   }
 
-  _onSelectEvent(SelectEvent event, Emitter<EventsState> emit) async {
+  Future<void> _onSelectEvent(
+    SelectEvent event,
+    Emitter<EventsState> emit,
+  ) async {
     emit(state.copyWith(selectedEvent: () => event.event));
   }
 
-  _onUpdateEvent(UpdateEvent event, Emitter<EventsState> emit) async {
+  Future<void> _onUpdateEvent(
+    UpdateEvent event,
+    Emitter<EventsState> emit,
+  ) async {
     await _asyncErrorHandler(() async {
       final updatedEvent = await _useCase.updateActivity(event.event,
           state.selectedEvent?.calendarId ?? event.event.calendarId);
@@ -67,13 +75,19 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
     }, emit);
   }
 
-  _onDeleteEvent(DeleteEvent event, Emitter<EventsState> emit) async {
+  Future<void> _onDeleteEvent(
+    DeleteEvent event,
+    Emitter<EventsState> emit,
+  ) async {
     await _asyncErrorHandler(() async {
       await _useCase.deleteActivity(state.selectedEvent!);
     }, emit);
   }
 
-  _onLoadEvents(LoadEvents event, Emitter<EventsState> emit) async {
+  Future<void> _onLoadEvents(
+    LoadEvents event,
+    Emitter<EventsState> emit,
+  ) async {
     await _asyncErrorHandler(() async {
       await _useCase.getForPeriod(
           start: state.startIntervalDate.withoutTime.subtract(extraDuration),
@@ -81,13 +95,19 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
     }, emit);
   }
 
-  _onCreateEvent(CreateEvent event, Emitter<EventsState> emit) async {
+  Future<void> _onCreateEvent(
+    CreateEvent event,
+    Emitter<EventsState> emit,
+  ) async {
     await _asyncErrorHandler(() async {
       await _useCase.createActivity(event.creationData);
     }, emit);
   }
 
-  _onAddEvents(AddEvents event, Emitter<EventsState> emit) async {
+  Future<void> _onAddEvents(
+    AddEvents event,
+    Emitter<EventsState> emit,
+  ) async {
     if (event.events == null && state.status.isLoading) {
       return;
     }
@@ -110,7 +130,10 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
     }, emit);
   }
 
-  _onStartSync(StartSync event, Emitter<EventsState> emit) async {
+  Future<void> _onStartSync(
+    StartSync event,
+    Emitter<EventsState> emit,
+  ) async {
     if (state.originalEvents == null || state.eventsMap == null) {
       emit(state.copyWith(status: EventsStatus.loading));
     }
@@ -119,11 +142,14 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
     }, emit);
   }
 
-  _onSelectDate(SelectDate event, Emitter<EventsState> emit) async {
+  Future<void> _onSelectDate(
+    SelectDate event,
+    Emitter<EventsState> emit,
+  ) async {
     final today = DateTime.now().withoutTime;
     // TODO: review this correction of the selected date in month mode.
-    final dateSelected = event.isMonthMode ?
-        event.date.toLocal().subtract(event.date.toLocal().timeZoneOffset)
+    final dateSelected = event.isMonthMode
+        ? event.date.toLocal().subtract(event.date.toLocal().timeZoneOffset)
         : event.date;
     if (dateSelected.isAtSameMomentAs(state.selectedDate)) {
       emit(state.copyWith(selectedDate: DateTime.now()));
@@ -153,24 +179,33 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
             : dateSelected));
   }
 
-  _errorHandler(void Function() callback, Emitter<EventsState> emit) {
+  void _errorHandler(
+    void Function() callback,
+    Emitter<EventsState> emit,
+  ) {
     try {
       callback();
     } catch (e, s) {
       emit(state.copyWith(
-          status: EventsStatus.error, error: () => formatError(e, s)));
+        status: EventsStatus.error,
+        error: () => formatError(e, s),
+      ));
     } finally {
       // emit(state.copyWith(status: EventsStatus.idle, error: () => null));
     }
   }
 
-  _asyncErrorHandler(
-      Future Function() callback, Emitter<EventsState> emit) async {
+  Future<void> _asyncErrorHandler(
+    Future Function() callback,
+    Emitter<EventsState> emit,
+  ) async {
     try {
       await callback();
     } catch (e, s) {
       emit(state.copyWith(
-          status: EventsStatus.error, error: () => formatError(e, s)));
+        status: EventsStatus.error,
+        error: () => formatError(e, s),
+      ));
     } finally {
       // emit(state.copyWith(status: EventsStatus.idle, error: () => null));
     }

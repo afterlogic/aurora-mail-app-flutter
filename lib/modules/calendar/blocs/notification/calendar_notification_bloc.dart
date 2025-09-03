@@ -19,7 +19,7 @@ class CalendarNotificationBloc
     on<StartSyncFromNotification>(_onStartSyncFromNotification);
   }
 
-  _onStartSyncFromNotification(
+  Future<void> _onStartSyncFromNotification(
     StartSyncFromNotification event,
     Emitter<CalendarNotificationState> emit,
   ) async {
@@ -45,10 +45,11 @@ class CalendarNotificationBloc
       );
     } finally {
       emit(state.copyWith(
-          notificationSyncStatus: NotificationStatus.idle,
-          error: () => null,
-          activityType: () => null,
-          activityFromNotification: () => null));
+        notificationSyncStatus: NotificationStatus.idle,
+        error: () => null,
+        activityType: () => null,
+        activityFromNotification: () => null,
+      ));
     }
   }
 }

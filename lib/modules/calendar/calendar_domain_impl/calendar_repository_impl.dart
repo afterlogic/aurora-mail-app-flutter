@@ -25,10 +25,11 @@ class CalendarRepositoryImpl implements CalendarRepository {
   late final CalendarNetworkService _network;
   late final CalendarDbService _db;
 
-  CalendarRepositoryImpl(
-      {required this.user,
-      required AppDatabase appDB,
-      Logger? repositoryLogger}) {
+  CalendarRepositoryImpl({
+    required this.user,
+    required AppDatabase appDB,
+    Logger? repositoryLogger,
+  }) {
     final module = new WebMailApi(
       moduleName: WebMailModules.calendar,
       hostname: user.hostname,
@@ -173,10 +174,11 @@ class CalendarRepositoryImpl implements CalendarRepository {
   }
 
   @override
-  Future<List<Event>> getEventsForPeriod(
-      {required DateTime start,
-      required DateTime end,
-      required List<String> calendarIds}) async {
+  Future<List<Event>> getEventsForPeriod({
+    required DateTime start,
+    required DateTime end,
+    required List<String> calendarIds,
+  }) async {
     final activities = await _db.getActivitiesForPeriod(
         start: start,
         end: end,
@@ -258,7 +260,9 @@ class CalendarRepositoryImpl implements CalendarRepository {
 
   @override
   Future<Activity> updateActivity(
-      Activity activity, String originalCalendarId) {
+    Activity activity,
+    String originalCalendarId,
+  ) {
     return _network.updateActivity(activity, originalCalendarId);
   }
 
@@ -273,8 +277,10 @@ class CalendarRepositoryImpl implements CalendarRepository {
   }
 
   @override
-  Future<Activity> getActivityByUid(
-      {required String calendarId, required String activityUid}) {
+  Future<Activity> getActivityByUid({
+    required String calendarId,
+    required String activityUid,
+  }) {
     return _db.getActivityByUid(
         userLocalId: user.localId!,
         calendarId: calendarId,

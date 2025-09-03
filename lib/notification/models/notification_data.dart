@@ -6,21 +6,21 @@ class NotificationData {
   final String subject;
   final String to;
   final String from;
-  final String messageID;
+  final String messageId;
   final String folder;
   final String calendarId;
   final String activityId;
 
-  NotificationData(
-    this.type,
-    this.subject,
-    this.to,
-    this.from,
-    this.messageID,
-    this.folder,
-    this.calendarId,
-    this.activityId,
-  );
+  NotificationData({
+    required this.type,
+    required this.subject,
+    required this.to,
+    required this.from,
+    required this.messageId,
+    required this.folder,
+    required this.calendarId,
+    required this.activityId,
+  });
 
   static NotificationData fromMap(RemoteMessage message) {
     final notification = message.data;
@@ -30,16 +30,16 @@ class NotificationData {
   static NotificationData fromJson(Map<String, dynamic> json) {
     final typeString = json["Type"] as String?;
     return NotificationData(
-      typeString == null
+      type: typeString == null
           ? NotificationType.email
           : NotificationTypeMapper.fromString(typeString),
-      json["Subject"] as String,
-      json["To"] as String,
-      json["From"] as String,
-      json["MessageId"] as String,
-      json["Folder"] as String,
-      json["CalendarId"] as String,
-      json["EventUid"] as String,
+      subject: json["Subject"] as String,
+      to: json["To"] as String,
+      from: json["From"] as String,
+      messageId: json["MessageId"] as String,
+      folder: json["Folder"] as String,
+      calendarId: json["CalendarId"] as String,
+      activityId: json["EventUid"] as String,
     );
   }
 
@@ -47,9 +47,9 @@ class NotificationData {
         "Subject": subject,
         "To": to,
         "From": from,
-        "MessageId": messageID,
+        "MessageId": messageId,
         "Folder": folder,
-        "Type": type == null ? null : type.toStringCode(),
+        "Type": type.toStringCode(),
         "CalendarId": calendarId,
         "EventUid": activityId
       };
