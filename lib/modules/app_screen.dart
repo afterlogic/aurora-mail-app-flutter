@@ -8,6 +8,7 @@ import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/server_modules.dart';
+import 'package:aurora_mail/modules/app_route_observer.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/notification/calendar_notification_bloc.dart';
@@ -43,8 +44,6 @@ import 'auth/blocs/auth_bloc/bloc.dart';
 import 'auth/screens/login/login_route.dart';
 import 'dialog_wrap.dart';
 import 'route_generator.dart';
-
-final routeObserver = RouteObserver();
 
 class App extends StatefulWidget {
   @override
@@ -368,7 +367,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                               : _notification != null
                                   ? CalendarRoute.name
                                   : MessagesListRoute.name,
-                          navigatorObservers: [routeObserver],
+                          navigatorObservers: [AppRouteObserver()],
                           builder: (context, child) {
                             return MediaQuery(
                               data: MediaQuery.of(context).copyWith(
