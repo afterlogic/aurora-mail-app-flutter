@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:aurora_logger/aurora_logger.dart';
-// import 'package:aurora_mail/config.dart';
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
@@ -21,8 +21,7 @@ import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:drift/drift.dart';
-
-import 'package:aurora_mail/build_property.dart';
+import 'package:flutter/foundation.dart';
 
 class MailMethods {
   final _foldersDao = new FoldersDao(DBInstances.appDB);
@@ -440,7 +439,10 @@ class MailMethods {
       return _setMessagesInfoToFolder();
     }
     final uids = messagesForUpdate
-        .getRange(0, min(BuildProperty.mailMessagesChunkSize, messagesForUpdate.length))
+        .getRange(
+          0,
+          min(BuildProperty.mailMessagesChunkSize, messagesForUpdate.length),
+        )
         .toList();
 
     logger.log("${messagesForUpdate.length} messages in queue");
@@ -480,8 +482,9 @@ class MailMethods {
       // check if there are other messages to sync
       _syncMessagesChunk(
         syncPeriod,
-        messagesForUpdate
-            .sublist(min(BuildProperty.mailMessagesChunkSize, messagesForUpdate.length)),
+        messagesForUpdate.sublist(
+          min(BuildProperty.mailMessagesChunkSize, messagesForUpdate.length),
+        ),
         folderMessageCount,
         currentFolder,
       );
@@ -698,7 +701,7 @@ class MailMethods {
         return _mailDao.fillMessage(newMessages.first);
       }
     } catch (e) {
-      print(e);
+      debugPrint('!!! $e');
       rethrow;
     }
   }
@@ -708,14 +711,4 @@ class MailMethods {
         .getByName(name, account.localId)
         .then(Folder.getFolderObjectsFromDb);
   }
-}
-
-class _FillMessageArg {
-  final List result;
-  final List<Message> messagesInfo;
-  final int userLocalId;
-  final Account account;
-
-  _FillMessageArg(
-      this.result, this.messagesInfo, this.userLocalId, this.account);
 }
