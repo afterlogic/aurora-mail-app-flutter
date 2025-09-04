@@ -67,8 +67,9 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
       animationFinished = true;
     } else {
       widget.routeAnimationListener.onComplete = () {
-        animationFinished = true;
-        setState(() {});
+        setState(() {
+          animationFinished = true;
+        });
       };
     }
   }

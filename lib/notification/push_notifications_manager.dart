@@ -55,7 +55,7 @@ class PushNotificationsManager {
         }
         FirebaseMessaging.onBackgroundMessage(voidMessageHandler);
         FirebaseMessaging.onMessage.listen(messageHandler);
-        FirebaseMessaging.onMessageOpenedApp.listen(onResume);
+        FirebaseMessaging.onMessageOpenedApp.listen(onMessageOpenedApp);
         _initialized = true;
       }
     }
@@ -78,7 +78,7 @@ class PushNotificationsManager {
   }
 }
 
-Future<void> onResume(RemoteMessage message) async {
+Future<void> onMessageOpenedApp(RemoteMessage message) async {
   final notification = NotificationData.fromMap(message);
   final payload = notification.toJson();
 

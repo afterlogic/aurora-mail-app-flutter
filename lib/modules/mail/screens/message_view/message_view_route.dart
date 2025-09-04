@@ -28,13 +28,13 @@ class MessageProgressRoute {
 }
 
 class MessageProgressRouteArg {
-  final Future<Message> message;
+  final Future<Message> futureMessage;
   final MailBloc mailBloc;
   final ContactsBloc contactsBloc;
   final MessagesListBloc messagesListBloc;
 
   const MessageProgressRouteArg({
-    @required this.message,
+    @required this.futureMessage,
     @required this.mailBloc,
     @required this.messagesListBloc,
     @required this.contactsBloc,
