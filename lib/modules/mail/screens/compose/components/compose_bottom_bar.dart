@@ -25,79 +25,81 @@ class ComposeBottomBar extends StatelessWidget {
     final isUndo =
         [EncryptType.Encrypt, EncryptType.Sign].contains(encryptType);
     final notEncrypt = encryptType == EncryptType.None;
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(color: theme.dividerColor, width: 0),
+    return SafeArea(
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(color: theme.dividerColor, width: 0),
+          ),
         ),
-      ),
-      height: (Platform.isIOS ? kToolbarHeight + 15 : kToolbarHeight),
-      padding: EdgeInsets.only(bottom: Platform.isIOS ? 15 : 0),
-      width: double.infinity,
-      child: Flex(
-        direction: Axis.horizontal,
-        children: <Widget>[
-          if (isUndo)
-            Flexible(
-              child: Center(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => onBack(),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(Icons.arrow_back),
-                      Text(S.of(context).btn_pgp_undo_pgp),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          if (!isUndo && BuildProperty.selfDestructingEmail)
-            Flexible(
-              child: Center(
-                child: Opacity(
-                  opacity: notEncrypt ? 1 : 0.7,
+        height: (Platform.isIOS ? kToolbarHeight + 15 : kToolbarHeight),
+        padding: EdgeInsets.only(bottom: Platform.isIOS ? 15 : 0),
+        width: double.infinity,
+        child: Flex(
+          direction: Axis.horizontal,
+          children: <Widget>[
+            if (isUndo)
+              Flexible(
+                child: Center(
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: () => encryptType == EncryptType.None
-                        ? onCreateSelfDestructingEmail()
-                        : null,
+                    onTap: () => onBack(),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Icon(MdiIcons.clockAlertOutline),
-                        Text(S.of(context).btn_self_destructing),
+                        Icon(Icons.arrow_back),
+                        Text(S.of(context).btn_pgp_undo_pgp),
                       ],
                     ),
                   ),
                 ),
               ),
-            ),
-          if (!isUndo)
-            Flexible(
-              child: Center(
-                child: Opacity(
-                  opacity: notEncrypt ? 1 : 0.7,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () =>
-                        encryptType == EncryptType.None ? onEncrypt() : null,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Icon(Icons.lock_outline),
-                        Text(S.of(context).btn_pgp_encrypt),
-                      ],
+            if (!isUndo && BuildProperty.selfDestructingEmail)
+              Flexible(
+                child: Center(
+                  child: Opacity(
+                    opacity: notEncrypt ? 1 : 0.7,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => encryptType == EncryptType.None
+                          ? onCreateSelfDestructingEmail()
+                          : null,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Icon(MdiIcons.clockAlertOutline),
+                          Text(S.of(context).btn_self_destructing),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-        ],
+            if (!isUndo)
+              Flexible(
+                child: Center(
+                  child: Opacity(
+                    opacity: notEncrypt ? 1 : 0.7,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () =>
+                          encryptType == EncryptType.None ? onEncrypt() : null,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Icon(Icons.lock_outline),
+                          Text(S.of(context).btn_pgp_encrypt),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
