@@ -283,6 +283,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                           BlocProvider.value(value: _settingsBloc),
                           if (calendarUseCase != null)
                             BlocProvider(
+                              lazy: false,
                               create: (_) => EventsBloc(
                                   useCase: calendarUseCase,
                                   firstDayInWeek: convert(UserAppDataSingleton()

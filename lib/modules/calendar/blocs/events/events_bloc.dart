@@ -8,6 +8,7 @@ import 'package:aurora_mail/modules/calendar/utils/events_grid_builder.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
@@ -39,10 +40,11 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
   })  : _useCase = useCase,
         super(
           EventsState(
-              startIntervalDate: DateTime.now().firstDayOfMonth,
-              endIntervalDate: DateTime.now().lastDayOfMonth,
-              selectedDate: DateTime.now().withoutTime,
-              firstDayInWeek: firstDayInWeek),
+            startIntervalDate: DateTime.now().firstDayOfMonth,
+            endIntervalDate: DateTime.now().lastDayOfMonth,
+            selectedDate: DateTime.now().withoutTime,
+            firstDayInWeek: firstDayInWeek,
+          ),
         ) {
     _useCase.eventsSubscription.listen((events) {
       add(AddEvents(events));
@@ -53,7 +55,12 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
     on<SelectEvent>(_onSelectEvent);
     on<UpdateEvent>(_onUpdateEvent);
     on<DeleteEvent>(_onDeleteEvent);
-    on<StartSync>(_onStartSync);
+    on<StartSync>(
+      (event, emit) async {
+        await _onStartSync(event, emit);
+      },
+      transformer: sequential(),
+    );
     on<SelectDate>(_onSelectDate);
   }
 

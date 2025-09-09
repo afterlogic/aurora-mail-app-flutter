@@ -19,6 +19,7 @@ dependencies:
   # state management
   provider: ^5.0.0
   flutter_bloc: ^7.0.0
+  bloc_concurrency: any
   equatable: ^2.0.5
   rxdart: ^0.27.7
 
