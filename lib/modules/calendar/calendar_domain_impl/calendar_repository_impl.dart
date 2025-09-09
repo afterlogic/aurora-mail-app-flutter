@@ -18,7 +18,7 @@ import 'package:aurora_mail/utils/extensions/colors_extensions.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class CalendarRepositoryImpl implements CalendarRepository {
-  static const int BATCH_SIZE = 50;
+  static const int SYNC_BATCH_SIZE = 10000;
 
   final User user;
   late final Logger _logger;
@@ -128,11 +128,17 @@ class CalendarRepositoryImpl implements CalendarRepository {
       final serverCalendarsMap =
           CalendarMapper.convertListToMapById(calendarsFromServer);
       for (final serverEntry in serverCalendarsMap.entries) {
+        //TODO: Why check "areFieldsChanged" is used in the condition?
+        // According to the current logic, we update the calendar data,
+        // even if the syncToken has not changed.
         if (serverEntry.value.syncToken ==
                 localCalendarsMap[serverEntry.key]?.syncToken &&
             localCalendarsMap[serverEntry.key]
                     ?.areFieldsChanged(serverEntry.value) ==
-                false) continue;
+                false) {
+          continue;
+        }
+
         calendarsForUpdate.add(serverEntry.value);
       }
       _logger.log(
@@ -147,23 +153,27 @@ class CalendarRepositoryImpl implements CalendarRepository {
 
       for (final calendar in calendarsForUpdate) {
         int currentSync =
-            int.parse(localCalendarsMap[calendar.id]?.syncToken ?? '0');
+            int.tryParse(localCalendarsMap[calendar.id]?.syncToken ?? '0') ?? 0;
+        final targetSync = int.tryParse(calendar.syncToken) ?? 0;
         _logger.log(
-            'IN ${calendar.id} INITIAL SYNC: $currentSync, TARGET SYNC: ${calendar.syncToken}');
-        while (currentSync < int.parse(calendar.syncToken)) {
+            'IN ${calendar.id} INITIAL SYNC: $currentSync, TARGET SYNC: $targetSync');
+
+        while (currentSync < targetSync) {
           _logger.log('IN ${calendar.id} SYNC: $currentSync');
           final changes = await _network.getChangesForCalendar(
-              userLocalId: user.localId!,
-              calendarId: calendar.id,
-              syncTokenFrom: currentSync);
+            userLocalId: user.localId!,
+            calendarId: calendar.id,
+            syncTokenFrom: currentSync,
+            limit: SYNC_BATCH_SIZE,
+          );
+
           _logger.log(
-              'FOR ${calendar.id} AND SYNC = $currentSync CHANGES: ${changes.map((e) => e.toString())} ');
+              'FOR ${calendar.id} AND SYNC = $currentSync CHANGES: ${changes.length}');
           await _db.emitChanges(changes);
-          currentSync += BATCH_SIZE;
-          if (currentSync > int.parse(calendar.syncToken)) {
-            currentSync = int.parse(calendar.syncToken);
-          }
+
+          currentSync += SYNC_BATCH_SIZE;
         }
+
         await _db.createOrUpdateCalendar(calendar);
       }
       await _syncEvents();
