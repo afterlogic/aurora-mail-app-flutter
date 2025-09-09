@@ -61,91 +61,103 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
     SelectEvent event,
     Emitter<EventsState> emit,
   ) async {
-    emit(state.copyWith(selectedEvent: () => event.event));
+    emit(state.copyWith(
+      selectedEvent: () => event.event,
+    ));
   }
 
   Future<void> _onUpdateEvent(
-    UpdateEvent event,
-    Emitter<EventsState> emit,
-  ) async {
-    await _asyncErrorHandler(() async {
-      final updatedEvent = await _useCase.updateActivity(event.event,
-          state.selectedEvent?.calendarId ?? event.event.calendarId);
-      emit(state.copyWith(selectedEvent: () => updatedEvent as ViewEvent));
-    }, emit);
+      UpdateEvent event, Emitter<EventsState> emit) async {
+    await _asyncErrorHandler(
+      () async {
+        final updatedEvent = await _useCase.updateActivity(
+          event.event,
+          state.selectedEvent?.calendarId ?? event.event.calendarId,
+        );
+        emit(state.copyWith(
+          selectedEvent: () => updatedEvent as ViewEvent,
+        ));
+      },
+      emit,
+    );
   }
 
   Future<void> _onDeleteEvent(
-    DeleteEvent event,
-    Emitter<EventsState> emit,
-  ) async {
-    await _asyncErrorHandler(() async {
-      await _useCase.deleteActivity(state.selectedEvent!);
-    }, emit);
+      DeleteEvent event, Emitter<EventsState> emit) async {
+    await _asyncErrorHandler(
+      () async {
+        await _useCase.deleteActivity(state.selectedEvent!);
+      },
+      emit,
+    );
   }
 
   Future<void> _onLoadEvents(
-    LoadEvents event,
-    Emitter<EventsState> emit,
-  ) async {
-    await _asyncErrorHandler(() async {
-      await _useCase.getForPeriod(
-          start: state.startIntervalDate.withoutTime.subtract(extraDuration),
-          end: state.endIntervalDate.startOfNextDay.add(extraDuration));
-    }, emit);
+      LoadEvents event, Emitter<EventsState> emit) async {
+    await _asyncErrorHandler(
+      () async {
+        await _useCase.getForPeriod(
+            start: state.startIntervalDate.withoutTime.subtract(extraDuration),
+            end: state.endIntervalDate.startOfNextDay.add(extraDuration));
+      },
+      emit,
+    );
   }
 
   Future<void> _onCreateEvent(
-    CreateEvent event,
-    Emitter<EventsState> emit,
-  ) async {
-    await _asyncErrorHandler(() async {
-      await _useCase.createActivity(event.creationData);
-    }, emit);
+      CreateEvent event, Emitter<EventsState> emit) async {
+    await _asyncErrorHandler(
+      () async {
+        await _useCase.createActivity(event.creationData);
+      },
+      emit,
+    );
   }
 
-  Future<void> _onAddEvents(
-    AddEvents event,
-    Emitter<EventsState> emit,
-  ) async {
+  Future<void> _onAddEvents(AddEvents event, Emitter<EventsState> emit) async {
     if (event.events == null && state.status.isLoading) {
       return;
     }
-    _errorHandler(() {
-      final weeks = generateWeeks(
-          state.startIntervalDate.subtract(extraDuration),
-          state.endIntervalDate.add(extraDuration));
-      final List<ExtendedMonthEvent> extendedMonthEvents = event.events == null
-          ? []
-          : event.events!
-              .map((e) => ExtendedMonthEvent.fromViewEvent(e))
-              .toList();
-      final processedEvents = processEvents(weeks, extendedMonthEvents);
-      final viewEvents = convertWeeksToMap(processedEvents);
+    _errorHandler(
+      () {
+        final weeks = generateWeeks(
+            state.startIntervalDate.subtract(extraDuration),
+            state.endIntervalDate.add(extraDuration));
+        final List<ExtendedMonthEvent> extendedMonthEvents =
+            event.events == null
+                ? []
+                : event.events!
+                    .map((e) => ExtendedMonthEvent.fromViewEvent(e))
+                    .toList();
+        final processedEvents = processEvents(weeks, extendedMonthEvents);
+        final viewEvents = convertWeeksToMap(processedEvents);
 
-      emit(state.copyWith(
+        emit(state.copyWith(
           status: EventsStatus.success,
           eventsMap: () => viewEvents,
-          originalEvents: () => event.events));
-    }, emit);
+          originalEvents: () => event.events,
+        ));
+      },
+      emit,
+    );
   }
 
-  Future<void> _onStartSync(
-    StartSync event,
-    Emitter<EventsState> emit,
-  ) async {
+  Future<void> _onStartSync(StartSync event, Emitter<EventsState> emit) async {
     if (state.originalEvents == null || state.eventsMap == null) {
-      emit(state.copyWith(status: EventsStatus.loading));
+      emit(state.copyWith(
+        status: EventsStatus.loading,
+      ));
     }
-    await _asyncErrorHandler(() async {
-      await _useCase.syncCalendarsWithActivities();
-    }, emit);
+    await _asyncErrorHandler(
+      () async {
+        await _useCase.syncCalendarsWithActivities();
+      },
+      emit,
+    );
   }
 
   Future<void> _onSelectDate(
-    SelectDate event,
-    Emitter<EventsState> emit,
-  ) async {
+      SelectDate event, Emitter<EventsState> emit) async {
     final today = DateTime.now().withoutTime;
     // TODO: review this correction of the selected date in month mode.
     final dateSelected = event.isMonthMode
@@ -153,30 +165,36 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
         : event.date;
     if (dateSelected.isAtSameMomentAs(state.selectedDate)) {
       emit(state.copyWith(selectedDate: DateTime.now()));
+
       return;
-    } else if (dateSelected.isBefore(state.startIntervalDate) ||
+    }
+
+    if (dateSelected.isBefore(state.startIntervalDate) ||
         dateSelected.isAfter(state.endIntervalDate)) {
       final newStartDate = dateSelected.firstDayOfMonth;
       final newEndDate = dateSelected.lastDayOfMonth;
       emit(state.copyWith(
-          selectedDate:
-              today.isBefore(newEndDate) && today.isAfter(newStartDate)
-                  ? today
-                  : dateSelected,
-          startIntervalDate: newStartDate,
-          endIntervalDate: newEndDate));
+        selectedDate: today.isBefore(newEndDate) && today.isAfter(newStartDate)
+            ? today
+            : dateSelected,
+        startIntervalDate: newStartDate,
+        endIntervalDate: newEndDate,
+      ));
       add(LoadEvents());
+
       return;
     }
+
     final weekEnd =
         event.isWeekMode ? dateSelected.add(Duration(days: 6)) : null;
 
     emit(state.copyWith(
-        selectedDate: weekEnd != null &&
-                today.isBefore(weekEnd) &&
-                today.isAfter(dateSelected)
-            ? today
-            : dateSelected));
+      selectedDate: weekEnd != null &&
+              today.isBefore(weekEnd) &&
+              today.isAfter(dateSelected)
+          ? today
+          : dateSelected,
+    ));
   }
 
   void _errorHandler(

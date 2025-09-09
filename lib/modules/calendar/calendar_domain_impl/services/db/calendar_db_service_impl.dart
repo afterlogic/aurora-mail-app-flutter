@@ -29,7 +29,9 @@ class CalendarDbServiceImpl implements CalendarDbService {
 
   @override
   Future<void> emitChanges(List<ActivityBase> events) async {
-    return _activityDao.syncEventList(events.map((e) => e.toDb()).toList());
+    final models = events.map((e) => e.toDb()).toList();
+
+    return _activityDao.syncEventList(models);
   }
 
   @override
@@ -61,8 +63,10 @@ class CalendarDbServiceImpl implements CalendarDbService {
 
   @override
   Future<void> updateEventList(List<Activity> events) {
-    return _activityDao.syncEventList(events.map((e) => e.toDb()).toList(),
-        synced: true);
+    return _activityDao.syncEventList(
+      events.map((e) => e.toDb()).toList(),
+      synced: true,
+    );
   }
 
   @override
