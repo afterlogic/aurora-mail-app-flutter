@@ -30,70 +30,116 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     on<DeleteTask>(_onDeleteTask);
   }
 
-  _onSelectTask(SelectTask event, Emitter<TasksState> emit) async {
-    emit(state.copyWith(selectedTask: () => event.task));
+  Future<void> _onSelectTask(SelectTask event, Emitter<TasksState> emit) async {
+    emit(state.copyWith(
+      selectedTask: () => event.task,
+    ));
   }
 
-  _onUpdateTask(UpdateTask event, Emitter<TasksState> emit) async {
-    _asyncErrorHandler(() async {
-      final updatedTask = await _useCase.updateActivity(
-          event.task, state.selectedTask?.calendarId ?? event.task.calendarId);
-      emit(state.copyWith(selectedTask: () => updatedTask as ViewTask));
-    }, emit);
+  Future<void> _onUpdateTask(UpdateTask event, Emitter<TasksState> emit) async {
+    await _asyncErrorHandler(
+      () async {
+        final updatedTask = await _useCase.updateActivity(
+          event.task,
+          state.selectedTask?.calendarId ?? event.task.calendarId,
+        );
+        emit(state.copyWith(
+          selectedTask: () => updatedTask as ViewTask,
+        ));
+      },
+      emit,
+    );
   }
 
-  _onUpdateFilter(UpdateFilter event, Emitter<TasksState> emit) async {
-    if (state.filter == event.filter) return;
-    emit(state.copyWith(filter: event.filter));
+  Future<void> _onUpdateFilter(
+      UpdateFilter event, Emitter<TasksState> emit) async {
+    if (state.filter == event.filter) {
+      return;
+    }
+
+    emit(state.copyWith(
+      filter: event.filter,
+    ));
     _useCase.updateTasksFilter(event.filter);
   }
 
-  _onDeleteTask(DeleteTask event, Emitter<TasksState> emit) async {
-    _asyncErrorHandler(() async {
-      await _useCase.deleteActivity(state.selectedTask!);
-      emit(state.copyWith(selectedTask: () => null));
-    }, emit);
+  Future<void> _onDeleteTask(DeleteTask event, Emitter<TasksState> emit) async {
+    await _asyncErrorHandler(
+      () async {
+        await _useCase.deleteActivity(state.selectedTask!);
+        emit(state.copyWith(
+          selectedTask: () => null,
+        ));
+      },
+      emit,
+    );
   }
 
-  _onLoadTasks(LoadTasks event, Emitter<TasksState> emit) async {
-    _asyncErrorHandler(() async {
-      await _useCase.getTasks();
-    }, emit);
+  Future<void> _onLoadTasks(LoadTasks event, Emitter<TasksState> emit) async {
+    await _asyncErrorHandler(
+      () async {
+        await _useCase.getTasks();
+      },
+      emit,
+    );
   }
 
-  _onCreateTask(CreateTask event, Emitter<TasksState> emit) async {
-    _asyncErrorHandler(() async {
-      await _useCase.createActivity(event.creationData);
-    }, emit);
+  Future<void> _onCreateTask(CreateTask event, Emitter<TasksState> emit) async {
+    await _asyncErrorHandler(
+      () async {
+        await _useCase.createActivity(event.creationData);
+      },
+      emit,
+    );
   }
 
-  _onAddTasks(AddTasks event, Emitter<TasksState> emit) async {
-    _errorHandler(() {
-      emit(state.copyWith(
-          status: TasksStatus.success, tasks: () => event.tasks));
-    }, emit);
+  Future<void> _onAddTasks(AddTasks event, Emitter<TasksState> emit) async {
+    _errorHandler(
+      () {
+        emit(state.copyWith(
+          status: TasksStatus.success,
+          tasks: () => event.tasks,
+        ));
+      },
+      emit,
+    );
   }
 
-  _errorHandler(void Function() callback, Emitter<TasksState> emit) {
+  void _errorHandler(
+    void Function() callback,
+    Emitter<TasksState> emit,
+  ) {
     try {
       callback();
     } catch (e, s) {
       emit(state.copyWith(
-          status: TasksStatus.error, error: () => formatError(e, s)));
+        status: TasksStatus.error,
+        error: () => formatError(e, s),
+      ));
     } finally {
-      emit(state.copyWith(status: TasksStatus.idle, error: () => null));
+      emit(state.copyWith(
+        status: TasksStatus.idle,
+        error: () => null,
+      ));
     }
   }
 
-  _asyncErrorHandler(
-      Future Function() callback, Emitter<TasksState> emit) async {
+  Future<void> _asyncErrorHandler(
+    Future Function() callback,
+    Emitter<TasksState> emit,
+  ) async {
     try {
       await callback();
     } catch (e, s) {
       emit(state.copyWith(
-          status: TasksStatus.error, error: () => formatError(e, s)));
+        status: TasksStatus.error,
+        error: () => formatError(e, s),
+      ));
     } finally {
-      emit(state.copyWith(status: TasksStatus.idle, error: () => null));
+      emit(state.copyWith(
+        status: TasksStatus.idle,
+        error: () => null,
+      ));
     }
   }
 }
