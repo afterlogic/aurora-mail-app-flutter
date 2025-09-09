@@ -53,30 +53,47 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
     List<ActivityDb> events, {
     bool synced = false,
   }) async {
-    for (final event in events) {
-      final companion = event.toCompanion(true);
-      try {
-        await into(activityTable).insert(companion);
-      } catch (e) {
-        // If there's a conflict, update the existing record
+    final calendarId = events.isNotEmpty ? events.first.calendarId : '';
+    final forAdd = events
+        .where((event) => event.updateStatus == UpdateStatus.added)
+        .map((event) => event.copyWith(synced: synced).toCompanion(true))
+        .toList();
+    final forModify = events
+        .where((event) => event.updateStatus == UpdateStatus.modified)
+        .map((event) => event.copyWith(synced: synced).toCompanion(true))
+        .toList();
+    final uidsForDelete = events
+        .where((event) => event.updateStatus == UpdateStatus.deleted)
+        .map((event) => event.uid)
+        .toList();
 
-        await (update(activityTable)
-              ..where((tbl) =>
-                  tbl.uid.equals(event.uid) &
-                  tbl.calendarId.equals(event.calendarId) &
-                  tbl.userLocalId.equals(event.userLocalId)))
-            .write(companion.copyWith(
-          synced: Value(synced),
-        ));
-      } finally {
-        if (event.updateStatus.isDeleted) {
-          await (deleteEvent(
-              uid: event.uid,
-              calendarId: event.calendarId,
-              userLocalId: event.userLocalId));
-        }
-      }
-    }
+    await batch((batch) {
+      batch.insertAll(
+        activityTable,
+        forAdd,
+        mode: InsertMode.insertOrReplace,
+      );
+    });
+
+    // We add records intended for modification,
+    // because sometimes they come from the server,
+    // without duplication in the "Added" section.
+    await batch((batch) {
+      batch.insertAll(
+        activityTable,
+        forModify,
+        mode: InsertMode.insertOrReplace,
+      );
+    });
+
+    await batch((batch) {
+      batch.deleteWhere(
+        activityTable,
+        (t) =>
+            activityTable.calendarId.equals(calendarId) &
+            activityTable.uid.isIn(uidsForDelete),
+      );
+    });
   }
 
   Future<int> deleteMarkedEvents() {
