@@ -52,13 +52,6 @@ void main() async {
         : AppleProvider.appAttestWithDeviceCheckFallback,
   );
 
-  try {
-    final appCheckToken = await FirebaseAppCheck.instance.getLimitedUseToken();
-    debugPrint('FirebaseAppCheck: $appCheckToken');
-  } catch (e) {
-    debugPrint('FirebaseAppCheck: $e');
-  }
-
   if (!kDebugMode) {
     FlutterError.onError = (details) {
       FirebaseCrashlytics.instance.recordFlutterError(details, fatal: true);

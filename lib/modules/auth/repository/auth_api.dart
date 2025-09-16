@@ -7,12 +7,19 @@ import 'package:aurora_mail/database/account_identity/account_identity_table.dar
 import 'package:aurora_mail/database/accounts/accounts_table.dart';
 import 'package:aurora_mail/database/aliases/aliases_table.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/auth/repository/app_check_repository.dart';
 import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class AuthApi {
+  AppCheckRepository _appCheckRepository;
+
+  AuthApi({AppCheckRepository appCheckRepository})
+      : _appCheckRepository = appCheckRepository ?? AppCheckRepositoryImpl();
+
   Future<Map<String, String>> deviceIdHeader() async {
     return {"X-DeviceId": await DeviceIdStorage.getDeviceId()};
   }
@@ -38,7 +45,11 @@ class AuthApi {
     }
   }
 
-  Future<User> login(String email, String password, String hostname) async {
+  Future<User> login(
+    String email,
+    String password,
+    String hostname,
+  ) async {
     final coreModuleForLogin = WebMailApi(
       moduleName: WebMailModules.core,
       hostname: hostname,
@@ -50,9 +61,14 @@ class AuthApi {
 
     final body = new WebMailApiBody(method: "Login", parameters: parameters);
 
+    final appCheckToken = await _appCheckRepository.getToken();
+    debugPrint('!!! appCheckToken = "$appCheckToken"');
+    final addedHeaders = {"X-Firebase-AppCheck": appCheckToken};
+
     try {
       final response = await coreModuleForLogin.post(
         body,
+        addedHeaders: addedHeaders,
         getRawResponse: true,
       );
       if (response["ErrorCode"] == 108) {
@@ -243,8 +259,11 @@ class AuthApi {
     }
   }
 
-  Future<bool> setPushToken(Map<User, List<String>> userWithAccount, String uid,
-      String fbToken) async {
+  Future<bool> setPushToken(
+    Map<User, List<String>> userWithAccount,
+    String uid,
+    String fbToken,
+  ) async {
     final map = <String, List<MapEntry<User, List<String>>>>{};
     bool success = true;
     for (var value in userWithAccount.entries) {
