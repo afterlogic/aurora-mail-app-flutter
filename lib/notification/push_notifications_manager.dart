@@ -49,7 +49,7 @@ class PushNotificationsManager {
         if (initMessage != null) {
           _initNotification = NotificationData.fromMap(initMessage);
         }
-        FirebaseMessaging.onBackgroundMessage(voidMessageHandler);
+        FirebaseMessaging.onBackgroundMessage(messageHandler);
         FirebaseMessaging.onMessage.listen(messageHandler);
         FirebaseMessaging.onMessageOpenedApp.listen((v) => onResume(v));
         _initialized = true;
@@ -101,10 +101,6 @@ Future onResume(RemoteMessage message) async {
 
 Future<bool> mapMessageHandler(Map<String, dynamic> message) async {
   return messageHandler(RemoteMessage.fromMap(message));
-}
-
-Future<void> voidMessageHandler(RemoteMessage message) async {
-  await messageHandler(message);
 }
 
 Future<bool> messageHandler(RemoteMessage message) async {

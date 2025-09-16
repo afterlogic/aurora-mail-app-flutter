@@ -5,11 +5,10 @@ import 'dart:math';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
-import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     hide Message;
 import 'package:notifications_utils/notifications_utils.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class NotificationManager {
   final plugin = FlutterLocalNotificationsPlugin();
@@ -41,8 +40,13 @@ class NotificationManager {
   }
 
   Future<void> showNotification(
-      String from, String subject, Account account, User user, int localId,
-      {Map<String, dynamic> forcePayload}) async {
+    String from,
+    String subject,
+    Account account,
+    User user,
+    int localId, {
+    Map<String, dynamic> forcePayload,
+  }) async {
     final packageName = (await PackageInfo.fromPlatform()).packageName;
     bool isFirstNotification = false;
     if (!Platform.isIOS) {

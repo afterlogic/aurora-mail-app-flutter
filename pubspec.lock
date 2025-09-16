@@ -472,6 +472,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  firebase_app_check:
+    dependency: "direct main"
+    description:
+      name: firebase_app_check
+      sha256: "5a44dd8c7d99a0251c095e12f863ccb8a12ca4269601855e4a800997324210bb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0+1"
+  firebase_app_check_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_app_check_platform_interface
+      sha256: d1e8aa11d5221823553e56efc5a713dc8ebebd47afea967bee486653d6fe1dfe
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0+1"
+  firebase_app_check_web:
+    dependency: transitive
+    description:
+      name: firebase_app_check_web
+      sha256: "0f60160a2ac3a5174802dd5df13415934e89551b8d5c78d390de65d8e0fa6222"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0+1"
   firebase_core:
     dependency: "direct main"
     description:
@@ -481,7 +505,7 @@ packages:
     source: hosted
     version: "2.17.0"
   firebase_core_platform_interface:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: firebase_core_platform_interface
       sha256: b63e3be6c96ef5c33bdec1aab23c91eb00696f6452f0519401d640938c94cba2
@@ -946,14 +970,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
-  package_info:
+  package_info_plus:
     dependency: "direct main"
     description:
-      name: package_info
-      sha256: "6c07d9d82c69e16afeeeeb6866fe43985a20b3b50df243091bfc4a4ad2b03b75"
+      name: package_info_plus
+      sha256: "10259b111176fba5c505b102e3a5b022b51dd97e30522e906d6922c745584745"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.2"
+    version: "3.1.2"
+  package_info_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: package_info_plus_platform_interface
+      sha256: "9bc8ba46813a4cc42c66ab781470711781940780fd8beddd0c3da62506d3a6c6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   path:
     dependency: transitive
     description:
