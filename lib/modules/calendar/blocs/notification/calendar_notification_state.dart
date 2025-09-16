@@ -6,15 +6,20 @@ class CalendarNotificationState extends Equatable {
   final ActivityType? activityType;
   final ErrorToShow? error;
 
-  @override
-  List<Object?> get props =>
-      [notificationSyncStatus, activityFromNotification, error];
+  const CalendarNotificationState({
+    this.notificationSyncStatus = NotificationStatus.idle,
+    this.activityFromNotification,
+    this.activityType,
+    this.error,
+  });
 
-  const CalendarNotificationState(
-      {this.notificationSyncStatus = NotificationStatus.idle,
-      this.error,
-      this.activityType,
-      this.activityFromNotification});
+  @override
+  List<Object?> get props => [
+        notificationSyncStatus,
+        activityFromNotification,
+        activityType,
+        error,
+      ];
 
   CalendarNotificationState copyWith({
     NotificationStatus? notificationSyncStatus,
@@ -23,13 +28,14 @@ class CalendarNotificationState extends Equatable {
     ErrorToShow? Function()? error,
   }) {
     return CalendarNotificationState(
-        notificationSyncStatus:
-            notificationSyncStatus ?? this.notificationSyncStatus,
-        error: error == null ? this.error : error(),
-        activityType: activityType == null ? this.activityType : activityType(),
-        activityFromNotification: activityFromNotification == null
-            ? this.activityFromNotification
-            : activityFromNotification());
+      notificationSyncStatus:
+          notificationSyncStatus ?? this.notificationSyncStatus,
+      activityFromNotification: activityFromNotification == null
+          ? this.activityFromNotification
+          : activityFromNotification(),
+      activityType: activityType == null ? this.activityType : activityType(),
+      error: error == null ? this.error : error(),
+    );
   }
 }
 
@@ -37,6 +43,8 @@ enum NotificationStatus { success, error, loading, idle }
 
 extension NotificationStatusX on NotificationStatus {
   bool get isError => this == NotificationStatus.error;
+
   bool get isLoading => this == NotificationStatus.loading;
+
   bool get isIdle => this == NotificationStatus.idle;
 }

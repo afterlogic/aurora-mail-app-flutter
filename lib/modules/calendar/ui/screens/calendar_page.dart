@@ -5,6 +5,7 @@ import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/notification/calendar_notification_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/tasks/tasks_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/displayable.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/task.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
@@ -19,6 +20,7 @@ import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_drawer.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tab.dart';
 import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/shared_ui/asset_svg_icon.dart';
+import 'package:aurora_mail/shared_ui/loading_container_indicator.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/extensions/bloc_provider_extensions.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -34,10 +36,12 @@ class CalendarPageArg {
   final String selectedCalendarId;
   final String selectedActivityId;
   final ActivityType type;
-  CalendarPageArg(
-      {required this.selectedCalendarId,
-      required this.selectedActivityId,
-      required this.type});
+
+  CalendarPageArg({
+    required this.selectedCalendarId,
+    required this.selectedActivityId,
+    required this.type,
+  });
 }
 
 class CalendarPage extends StatefulWidget {
@@ -45,6 +49,7 @@ class CalendarPage extends StatefulWidget {
   static String? selectedActivityId = null;
   static ActivityType? activityType = null;
   final CalendarPageArg? args;
+
   const CalendarPage({super.key, this.args});
 
   @override
@@ -55,6 +60,8 @@ class _CalendarPageState extends State<CalendarPage>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   late final TabController _tabController;
   late final CalendarsBloc _calendarsBloc;
+  late final EventsBloc _eventsBloc;
+  late final CalendarNotificationBloc _calendarNotificationBloc;
   bool _overlay = false;
 
   @override
@@ -63,48 +70,17 @@ class _CalendarPageState extends State<CalendarPage>
     WidgetsBinding.instance.addObserver(this);
     _overlay = false;
     _calendarsBloc = BlocProvider.of<CalendarsBloc>(context);
+    _eventsBloc = BlocProvider.of<EventsBloc>(context);
+    _calendarNotificationBloc =
+        BlocProvider.of<CalendarNotificationBloc>(context);
     _tabController = TabController(
-        length: 4,
-        vsync: this,
-        initialIndex: _calendarsBloc.state.selectedTabIndex ?? 0);
-    BlocProvider.of<CalendarsBloc>(context).add(GetCalendars());
-    if (widget.args != null) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        BlocProvider.of<CalendarNotificationBloc>(context).add(
-            StartSyncFromNotification(
-                activityType: widget.args!.type,
-                calendarId: widget.args!.selectedCalendarId,
-                activityId: widget.args!.selectedActivityId));
-        switch (widget.args!.type) {
-          case ActivityType.event:
-            Navigator.of(context).pushNamed(EventViewPage.name);
-            break;
-          case ActivityType.task:
-            Navigator.of(context).pushNamed(TaskViewPage.name);
-            break;
-        }
-      });
-    } else if (CalendarPage.selectedCalendarId != null &&
-        CalendarPage.activityType != null &&
-        CalendarPage.selectedActivityId != null) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        BlocProvider.of<CalendarNotificationBloc>(context).add(
-            StartSyncFromNotification(
-                activityType: CalendarPage.activityType!,
-                calendarId: CalendarPage.selectedCalendarId!,
-                activityId: CalendarPage.selectedActivityId!));
-        switch (CalendarPage.activityType!) {
-          case ActivityType.event:
-            Navigator.of(context).pushNamed(EventViewPage.name);
-            break;
-          case ActivityType.task:
-            Navigator.of(context).pushNamed(TaskViewPage.name);
-            break;
-        }
-      });
-    } else {
-      BlocProvider.of<EventsBloc>(context).add(const StartSync());
-    }
+      length: 4,
+      vsync: this,
+      initialIndex: _calendarsBloc.state.selectedTabIndex ?? 0,
+    );
+    _calendarsBloc.add(GetCalendars());
+
+    _checkActivityFromNotification();
   }
 
   @override
@@ -117,10 +93,48 @@ class _CalendarPageState extends State<CalendarPage>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _overlay = false;
     _calendarsBloc.add(SaveTabIndex(_tabController.index));
     _tabController.dispose();
     super.dispose();
+  }
+
+  void _checkActivityFromNotification() {
+    final argsType = widget.args?.type;
+    final argsCalendarId = widget.args?.selectedCalendarId;
+    final argsActivityId = widget.args?.selectedActivityId;
+
+    if (argsType != null && argsCalendarId != null && argsActivityId != null) {
+      _calendarNotificationBloc.add(
+        StartSyncFromNotification(
+          activityType: argsType,
+          calendarId: argsCalendarId,
+          activityId: argsActivityId,
+        ),
+      );
+
+      return;
+    }
+
+    final initialType = CalendarPage.activityType;
+    final initialCalendarId = CalendarPage.selectedCalendarId;
+    final initialActivityId = CalendarPage.selectedActivityId;
+    if (initialType != null &&
+        initialCalendarId != null &&
+        initialActivityId != null) {
+      _calendarNotificationBloc.add(
+        StartSyncFromNotification(
+          activityType: initialType,
+          calendarId: initialCalendarId,
+          activityId: initialActivityId,
+        ),
+      );
+
+      return;
+    }
+
+    _eventsBloc.add(const StartSync());
   }
 
   @override
@@ -150,7 +164,7 @@ class _CalendarPageState extends State<CalendarPage>
           Expanded(
             child: Stack(
               children: [
-                _BlocErrorsHandler(
+                _BlocHandler(
                   child: Stack(
                     children: [
                       Column(
@@ -265,8 +279,7 @@ class _CalendarPageState extends State<CalendarPage>
                         children: [
                           GestureDetector(
                             onTap: () {
-                              BlocProvider.of<EventsBloc>(context)
-                                  .add(SelectEvent(null));
+                              _eventsBloc.add(SelectEvent(null));
                               _overlay = false;
                               setState(() {});
                               Navigator.of(context).pushNamed(
@@ -352,8 +365,7 @@ class _CalendarPageState extends State<CalendarPage>
                                             ? null
                                             : BoxShadow(),
                                         onPressed: () {
-                                          BlocProvider.of<EventsBloc>(context)
-                                              .add(SelectEvent(null));
+                                          _eventsBloc.add(SelectEvent(null));
                                           _overlay = false;
                                           setState(() {});
                                           Navigator.of(context).pushNamed(
@@ -488,8 +500,7 @@ class _CalendarPageState extends State<CalendarPage>
                             ? null
                             : BoxShadow(),
                         onPressed: () {
-                          BlocProvider.of<EventsBloc>(context)
-                              .add(SelectEvent(null));
+                          _eventsBloc.add(SelectEvent(null));
                           _overlay = false;
                           setState(() {});
                           Navigator.of(context).pushNamed(
@@ -557,74 +568,139 @@ class _CalendarPageState extends State<CalendarPage>
   }
 }
 
-class _BlocErrorsHandler extends StatelessWidget {
-  const _BlocErrorsHandler({required this.child});
-
+class _BlocHandler extends StatefulWidget {
   final Widget child;
+
+  const _BlocHandler({
+    required this.child,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<_BlocHandler> createState() => _BlocHandlerState();
+}
+
+class _BlocHandlerState extends State<_BlocHandler> {
+  late final EventsBloc _eventsBloc;
+  late final TasksBloc _tasksBloc;
+  late final CalendarNotificationBloc _calendarNotificationBloc;
+  late final ValueNotifier<bool> _activityLoading;
+
+  @override
+  void initState() {
+    super.initState();
+    _eventsBloc = BlocProvider.of<EventsBloc>(context);
+    _tasksBloc = BlocProvider.of<TasksBloc>(context);
+    _calendarNotificationBloc =
+        BlocProvider.of<CalendarNotificationBloc>(context);
+    final isLoading =
+        _calendarNotificationBloc.state.notificationSyncStatus.isLoading;
+    _activityLoading = ValueNotifier<bool>(isLoading);
+  }
+
+  @override
+  void dispose() {
+    _activityLoading.dispose();
+    super.dispose();
+  }
+
+  void _onActivityLoadingChanged(bool value) {
+    _activityLoading.value = value;
+  }
+
+  void _openActivityFromNotification(Displayable activity) {
+    if (activity is ViewEvent) {
+      _eventsBloc.add(SelectEvent(activity));
+      _openScreen(EventViewPage.name);
+
+      return;
+    }
+
+    if (activity is ViewTask) {
+      _tasksBloc.add(SelectTask(activity));
+      _openScreen(TaskViewPage.name);
+
+      return;
+    }
+  }
+
+  void _openScreen(String routeName) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Navigator.of(context).pushNamed(routeName);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(listeners: [
-      BlocListener<TasksBloc, TasksState>(
-          listenWhen: (previous, current) =>
-              previous.error != current.error &&
-              current.error != null &&
-              current.status.isError,
-          listener: (context, state) {
-            showErrorSnack(
-              context: context,
-              scaffoldState: Scaffold.of(context),
-              msg: state.error,
-            );
-          }),
-      BlocListener<CalendarNotificationBloc, CalendarNotificationState>(
-          listenWhen: (previous, current) => previous != current,
-          listener: (context, state) {
-            if (state.error != null) {
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<TasksBloc, TasksState>(
+            listenWhen: (previous, current) =>
+                previous.error != current.error &&
+                current.error != null &&
+                current.status.isError,
+            listener: (context, state) {
               showErrorSnack(
                 context: context,
                 scaffoldState: Scaffold.of(context),
                 msg: state.error,
               );
-            }
-            if (state.activityFromNotification != null &&
-                state.activityType != null) {
-              switch (state.activityType!) {
-                case ActivityType.event:
-                  BlocProvider.of<EventsBloc>(context).add(
-                      SelectEvent(state.activityFromNotification as ViewEvent));
-                  break;
-                case ActivityType.task:
-                  BlocProvider.of<TasksBloc>(context).add(
-                      SelectTask(state.activityFromNotification as ViewTask));
-                  break;
+            }),
+        BlocListener<CalendarNotificationBloc, CalendarNotificationState>(
+            listenWhen: (previous, current) => previous != current,
+            listener: (context, state) {
+              final isLoading = state.notificationSyncStatus.isLoading;
+              _onActivityLoadingChanged(isLoading);
+
+              if (state.error != null) {
+                showErrorSnack(
+                  context: context,
+                  scaffoldState: Scaffold.of(context),
+                  msg: state.error,
+                );
               }
-            }
-          }),
-      BlocListener<EventsBloc, EventsState>(
-          listenWhen: (previous, current) =>
-              previous.error != current.error &&
-              current.error != null &&
-              current.status.isError,
-          listener: (context, state) {
-            showErrorSnack(
-              context: context,
-              scaffoldState: Scaffold.of(context),
-              msg: state.error,
-            );
-          }),
-      BlocListener<CalendarsBloc, CalendarsState>(
-          listenWhen: (previous, current) =>
-              previous.error != current.error &&
-              current.error != null &&
-              current.status.isError,
-          listener: (context, state) {
-            showErrorSnack(
-              context: context,
-              scaffoldState: Scaffold.of(context),
-              msg: state.error,
-            );
-          }),
-    ], child: child);
+
+              final activity = state.activityFromNotification;
+              if (activity != null) {
+                _openActivityFromNotification(activity);
+              }
+            }),
+        BlocListener<EventsBloc, EventsState>(
+            listenWhen: (previous, current) =>
+                previous.error != current.error &&
+                current.error != null &&
+                current.status.isError,
+            listener: (context, state) {
+              showErrorSnack(
+                context: context,
+                scaffoldState: Scaffold.of(context),
+                msg: state.error,
+              );
+            }),
+        BlocListener<CalendarsBloc, CalendarsState>(
+            listenWhen: (previous, current) =>
+                previous.error != current.error &&
+                current.error != null &&
+                current.status.isError,
+            listener: (context, state) {
+              showErrorSnack(
+                context: context,
+                scaffoldState: Scaffold.of(context),
+                msg: state.error,
+              );
+            }),
+      ],
+      child: Stack(
+        children: [
+          widget.child,
+          ValueListenableBuilder<bool>(
+            valueListenable: _activityLoading,
+            builder: (context, loading, _) {
+              return LoadingContainerIndicator(loading: loading);
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
@@ -42,10 +43,12 @@ class CalendarUseCaseImpl implements CalendarUseCase {
 
   set setLocation(tz.Location? location) => _location = location;
 
-  List<String> get selectedCalendarIds => _calendarsSubject.value == null ? [] :
-  _calendarsSubject.value!.where((e) => e.selected)
-      .map((e) => e.id)
-      .toList();
+  List<String> get selectedCalendarIds => _calendarsSubject.value == null
+      ? []
+      : _calendarsSubject.value!
+          .where((e) => e.selected)
+          .map((e) => e.id)
+          .toList();
 
   @override
   ValueStream<List<ViewCalendar>?> get calendarsSubscription =>
@@ -72,10 +75,12 @@ class CalendarUseCaseImpl implements CalendarUseCase {
       _calendarsSubject.add(calendarViews);
       return;
     }
-    final lastSelectedIds = _calendarsSubject.value == null ? <String>{} :
-    _calendarsSubject.value!.where((e) => e.selected)
-        .map((e) => e.id)
-        .toSet();
+    final lastSelectedIds = _calendarsSubject.value == null
+        ? <String>{}
+        : _calendarsSubject.value!
+            .where((e) => e.selected)
+            .map((e) => e.id)
+            .toSet();
     _calendarsSubject.add(calendarViews
         .map((e) => lastSelectedIds.contains(e.id)
             ? e.updateSelect(true)
@@ -206,8 +211,10 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   Future<void> _getLocalEvents() async {
     if (_selectedStartEventsInterval == null ||
         _selectedEndEventsInterval == null) {
-      _selectedStartEventsInterval = DateTime.now().firstDayOfMonth.subtract(_extraIntervalDuration);
-      _selectedEndEventsInterval = DateTime.now().lastDayOfMonth.add(_extraIntervalDuration);
+      _selectedStartEventsInterval =
+          DateTime.now().firstDayOfMonth.subtract(_extraIntervalDuration);
+      _selectedEndEventsInterval =
+          DateTime.now().lastDayOfMonth.add(_extraIntervalDuration);
     }
     final allEvents = await repository.getEventsForPeriod(
       start: _selectedStartEventsInterval!,
@@ -217,8 +224,8 @@ class CalendarUseCaseImpl implements CalendarUseCase {
     final eventViews = allEvents
         .map((e) => ViewEvent.tryFromEvent(
               e,
-              color: _calendarsSubject.value
-                  !.firstWhere((c) => c.id == e.calendarId)
+              color: _calendarsSubject.value!
+                  .firstWhere((c) => c.id == e.calendarId)
                   .color,
             ))
         .whereNotNull()
@@ -241,8 +248,8 @@ class CalendarUseCaseImpl implements CalendarUseCase {
     final allTasks = await repository.getTasks(_tasksFilter);
     final taskViews = allTasks
         .map((e) => e.toDisplayable(
-              color: _calendarsSubject.value
-                 !.firstWhere((c) => c.id == e.calendarId)
+              color: _calendarsSubject.value!
+                  .firstWhere((c) => c.id == e.calendarId)
                   .color,
             ))
         .whereNotNull()
@@ -285,8 +292,14 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   }
 
   @override
-  Future<Displayable> getActivityByUid({required String calendarId, required String activityId}) async {
-    final activity = await repository.getActivityByUid(calendarId: calendarId, activityUid: activityId);
+  Future<Displayable> getActivityByUid({
+    required String calendarId,
+    required String activityId,
+  }) async {
+    final activity = await repository.getActivityByUid(
+      calendarId: calendarId,
+      activityUid: activityId,
+    );
     final displayable = activity.toDisplayable(color: Colors.red);
     //TODO add right color
     //TODO add right time
@@ -294,17 +307,22 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   }
 
   @override
-  Future<Displayable> updateActivity(Displayable activity, String originalCalendarId) async {
+  Future<Displayable> updateActivity(
+    Displayable activity,
+    String originalCalendarId,
+  ) async {
     final endDate = activity.allDay == true && activity.endDate != null
         ? activity.endDate!.add(Duration(days: 1))
         : activity.endDate;
-    final model = await repository.updateActivity(activity.copyWith(
-        startTS: _location == null || activity.startDate == null
-            ? () => activity.startDate
-            : () => convertToTZDateTime(activity.startDate!, _location!),
-        endTS: _location == null || endDate == null
-            ? () => endDate
-            : () => convertToTZDateTime(endDate, _location!)), originalCalendarId);
+    final model = await repository.updateActivity(
+        activity.copyWith(
+            startTS: _location == null || activity.startDate == null
+                ? () => activity.startDate
+                : () => convertToTZDateTime(activity.startDate!, _location!),
+            endTS: _location == null || endDate == null
+                ? () => endDate
+                : () => convertToTZDateTime(endDate, _location!)),
+        originalCalendarId);
     syncCalendarsWithActivities().then((_) {
       if (activity is Event) {
         _getLocalEvents();

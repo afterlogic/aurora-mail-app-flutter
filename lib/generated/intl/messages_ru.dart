@@ -902,6 +902,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Тело письма"),
         "no_permission_to_local_storage": MessageLookupByLibrary.simpleMessage(
             "Нет разрешения для доступа к файлам. Проверьте настройки на вашем устройстве."),
+        "record_not_found":
+            MessageLookupByLibrary.simpleMessage("Запись не найдена"),
         "remove": MessageLookupByLibrary.simpleMessage("Удалить"),
         "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
         "save_changes_question":

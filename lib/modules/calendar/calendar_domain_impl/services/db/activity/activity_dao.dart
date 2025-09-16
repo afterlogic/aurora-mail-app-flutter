@@ -4,7 +4,6 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/fil
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/recurrence_mode.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/activity/activity_table.dart';
-import 'package:aurora_mail/modules/calendar/utils/recurrence_handlers.dart';
 import 'package:drift/drift.dart';
 
 part 'activity_dao.g.dart';
@@ -15,7 +14,9 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
   ActivityDao(AppDatabase db) : super(db);
 
   Future<List<ActivityDb>> getAllEventsFromCalendar(
-      String calendarUUID, int userLocalId) {
+    String calendarUUID,
+    int userLocalId,
+  ) {
     return (select(activityTable)
           ..where((t) =>
               t.calendarId.equals(calendarUUID) &
@@ -27,7 +28,9 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> deleteAllEventsFromCalendar(
-      String calendarUUID, int userLocalId) async {
+    String calendarUUID,
+    int userLocalId,
+  ) async {
     await (delete(activityTable)
           ..where((t) =>
               t.calendarId.equals(calendarUUID) &
@@ -36,7 +39,9 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<int> deleteAllUnusedEvents(
-      List<String> calendarUUIDs, List<int> userLocalIds) async {
+    List<String> calendarUUIDs,
+    List<int> userLocalIds,
+  ) async {
     return (delete(activityTable)
           ..where((t) =>
               t.calendarId.isNotIn(calendarUUIDs) &
@@ -44,32 +49,51 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
         .go();
   }
 
-  Future<void> syncEventList(List<ActivityDb> events,
-      {bool synced = false}) async {
-    for (final event in events) {
-      final companion = event.toCompanion(true);
-      try {
-        await into(activityTable).insert(companion);
-      } catch (e) {
-        // If there's a conflict, update the existing record
+  Future<void> syncEventList(
+    List<ActivityDb> events, {
+    bool synced = false,
+  }) async {
+    final calendarId = events.isNotEmpty ? events.first.calendarId : '';
+    final forAdd = events
+        .where((event) => event.updateStatus == UpdateStatus.added)
+        .map((event) => event.copyWith(synced: synced).toCompanion(true))
+        .toList();
+    final forModify = events
+        .where((event) => event.updateStatus == UpdateStatus.modified)
+        .map((event) => event.copyWith(synced: synced).toCompanion(true))
+        .toList();
+    final uidsForDelete = events
+        .where((event) => event.updateStatus == UpdateStatus.deleted)
+        .map((event) => event.uid)
+        .toList();
 
-        await (update(activityTable)
-              ..where((tbl) =>
-                  tbl.uid.equals(event.uid) &
-                  tbl.calendarId.equals(event.calendarId) &
-                  tbl.userLocalId.equals(event.userLocalId)))
-            .write(companion.copyWith(
-          synced: Value(synced),
-        ));
-      } finally {
-        if (event.updateStatus.isDeleted) {
-          await (deleteEvent(
-              uid: event.uid,
-              calendarId: event.calendarId,
-              userLocalId: event.userLocalId));
-        }
-      }
-    }
+    await batch((batch) {
+      batch.insertAll(
+        activityTable,
+        forAdd,
+        mode: InsertMode.insertOrReplace,
+      );
+    });
+
+    // We add records intended for modification,
+    // because sometimes they come from the server,
+    // without duplication in the "Added" section.
+    await batch((batch) {
+      batch.insertAll(
+        activityTable,
+        forModify,
+        mode: InsertMode.insertOrReplace,
+      );
+    });
+
+    await batch((batch) {
+      batch.deleteWhere(
+        activityTable,
+        (t) =>
+            activityTable.calendarId.equals(calendarId) &
+            activityTable.uid.isIn(uidsForDelete),
+      );
+    });
   }
 
   Future<int> deleteMarkedEvents() {
@@ -87,20 +111,23 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
     return result;
   }
 
-  Future<List<ActivityDb>> getEventsWithLimit(
-      {required int? limit, required int? offset}) async {
+  Future<List<ActivityDb>> getEventsWithLimit({
+    required int? limit,
+    required int? offset,
+  }) async {
     final eventsSelect = select(activityTable);
     eventsSelect.where((t) => t.synced.equals(false));
-    if(limit != null){
+    if (limit != null) {
       eventsSelect.limit(limit, offset: offset);
     }
     return eventsSelect.get();
   }
 
-  Future<void> deleteEvent(
-      {required String uid,
-      required String calendarId,
-      required int userLocalId}) {
+  Future<void> deleteEvent({
+    required String uid,
+    required String calendarId,
+    required int userLocalId,
+  }) {
     return (delete(activityTable)
           ..where((t) =>
               t.uid.equals(uid) &
@@ -109,12 +136,13 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
         .go();
   }
 
-  Future<List<ActivityDb>> getForPeriod(
-      {required DateTime start,
-      required DateTime end,
-      ActivityType? type,
-      required List<String> calendarIds,
-      required int userLocalId}) async {
+  Future<List<ActivityDb>> getForPeriod({
+    required DateTime start,
+    required DateTime end,
+    ActivityType? type,
+    required List<String> calendarIds,
+    required int userLocalId,
+  }) async {
     final notRecurrenceActivitySelect = select(activityTable);
     if (type != null) {
       notRecurrenceActivitySelect.where((t) => t.type.equals(type.index));
@@ -153,10 +181,11 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
     return [...notRecurrenceActivities, ...recurrenceActivities];
   }
 
-  Future<ActivityDb> getByUid(
-      {required String calendarId,
-      required String uid,
-      required int userLocalId}) {
+  Future<ActivityDb> getByUid({
+    required String calendarId,
+    required String uid,
+    required int userLocalId,
+  }) {
     return (select(activityTable)
           ..where((t) =>
               t.userLocalId.equals(userLocalId) &
@@ -166,11 +195,12 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
         .getSingle();
   }
 
-  Future<List<ActivityDb>> getAll(
-      {ActivityType? type,
-      required List<String>? calendarIds,
-      required ActivityFilter filter,
-      required int userLocalId}) {
+  Future<List<ActivityDb>> getAll({
+    ActivityType? type,
+    required List<String>? calendarIds,
+    required ActivityFilter filter,
+    required int userLocalId,
+  }) {
     final activitySelect = select(activityTable);
     if (type != null) {
       activitySelect.where((t) => t.type.equals(type.index));

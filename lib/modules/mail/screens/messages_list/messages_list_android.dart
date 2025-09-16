@@ -95,18 +95,9 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
         MessagesListAndroid.shareHolder = null;
       }
     });
-    if (MessagesListAndroid.openMessageLocalId != null) {
-      _openMessageByLocalId(MessagesListAndroid.openMessageLocalId);
-      MessagesListAndroid.openMessageLocalId = null;
-    } else if (MessagesListAndroid.openMessageId != null &&
-        MessagesListAndroid.openMessageFolder != null) {
-      _openMessageById(
-        MessagesListAndroid.openMessageId,
-        MessagesListAndroid.openMessageFolder,
-      );
-      MessagesListAndroid.openMessageId = null;
-      MessagesListAndroid.openMessageFolder = null;
-    }
+
+    _initMessageFromPush();
+
     BackgroundHelper.addOnAlarmObserver(false, onAlarm);
     BackgroundHelper.addOnEndAlarmObserver(false, onEndAlarm);
   }
@@ -119,45 +110,67 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     super.didChangeAppLifecycleState(state);
   }
 
-  Future<void> _openMessageById(String messageId, String folder) async {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      try {
-        final message = _mailBloc.getMessageById(messageId, folder);
-        final result = await _onMessageSelectedWithProgress(message);
-        if (result is ErrorToShow) {
-          _showError(context, result);
-        }
-      } catch (e) {
-        print(e);
-      }
-    });
-  }
-
-  Future<void> _openMessageByLocalId(int uid) async {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      try {
-        final message = await _mailBloc.getMessageByLocalId(uid);
-        await _onMessageSelected(message);
-      } catch (e) {
-        print(e);
-      }
-    });
-  }
-
   @override
   void didUpdateWidget(MessagesListAndroid oldWidget) {
-    super.didUpdateWidget(oldWidget);
     _initBlocs();
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
   void dispose() {
-    super.dispose();
-    MessagesListAndroid.onShare = null;
     WidgetsBinding.instance.removeObserver(this);
+    MessagesListAndroid.onShare = null;
     selectionController.removeListener(selectionCallback);
     BackgroundHelper.removeOnAlarmObserver(onAlarm);
     BackgroundHelper.removeOnEndAlarmObserver(onEndAlarm);
+    super.dispose();
+  }
+
+  void _initMessageFromPush() {
+    final messageLocalId = MessagesListAndroid.openMessageLocalId;
+    if (messageLocalId != null) {
+      _openMessageByLocalId(messageLocalId);
+      MessagesListAndroid.openMessageLocalId = null;
+
+      return;
+    }
+
+    final messageId = MessagesListAndroid.openMessageId;
+    final folder = MessagesListAndroid.openMessageFolder;
+    if (messageId != null && folder != null) {
+      _openMessageById(messageId, folder);
+      MessagesListAndroid.openMessageId = null;
+      MessagesListAndroid.openMessageFolder = null;
+    }
+  }
+
+  Future<void> _openMessageByLocalId(int uid) async {
+    Message message;
+    try {
+      message = await _mailBloc.getMessageByLocalId(uid);
+    } catch (e) {
+      _showError(context, ErrorToShow('$e'));
+    }
+
+    if (message == null) {
+      return;
+    }
+
+    _onMessageSelected(message);
+  }
+
+  Future<void> _openMessageById(String messageId, String folder) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        final futureMessage = _mailBloc.getMessageById(messageId, folder);
+        final result = await _onMessageSelectedWithProgress(futureMessage);
+        if (result is ErrorToShow) {
+          _showError(context, result);
+        }
+      } catch (e) {
+        _showError(context, ErrorToShow('$e'));
+      }
+    });
   }
 
   void _initBlocs() {
@@ -188,12 +201,14 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
         context: ctx, scaffoldState: scaffoldKey.currentState, msg: err);
   }
 
-  Future<ErrorToShow> _onMessageSelectedWithProgress(Future<Message> message) {
-    return Navigator.pushNamed(
+  Future<ErrorToShow> _onMessageSelectedWithProgress(
+    Future<Message> futureMessage,
+  ) {
+    return Navigator.pushNamed<ErrorToShow>(
       context,
       MessageProgressRoute.name,
       arguments: MessageProgressRouteArg(
-        message: message,
+        futureMessage: futureMessage,
         mailBloc: _mailBloc,
         messagesListBloc: _messagesListBloc,
         contactsBloc: _contactsBloc,
@@ -202,34 +217,45 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   }
 
   Future<void> _onMessageSelected(Message _message) async {
-    final message = await _mailBloc.getFullMessage(_message.localId);
-    final draftsFolder = await _mailBloc.getFolderByType(FolderType.drafts);
-    final isDraftMessage =
-        draftsFolder != null && message.folder == draftsFolder.fullNameRaw;
-    if (isDraftMessage || _selectedFolder.folderType.isNotes) {
-      Navigator.pushNamed(
-        context,
-        ComposeRoute.name,
-        arguments: ComposeScreenArgs(
-          mailBloc: _mailBloc,
-          contactsBloc: _contactsBloc,
-          composeAction: _selectedFolder.folderType.isNotes
-              ? OpenFromNotes(message, _selectedFolder)
-              : OpenFromDrafts(message, message.uid),
-        ),
-      );
-    } else {
-      await Navigator.pushNamed(
-        context,
-        MessageViewRoute.name,
-        arguments: MessageViewScreenArgs(
-          message: message,
-          mailBloc: _mailBloc,
-          messagesListBloc: _messagesListBloc,
-          contactsBloc: _contactsBloc,
-        ),
-      );
+    Message message;
+    LocalFolder draftsFolder;
+    try {
+      message = await _mailBloc.getFullMessage(_message.localId);
+      draftsFolder = await _mailBloc.getFolderByType(FolderType.drafts);
+    } catch (e) {
+      _showError(context, ErrorToShow('$e'));
+      return;
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final isDraftMessage =
+          draftsFolder != null && message.folder == draftsFolder.fullNameRaw;
+      final isNotesFolder = _selectedFolder.folderType.isNotes;
+      if (isDraftMessage || isNotesFolder) {
+        Navigator.pushNamed(
+          context,
+          ComposeRoute.name,
+          arguments: ComposeScreenArgs(
+            mailBloc: _mailBloc,
+            contactsBloc: _contactsBloc,
+            composeAction: isNotesFolder
+                ? OpenFromNotes(message, _selectedFolder)
+                : OpenFromDrafts(message, message.uid),
+          ),
+        );
+      } else {
+        Navigator.pushNamed(
+          context,
+          MessageViewRoute.name,
+          arguments: MessageViewScreenArgs(
+            message: message,
+            mailBloc: _mailBloc,
+            messagesListBloc: _messagesListBloc,
+            contactsBloc: _contactsBloc,
+          ),
+        );
+      }
+    });
   }
 
   void _deleteMessage(Message message) {

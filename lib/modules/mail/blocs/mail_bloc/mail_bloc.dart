@@ -126,19 +126,24 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   Stream<MailState> _updateFolders(UpdateFolders event) async* {
-    final List<Folder> folders = await _methods.getFolders();
+    try {
+      final List<Folder> folders = await _methods.getFolders();
 
-    _selectedFolder = folders.firstWhere(
-      (f) => f.guid == _selectedFolder.guid,
-      orElse: () => folders[0],
-    );
+      _selectedFolder = folders.firstWhere(
+        (f) => f.guid == _selectedFolder.guid,
+        orElse: () => folders[0],
+      );
 
-    yield FoldersLoaded(
-      folders,
-      _selectedFolder,
-      _filter,
-      PostFolderLoadedAction.stopMessagesRefresh,
-    );
+      yield FoldersLoaded(
+        folders,
+        _selectedFolder,
+        _filter,
+        PostFolderLoadedAction.stopMessagesRefresh,
+      );
+    } catch (err, s) {
+      logger.error(err, s);
+      yield FoldersError(formatError(err, s));
+    }
   }
 
   Stream<MailState> _refreshFolders(RefreshFolders event) async* {
@@ -263,24 +268,39 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   Stream<MailState> _setSeen(SetSeen event) async* {
-    _methods.setMessagesSeen(
-      folder: _selectedFolder,
-      messages: event.messages,
-      isSeen: event.isSeen,
-    );
+    try {
+      _methods.setMessagesSeen(
+        folder: _selectedFolder,
+        messages: event.messages,
+        isSeen: event.isSeen,
+      );
+    } catch (err, s) {
+      logger.error(err, s);
+      yield FoldersError(formatError(err, s));
+    }
   }
 
   Stream<MailState> _setStarred(SetStarred event) async* {
-    _methods.setMessagesStarred(
-      folder: _selectedFolder,
-      messages: event.messages,
-      isStarred: event.isStarred,
-    );
+    try {
+      _methods.setMessagesStarred(
+        folder: _selectedFolder,
+        messages: event.messages,
+        isStarred: event.isStarred,
+      );
+    } catch (err, s) {
+      logger.error(err, s);
+      yield FoldersError(formatError(err, s));
+    }
   }
 
   Stream<MailState> _selectFolderByName(SelectFolderByName event) async* {
-    final folder = await _methods.getFolderByName(event.name);
-    add(SelectFolder(folder));
+    try {
+      final folder = await _methods.getFolderByName(event.name);
+      add(SelectFolder(folder));
+    } catch (err, s) {
+      logger.error(err, s);
+      yield FoldersError(formatError(err, s));
+    }
   }
 
   Future<Message> getFullMessage(int localId) {

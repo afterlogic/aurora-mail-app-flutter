@@ -499,5 +499,6 @@
 	"calendar_color_label": "Farbe",
 	"calendar_validation_enter_text": "Bitte geben Sie Text ein",
 	"settings_delete_account": "Konto löschen",
-	"week_titles": "Mo,Di,Mi,Do,Fr,Sa,So"
+	"week_titles": "Mo,Di,Mi,Do,Fr,Sa,So",
+	"record_not_found": "Kein Eintrag gefunden"
 }

@@ -8,6 +8,7 @@ import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/server_modules.dart';
+import 'package:aurora_mail/modules/app_route_observer.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/notification/calendar_notification_bloc.dart';
@@ -24,6 +25,8 @@ import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_android.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
+import 'package:aurora_mail/notification/models/notification_data.dart';
+import 'package:aurora_mail/notification/models/notification_type.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -41,8 +44,6 @@ import 'auth/blocs/auth_bloc/bloc.dart';
 import 'auth/screens/login/login_route.dart';
 import 'dialog_wrap.dart';
 import 'route_generator.dart';
-
-final routeObserver = RouteObserver();
 
 class App extends StatefulWidget {
   @override
@@ -282,6 +283,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                           BlocProvider.value(value: _settingsBloc),
                           if (calendarUseCase != null)
                             BlocProvider(
+                              lazy: false,
                               create: (_) => EventsBloc(
                                   useCase: calendarUseCase,
                                   firstDayInWeek: convert(UserAppDataSingleton()
@@ -366,7 +368,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                               : _notification != null
                                   ? CalendarRoute.name
                                   : MessagesListRoute.name,
-                          navigatorObservers: [routeObserver],
+                          navigatorObservers: [AppRouteObserver()],
                           builder: (context, child) {
                             return MediaQuery(
                               data: MediaQuery.of(context).copyWith(

@@ -10,6 +10,7 @@ import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
+import 'package:aurora_mail/notification/models/notification_data.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -104,6 +105,7 @@ void main() async {
       ),
     ),
     (error, stack) {
+      debugPrint('!!! ZoneError: $error Stack: $stack');
       if (!kDebugMode) {
         FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       }

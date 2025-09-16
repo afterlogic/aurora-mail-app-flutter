@@ -219,7 +219,7 @@ class AppBarIcons {
 
     return AssetSvgIcon(
       showSvg: BuildProperty.useCustomAppBarIcons,
-      svgPath: '${BuildProperty.image_dir}/m-app-bar/menu-forward.svg',
+      svgPath: '${BuildProperty.image_dir}/m-app-bar/menu-reply.svg',
       iconData: Icons.reply,
       width: 24.0,
       height: 24.0,

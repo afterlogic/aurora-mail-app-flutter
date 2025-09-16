@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 
 class FadeRoute extends PageRouteBuilder {
   final Widget Function(BuildContext) builder;
+  final RouteSettings settings;
   final int duration;
   final bool fullscreenDialog;
-  final RouteSettings settings;
 
-  FadeRoute(
-      {this.settings,
-      this.duration = 200,
-      @required this.builder,
-      this.fullscreenDialog = false})
-      : super(
+  FadeRoute({
+    @required this.builder,
+    this.settings,
+    this.duration = 200,
+    this.fullscreenDialog = false,
+  }) : super(
             settings: settings,
             transitionDuration: Duration(milliseconds: duration),
             fullscreenDialog: fullscreenDialog,

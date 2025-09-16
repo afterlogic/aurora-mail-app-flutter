@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/utils/error_code.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
+import 'package:flutter/foundation.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
-import 'error_code.dart';
 
 ErrorToShow formatError(dynamic err, StackTrace stack) {
   if (err is WebMailApiError) {
@@ -17,11 +18,18 @@ ErrorToShow formatError(dynamic err, StackTrace stack) {
           err.message.isNotEmpty ? err.message : err.toString());
     }
   } else if (err is TypeError) {
-    print("TypeError: $err Stack: $stack");
+    debugPrint("TypeError: $err Stack: $stack");
     return ErrorToShow(err);
+  } else if (err is StateError) {
+    debugPrint("StateError: $err Stack: $stack");
+    if (err.message.contains('No element') == true) {
+      return ErrorToShow.message(S.current.record_not_found);
+    } else {
+      return ErrorToShow(err);
+    }
   } else {
-    print("Debug error: $err");
-    print("Debug stack: $stack");
+    debugPrint("Debug error: $err");
+    debugPrint("Debug stack: $stack");
     return ErrorToShow(err);
     // TODO set unknown for release
 //    return "Unknown error";

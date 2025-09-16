@@ -3,14 +3,12 @@ import 'dart:convert';
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity_base.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/attendee.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/days_of_week.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/every_week_frequency.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/recurrence_mode.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/reminders_option.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/task.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/calendar_mapper.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/event_mapper.dart';
@@ -39,11 +37,12 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
   }
 
   @override
-  Future<List<ActivityBase>> getChangesForCalendar(
-      {required String calendarId,
-      required int userLocalId,
-      required int syncTokenFrom,
-      int? limit}) async {
+  Future<List<ActivityBase>> getChangesForCalendar({
+    required String calendarId,
+    required int userLocalId,
+    required int syncTokenFrom,
+    int? limit,
+  }) async {
     final parameters = {
       "CalendarId": calendarId,
       "SyncToken": syncTokenFrom,
@@ -59,8 +58,13 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     );
 
     final result = await calendarModule.post(body);
-    return EventMapper.listOfBaseFromNetworkMap(result as Map<String, dynamic>,
-        userLocalId: userLocalId, calendarId: calendarId);
+    final changes = EventMapper.listOfBaseFromNetworkMap(
+      result as Map<String, dynamic>,
+      userLocalId: userLocalId,
+      calendarId: calendarId,
+    );
+
+    return changes;
   }
 
   @override
@@ -279,7 +283,10 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
   }
 
   @override
-  Future<Activity> updateActivity(Activity activity, String originalCalendarId) async {
+  Future<Activity> updateActivity(
+    Activity activity,
+    String originalCalendarId,
+  ) async {
     final type = _getActivityType(activity);
     final dateInfo = _getDateInfo(activity);
     final rruleParameters = activity.recurrenceMode == RecurrenceMode.never
@@ -350,9 +357,9 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       parameters: jsonEncode(parameters),
     );
     late final Map<String, dynamic> result;
-    try{
+    try {
       result = await calendarModule.post(body) as Map<String, dynamic>;
-    }catch(e, s){
+    } catch (e, s) {
       Logger.errorLog(e, s);
       throw ErrorToShow('${type.isEvent ? "Event" : "Task"} update failed');
     }

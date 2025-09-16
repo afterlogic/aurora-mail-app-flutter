@@ -42,11 +42,12 @@ class TaskViewPage extends StatelessWidget {
     }
   }
 
-  PopupMenuEntry<EventViewAppBarAction> _buildMenuItem(
-      {required EventViewAppBarAction value,
-      required String text,
-      required Widget icon,
-      required BuildContext context}) {
+  PopupMenuEntry<EventViewAppBarAction> _buildMenuItem({
+    required EventViewAppBarAction value,
+    required String text,
+    required Widget icon,
+    required BuildContext context,
+  }) {
     return PopupMenuItem(
       child: ListTile(
         leading: icon,

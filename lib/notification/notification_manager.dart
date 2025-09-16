@@ -10,6 +10,10 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
 import 'package:notifications_utils/notifications_utils.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+const NOTIFICATION_MAIL_CHANNEL_ID = "new_mail";
+const NOTIFICATION_MAIL_CHANNEL_NAME = "New mail";
+const NOTIFICATION_MAIL_CHANNEL_DESCRIPTION = "";
+
 class NotificationManager {
   final plugin = FlutterLocalNotificationsPlugin();
   static NotificationManager instance = NotificationManager._();
@@ -26,7 +30,7 @@ class NotificationManager {
     _openFromNotification();
   }
 
-  _openFromNotification() async {
+  Future<void> _openFromNotification() async {
     final notification = await plugin.getNotificationAppLaunchDetails();
     if (notification.didNotificationLaunchApp) {
       onSelectNotification(notification.payload);
@@ -34,9 +38,17 @@ class NotificationManager {
   }
 
   Future<void> showMessageNotification(
-      Message message, Account account, User user) async {
+    Message message,
+    Account account,
+    User user,
+  ) async {
     return showNotification(
-        message.fromToDisplay, message.subject, account, user, message.localId);
+      message.fromToDisplay,
+      message.subject,
+      account,
+      user,
+      message.localId,
+    );
   }
 
   Future<void> showNotification(
@@ -112,7 +124,3 @@ Future onSelectNotification(String payload) async {
     RouteWrap.notification = json;
   }
 }
-
-const NOTIFICATION_MAIL_CHANNEL_ID = "new_mail";
-const NOTIFICATION_MAIL_CHANNEL_NAME = "New mail";
-const NOTIFICATION_MAIL_CHANNEL_DESCRIPTION = "";

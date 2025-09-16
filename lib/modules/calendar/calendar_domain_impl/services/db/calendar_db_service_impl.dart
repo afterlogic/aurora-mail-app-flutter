@@ -5,13 +5,11 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/act
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/filters.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/recurrence_mode.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/calendar_mapper.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/event_mapper.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/activity/activity_dao.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/calendar/calendar_dao.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/calendar_db_service.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/activity/activity_dao.dart';
 import 'package:aurora_mail/modules/calendar/utils/recurrence_handlers.dart';
 import 'package:collection/collection.dart';
 
@@ -31,7 +29,9 @@ class CalendarDbServiceImpl implements CalendarDbService {
 
   @override
   Future<void> emitChanges(List<ActivityBase> events) async {
-    return _activityDao.syncEventList(events.map((e) => e.toDb()).toList());
+    final models = events.map((e) => e.toDb()).toList();
+
+    return _activityDao.syncEventList(models);
   }
 
   @override
@@ -63,8 +63,10 @@ class CalendarDbServiceImpl implements CalendarDbService {
 
   @override
   Future<void> updateEventList(List<Activity> events) {
-    return _activityDao.syncEventList(events.map((e) => e.toDb()).toList(),
-        synced: true);
+    return _activityDao.syncEventList(
+      events.map((e) => e.toDb()).toList(),
+      synced: true,
+    );
   }
 
   @override
@@ -74,42 +76,47 @@ class CalendarDbServiceImpl implements CalendarDbService {
   }
 
   @override
-  Future<List<ActivityBase>> getNotUpdatedEvents(
-      {required int? limit, required int? offset}) async {
+  Future<List<ActivityBase>> getNotUpdatedEvents({
+    required int? limit,
+    required int? offset,
+  }) async {
     final result =
         await _activityDao.getEventsWithLimit(limit: limit, offset: offset);
-    return result
-        .map((e) => e.toActivity())
-        .whereNotNull()
-        .toList();
+    return result.map((e) => e.toActivity()).whereNotNull().toList();
   }
 
   @override
-  Future<List<Activity>> getActivitiesForPeriod(
-      {required DateTime start,
-      required DateTime end,
-      ActivityType? type,
-      required List<String> calendarIds,
-      required int userLocalId}) async {
+  Future<List<Activity>> getActivitiesForPeriod({
+    required DateTime start,
+    required DateTime end,
+    ActivityType? type,
+    required List<String> calendarIds,
+    required int userLocalId,
+  }) async {
     final entities = await _activityDao.getForPeriod(
         calendarIds: calendarIds,
         start: start,
         end: end,
         userLocalId: userLocalId);
-    final models = entities.map((e) => e.toActivity()).whereType<Activity>().toList();
-    final recurrenceModels = models.where((e) => e.recurrenceMode != RecurrenceMode.never).toList();
-    final withoutRecurrenceModels = models.where((e) => e.recurrenceMode == RecurrenceMode.never).toList();
-    final recurrenceHandledModels = handleRecurrence(start, end, recurrenceModels);
+    final models =
+        entities.map((e) => e.toActivity()).whereType<Activity>().toList();
+    final recurrenceModels =
+        models.where((e) => e.recurrenceMode != RecurrenceMode.never).toList();
+    final withoutRecurrenceModels =
+        models.where((e) => e.recurrenceMode == RecurrenceMode.never).toList();
+    final recurrenceHandledModels =
+        handleRecurrence(start, end, recurrenceModels);
 
     return [...withoutRecurrenceModels, ...recurrenceHandledModels];
   }
 
   @override
-  Future<List<Activity>> getActivities(
-      {required List<String>? calendarIds,
-      required ActivityFilter filter,
-      ActivityType? type,
-      required int userLocalId}) async {
+  Future<List<Activity>> getActivities({
+    required List<String>? calendarIds,
+    required ActivityFilter filter,
+    ActivityType? type,
+    required int userLocalId,
+  }) async {
     final entities = await _activityDao.getAll(
         filter: filter,
         calendarIds: calendarIds,
@@ -125,9 +132,17 @@ class CalendarDbServiceImpl implements CalendarDbService {
   }
 
   @override
-  Future<Activity> getActivityByUid({required String calendarId, required String activityUid, required int userLocalId}) async {
-    final entity = await _activityDao.getByUid(calendarId: calendarId, userLocalId: userLocalId, uid: activityUid, );
-    final model  = entity.toActivity();
+  Future<Activity> getActivityByUid({
+    required String calendarId,
+    required String activityUid,
+    required int userLocalId,
+  }) async {
+    final entity = await _activityDao.getByUid(
+      calendarId: calendarId,
+      userLocalId: userLocalId,
+      uid: activityUid,
+    );
+    final model = entity.toActivity();
     if ((model is! Activity)) throw Exception('Activity not synced');
     return model;
   }

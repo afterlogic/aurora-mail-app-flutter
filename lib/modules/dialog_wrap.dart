@@ -6,10 +6,10 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/calendar_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/calendar_route.dart';
-import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_android.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
-import 'package:aurora_mail/notification/push_notifications_manager.dart';
+import 'package:aurora_mail/notification/models/notification_data.dart';
+import 'package:aurora_mail/notification/models/notification_type.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -64,7 +64,16 @@ class RouteWrapState extends State<RouteWrap> {
     if (RouteWrap.staticState == this) RouteWrap.staticState = null;
   }
 
-  void showMessage(int userId, int messageUid, int accountLocalId) async {
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
+  }
+
+  Future<void> showMessage(
+    int userId,
+    int messageUid,
+    int accountLocalId,
+  ) async {
     if (await discardNotSavedChanges()) {
       final completer = Completer();
       widget.authBloc.add(SelectUser(userId, completer, accountLocalId));
@@ -78,7 +87,7 @@ class RouteWrapState extends State<RouteWrap> {
     }
   }
 
-  onMessage(Map<String, dynamic> json) {
+  Future<void> onMessage(Map<String, dynamic> json) {
     if (json.containsKey("To")) {
       return selectUser(json);
     } else {
@@ -86,11 +95,12 @@ class RouteWrapState extends State<RouteWrap> {
       final userLocalId = json["user"] as int;
       final messageLocalId = json["message"] as int;
       final accountLocalId = json["account"] as int;
+
       return showMessage(userLocalId, messageLocalId, accountLocalId);
     }
   }
 
-  onCalendar(Map<String, dynamic> json) async {
+  Future<void> onCalendar(Map<String, dynamic> json) async {
     final email = json["To"] as String;
     final completer = Completer();
     final notificationData = NotificationData.fromJson(json);
@@ -101,7 +111,6 @@ class RouteWrapState extends State<RouteWrap> {
     }
 
     ActivityType activityType;
-
     switch (notificationData.type) {
       case NotificationType.email:
         throw Exception('Unsupported activity type');
@@ -115,11 +124,14 @@ class RouteWrapState extends State<RouteWrap> {
     }
 
     widget.navKey.currentState.pushNamedAndRemoveUntil(
-        CalendarRoute.name, (_) => false,
-        arguments: CalendarPageArg(
-            selectedCalendarId: notificationData.calendarId,
-            selectedActivityId: notificationData.activityId,
-            type: activityType));
+      CalendarRoute.name,
+      (_) => false,
+      arguments: CalendarPageArg(
+        selectedCalendarId: notificationData.calendarId,
+        selectedActivityId: notificationData.activityId,
+        type: activityType,
+      ),
+    );
   }
 
   Future<bool> discardNotSavedChanges() async {
@@ -131,17 +143,14 @@ class RouteWrapState extends State<RouteWrap> {
         S.of(context).label_discard_not_saved_changes,
         S.of(context).btn_discard,
       );
+
       return result ?? false;
     }
+
     return true;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return widget.child;
-  }
-
-  void selectUser(Map<String, dynamic> json) async {
+  Future<void> selectUser(Map<String, dynamic> json) async {
     if (await discardNotSavedChanges()) {
       final email = json["To"] as String;
       final completer = Completer();

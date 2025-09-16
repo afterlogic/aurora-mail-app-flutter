@@ -5062,6 +5062,16 @@ class S {
       args: [],
     );
   }
+
+  /// `The record not found`
+  String get record_not_found {
+    return Intl.message(
+      'The record not found',
+      name: 'record_not_found',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

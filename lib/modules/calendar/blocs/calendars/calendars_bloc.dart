@@ -46,107 +46,163 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
     super.close();
   }
 
-  _onAddCalendars(AddCalendars event, Emitter<CalendarsState> emit) async {
-    emit(state.copyWith(calendars: () => event.calendars));
+  Future<void> _onAddCalendars(
+      AddCalendars event, Emitter<CalendarsState> emit) async {
+    emit(state.copyWith(
+      calendars: () => event.calendars,
+    ));
   }
 
-  _onClearData(ClearData event, Emitter<CalendarsState> emit) async {
-    await _asyncErrorHandler(() async{
-      await _useCase.clearData();
-    }, emit);
+  Future<void> _onClearData(
+      ClearData event, Emitter<CalendarsState> emit) async {
+    await _asyncErrorHandler(
+      () async {
+        await _useCase.clearData();
+      },
+      emit,
+    );
   }
 
-  _onSaveTabIndex(SaveTabIndex event, Emitter<CalendarsState> emit) async {
-    emit(state.copyWith(selectedTabIndex: event.index));
+  Future<void> _onSaveTabIndex(
+      SaveTabIndex event, Emitter<CalendarsState> emit) async {
+    emit(state.copyWith(
+      selectedTabIndex: event.index,
+    ));
   }
 
-  _onSaveMonthViewMode(
+  Future<void> _onSaveMonthViewMode(
       SaveMonthViewMode event, Emitter<CalendarsState> emit) async {
-    emit(state.copyWith(monthViewMode: event.mode));
+    emit(state.copyWith(
+      monthViewMode: event.mode,
+    ));
   }
 
-  _onCreateCalendar(CreateCalendar event, Emitter<CalendarsState> emit) async {
-    await _asyncErrorHandler(() async{
-      await _useCase.createCalendar(event.creationData);
-    }, emit);
+  Future<void> _onCreateCalendar(
+      CreateCalendar event, Emitter<CalendarsState> emit) async {
+    await _asyncErrorHandler(
+      () async {
+        await _useCase.createCalendar(event.creationData);
+      },
+      emit,
+    );
   }
 
-  _onUnsubscribeFromCalendar(UnsubscribeFromCalendar event, Emitter<CalendarsState> emit) async {
-    await _asyncErrorHandler(() async{
-      await _useCase.unsubscribeFromCalendar(event.calendar);
-    }, emit);
+  Future<void> _onUnsubscribeFromCalendar(
+      UnsubscribeFromCalendar event, Emitter<CalendarsState> emit) async {
+    await _asyncErrorHandler(
+      () async {
+        await _useCase.unsubscribeFromCalendar(event.calendar);
+      },
+      emit,
+    );
   }
 
-  _onFetchCalendars(FetchCalendars event, Emitter<CalendarsState> emit) async {
-    await _asyncErrorHandler(() async{
-      await _useCase.fetchCalendars();
-    }, emit);
+  Future<void> _onFetchCalendars(
+      FetchCalendars event, Emitter<CalendarsState> emit) async {
+    await _asyncErrorHandler(
+      () async {
+        await _useCase.fetchCalendars();
+      },
+      emit,
+    );
   }
 
-  _onGetCalendars(GetCalendars event, Emitter<CalendarsState> emit) async {
-    await _asyncErrorHandler(() async{
-      await _useCase.getCalendars();
-    }, emit);
+  Future<void> _onGetCalendars(
+      GetCalendars event, Emitter<CalendarsState> emit) async {
+    await _asyncErrorHandler(
+      () async {
+        await _useCase.getCalendars();
+      },
+      emit,
+    );
   }
 
-  _onDeleteCalendar(DeleteCalendar event, Emitter<CalendarsState> emit) async {
-    await _asyncErrorHandler(() async{
-      await _useCase.deleteCalendar(event.calendar);
-    }, emit);
+  Future<void> _onDeleteCalendar(
+      DeleteCalendar event, Emitter<CalendarsState> emit) async {
+    await _asyncErrorHandler(
+      () async {
+        await _useCase.deleteCalendar(event.calendar);
+      },
+      emit,
+    );
   }
 
-  _onUpdateCalendarSelection(
+  Future<void> _onUpdateCalendarSelection(
       UpdateCalendarSelection event, Emitter<CalendarsState> emit) async {
     _errorHandler(
-        () => _useCase.updateSelectedCalendarIds(
-            selectedId: event.calendarId, isAdded: event.selected),
-        emit);
+      () => _useCase.updateSelectedCalendarIds(
+          selectedId: event.calendarId, isAdded: event.selected),
+      emit,
+    );
   }
 
-  _onUpdateCalendar(UpdateCalendar event, Emitter<CalendarsState> emit) async {
-    _asyncErrorHandler(
-        () async => _useCase.updateCalendar(event.calendar), emit);
+  Future<void> _onUpdateCalendar(
+      UpdateCalendar event, Emitter<CalendarsState> emit) async {
+    await _asyncErrorHandler(
+      () async => _useCase.updateCalendar(event.calendar),
+      emit,
+    );
   }
 
-  _onUpdateCalendarPublic(
+  Future<void> _onUpdateCalendarPublic(
       UpdateCalendarPublic event, Emitter<CalendarsState> emit) async {
-    _asyncErrorHandler(
-        () async => _useCase.updateCalendarPublic(
-            event.calendar.copyWith(isPublic: !event.calendar.isPublic)),
-        emit);
+    await _asyncErrorHandler(
+      () async => _useCase.updateCalendarPublic(
+          event.calendar.copyWith(isPublic: !event.calendar.isPublic)),
+      emit,
+    );
   }
 
-  _onUpdateCalendarShares(
+  Future<void> _onUpdateCalendarShares(
       UpdateCalendarShares event, Emitter<CalendarsState> emit) async {
     final calendarForUpdate =
         state.calendars?.firstWhereOrNull((e) => e.id == event.calendarId);
-    if (calendarForUpdate == null) return;
-    _asyncErrorHandler(
-        () async => _useCase.updateCalendarSharing(
-            calendarForUpdate.copyWith(shares: event.shares)),
-        emit);
+    if (calendarForUpdate == null) {
+      return;
+    }
+
+    await _asyncErrorHandler(
+      () async => _useCase.updateCalendarSharing(
+          calendarForUpdate.copyWith(shares: event.shares)),
+      emit,
+    );
   }
 
-  _errorHandler(void Function() callback, Emitter<CalendarsState> emit) {
+  void _errorHandler(
+    void Function() callback,
+    Emitter<CalendarsState> emit,
+  ) {
     try {
       callback();
     } catch (e, s) {
       emit(state.copyWith(
-          status: CalendarsStatus.error, error: () => formatError(e, s)));
+        status: CalendarsStatus.error,
+        error: () => formatError(e, s),
+      ));
     } finally {
-      emit(state.copyWith(status: CalendarsStatus.idle, error: () => null));
+      emit(state.copyWith(
+        status: CalendarsStatus.idle,
+        error: () => null,
+      ));
     }
   }
 
-  _asyncErrorHandler(
-      Future Function() callback, Emitter<CalendarsState> emit) async {
+  Future<void> _asyncErrorHandler(
+    Future Function() callback,
+    Emitter<CalendarsState> emit,
+  ) async {
     try {
       await callback();
     } catch (e, s) {
       emit(state.copyWith(
-          status: CalendarsStatus.error, error: () => formatError(e, s)));
+        status: CalendarsStatus.error,
+        error: () => formatError(e, s),
+      ));
     } finally {
-      emit(state.copyWith(status: CalendarsStatus.idle, error: () => null));
+      emit(state.copyWith(
+        status: CalendarsStatus.idle,
+        error: () => null,
+      ));
     }
   }
 }

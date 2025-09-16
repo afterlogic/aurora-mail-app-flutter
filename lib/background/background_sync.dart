@@ -18,8 +18,8 @@ import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_methods.dart';
 import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
+import 'package:aurora_mail/notification/models/notification_data.dart';
 import 'package:aurora_mail/notification/notification_manager.dart';
-import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:drift/drift.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 

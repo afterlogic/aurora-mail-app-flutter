@@ -500,5 +500,6 @@
 	"login_no_account_yet": "Henüz hesabınız yok mu? ",
 	"login_register_now": "Şimdi kayıt ol",
 	"settings_delete_account": "Hesabı sil",
-	"week_titles": "Pt,Sa,Ça,Pe,Cu,Ct,Pz"
+	"week_titles": "Pt,Sa,Ça,Pe,Cu,Ct,Pz",
+	"record_not_found": "Kayıt bulunamadı"
 }

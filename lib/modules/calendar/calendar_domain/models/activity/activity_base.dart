@@ -13,16 +13,17 @@ class ActivityBase {
     required this.updateStatus,
     required this.userLocalId,
     required this.calendarId,
-    required this.synced
+    required this.synced,
   });
 
   ActivityDb toDb() {
     return ActivityDb(
-        calendarId: calendarId,
-        userLocalId: userLocalId,
-        uid: uid,
-        updateStatus: updateStatus,
-        synced: false,
-        onceLoaded: false);
+      calendarId: calendarId,
+      userLocalId: userLocalId,
+      uid: uid,
+      updateStatus: updateStatus,
+      synced: false,
+      onceLoaded: false,
+    );
   }
 }

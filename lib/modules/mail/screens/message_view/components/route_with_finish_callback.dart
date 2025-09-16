@@ -6,11 +6,11 @@ class RouteWithFinishCallback extends CupertinoPageRoute {
 
   RouteWithFinishCallback({
     @required WidgetBuilder builder,
+    @required this.routeAnimationListener,
     String title,
     RouteSettings settings,
     bool maintainState = true,
     bool fullscreenDialog = false,
-    @required this.routeAnimationListener,
   }) : super(
           builder: builder,
           title: title,
@@ -20,8 +20,12 @@ class RouteWithFinishCallback extends CupertinoPageRoute {
         );
 
   @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
     animation.addStatusListener(routeEndListener);
     return super.buildTransitions(
       context,
