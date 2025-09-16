@@ -38,16 +38,23 @@ void main() async {
     defaultInterceptor: DefaultLoggerInterceptorAdapter(),
   ));
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp();
+
+  const appCheckDebugToken =
+      String.fromEnvironment('FIREBASE_APP_CHECK_DEBUG_TOKEN');
+  debugPrint('!!! Dart FIREBASE_APP_CHECK_DEBUG_TOKEN: $appCheckDebugToken');
+  final isDebugBuild = appCheckDebugToken.isNotEmpty;
   await FirebaseAppCheck.instance.activate(
     androidProvider:
-        kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
-    appleProvider: kDebugMode ? AppleProvider.debug : AppleProvider.deviceCheck,
+        isDebugBuild ? AndroidProvider.debug : AndroidProvider.playIntegrity,
+    appleProvider: isDebugBuild
+        ? AppleProvider.debug
+        : AppleProvider.appAttestWithDeviceCheckFallback,
   );
 
   try {
-    final appCheckToken = await FirebaseAppCheck.instance.getToken();
+    final appCheckToken = await FirebaseAppCheck.instance.getLimitedUseToken();
+    debugPrint('FirebaseAppCheck: $appCheckToken');
   } catch (e) {
     debugPrint('FirebaseAppCheck: $e');
   }

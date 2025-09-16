@@ -1,11 +1,14 @@
 package com.afterlogic.aurora.mail.aurora_mail
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.firebase.Firebase
+import com.google.firebase.app
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 
@@ -13,6 +16,32 @@ import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 
 class MainActivity : FlutterActivity() {
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        // A workaround for installing the "firebase_app_check" debug-token.
+        // Until the possibility of installing it from Flutter is implemented:
+        // https://github.com/firebase/flutterfire/pull/16942
+        // Source: https://stackoverflow.com/questions/76162520/how-to-setup-firebase-app-check-debug-tokens-for-real-device-while-testing-acros
+
+        //TODO: Think about optimizing so that this code is not called every time the activity is recreated.
+
+        val debugToken = BuildConfig.FIREBASE_APP_CHECK_DEBUG_TOKEN
+        println("!!! onCreate FIREBASE_APP_CHECK_DEBUG_TOKEN: $debugToken")
+        if (debugToken != "") {
+            val firebaseApp = Firebase.app
+            val prefs = context.getSharedPreferences(
+                "com.google.firebase.appcheck.debug.store.${firebaseApp.persistenceKey}",
+                Context.MODE_PRIVATE,
+            )
+            prefs.edit().putString(
+                "com.google.firebase.appcheck.debug.DEBUG_SECRET",
+                debugToken,
+            ).apply()
+        }
+
+        super.onCreate(savedInstanceState)
+    }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine)

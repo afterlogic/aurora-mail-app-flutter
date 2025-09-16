@@ -29,6 +29,17 @@ if (flutterVersionName == null) {
     flutterVersionName = '0.0.10'
 }
 
+def dartEnvironmentVariables = []
+if (project.hasProperty('dart-defines')) {
+    dartEnvironmentVariables = project.property('dart-defines')
+            .split(',')
+            .collectEntries { entry ->
+                def pair = new String(entry.decodeBase64(), 'UTF-8').split('=')
+                [(pair.first()): pair.last()]
+            }
+}
+println "!!! Gradle FIREBASE_APP_CHECK_DEBUG_TOKEN: ${dartEnvironmentVariables.FIREBASE_APP_CHECK_DEBUG_TOKEN ?: ''}"
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -62,6 +73,7 @@ android {
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        buildConfigField("String", "FIREBASE_APP_CHECK_DEBUG_TOKEN", "\"${dartEnvironmentVariables.FIREBASE_APP_CHECK_DEBUG_TOKEN ?: ''}\"")
     }
 
     signingConfigs {
@@ -92,4 +104,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     implementation "com.google.firebase:firebase-messaging:21.0.0"
+    implementation("com.google.firebase:firebase-appcheck-debug:18.0.0")
 }
