@@ -24,8 +24,6 @@ class InputUtils {
       hintText: hintText,
       floatingLabelBehavior: FloatingLabelBehavior.auto,
       suffixIcon: suffixIcon,
-      filled: true,
-      fillColor: AppColor.inputBackground,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
         borderSide: BorderSide(color: AppColor.inputBorder, width: 1.0),
@@ -191,6 +189,7 @@ class InputUtils {
     bool isExpanded = true,
     bool isDense = false,
     List<Widget> Function(BuildContext)? selectedItemBuilder,
+    Color backgroundColor = Colors.white,
   }) {
     if (!BuildProperty.useCustomInputStyles) {
       return DropdownButtonFormField<T>(
@@ -231,7 +230,7 @@ class InputUtils {
           .toList(),
       onChanged: enabled ? onChanged : null,
       validator: validator,
-      dropdownColor: Colors.white,
+      dropdownColor: backgroundColor,
       icon: Icon(Icons.arrow_drop_down,
           color: AppColor.inputPlaceholder, size: 20),
       decoration: getUnlymeInputDecoration(
@@ -267,6 +266,7 @@ class InputUtils {
     bool enabled = true,
     bool isExpanded = false,
     bool isDense = false,
+    Color backgroundColor = Colors.white,
   }) {
     if (!BuildProperty.useCustomInputStyles) {
       return DropdownButton<T>(
@@ -289,7 +289,7 @@ class InputUtils {
       height: 52.0,
       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
       decoration: BoxDecoration(
-        color: AppColor.inputBackground,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(
           color: AppColor.inputBorder,
@@ -315,7 +315,7 @@ class InputUtils {
         isDense: isDense,
         underline: SizedBox.shrink(),
         icon: Icon(Icons.arrow_drop_down, color: AppColor.inputPlaceholder),
-        dropdownColor: Colors.white,
+        dropdownColor: backgroundColor,
       ),
     );
   }
@@ -329,6 +329,7 @@ class InputUtils {
     required T Function(String) optionsToValue,
     required TextEditingController primaryTextCtrl,
     TextInputType? keyboardType,
+    Color backgroundColor = Colors.white,
   }) {
     if (!BuildProperty.useCustomInputStyles) {
       // Standard style
@@ -380,7 +381,7 @@ class InputUtils {
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: AppColor.inputBackground,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(
           color: AppColor.inputBorder,
@@ -426,7 +427,7 @@ class InputUtils {
                   isDense: true,
                   icon: Icon(Icons.arrow_drop_down,
                       color: AppColor.inputPlaceholder, size: 20),
-                  dropdownColor: Colors.white,
+                  dropdownColor: backgroundColor,
                 ),
               ),
               SizedBox(width: 12.0),
@@ -443,7 +444,7 @@ class InputUtils {
                     disabledBorder: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: backgroundColor,
                   ),
                 ),
               ),
@@ -529,8 +530,6 @@ class InputUtils {
             ? InputDecoration(
                 labelText: labelText,
                 floatingLabelBehavior: FloatingLabelBehavior.auto,
-                filled: true,
-                fillColor: AppColor.inputBackground,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide:

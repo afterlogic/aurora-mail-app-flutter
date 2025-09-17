@@ -26,43 +26,41 @@ class _ComposeBodyState extends BState<ComposeBody> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-        enabled: widget.enable,
-        controller: widget.textCtrl,
-        maxLines: null,
-        minLines: 8,
-        textCapitalization: TextCapitalization.sentences,
-        focusNode: widget.focusNode,
-        decoration: InputDecoration(
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-          filled: true,
-          fillColor: AppColor.inputBackground,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide(
-              color: AppColor.inputBorder,
-              width: 1.0,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide(
-              color: AppColor.inputBorder,
-              width: 1.0,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide(
-              color: AppColor.inputBorder,
-              width: 1.0,
-            ),
-          ),
-          hintText: S.of(context).compose_body_placeholder,
-          hintStyle: TextStyle(
-            color: AppColor.inputPlaceholder,
+      enabled: widget.enable,
+      controller: widget.textCtrl,
+      maxLines: null,
+      minLines: 8,
+      textCapitalization: TextCapitalization.sentences,
+      focusNode: widget.focusNode,
+      decoration: InputDecoration(
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(
+            color: AppColor.inputBorder,
+            width: 1.0,
           ),
         ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(
+            color: AppColor.inputBorder,
+            width: 1.0,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(
+            color: AppColor.inputBorder,
+            width: 1.0,
+          ),
+        ),
+        hintText: S.of(context).compose_body_placeholder,
+        hintStyle: TextStyle(
+          color: AppColor.inputPlaceholder,
+        ),
+      ),
     );
   }
 }

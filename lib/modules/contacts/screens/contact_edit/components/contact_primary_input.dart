@@ -71,8 +71,11 @@ class _ContactPrimaryInputState<T> extends State<ContactPrimaryInput<T>> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
+
     return InputUtils.buildUnlymePrimaryInput<T>(
       label: widget.label,
+      backgroundColor: isDarkTheme ? Colors.black : Colors.white,
       onChanged: (value) {
         if (value != null) widget.onChanged(value);
       },
