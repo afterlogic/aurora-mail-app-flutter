@@ -61,10 +61,12 @@ class AuthApi {
 
     final body = new WebMailApiBody(method: "Login", parameters: parameters);
 
-    final appCheckToken = await _appCheckRepository.getToken();
-    debugPrint('!!! appCheckToken = "$appCheckToken"');
-    final addedHeaders = {"X-Firebase-AppCheck": appCheckToken};
-
+    Map<String, String> addedHeaders = {};
+    if (BuildProperty.enableAppCheck) {
+      final appCheckToken = await _appCheckRepository.getToken();
+      debugPrint('!!! appCheckToken = "$appCheckToken"');
+      addedHeaders = {"X-Firebase-AppCheck": appCheckToken};
+    }
     try {
       final response = await coreModuleForLogin.post(
         body,

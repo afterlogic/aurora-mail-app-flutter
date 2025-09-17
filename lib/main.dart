@@ -41,17 +41,19 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  const appCheckDebugToken =
-      String.fromEnvironment('FIREBASE_APP_CHECK_DEBUG_TOKEN');
-  debugPrint('!!! Dart FIREBASE_APP_CHECK_DEBUG_TOKEN: $appCheckDebugToken');
-  final isDebugBuild = appCheckDebugToken.isNotEmpty;
-  await FirebaseAppCheck.instance.activate(
-    androidProvider:
-        isDebugBuild ? AndroidProvider.debug : AndroidProvider.playIntegrity,
-    appleProvider: isDebugBuild
-        ? AppleProvider.debug
-        : AppleProvider.appAttestWithDeviceCheckFallback,
-  );
+  if (BuildProperty.enableAppCheck) {
+    const appCheckDebugToken =
+        String.fromEnvironment('FIREBASE_APP_CHECK_DEBUG_TOKEN');
+    debugPrint('!!! Dart FIREBASE_APP_CHECK_DEBUG_TOKEN: $appCheckDebugToken');
+    final isDebugBuild = appCheckDebugToken.isNotEmpty;
+    await FirebaseAppCheck.instance.activate(
+      androidProvider:
+          isDebugBuild ? AndroidProvider.debug : AndroidProvider.playIntegrity,
+      appleProvider: isDebugBuild
+          ? AppleProvider.debug
+          : AppleProvider.appAttestWithDeviceCheckFallback,
+    );
+  }
 
   if (!kDebugMode) {
     FlutterError.onError = (details) {

@@ -72,6 +72,7 @@ logger: true
 pushNotification: true
 backgroundSync: false
 supportAllowAccess: true
+enableAppCheck: false
 
 # Android splash screen
 useBackgroundImage: false

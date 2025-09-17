@@ -49,6 +49,7 @@ showPushNotificatonsSettings: true
 selfDestructingEmail: false
 useMainLogo: false
 supportAllowAccess: false
+enableAppCheck: false
 
 # ===================================================================
 # FIDO Security key settings
