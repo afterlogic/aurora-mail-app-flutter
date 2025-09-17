@@ -151,7 +151,6 @@ class _CalendarPageState extends State<CalendarPage>
           ),
         ),
         title: Text(S.of(context).calendar),
-        backgroundColor: AppColor.appBarBackground,
         shadow: BoxShadow(color: Colors.transparent),
       ),
       body: Column(

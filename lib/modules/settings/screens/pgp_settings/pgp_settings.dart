@@ -61,7 +61,6 @@ class _PgpSettingsState extends BState<PgpSettings> {
                 onPressed: () => Navigator.of(context).pop(),
               ),
               title: Text(S.of(context).label_pgp_settings),
-              backgroundColor: AppColor.appBarBackground,
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: Column(

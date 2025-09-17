@@ -80,7 +80,6 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
                 onPressed: () => Navigator.of(context).pop(),
               ),
               title: Text(S.of(context).settings_sync),
-              backgroundColor: AppColor.appBarBackground,
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: Column(

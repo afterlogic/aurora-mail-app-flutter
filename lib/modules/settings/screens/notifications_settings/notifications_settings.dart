@@ -36,7 +36,6 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
               title: Text(
                 S.of(context).label_notifications_settings,
               ),
-              backgroundColor: AppColor.appBarBackground,
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: Column(
@@ -84,16 +83,22 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                                 style: theme.textTheme.subtitle1,
                               ),
                               Expanded(
-                                  child: Text(
-                                PushNotificationsManager.instance.token ?? "N/A",
-                                textAlign: TextAlign.right,
-                              )),
+                                child: Text(
+                                  PushNotificationsManager.instance.token ??
+                                      "N/A",
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
                               IconButton(
                                 icon: Icon(Icons.content_copy),
                                 onPressed: () {
-                                  Clipboard.setData(ClipboardData(
+                                  Clipboard.setData(
+                                    ClipboardData(
                                       text: PushNotificationsManager
-                                          .instance.token ?? ""));
+                                              .instance.token ??
+                                          "",
+                                    ),
+                                  );
                                   showSnack(
                                     isError: false,
                                     context: context,
@@ -117,16 +122,22 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                                 style: theme.textTheme.subtitle1,
                               ),
                               Expanded(
-                                  child: Text(
-                                PushNotificationsManager.instance.deviceId ?? "N/A",
-                                textAlign: TextAlign.right,
-                              )),
+                                child: Text(
+                                  PushNotificationsManager.instance.deviceId ??
+                                      "N/A",
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
                               IconButton(
                                 icon: Icon(Icons.content_copy),
                                 onPressed: () {
-                                  Clipboard.setData(ClipboardData(
+                                  Clipboard.setData(
+                                    ClipboardData(
                                       text: PushNotificationsManager
-                                          .instance.deviceId ?? ""));
+                                              .instance.deviceId ??
+                                          "",
+                                    ),
+                                  );
                                   showSnack(
                                     isError: false,
                                     context: context,

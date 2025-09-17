@@ -16,10 +16,11 @@ class AppTheme {
     scaffoldBackgroundColor: Colors.white,
     splashFactory: InkRipple.splashFactory,
     appBarTheme: _appBarThemeLight,
+    bottomNavigationBarTheme: _bottomNavigationBarThemeLight,
     buttonTheme: _buttonTheme,
     dialogTheme: _dialogTheme,
     floatingActionButtonTheme: _fabTheme,
-    inputDecorationTheme: _inputDecorationTheme,
+    inputDecorationTheme: _inputDecorationThemeLight,
     progressIndicatorTheme: _progressIndicatorTheme,
     snackBarTheme: _snackBarTheme,
     textButtonTheme: _textButtonTheme,
@@ -39,11 +40,12 @@ class AppTheme {
     scaffoldBackgroundColor: Color(0xFF1A1A1A),
     splashFactory: InkRipple.splashFactory,
     appBarTheme: _appBarThemeDark,
+    bottomNavigationBarTheme: _bottomNavigationBarThemeDark,
     bottomAppBarTheme: BottomAppBarTheme(color: Colors.black),
     buttonTheme: _buttonTheme,
     dialogTheme: _dialogTheme,
     floatingActionButtonTheme: _fabTheme,
-    inputDecorationTheme: _inputDecorationTheme,
+    inputDecorationTheme: _inputDecorationThemeDark,
     snackBarTheme: _snackBarTheme,
     textButtonTheme: _textButtonTheme,
     textTheme: _textThemeDark,
@@ -59,7 +61,7 @@ class AppTheme {
       statusBarBrightness: Brightness.light,
       systemNavigationBarColor: AppColor.bottomNavigationBackground,
     ),
-    color: Colors.white,
+    backgroundColor: AppColor.appBarBackground,
     iconTheme: IconThemeData(color: Colors.black),
     actionsIconTheme: IconThemeData(color: Colors.black),
     titleTextStyle: TextTheme(
@@ -91,9 +93,9 @@ class AppTheme {
   static final _appBarThemeDark = AppBarTheme(
     systemOverlayStyle: SystemUiOverlayStyle(
       statusBarBrightness: Brightness.dark,
-      systemNavigationBarColor: AppColor.bottomNavigationBackground,
+      systemNavigationBarColor: AppColor.bottomNavigationBackgroundDark,
     ),
-    color: Colors.black,
+    backgroundColor: AppColor.appBarBackgroundDark,
     iconTheme: IconThemeData(color: Colors.white),
     actionsIconTheme: IconThemeData(color: Colors.white),
     titleTextStyle: TextTheme(
@@ -122,6 +124,14 @@ class AppTheme {
     ).bodyMedium,
   );
 
+  static final _bottomNavigationBarThemeLight = BottomNavigationBarThemeData(
+    backgroundColor: AppColor.bottomNavigationBackground,
+  );
+
+  static final _bottomNavigationBarThemeDark = BottomNavigationBarThemeData(
+    backgroundColor: AppColor.bottomNavigationBackgroundDark,
+  );
+
   static final _buttonTheme = ButtonThemeData(
     buttonColor: AppColor.accent,
     textTheme: ButtonTextTheme.primary,
@@ -141,8 +151,16 @@ class AppTheme {
     backgroundColor: AppColor.accent,
   );
 
-  static final _inputDecorationTheme = InputDecorationTheme(
+  static final _inputDecorationThemeLight = InputDecorationTheme(
     floatingLabelStyle: TextStyle(color: AppColor.primary),
+    filled: true,
+    fillColor: AppColor.inputBackground,
+  );
+
+  static final _inputDecorationThemeDark = InputDecorationTheme(
+    floatingLabelStyle: TextStyle(color: AppColor.primary),
+    filled: true,
+    fillColor: Colors.transparent,
   );
 
   static final _progressIndicatorTheme = ProgressIndicatorThemeData(

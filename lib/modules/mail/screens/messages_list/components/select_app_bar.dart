@@ -12,7 +12,6 @@ import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:theme/app_color.dart';
 
 class SelectAppBar extends StatefulWidget {
   final SelectionController<int, Message> controller;
@@ -80,7 +79,6 @@ class _SelectAppBarState extends BState<SelectAppBar> {
                 ),
               ];
         return AMAppBar(
-          backgroundColor: AppColor.appBarBackground,
           shadow: BoxShadow(color: Colors.transparent),
           leading: IconButton(
             icon: Icon(

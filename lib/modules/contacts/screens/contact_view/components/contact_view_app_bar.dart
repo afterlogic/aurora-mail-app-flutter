@@ -7,7 +7,6 @@ import 'package:aurora_mail/shared_ui/asset_svg_icon.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:theme/app_color.dart';
 
 enum ContactViewAppBarAction {
   attach,
@@ -130,7 +129,6 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
           name,
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
-        backgroundColor: AppColor.appBarBackground,
         shadow: BoxShadow(color: Colors.transparent),
         leading: IconButton(
           icon: AppBarIcons.back(context: context),

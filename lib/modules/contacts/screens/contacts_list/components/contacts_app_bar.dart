@@ -15,7 +15,6 @@ import 'package:aurora_mail/utils/storage_util.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:theme/app_color.dart';
 
 class ContactsAppBar extends StatefulWidget implements PreferredSizeWidget {
   final bool isAppBar;
@@ -191,7 +190,6 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
                 onPressed: () => Scaffold.of(context).openDrawer(),
               ),
         title: _buildTitle(context, state),
-        backgroundColor: AppColor.appBarBackground,
         shadow: BoxShadow(color: Colors.transparent),
         actions: widget.enable
             ? <Widget>[
@@ -226,7 +224,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
       final storageName = getStorageName(displayName.substring(6), context);
       if (storageName != null) return storageName;
     }
-    
+
     // Handle English storage names from server
     switch (displayName) {
       case "Personal":

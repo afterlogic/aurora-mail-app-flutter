@@ -11,7 +11,6 @@ import 'package:aurora_ui_kit/components/am_app_bar.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:theme/app_color.dart';
 
 class SelectAppBar extends StatelessWidget {
   final SelectionController<String, Contact> controller;
@@ -29,7 +28,6 @@ class SelectAppBar extends StatelessWidget {
                 .firstWhereOrNull((e) => e.name == state.selectedStorage),
             context);
         return AMAppBar(
-          backgroundColor: AppColor.appBarBackground,
           shadow: BoxShadow(color: Colors.transparent),
           leading: IconButton(
             icon: Icon(

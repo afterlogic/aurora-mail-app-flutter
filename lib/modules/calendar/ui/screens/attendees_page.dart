@@ -64,7 +64,6 @@ class _AttendeesPageState extends State<AttendeesPage> {
     return Scaffold(
       appBar: AMAppBar(
         title: Text(S.of(context).calendar_add_attendee_title),
-        backgroundColor: AppColor.appBarBackground,
         shadow: BoxShadow(color: Colors.transparent),
         actions: [
           IconButton(

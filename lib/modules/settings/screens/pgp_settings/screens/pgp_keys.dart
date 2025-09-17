@@ -57,7 +57,6 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
               title: Text(
                 S.of(context).label_pgp_all_public_key,
               ),
-              backgroundColor: AppColor.appBarBackground,
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: Column(

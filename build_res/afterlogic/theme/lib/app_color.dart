@@ -13,10 +13,12 @@ class AppColor {
 
   // UI Components
   static const appBarBackground = Color(0xFFF4F1FD);
+  static const appBarBackgroundDark = Colors.black;
   static const appBarText = Color(0xFF212121); // for compatibility
   static const appBarDivider =
       Color(0xFFEBEBEB); // only used when useAppBarDivider is enabled
   static const bottomNavigationBackground = Color(0xFFF4F1FD);
+  static const bottomNavigationBackgroundDark = Colors.black;
 
   // Text colors
   static const contactsPrimary = Color(0xFF212121); // for compatibility
