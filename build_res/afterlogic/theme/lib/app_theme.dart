@@ -154,7 +154,7 @@ class AppTheme {
   static final _inputDecorationThemeLight = InputDecorationTheme(
     floatingLabelStyle: TextStyle(color: AppColor.primary),
     filled: true,
-    fillColor: AppColor.inputBackground,
+    fillColor: Colors.white,
   );
 
   static final _inputDecorationThemeDark = InputDecorationTheme(

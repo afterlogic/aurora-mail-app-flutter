@@ -143,6 +143,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
           : null,
       body: _gradientWrap(
         SafeArea(
+          top: false,
           child: BlocListener(
               bloc: authBloc,
               listener: (context, state) {
