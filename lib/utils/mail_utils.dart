@@ -499,8 +499,8 @@ class MailUtils {
     if (toPrimary.isEmpty) {
       toPrimary = S.of(context).messages_no_receivers;
     }
-
     final accentColor = _getWebColor(theme.primaryColor);
+
     return "<!doctype html>" +
         """
         <html lang="en">
@@ -976,8 +976,8 @@ class MailUtils {
   ''';
 
   static void updateNodesStyle(List<Node> nodes) {
-    nodes.forEach((c) {
-      c.nodes.forEach((node) {
+    nodes.forEach((e) {
+      e.nodes.forEach((node) {
         if (node.attributes.containsKey("data-x-style-url")) {
           var backgroundImageUrl = node.attributes["data-x-style-url"];
           backgroundImageUrl =
@@ -991,7 +991,35 @@ class MailUtils {
         }
       });
 
-      updateNodesStyle(c.nodes);
+      updateNodesStyle(e.nodes);
+    });
+  }
+
+  // Replaces all style-attributes 'width' with 'max-width'
+  static void updateNodesWidth(List<Node> nodes) {
+    nodes.forEach((e) {
+      e.nodes.forEach((node) {
+        if (node.attributes.containsKey("style")) {
+          debugPrint('!!! node.attributes: ${node.attributes}');
+          final style = node.attributes["style"];
+          final styleList = style.split(";");
+          for (int i = 0; i < styleList.length; i++) {
+            final e = styleList[i].split(':');
+            if (e.length != 2) continue;
+
+            final name = e.first;
+            final value = e.last;
+            if (name.toLowerCase().contains('width') &&
+                !name.toLowerCase().contains('-width')) {
+              styleList[i] = 'max-width: $value';
+            }
+          }
+          node.attributes["style"] = styleList.join('; ');
+          debugPrint('!!! node.attributes: ${node.attributes}');
+        }
+      });
+
+      updateNodesWidth(e.nodes);
     });
   }
 }

@@ -196,7 +196,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     }
   }
 
-  _decrypt(EncryptType type) async {
+  Future<void> _decrypt(EncryptType type) async {
     String pass;
     final message = widget.message;
     if (type == EncryptType.Encrypt) {
@@ -278,8 +278,9 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
                       bloc: _messageViewBloc,
                       listener: (context, state) {
                         if (state is DecryptComplete) {
-                          decryptedText = MailUtils.plainToHtml(state.text);
-                          setState(() {});
+                          setState(() {
+                            decryptedText = MailUtils.plainToHtml(state.text);
+                          });
 
                           _showSnack(
                               state.type == EncryptType.Sign
