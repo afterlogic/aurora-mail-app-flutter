@@ -6,7 +6,6 @@ import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:theme/app_color.dart';
 
 enum MailViewAppBarAction {
   move,
@@ -33,9 +32,7 @@ class MailViewAppBarMock extends StatelessWidget
   Widget build(BuildContext context) {
     return PreferredSize(
       preferredSize: preferredSize,
-      child: AMAppBar(
-        backgroundColor: AppColor.appBarBackground,
-      ),
+      child: AMAppBar(),
     );
   }
 }
@@ -59,7 +56,6 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
           builder: (context, state) {
             final folderType = state is FolderTypeState ? state.type : null;
             return AMAppBar(
-              backgroundColor: AppColor.appBarBackground,
               shadow: BoxShadow(color: Colors.transparent),
               leading: IconButton(
                 icon: AppBarIcons.back(context: context),

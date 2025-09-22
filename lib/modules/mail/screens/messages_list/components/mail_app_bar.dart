@@ -18,7 +18,6 @@ import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:theme/app_color.dart';
 
 class MailAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String initSearch;
@@ -196,7 +195,6 @@ class MailAppBarState extends BState<MailAppBar> {
     final isTablet = LayoutConfig.of(context).isTablet;
     return AMAppBar(
       key: Key("default_mail_app_bar"),
-      backgroundColor: AppColor.appBarBackground,
       shadow: BoxShadow(color: Colors.transparent),
       leading: isTablet
           ? null

@@ -3,7 +3,6 @@ import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:theme/app_color.dart';
 
 enum ContactEditAppBarAction { save }
 
@@ -21,7 +20,6 @@ class ContactEditAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AMAppBar(
       title: Text(
           isEdit ? S.of(context).contacts_edit : S.of(context).contacts_add),
-      backgroundColor: AppColor.appBarBackground,
       shadow: BoxShadow(color: Colors.transparent),
       leading: IconButton(
         icon: AppBarIcons.back(context: context),

@@ -33,6 +33,7 @@ import 'package:theme/app_color.dart';
 
 class EventCreationPage extends StatefulWidget {
   static const name = "event_creation_page";
+
   const EventCreationPage({super.key});
 
   @override
@@ -182,8 +183,11 @@ class _EventCreationPageState extends State<EventCreationPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AMAppBar(
-        title: Text(_selectedEvent == null ? S.of(context).calendar_create_event_title : S.of(context).calendar_edit_event_title),
-        backgroundColor: AppColor.appBarBackground,
+        title: Text(
+          _selectedEvent == null
+              ? S.of(context).calendar_create_event_title
+              : S.of(context).calendar_edit_event_title,
+        ),
         shadow: BoxShadow(color: Colors.transparent),
         leading: IconButton(
           icon: AppBarIcons.back(context: context),
@@ -197,9 +201,13 @@ class _EventCreationPageState extends State<EventCreationPage> {
                 }
                 if (_selectedCalendar == null) {
                   showErrorSnack(
-                      context: context,
-                      scaffoldState: _scaffoldKey.currentState,
-                      msg: ErrorToShow.message(S.of(context).calendar_please_select_calendar));
+                    context: context,
+                    scaffoldState: _scaffoldKey.currentState,
+                    msg: ErrorToShow.message(
+                      S.of(context).calendar_please_select_calendar,
+                    ),
+                  );
+
                   return;
                 }
                 if (_selectedEvent == null) {

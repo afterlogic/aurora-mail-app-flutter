@@ -1,25 +1,24 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 class AppColor {
   // Main palette
-  static const _color = const Color(0xFF009FFF);
-  static const primary = _color;
-  static const primaryVariant = _color;
-  static const secondary = _color;
-  static const secondaryVariant = _color;
-  static const accent = _color;
-  static const accentVariant = _color;
+  static const primary = const Color(0xFF009FFF);
+  static const primaryVariant = primary;
+  static const secondary = primary;
+  static const secondaryVariant = primary;
+  static const accent = primary;
+  static const accentVariant = primary;
   static const surface = Color(0xFFFFFFFF);
   static const warning = Color(0xFFF44336);
 
   // UI Components
   static const appBarBackground = Color(0xFFF4F1FD);
+  static const appBarBackgroundDark = Colors.black;
   static const appBarText = Color(0xFF212121); // for compatibility
   static const appBarDivider =
       Color(0xFFEBEBEB); // only used when useAppBarDivider is enabled
   static const bottomNavigationBackground = Color(0xFFF4F1FD);
+  static const bottomNavigationBackgroundDark = Colors.black;
 
   // Text colors
   static const contactsPrimary = Color(0xFF212121); // for compatibility
@@ -42,10 +41,14 @@ class AppColor {
   static const starInactiveDark = Color(0xFF808080);
 
   // Icon colors
+  // AppBar icons
+  static const appBarIconLight = Colors.black;
+  static const appBarIconDark = Colors.white;
+
   // Bottom bar icons
   // Light theme
   static const bottomBarIconLight = Color(0xFF6F788D); // inactive
-  static const bottomBarIconActiveLight = Color(0xFF212121); // active
+  static const bottomBarIconActiveLight = Color(0xFF041844); // active
   // Dark theme
   static const bottomBarIconDark = Color(0xFF698AD0); // inactive
   static const bottomBarIconActiveDark = Color(0xFFFFFFFF); // active

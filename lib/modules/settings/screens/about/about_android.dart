@@ -76,7 +76,6 @@ class _AboutAndroidState extends BState<AboutAndroid> {
                 onPressed: () => Navigator.of(context).pop(),
               ),
               title: Text(S.of(context).settings_about),
-              backgroundColor: AppColor.appBarBackground,
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: Column(

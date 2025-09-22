@@ -232,7 +232,6 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
       body = Scaffold(
         appBar: AMAppBar(
           title: Text(S.of(context).settings),
-          backgroundColor: AppColor.appBarBackground,
           shadow: BoxShadow(color: Colors.transparent),
         ),
         body: Column(
@@ -291,7 +290,6 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
           ? null
           : AMAppBar(
               title: Text(S.of(context).settings),
-              backgroundColor: AppColor.appBarBackground,
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: isTablet

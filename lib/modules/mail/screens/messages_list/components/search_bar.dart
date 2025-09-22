@@ -6,7 +6,6 @@ import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:theme/app_color.dart';
 
 class SearchBar extends StatefulWidget {
   final Function onCancel;
@@ -103,7 +102,6 @@ class SearchBarState extends BState<SearchBar> {
           onChanged: _getMessages,
           controller: widget.searchCtrl,
         ),
-        backgroundColor: AppColor.appBarBackground,
         shadow: BoxShadow(color: Colors.transparent),
         actions: <Widget>[
           IconButton(

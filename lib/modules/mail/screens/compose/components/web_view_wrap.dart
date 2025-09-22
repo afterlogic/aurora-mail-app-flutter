@@ -33,9 +33,10 @@ class _WebViewWrapState extends State<WebViewWrap> {
   dispose() {
     super.dispose();
     scroll.removeListener(listener);
+    scroll.dispose();
   }
 
-  listener() {
+  void listener() {
     if (scroll.offset >= scroll.position.maxScrollExtent) {
       setState(() {
         setFocus(true);
@@ -43,7 +44,7 @@ class _WebViewWrapState extends State<WebViewWrap> {
     }
   }
 
-  setFocus(bool value) async {
+  Future<void> setFocus(bool value) async {
     final position = value
         ? scroll.position.maxScrollExtent
         : scroll.position.minScrollExtent;
@@ -62,8 +63,9 @@ class _WebViewWrapState extends State<WebViewWrap> {
     } else {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
     }
-    focused = value;
-    setState(() {});
+    setState(() {
+      focused = value;
+    });
   }
 
   @override
@@ -72,6 +74,7 @@ class _WebViewWrapState extends State<WebViewWrap> {
       builder: (context, size) {
         final bottom = MediaQuery.of(context).padding.bottom;
         final closeWebView = widget.closeWebView(() => setFocus(false));
+
         return SingleChildScrollView(
           controller: scroll,
           child: Column(
@@ -87,11 +90,11 @@ class _WebViewWrapState extends State<WebViewWrap> {
                         ? widget.webView
                         : GestureDetector(
                             behavior: HitTestBehavior.opaque,
-                            onTapDown: focused
-                                ? null
-                                : (_) {
-                                    setFocus(true);
-                                  },
+                            onTapDown: (_) {
+                              if (focused) return;
+
+                              setFocus(true);
+                            },
                             child: IgnorePointer(
                               ignoring: !focused,
                               child: widget.webView,

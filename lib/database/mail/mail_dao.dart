@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
 
 import '../app_database.dart';
@@ -154,18 +153,17 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
         .getSingle();
   }
 
-  Future<Message?> getMessageById(String messageId, String folder) {
-    return (select(mail)
-          ..where((item) => item.messageId.equals(messageId))
-          ..where((item) => item.folder.equals(folder)))
-        .get()
-        .then((value) {
-      if (value.isNotEmpty) {
-        return value.first;
-      } else {
-        return null;
-      }
-    });
+  Future<Message?> getMessageById(String messageId, String folder) async {
+    try {
+      final value = await (select(mail)
+            ..where((item) => item.messageId.equals(messageId))
+            ..where((item) => item.folder.equals(folder)))
+          .get();
+
+      return value.isNotEmpty ? value.first : null;
+    } catch (e, st) {
+      return null;
+    }
   }
 
   Future<Message> fillMessage(Message newMessage) async {
@@ -224,18 +222,24 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     return (delete(mail)..where((m) => m.userLocalId.equals(userLocalId))).go();
   }
 
-  Future<Message> getMessageByUid(
+  Future<Message?> getMessageByUid(
     int uid,
     String folder,
     Account account,
     User user,
-  ) {
-    return (select(mail)
-          ..where((tbl) => tbl.accountEntityId.equals(account.entityId))
-          ..where((tbl) => tbl.folder.equals(folder))
-          ..where((tbl) => tbl.userLocalId.equals(user.localId))
-          ..where((tbl) => tbl.uid.equals(uid)))
-        .getSingle();
+  ) async {
+    try {
+      final result = await (select(mail)
+            ..where((tbl) => tbl.accountEntityId.equals(account.entityId))
+            ..where((tbl) => tbl.folder.equals(folder))
+            ..where((tbl) => tbl.userLocalId.equals(user.localId))
+            ..where((tbl) => tbl.uid.equals(uid)))
+          .getSingle();
+
+      return result;
+    } catch (e, st) {
+      return null;
+    }
   }
 
   Future<List<Message>> getMessageWithNotBody(

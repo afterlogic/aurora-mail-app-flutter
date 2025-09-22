@@ -629,78 +629,83 @@ class MailMethods {
 
   Future<Message> getMessageById(String messageId, String folder) async {
     try {
-      var message = await _mailDao.getMessageById(messageId, folder);
+      Message message = await _mailDao.getMessageById(messageId, folder);
       if (message != null) {
         return message;
-      } else {
-        var messageInfos = await FolderMessageInfo.getMessageInfo(
+      }
+
+      List<MessageInfo> messageInfos = await FolderMessageInfo.getMessageInfo(
+        folder,
+        account.localId,
+      );
+      final lastUid =
+          messageInfos?.isNotEmpty == true ? messageInfos.first.uid : null;
+      if (lastUid == null) {
+        throw ErrorToShow.message(S.current.error_message_not_found);
+      }
+      final response = await _mailApi.getMessageById(
+        messageId,
+        folder,
+        lastUid,
+      );
+      if (response == null) {
+        throw ErrorToShow.message(S.current.error_message_not_found);
+      }
+      final messageInfo = MessageInfo(
+        uid: response["Uid"] as int,
+        hasThread: false,
+        flags: [],
+      );
+      message = await _mailDao.getMessageByUid(
+        messageInfo.uid,
+        folder,
+        account,
+        user,
+      );
+      if (message?.hasBody == true) {
+        return message;
+      }
+
+      messageInfos = await FolderMessageInfo.getMessageInfo(
+        folder,
+        account.localId,
+      );
+      try {
+        message = await _mailDao.addEmptyMessage(
+          messageInfo,
+          account,
+          user,
+          folder,
+        );
+        messageInfos.insert(0, messageInfo);
+        await FolderMessageInfo.setMessageInfo(
           folder,
           account.localId,
+          messageInfos,
         );
-        final lastUid =
-            messageInfos?.isNotEmpty == true ? messageInfos.first.uid : null;
-        if (lastUid == null) {
-          throw ErrorToShow.message(S.current.error_message_not_found);
-        }
-        final response = await _mailApi.getMessageById(
-          messageId,
-          folder,
-          lastUid,
-        );
-        if (response == null) {
-          throw ErrorToShow.message(S.current.error_message_not_found);
-        }
-        final messageInfo = MessageInfo(
-          uid: response["Uid"] as int,
-          hasThread: false,
-          flags: [],
-        );
+      } catch (e, st) {
         message = await _mailDao.getMessageByUid(
           messageInfo.uid,
           folder,
           account,
           user,
         );
-        if (message != null) {
-          if (message.hasBody == true) {
-            return message;
-          }
-        } else {
-          messageInfos = await FolderMessageInfo.getMessageInfo(
-            folder,
-            account.localId,
-          );
-          try {
-            message = await _mailDao.addEmptyMessage(
-                messageInfo, account, user, folder);
-            messageInfos.insert(0, messageInfo);
-            await FolderMessageInfo.setMessageInfo(
-              folder,
-              account.localId,
-              messageInfos,
-            );
-          } catch (e) {
-            message = await _mailDao.getMessageByUid(
-              messageInfo.uid,
-              folder,
-              account,
-              user,
-            );
-            if (message.hasBody == true) {
-              return message;
-            }
-          }
+        if (message?.hasBody == true) {
+          return message;
         }
-        final newMessages =
-            await Mail.getMessageObjFromServerAndUpdateInfoHasBody(
-          [response],
-          [message],
-          user.localId,
-          account,
-        );
-        return _mailDao.fillMessage(newMessages.first);
       }
-    } catch (e) {
+
+      final newMessages =
+          await Mail.getMessageObjFromServerAndUpdateInfoHasBody(
+        [response],
+        [message],
+        user.localId,
+        account,
+      );
+      message = await _mailDao.fillMessage(newMessages.first);
+
+      return message;
+    } catch (e, st) {
       debugPrint('!!! $e');
       rethrow;
     }

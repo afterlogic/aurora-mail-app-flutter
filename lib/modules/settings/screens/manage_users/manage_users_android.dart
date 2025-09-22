@@ -36,7 +36,6 @@ class _ManageUsersAndroidState extends BState<ManageUsersAndroid> {
           ? null
           : AMAppBar(
               title: Text(S.of(context).settings_accounts_manage),
-              backgroundColor: AppColor.appBarBackground,
               shadow: BoxShadow(color: Colors.transparent),
               actions: <Widget>[
                 IconButton(

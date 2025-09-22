@@ -591,6 +591,8 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
       return ContactInput(label, _getPrimaryEmailCtrl(),
           keyboardType: TextInputType.emailAddress);
     } else {
+      final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
+
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Row(
@@ -603,6 +605,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                 value: _primaryEmail,
                 items: [0, 1, 2],
                 isDense: true,
+                backgroundColor: isDarkTheme ? Colors.black : Colors.white,
                 onChanged: (value) {
                   if (value != null) setState(() => _primaryEmail = value);
                 },
@@ -643,6 +646,8 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
       return ContactInput(label, _getPrimaryPhoneCtrl(),
           keyboardType: TextInputType.phone);
     } else {
+      final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
+
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Row(
@@ -655,6 +660,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                 value: _primaryPhone,
                 items: [0, 1, 2],
                 isDense: true,
+                backgroundColor: isDarkTheme ? Colors.black : Colors.white,
                 onChanged: (value) {
                   if (value != null) setState(() => _primaryPhone = value);
                 },
@@ -694,6 +700,8 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
     if (!_showAllFields) {
       return ContactInput(label, _getPrimaryAddressCtrl());
     } else {
+      final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
+
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Row(
@@ -706,6 +714,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                 value: _primaryAddress,
                 items: [0, 1],
                 isDense: true,
+                backgroundColor: isDarkTheme ? Colors.black : Colors.white,
                 onChanged: (value) {
                   if (value != null) setState(() => _primaryAddress = value);
                 },

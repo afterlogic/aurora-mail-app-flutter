@@ -214,40 +214,23 @@ class MessageWebViewState extends BState<MessageWebView> {
       _htmlData = htmlData;
       _controller?.loadRequest(Uri.parse(_getHtmlUri(htmlData)));
       if (mounted) setState(() {});
+
       return;
-    } else {
-      htmlData = widget.message.htmlBody;
     }
+
+    htmlData = widget.message.htmlBody;
+
+    // To prevent content from exceeding the width of the screen [869acj3da].
+    final document = html.parse(htmlData);
+    MailUtils.updateNodesWidth(document.nodes.toList());
+    htmlData = document.outerHtml;
 
     if (showImages) {
       htmlData = htmlData
           .replaceAll("data-x-src=", "src=")
           .replaceAll("src=\"http:", "src=\"https:");
-
       final document = html.parse(htmlData);
-
-      void getAllChildren(nodes) {
-        nodes.forEach((c) {
-          c.nodes.forEach((node) {
-            if (node.attributes.containsKey("data-x-style-url") as bool) {
-              var backgroundImageUrl =
-                  node.attributes["data-x-style-url"] as String;
-              backgroundImageUrl =
-                  backgroundImageUrl.replaceAll("http://", "https://");
-              node.attributes.remove("data-x-style-url");
-
-              String style = node.attributes["style"] as String;
-              style = style.endsWith(";") ? style : style + "; ";
-              style += backgroundImageUrl;
-              node.attributes["style"] = style;
-            }
-          });
-
-          getAllChildren(c.nodes);
-        });
-      }
-
-      getAllChildren(document.nodes.toList());
+      MailUtils.updateNodesStyle(document.nodes.toList());
       htmlData = document.outerHtml;
     }
 
@@ -306,6 +289,7 @@ class MessageWebViewState extends BState<MessageWebView> {
       showLightEmail: false,
       isStarred: _isStarred,
     );
+
     return Uri.dataFromString(wrappedHtml,
             mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
         .toString();
@@ -385,7 +369,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     }
   }
 
-  setStarred(bool isStarred) {
+  void setStarred(bool isStarred) {
     _isStarred = isStarred;
     _mailBloc.add(SetStarred([widget.message], isStarred));
   }

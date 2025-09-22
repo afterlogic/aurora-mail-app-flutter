@@ -70,7 +70,6 @@ class ComposeAndroid extends StatefulWidget {
 
 class _ComposeAndroidState extends BState<ComposeAndroid>
     with NotSavedChangesMixin {
-  
   Aliases alias;
   AccountIdentity identity;
   ComposeBloc _bloc;
@@ -107,8 +106,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
   final _ccTextCtrl = new TextEditingController();
   final _bccTextCtrl = new TextEditingController();
   final _subjectTextCtrl = new TextEditingController();
-  final _bodyTextCtrl = ComposeWebViewController();
   final _fromCtrl = TextEditingController();
+  final _bodyTextCtrl = ComposeWebViewController();
 
   @override
   void initState() {
@@ -135,7 +134,16 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     ccNode.dispose();
     toNode.dispose();
     bccNode.dispose();
+    subjectNode.dispose();
     bodyNode.dispose();
+
+    _toTextCtrl.dispose();
+    _ccTextCtrl.dispose();
+    _bccTextCtrl.dispose();
+    _subjectTextCtrl.dispose();
+    _fromCtrl.dispose();
+
+    _bodyTextCtrl.dispose();
   }
 
   void _prepareMessage() async {
@@ -332,7 +340,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
         user,
       );
     } catch (e) {
-      print(e);
+      debugPrint('!!! $e');
     }
   }
 
@@ -912,7 +920,6 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     // }
 
     Widget body = WebViewWrap(
-      
       simplified: widget.composeAction is OpenFromNotes,
       topWidget: Container(
         child: Column(
@@ -1151,7 +1158,9 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
             height: 1,
             color: AppColor.appBarDivider,
           ),
-        Expanded(child: body),
+        Expanded(
+          child: body,
+        ),
         if (!keyboardIsOpened &&
             BuildProperty.cryptoEnable &&
             widget.composeAction is! OpenFromNotes)
@@ -1192,7 +1201,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     );
   }
 
-  _createSelfDestructingEmail() async {
+  Future<void> _createSelfDestructingEmail() async {
     final subject = _subjectTextCtrl.text;
     final body = MailUtils.htmlToPlain(await _bodyTextCtrl.getText());
 

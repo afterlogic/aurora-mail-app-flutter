@@ -25,28 +25,7 @@ class ComposeWebViewController {
 
       final document = html.parse(text);
 
-      void getAllChildren(nodes) {
-        nodes.forEach((c) {
-          c.nodes.forEach((node) {
-            if (node.attributes.containsKey("data-x-style-url") as bool) {
-              var backgroundImageUrl =
-                  node.attributes["data-x-style-url"] as String;
-              backgroundImageUrl =
-                  backgroundImageUrl.replaceAll("http://", "https://");
-              node.attributes.remove("data-x-style-url");
-
-              String style = node.attributes["style"] as String;
-              style = style.endsWith(";") ? style : style + "; ";
-              style += backgroundImageUrl;
-              node.attributes["style"] = style;
-            }
-          });
-
-          getAllChildren(c.nodes);
-        });
-      }
-
-      getAllChildren(document.nodes.toList());
+      MailUtils.updateNodesStyle(document.nodes.toList());
       text = document.outerHtml;
     }
     ;
@@ -92,7 +71,7 @@ class ComposeWebViewController {
     }
   }
 
-  setIsHtml(bool html) async {
+  Future<void> setIsHtml(bool html) async {
     _isHtml = html;
     if (_webViewController != null) {
       if (html) {
@@ -103,7 +82,7 @@ class ComposeWebViewController {
     }
   }
 
-  init(WebViewController webViewController) {
+  void init(WebViewController webViewController) {
     _webViewController = webViewController;
     setText(_text);
     setIsHtml(_isHtml);
@@ -120,13 +99,13 @@ class ComposeWebView extends StatefulWidget {
   final bool removeForcedHeight;
   final Function init;
 
-  const ComposeWebView(
-      {Key key,
-      this.textCtrl,
-      this.enable,
-      this.init,
-      this.removeForcedHeight = false})
-      : super(key: key);
+  const ComposeWebView({
+    this.textCtrl,
+    this.enable,
+    this.init,
+    this.removeForcedHeight = false,
+    Key key,
+  }) : super(key: key);
 
   @override
   _ComposeWebViewState createState() => _ComposeWebViewState();
@@ -145,11 +124,12 @@ class _ComposeWebViewState extends State<ComposeWebView> {
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
-            onProgress: (int progress) {},
-            onPageStarted: (String url) {},
-            onPageFinished: (String url) => {init()},
-            onWebResourceError: (WebResourceError error) {},
-            onNavigationRequest: navigationDelegate),
+          onProgress: (int progress) {},
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) => {init()},
+          onWebResourceError: (WebResourceError error) {},
+          onNavigationRequest: navigationDelegate,
+        ),
       );
   }
 
@@ -159,50 +139,28 @@ class _ComposeWebViewState extends State<ComposeWebView> {
     initHtml();
   }
 
-  initHtml() {
-    var htmlData = MailUtils.wrapInHtmlEditor(
-        context, "", true, widget.removeForcedHeight);
+  void initHtml() {
+    String htmlData = MailUtils.wrapInHtmlEditor(
+      context,
+      "",
+      true,
+      widget.removeForcedHeight,
+    );
 
-    if (true) {
-      htmlData = htmlData
-          .replaceAll("data-x-src=", "src=")
-          .replaceAll("src=\"http:", "src=\"https:");
-      final document = html.parse(htmlData);
-      void getAllChildren(nodes) {
-        nodes.forEach((c) {
-          c.nodes.forEach((node) {
-            if (node.attributes.containsKey("data-x-style-url") as bool) {
-              var backgroundImageUrl =
-                  node.attributes["data-x-style-url"] as String;
-              backgroundImageUrl =
-                  backgroundImageUrl.replaceAll("http://", "https://");
-              node.attributes.remove("data-x-style-url");
+    htmlData = htmlData
+        .replaceAll("data-x-src=", "src=")
+        .replaceAll("src=\"http:", "src=\"https:");
+    final document = html.parse(htmlData);
 
-              String style = node.attributes["style"] as String;
-              style = style.endsWith(";") ? style : style + "; ";
-              style += backgroundImageUrl;
-              node.attributes["style"] = style;
-            }
-          });
+    MailUtils.updateNodesStyle(document.nodes.toList());
+    htmlData = document.outerHtml;
 
-          getAllChildren(c.nodes);
-        });
-      }
-
-      getAllChildren(document.nodes.toList());
-      htmlData = document.outerHtml;
-    }
     initUrl = Uri.dataFromString(
       htmlData,
       mimeType: 'text/html',
       encoding: Encoding.getByName('utf-8'),
     ).toString();
     _ctrl.loadRequest(Uri.parse(initUrl));
-  }
-
-  dispose() {
-    super.dispose();
-    widget.textCtrl.dispose();
   }
 
   Future<NavigationDecision> navigationDelegate(

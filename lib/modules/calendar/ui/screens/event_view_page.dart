@@ -85,7 +85,6 @@ class EventViewPage extends StatelessWidget {
         return Scaffold(
           appBar: AMAppBar(
             title: Text(S.of(context).calendar_event_title),
-            backgroundColor: AppColor.appBarBackground,
             shadow: BoxShadow(color: Colors.transparent),
             leading: IconButton(
               icon: AppBarIcons.back(context: context),

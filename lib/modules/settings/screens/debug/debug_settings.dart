@@ -51,7 +51,6 @@ class _DebugSettingState extends BState<DebugSetting> {
           ? null
           : AMAppBar(
               title: Text("Debug"),
-              backgroundColor: AppColor.appBarBackground,
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: Column(

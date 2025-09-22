@@ -68,7 +68,6 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                 onPressed: () => Navigator.of(context).pop(),
               ),
               title: Text(S.of(context).settings_common),
-              backgroundColor: AppColor.appBarBackground,
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: Column(

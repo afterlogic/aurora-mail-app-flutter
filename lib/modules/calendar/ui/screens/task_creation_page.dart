@@ -30,6 +30,7 @@ import 'package:theme/app_color.dart';
 
 class TaskCreationPage extends StatefulWidget {
   static const name = "task_creation_page";
+
   const TaskCreationPage({super.key});
 
   @override
@@ -171,8 +172,11 @@ class _TaskCreationPageState extends State<TaskCreationPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AMAppBar(
-        title: Text(_selectedTask == null ? S.of(context).calendar_create_task_title : S.of(context).calendar_edit_task_title),
-        backgroundColor: AppColor.appBarBackground,
+        title: Text(
+          _selectedTask == null
+              ? S.of(context).calendar_create_task_title
+              : S.of(context).calendar_edit_task_title,
+        ),
         shadow: BoxShadow(color: Colors.transparent),
         leading: IconButton(
           icon: AppBarIcons.back(context: context),
@@ -186,9 +190,12 @@ class _TaskCreationPageState extends State<TaskCreationPage> {
                 }
                 if (_selectedCalendar == null) {
                   showErrorSnack(
-                      context: context,
-                      scaffoldState: _scaffoldKey.currentState,
-                      msg: ErrorToShow.message(S.of(context).calendar_please_select_calendar));
+                    context: context,
+                    scaffoldState: _scaffoldKey.currentState,
+                    msg: ErrorToShow.message(
+                      S.of(context).calendar_please_select_calendar,
+                    ),
+                  );
                   return;
                 }
                 if (_selectedTask == null) {
