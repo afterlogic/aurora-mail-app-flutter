@@ -93,17 +93,15 @@ void main() async {
 
   runZonedGuarded<void>(
     () => runApp(
-      LoggerControllerWidget.wrap(
-        FutureBuilder(
-          future: DBInstances.appDB.migrationCompleter.future,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return RestartWidget(child: App());
-            } else {
-              return Container();
-            }
-          },
-        ),
+      FutureBuilder(
+        future: DBInstances.appDB.migrationCompleter.future,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return RestartWidget(child: App());
+          } else {
+            return Container();
+          }
+        },
       ),
     ),
     (error, stack) {

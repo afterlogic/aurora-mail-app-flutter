@@ -374,7 +374,11 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                               data: MediaQuery.of(context).copyWith(
                                 textScaleFactor: 1.0,
                               ),
-                              child: child ?? const SizedBox.shrink(),
+                              child: LoggerControllerWidget.wrap(
+                                child ?? const SizedBox.shrink(),
+                                bottomPadding:
+                                    MediaQuery.of(context).viewPadding.bottom,
+                              ),
                             );
                           },
                         ),
