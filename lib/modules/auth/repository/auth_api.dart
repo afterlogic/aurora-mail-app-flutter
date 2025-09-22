@@ -66,6 +66,7 @@ class AuthApi {
       final appCheckToken = await _appCheckRepository.getToken();
       debugPrint('!!! appCheckToken = "$appCheckToken"');
       addedHeaders = {"X-Firebase-AppCheck": appCheckToken};
+      logger.log('login request, "X-Firebase-AppCheck": ${appCheckToken}');
     }
     try {
       final response = await coreModuleForLogin.post(
