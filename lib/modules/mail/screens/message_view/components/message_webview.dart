@@ -222,11 +222,6 @@ class MessageWebViewState extends BState<MessageWebView> {
 
     htmlData = widget.message.htmlBody;
 
-    // To prevent content from exceeding the width of the screen [869acj3da].
-    final document = html.parse(htmlData);
-    MailUtils.updateNodesWidth(document.nodes.toList());
-    htmlData = document.outerHtml;
-
     if (showImages == true) {
       htmlData = htmlData
           .replaceAll("data-x-src=", "src=")
