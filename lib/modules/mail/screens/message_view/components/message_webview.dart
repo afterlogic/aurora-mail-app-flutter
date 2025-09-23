@@ -115,7 +115,7 @@ class MessageWebViewState extends BState<MessageWebView> {
         ? _calendarsBloc.state.availableCalendars(_currentUserMail)
         : null;
     _selectedCalendar = (_calendars?.isEmpty ?? true) ? null : _calendars[0];
-    _checkInWhiteList();
+    _onLoad();
     // On Android, hybrid composition (SurfaceAndroidWebView) is now the default (webview_flutter 3.0.0)
     // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     _eventFromExpandedMail = MailUtils.getExtendFromMessageByObjectTypeName(
@@ -402,10 +402,13 @@ class MessageWebViewState extends BState<MessageWebView> {
     }
   }
 
-  Future _checkInWhiteList() async {
+  Future _onLoad() async {
     if (widget.message.hasExternals == true) {
       showImages =
           await widget.messageViewBloc.checkInWhiteList(widget.message);
+      _getHtmlWithImages();
+      if (mounted) setState(() {});
+    } else {
       _getHtmlWithImages();
       if (mounted) setState(() {});
     }
