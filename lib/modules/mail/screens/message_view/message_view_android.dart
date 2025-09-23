@@ -114,7 +114,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
 
   void _onAppBarActionSelected(MailViewAppBarAction action) async {
     // ignore: close_sinks
-    final showImage = webViewKey.currentState.showImages;
+    final showImage = webViewKey.currentState.showImages ?? false;
     final mailBloc = BlocProvider.of<MailBloc>(context);
     final contactsBloc = BlocProvider.of<ContactsBloc>(context);
     final msg = widget.message;
