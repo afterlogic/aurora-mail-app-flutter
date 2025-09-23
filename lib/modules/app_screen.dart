@@ -62,19 +62,22 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     _notification = PushNotificationsManager.instance.initNotification;
-    if (_notification != null &&
-        (_notification.type == NotificationType.event ||
-            _notification.type == NotificationType.task)) {
-      CalendarPage.selectedActivityId = _notification.activityId;
-      CalendarPage.selectedCalendarId = _notification.calendarId;
+    if (_notification != null) {
       switch (_notification.type) {
-        case NotificationType.email:
-          break;
         case NotificationType.event:
           CalendarPage.activityType = ActivityType.event;
+          CalendarPage.selectedCalendarId = _notification.calendarId;
+          CalendarPage.selectedActivityId = _notification.activityId;
           break;
         case NotificationType.task:
           CalendarPage.activityType = ActivityType.task;
+          CalendarPage.selectedCalendarId = _notification.calendarId;
+          CalendarPage.selectedActivityId = _notification.activityId;
+          break;
+        case NotificationType.email:
+        default:
+          MessagesListAndroid.openMessageFolder = _notification.folder;
+          MessagesListAndroid.openMessageId = _notification.messageId;
           break;
       }
     }
@@ -365,7 +368,11 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                           locale: settingsState.language?.toLocale(),
                           initialRoute: authState.needsLogin
                               ? LoginRoute.name
-                              : _notification != null
+                              : _notification != null &&
+                                      (_notification.type ==
+                                              NotificationType.event ||
+                                          _notification.type ==
+                                              NotificationType.task)
                                   ? CalendarRoute.name
                                   : MessagesListRoute.name,
                           navigatorObservers: [AppRouteObserver()],
