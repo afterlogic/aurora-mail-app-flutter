@@ -1,4 +1,6 @@
 //@dart=2.9
+import 'dart:io';
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
@@ -234,6 +236,18 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                       arguments: UpgradePlanArg(null),
                     );
                   }
+                }
+                if (state is AppCheckVerificationFail) {
+                  final storeName =
+                      Platform.isIOS ? 'App Store' : 'Google Play';
+
+                  showErrorSnack(
+                    context: context,
+                    scaffoldState: Scaffold.of(context),
+                    msg: ErrorToShow.message(
+                      S.of(context).app_check_validation_fail(storeName),
+                    ),
+                  );
                 }
                 if (state is AuthError) {
                   _showError(

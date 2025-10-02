@@ -19,8 +19,8 @@ import 'package:aurora_mail/utils/user_app_data_singleton.dart';
 import 'package:bloc/bloc.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
-import '../../../settings/repository/settings_network.dart';
 import './bloc.dart';
+import '../../../settings/repository/settings_network.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final _methods = new AuthMethods();
@@ -187,6 +187,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           );
         } else if (err is AllowAccess) {
           yield UpgradePlan(null);
+        } else if (err is AppCheckValidationError) {
+          yield AppCheckVerificationFail();
         } else {
           yield AuthError(formatError(err, s));
         }

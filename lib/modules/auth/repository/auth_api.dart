@@ -77,6 +77,9 @@ class AuthApi {
       if (response["ErrorCode"] == 108) {
         throw AllowAccess();
       }
+      if (response["ErrorCode"] == 1012) {
+        throw AppCheckValidationError();
+      }
       if (response['Result'] != null &&
           response['Result']['TwoFactorAuth'] != null) {
         final twoFactor = response['Result']['TwoFactorAuth'];
@@ -520,6 +523,8 @@ class AllowAccess extends Error {
 }
 
 class InvalidPin extends Error {}
+
+class AppCheckValidationError extends Error {}
 
 class SecurityKeyBegin {
   final String host;

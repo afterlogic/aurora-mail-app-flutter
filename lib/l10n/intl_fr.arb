@@ -501,5 +501,13 @@
   "calendar_validation_enter_text": "Veuillez saisir du texte",
   "settings_delete_account": "Supprimer le compte",
   "week_titles": "Lu,Ma,Me,Je,Ve,Sa,Di",
-  "record_not_found": "Entrée introuvable"
+  "record_not_found": "Entrée introuvable",
+  "app_check_validation_fail": "Échec de la vérification de l'application. Veuillez installer la dernière version depuis l'{storeName}.",
+  "@app_check_validation_fail": {
+    "placeholders": {
+      "storeName": {
+        "type": "String"
+      }
+    }
+  }
 }

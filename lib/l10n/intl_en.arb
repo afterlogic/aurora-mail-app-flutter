@@ -507,5 +507,13 @@
 	},
 	"settings_delete_account": "Delete account",
 	"week_titles": "Mo,Tu,We,Th,Fr,Sa,Su",
-	"record_not_found": "The record not found"
+	"record_not_found": "The record not found",
+	"app_check_validation_fail": "App verification failed. Please install latest version from thе {storeName}.",
+	"@app_check_validation_fail": {
+		"placeholders": {
+			"storeName": {
+				"type": "String"
+			}
+		}
+	}
 }

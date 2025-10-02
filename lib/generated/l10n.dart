@@ -5072,6 +5072,16 @@ class S {
       args: [],
     );
   }
+
+  /// `App verification failed. Please install latest version from thе {storeName}.`
+  String app_check_validation_fail(String storeName) {
+    return Intl.message(
+      'App verification failed. Please install latest version from thе $storeName.',
+      name: 'app_check_validation_fail',
+      desc: '',
+      args: [storeName],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

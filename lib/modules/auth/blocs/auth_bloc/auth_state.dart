@@ -75,6 +75,8 @@ class UpgradePlan extends AuthState with AlwaysNonEqualObject {
   UpgradePlan(this.err);
 }
 
+class AppCheckVerificationFail extends AuthState {}
+
 class LoggedIn extends AuthState {
   final User user;
   final List<User> users;
