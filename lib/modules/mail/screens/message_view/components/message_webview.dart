@@ -97,7 +97,7 @@ class MessageWebViewState extends BState<MessageWebView> {
   WebViewController _controller = WebViewController();
   String _htmlData;
   bool _pageLoaded = false;
-  bool showImages = false;
+  bool showImages;
   bool _isStarred;
   ThemeData theme;
   MailBloc _mailBloc;
@@ -115,7 +115,7 @@ class MessageWebViewState extends BState<MessageWebView> {
         ? _calendarsBloc.state.availableCalendars(_currentUserMail)
         : null;
     _selectedCalendar = (_calendars?.isEmpty ?? true) ? null : _calendars[0];
-    onLoad();
+    _onLoad();
     // On Android, hybrid composition (SurfaceAndroidWebView) is now the default (webview_flutter 3.0.0)
     // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     _eventFromExpandedMail = MailUtils.getExtendFromMessageByObjectTypeName(
@@ -177,7 +177,9 @@ class MessageWebViewState extends BState<MessageWebView> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    showImages = !widget.message.hasExternals || widget.message.safety;
+    if (widget.message.hasExternals != true || widget.message.safety == true) {
+      showImages = true;
+    }
     theme = Theme.of(context);
     _mailBloc = BlocProvider.of(context);
     _controller.setBackgroundColor(theme.scaffoldBackgroundColor);
@@ -220,12 +222,7 @@ class MessageWebViewState extends BState<MessageWebView> {
 
     htmlData = widget.message.htmlBody;
 
-    // To prevent content from exceeding the width of the screen [869acj3da].
-    final document = html.parse(htmlData);
-    MailUtils.updateNodesWidth(document.nodes.toList());
-    htmlData = document.outerHtml;
-
-    if (showImages) {
+    if (showImages == true) {
       htmlData = htmlData
           .replaceAll("data-x-src=", "src=")
           .replaceAll("src=\"http:", "src=\"https:");
@@ -400,7 +397,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     }
   }
 
-  Future onLoad() async {
+  Future _onLoad() async {
     if (widget.message.hasExternals == true) {
       showImages =
           await widget.messageViewBloc.checkInWhiteList(widget.message);
@@ -417,7 +414,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        if (widget.message.hasExternals && !showImages)
+        if (showImages == false)
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(6.0),

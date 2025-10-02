@@ -23,16 +23,18 @@ import 'notification_manager.dart';
 final notificationFromPush = true;
 
 class PushNotificationsManager {
+  static final PushNotificationsManager instance = PushNotificationsManager._();
+
   PushNotificationsManager._();
 
   String deviceId;
   String token;
   NotificationData _initNotification = null;
-  static final PushNotificationsManager instance = PushNotificationsManager._();
 
   NotificationData get initNotification {
     final res = _initNotification;
     _initNotification = null;
+
     return res;
   }
 
