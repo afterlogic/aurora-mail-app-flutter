@@ -12,5 +12,5 @@ if [ -f "$1" ]; then
 		fvm flutter pub run intl_utils:generate
     fvm flutter pub run flutter_launcher_icons
 else
-    printf $RED"No build_variant.yaml file is found. Abborting.\n"$NC
+    printf $RED"No build_variant.yaml file is found. Aborting.\n"$NC
 fi
