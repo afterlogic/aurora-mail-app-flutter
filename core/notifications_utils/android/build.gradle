@@ -25,6 +25,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
+    namespace 'com.afterlogic.aurora.mail.notifications_utils'
+
     compileSdkVersion 28
 
     sourceSets {

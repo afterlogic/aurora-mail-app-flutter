@@ -25,6 +25,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
+    namespace 'com.afterlogic.ios_notification_handler'
+
     compileSdkVersion 28
 
     sourceSets {

@@ -8,7 +8,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.2'
+        classpath 'com.android.tools.build:gradle:8.6.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // Add the google services classpath
         classpath 'com.google.gms:google-services:4.3.8'
@@ -25,9 +25,83 @@ allprojects {
 }
 
 rootProject.buildDir = '../build'
+
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
+
+    // Error: The Android Gradle plugin supports only Kotlin Gradle plugin version 1.5.20 and higher.
+    beforeEvaluate { project ->
+        if (project.name in ["ios_notification_handler", "notifications_utils"]) {
+            project.buildscript.dependencies.classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}"
+        }
+    }
+
+    afterEvaluate { project ->
+        // Set the namespace in build.gradle and remove the package attribute from AndroidManifest.xml
+        if (project.hasProperty('android')) {
+            project.android {
+                if (namespace == null || namespace.isEmpty()) {
+                    def defaultNamespace = project.group.toString().replace('.', '_')
+                    namespace = defaultNamespace
+                }
+
+                buildFeatures {
+                    buildConfig = true
+                }
+            }
+
+            // Task to ensure namespace and remove package attribute
+            project.tasks.register("fixManifestsAndNamespace") {
+                doLast {
+                    // Ensure namespace in build.gradle
+                    def buildGradleFile = file("${project.projectDir}/build.gradle")
+                    if (buildGradleFile.exists()) {
+                        def buildGradleContent = buildGradleFile.getText('UTF-8')
+                        def manifestFile = file("${project.projectDir}/src/main/AndroidManifest.xml")
+                        if (manifestFile.exists()) {
+                            def manifestContent = manifestFile.getText('UTF-8')
+                            def packageName = manifestContent.find(/package="([^"]+)"/) { match, p -> p }
+                            if (packageName && !buildGradleContent.contains("namespace")) {
+                                println "Setting namespace in ${buildGradleFile}"
+                                buildGradleContent = buildGradleContent.replaceFirst(
+                                        /android\s*\{/, "android {\n    namespace '${packageName}'"
+                                )
+                                buildGradleFile.write(buildGradleContent, 'UTF-8')
+                            }
+                        }
+                    }
+
+                    // Remove package attribute from AndroidManifest.xml
+                    def manifests = fileTree(dir: project.projectDir, includes: ['**/AndroidManifest.xml'])
+                    manifests.each { File manifestFile ->
+                        def manifestContent = manifestFile.getText('UTF-8')
+                        if (manifestContent.contains('package=')) {
+                            println "Removing package attribute from ${manifestFile}"
+                            manifestContent = manifestContent.replaceAll(/package="[^"]*"/, '')
+                            manifestFile.write(manifestContent, 'UTF-8')
+                        }
+                    }
+                }
+            }
+
+            // Ensure the task runs before the build process
+            project.tasks.matching { it.name.startsWith("preBuild") }.all {
+                dependsOn project.tasks.named("fixManifestsAndNamespace")
+            }
+        }
+
+        // Error: 'compileReleaseJavaWithJavac' task (current target is 1.8) and 'compileReleaseKotlin' task (current target is 17)
+        // jvm target compatibility should be set to the same Java version.
+        project.plugins.withId("kotlin-android") {
+            project.android {
+                kotlinOptions {
+                    jvmTarget = "1.8"
+                }
+            }
+        }
+    }
 }
+
 subprojects {
     project.evaluationDependsOn(':app')
 }
