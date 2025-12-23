@@ -116,6 +116,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn_login": MessageLookupByLibrary.simpleMessage("Connexion"),
         "btn_login_back_to_login":
             MessageLookupByLibrary.simpleMessage("Retour à la connexion"),
+        "btn_login_open_web_version":
+            MessageLookupByLibrary.simpleMessage("Ouvrir la version Web"),
         "btn_message_advanced_search":
             MessageLookupByLibrary.simpleMessage("Recherche avancée"),
         "btn_message_empty_spam_folder":
@@ -669,6 +671,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "hint_log_delete_all": MessageLookupByLibrary.simpleMessage(
             "Voulez-vous vraiment supprimer tous les journaux ?"),
         "hint_log_delete_record": m15,
+        "hint_login_configure_2FA": MessageLookupByLibrary.simpleMessage(
+            "Pour des raisons de sécurité, l\'accès à l\'application nécessite une authentification à deux facteurs (2FA).\nVeuillez configurer 2FA dans la version Web via les paramètres de sécurité."),
         "hint_login_upgrade_your_plan": MessageLookupByLibrary.simpleMessage(
             "Les applications mobiles ne sont pas autorisées dans votre compte."),
         "hint_message_empty_folder": m16,

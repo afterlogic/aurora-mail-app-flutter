@@ -8,6 +8,7 @@ import 'package:aurora_mail/database/accounts/accounts_table.dart';
 import 'package:aurora_mail/database/aliases/aliases_table.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/repository/app_check_repository.dart';
+import 'package:aurora_mail/modules/auth/repository/auth_api_models.dart';
 import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:flutter/foundation.dart';
@@ -59,7 +60,7 @@ class AuthApi {
     final parameters =
         json.encode({"Login": email, "Password": password, "Pattern": ""});
 
-    final body = new WebMailApiBody(method: "Login", parameters: parameters);
+    final body = WebMailApiBody(method: "Login", parameters: parameters);
 
     Map<String, String> addedHeaders = {};
     if (BuildProperty.enableAppCheck) {
@@ -75,51 +76,47 @@ class AuthApi {
         getRawResponse: true,
       );
       if (response["ErrorCode"] == 108) {
-        throw AllowAccess();
+        throw AllowAccessError();
       }
       if (response["ErrorCode"] == 1012) {
         throw AppCheckValidationError();
       }
-      if (response['Result'] != null &&
-          response['Result']['TwoFactorAuth'] != null) {
-        final twoFactor = response['Result']['TwoFactorAuth'];
-        if (twoFactor == true) {
-          throw RequestTwoFactor(
-            hostname,
-            true,
-            false,
-            false,
-          );
-        }
 
-        throw RequestTwoFactor(
-          hostname,
-          twoFactor["HasAuthenticatorApp"] as bool,
-          twoFactor["HasSecurityKey"] as bool,
-          twoFactor["HasBackupCodes"] as bool,
+      final twoFactorAuth = response['Result']['TwoFactorAuth'] as dynamic;
+      if (twoFactorAuth != null) {
+        final twoFactorModel = twoFactorAuth is bool
+            ? TwoFactorAuthModel(hasAuthenticatorApp: twoFactorAuth)
+            : twoFactorAuth is Map<String, dynamic>
+                ? TwoFactorAuthModel.fromJson(twoFactorAuth)
+                : TwoFactorAuthModel();
+
+        throw RequestTwoFactorError(
+          host: hostname,
+          twoFactorModel: twoFactorModel,
         );
-      } else if (response['Result'] != null &&
-          response['Result']['AuthToken'] is String) {
+      }
+
+      final authToken = response['Result']['AuthToken'] as dynamic;
+      if (authToken is String) {
         if (BuildProperty.supportAllowAccess &&
             response['Result']["AllowAccess"] != 1) {
-          throw AllowAccess();
+          throw AllowAccessError();
         }
-        final token = response['Result']['AuthToken'] as String;
-        final id = response['AuthenticatedUserId'] as int;
 
-        return new User(
+        final id = response['AuthenticatedUserId'] as int;
+        return User(
           localId: null,
           serverId: id,
-          token: token,
+          token: authToken,
           hostname: hostname,
           emailFromLogin: email,
         );
-      } else {
-        throw WebMailApiError(response);
       }
+
+      throw WebMailApiError(response);
     } catch (e) {
       if (e is WebMailApiError && e.code == 108) {
-        throw AllowAccess();
+        throw AllowAccessError();
       }
       rethrow;
     }
@@ -133,7 +130,7 @@ class AuthApi {
       interceptor: DefaultApiInterceptor.get(),
     );
 
-    final body = new WebMailApiBody(module: "Core", method: "Logout");
+    final body = WebMailApiBody(module: "Core", method: "Logout");
 
     final res = await coreModuleForLogin.post(
       body,
@@ -155,8 +152,7 @@ class AuthApi {
 
     final parameters = json.encode({"UserId": user.serverId});
 
-    final body =
-        new WebMailApiBody(method: "GetAccounts", parameters: parameters);
+    final body = WebMailApiBody(method: "GetAccounts", parameters: parameters);
 
     final res = await coreModuleForLogin.post(
       body,
@@ -189,7 +185,7 @@ class AuthApi {
       "Password": password,
     });
 
-    final body = new WebMailApiBody(
+    final body = WebMailApiBody(
         method: "VerifyAuthenticatorAppCode", parameters: parameters);
 
     final res = await twoFactorModule.post(
@@ -200,7 +196,7 @@ class AuthApi {
 
     if (res["Result"] is! Map ||
         !(res["Result"] as Map).containsKey("AuthToken")) {
-      throw InvalidPin();
+      throw InvalidPinError();
     }
     final userId = res['AuthenticatedUserId'] as int;
     final token = res["Result"]["AuthToken"] as String;
@@ -222,7 +218,7 @@ class AuthApi {
       interceptor: DefaultApiInterceptor.get(),
     );
 
-    final request = new WebMailApiBody(method: "GetIdentities");
+    final request = WebMailApiBody(method: "GetIdentities");
     final res = await mailModule.post(
       request,
       // addedHeaders: await deviceIdHeader(),
@@ -248,7 +244,7 @@ class AuthApi {
       interceptor: DefaultApiInterceptor.get(),
     );
 
-    final request = new WebMailApiBody(method: "GetAliases");
+    final request = WebMailApiBody(method: "GetAliases");
     final res = await mailModule.post(
       request,
       // addedHeaders: await deviceIdHeader(),
@@ -297,7 +293,7 @@ class AuthApi {
           "Uid": uid,
           "Token": fbToken,
         });
-        final body = new WebMailApiBody(
+        final body = WebMailApiBody(
           module: "PushNotificator",
           method: "SetPushToken",
           parameters: parameters,
@@ -306,10 +302,10 @@ class AuthApi {
           body,
           // addedHeaders: await deviceIdHeader(),
         );
-        print(res);
+        debugPrint('$res');
       } catch (e, s) {
         success = false;
-        print(e);
+        debugPrint('$e');
       }
     }
     return success;
@@ -326,7 +322,7 @@ class AuthApi {
       interceptor: DefaultApiInterceptor.get(),
     );
 
-    final request = new WebMailApiBody(
+    final request = WebMailApiBody(
         method: "VerifySecurityKeyBegin",
         parameters: jsonEncode({
           "Login": login,
@@ -365,7 +361,7 @@ class AuthApi {
       interceptor: DefaultApiInterceptor.get(),
     );
 
-    final request = new WebMailApiBody(
+    final request = WebMailApiBody(
         method: "VerifySecurityKeyFinish",
         parameters: jsonEncode({
           "Login": login,
@@ -411,7 +407,7 @@ class AuthApi {
     });
 
     final body =
-        new WebMailApiBody(method: "VerifyBackupCode", parameters: parameters);
+        WebMailApiBody(method: "VerifyBackupCode", parameters: parameters);
 
     final res = await twoFactorModule.post(
       body,
@@ -421,7 +417,7 @@ class AuthApi {
 
     if (res["Result"] is! Map ||
         !(res["Result"] as Map).containsKey("AuthToken")) {
-      throw InvalidPin();
+      throw InvalidPinError();
     }
     final userId = res['AuthenticatedUserId'] as int;
     final token = res["Result"]["AuthToken"] as String;
@@ -453,14 +449,16 @@ class AuthApi {
     });
 
     final body =
-        new WebMailApiBody(method: "SetDeviceName", parameters: parameters);
-
-    final res = await twoFactorModule.post(
-      body,
-      // addedHeaders: await deviceIdHeader(),
-    );
-
-    print(res);
+        WebMailApiBody(method: "SetDeviceName", parameters: parameters);
+    try {
+      final res = await twoFactorModule.post(
+        body,
+        // addedHeaders: await deviceIdHeader(),
+      );
+      debugPrint('$res');
+    } on Object catch (e, st) {
+      debugPrint('$e');
+    }
   }
 
   Future trustDevice(
@@ -480,15 +478,14 @@ class AuthApi {
       "DeviceName": deviceName,
     });
 
-    final body =
-        new WebMailApiBody(method: "TrustDevice", parameters: parameters);
+    final body = WebMailApiBody(method: "TrustDevice", parameters: parameters);
 
     final res = await twoFactorModule.post(
       body,
       // addedHeaders: await deviceIdHeader(),
     );
 
-    print(res);
+    debugPrint('$res');
   }
 
   Future<int> getTwoFactorSettings(String hostname) async {
@@ -497,7 +494,7 @@ class AuthApi {
       hostname: hostname,
       interceptor: DefaultApiInterceptor.get(),
     );
-    final body = new WebMailApiBody(method: "GetSettings");
+    final body = WebMailApiBody(method: "GetSettings");
 
     final res = await twoFactorModule.post(
       body,
@@ -506,38 +503,4 @@ class AuthApi {
 
     return (res["TrustDevicesForDays"] as num).toInt();
   }
-}
-
-class RequestTwoFactor extends Error {
-  final String host;
-  final bool hasAuthenticatorApp;
-  final bool hasSecurityKey;
-  final bool hasBackupCodes;
-
-  RequestTwoFactor(this.host, this.hasAuthenticatorApp, this.hasSecurityKey,
-      this.hasBackupCodes);
-}
-
-class AllowAccess extends Error {
-  AllowAccess();
-}
-
-class InvalidPin extends Error {}
-
-class AppCheckValidationError extends Error {}
-
-class SecurityKeyBegin {
-  final String host;
-  final double timeout;
-  final String challenge;
-  final String rpId;
-  final List<String> allowCredentials;
-
-  SecurityKeyBegin(
-    this.host,
-    this.timeout,
-    this.challenge,
-    this.rpId,
-    this.allowCredentials,
-  );
 }

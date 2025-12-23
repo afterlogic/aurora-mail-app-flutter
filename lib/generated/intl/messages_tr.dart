@@ -114,6 +114,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn_login": MessageLookupByLibrary.simpleMessage("Oturum aç"),
         "btn_login_back_to_login":
             MessageLookupByLibrary.simpleMessage("Giriş ekranına geri dön"),
+        "btn_login_open_web_version":
+            MessageLookupByLibrary.simpleMessage("Web sürümünü aç"),
         "btn_message_advanced_search":
             MessageLookupByLibrary.simpleMessage("Gelişmiş arama"),
         "btn_message_empty_spam_folder":
@@ -651,6 +653,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "hint_log_delete_all": MessageLookupByLibrary.simpleMessage(
             "Tüm günlükleri silmek istediğinize emin misiniz?"),
         "hint_log_delete_record": m15,
+        "hint_login_configure_2FA": MessageLookupByLibrary.simpleMessage(
+            "Güvenlik nedeniyle, uygulamaya erişim iki faktörlü kimlik doğrulama (2FA) gerektirir.\nLütfen Güvenlik ayarları aracılığıyla web sürümünde 2FA\'yı yapılandırın."),
         "hint_login_upgrade_your_plan": MessageLookupByLibrary.simpleMessage(
             "Faturalandırma planınızda mobil uygulamalara izin verilmiyor."),
         "hint_message_empty_folder": m16,

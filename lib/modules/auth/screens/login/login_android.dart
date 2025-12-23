@@ -4,10 +4,13 @@ import 'dart:io';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
+import 'package:aurora_mail/modules/auth/repository/auth_api_models.dart';
+import 'package:aurora_mail/modules/auth/screens/configure_two_factor/configure_two_factor_route.dart';
 import 'package:aurora_mail/modules/auth/screens/fido_auth/fido_auth_route.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/host_input_formatter.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
+import 'package:aurora_mail/modules/auth/screens/login/components/mail_logo.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/auth/screens/trust_device/trust_device_route.dart';
@@ -28,8 +31,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:theme/app_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'components/mail_logo.dart';
 
 class LoginAndroid extends StatefulWidget {
   static final _authFormKey = GlobalKey<FormState>();
@@ -164,7 +165,8 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                   );
                 }
                 if (state is TwoFactor) {
-                  if (state.hasSecurityKey == true &&
+                  final twoFactorModel = state.twoFactorModel;
+                  if (twoFactorModel.hasSecurityKey &&
                       BuildProperty.useYubiKit) {
                     Navigator.pushNamed(
                       context,
@@ -175,7 +177,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                         state,
                       ),
                     );
-                  } else if (state.hasAuthenticatorApp == true) {
+                  } else if (twoFactorModel.hasAuthenticatorApp) {
                     Navigator.pushNamed(
                       context,
                       TwoFactorAuthRoute.name,
@@ -185,7 +187,16 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                         state,
                       ),
                     );
+                  } else if (twoFactorModel.mandatoryToConfigure) {
+                    Navigator.pushNamed(
+                      context,
+                      ConfigureTwoFactorRoute.name,
+                      arguments: ConfigureTwoFactorRouteArgs(
+                        webVersionUrl: state.hostname,
+                      ),
+                    );
                   }
+
                   return;
                 }
                 if (state is ReceivedLastEmail) {
@@ -491,9 +502,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                 "",
                 "",
                 "",
-                true,
-                true,
-                true,
+                TwoFactorAuthModel.debug(),
               )),
         ),
         child: child,

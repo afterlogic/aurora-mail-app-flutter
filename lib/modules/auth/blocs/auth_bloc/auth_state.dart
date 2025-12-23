@@ -1,9 +1,10 @@
 //@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/auth/repository/auth_api_models.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class AuthState extends Equatable {
   const AuthState();
@@ -53,17 +54,13 @@ class TwoFactor extends AuthState with AlwaysNonEqualObject {
   final String email;
   final String password;
   final String hostname;
-  final bool hasAuthenticatorApp;
-  final bool hasSecurityKey;
-  final bool hasBackupCodes;
+  final TwoFactorAuthModel twoFactorModel;
 
   TwoFactor(
     this.email,
     this.password,
     this.hostname,
-    this.hasAuthenticatorApp,
-    this.hasSecurityKey,
-    this.hasBackupCodes,
+    this.twoFactorModel,
   );
 }
 

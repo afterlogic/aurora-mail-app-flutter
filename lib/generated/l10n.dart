@@ -3823,11 +3823,31 @@ class S {
     );
   }
 
+  /// `For security reasons, access to the application requires two-factor authentication (2FA). Please configure 2FA in the web version via the Security settings.`
+  String get hint_login_configure_2FA {
+    return Intl.message(
+      'For security reasons, access to the application requires two-factor authentication (2FA). Please configure 2FA in the web version via the Security settings.',
+      name: 'hint_login_configure_2FA',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Back to login`
   String get btn_login_back_to_login {
     return Intl.message(
       'Back to login',
       name: 'btn_login_back_to_login',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open the web version`
+  String get btn_login_open_web_version {
+    return Intl.message(
+      'Open the web version',
+      name: 'btn_login_open_web_version',
       desc: '',
       args: [],
     );

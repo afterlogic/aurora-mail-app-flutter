@@ -10,17 +10,17 @@ import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/alias_or_account.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/models/app_data.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_methods.dart';
-import 'package:aurora_mail/modules/auth/repository/auth_api.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_state.dart';
+import 'package:aurora_mail/modules/auth/repository/auth_api_models.dart';
+import 'package:aurora_mail/modules/settings/repository/settings_network.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:aurora_mail/utils/user_app_data_singleton.dart';
 import 'package:bloc/bloc.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
-
-import './bloc.dart';
-import '../../../settings/repository/settings_network.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final _methods = new AuthMethods();
@@ -176,16 +176,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           yield* _userLogInFromMain(UserLogInFinish(user, null));
         }
       } catch (err, s) {
-        if (err is RequestTwoFactor) {
+        if (err is RequestTwoFactorError) {
           yield TwoFactor(
             event.email,
             event.password,
             err.host,
-            err.hasAuthenticatorApp,
-            err.hasSecurityKey,
-            err.hasBackupCodes,
+            err.twoFactorModel,
           );
-        } else if (err is AllowAccess) {
+        } else if (err is AllowAccessError) {
           yield UpgradePlan(null);
         } else if (err is AppCheckValidationError) {
           yield AppCheckVerificationFail();

@@ -119,6 +119,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn_login": MessageLookupByLibrary.simpleMessage("Войти"),
         "btn_login_back_to_login":
             MessageLookupByLibrary.simpleMessage("Вернуться к входу"),
+        "btn_login_open_web_version":
+            MessageLookupByLibrary.simpleMessage("Открыть веб-версию"),
         "btn_message_advanced_search":
             MessageLookupByLibrary.simpleMessage("Расширенный поиск"),
         "btn_message_empty_spam_folder":
@@ -664,6 +666,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "hint_log_delete_all": MessageLookupByLibrary.simpleMessage(
             "Вы уверены, что хотите удалить все логи?"),
         "hint_log_delete_record": m15,
+        "hint_login_configure_2FA": MessageLookupByLibrary.simpleMessage(
+            "По соображениям безопасности для доступа к приложению требуется двухфакторная аутентификация (2FA).\nПожалуйста, настройте 2FA в веб-версии через настройки безопасности."),
         "hint_login_upgrade_your_plan": MessageLookupByLibrary.simpleMessage(
             "Мобильные приложения не разрешены в вашем аккаунте."),
         "hint_message_empty_folder": m16,

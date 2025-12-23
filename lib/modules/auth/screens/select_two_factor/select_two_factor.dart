@@ -27,6 +27,8 @@ class SelectTwoFactorWidget extends StatefulWidget {
 class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
   @override
   Widget build(BuildContext context) {
+    final twoFactorModel = widget.args.state.twoFactorModel;
+
     return TwoFactorScene(
       logoHint: "",
       isDialog: widget.args.isDialog,
@@ -36,7 +38,7 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
           style: TextStyle(color: AppTheme.loginTextColor),
         ),
         SizedBox(height: 20),
-        if (widget.args.state.hasSecurityKey && BuildProperty.useYubiKit) ...[
+        if (twoFactorModel.hasSecurityKey && BuildProperty.useYubiKit) ...[
           SizedBox(
             width: double.infinity,
             child: AMButton(
@@ -61,7 +63,7 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
           ),
           SizedBox(height: 20)
         ],
-        if (widget.args.state.hasAuthenticatorApp) ...[
+        if (twoFactorModel.hasAuthenticatorApp) ...[
           SizedBox(
             width: double.infinity,
             child: AMButton(
@@ -83,7 +85,7 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
           ),
           SizedBox(height: 20)
         ],
-        if (widget.args.state.hasBackupCodes) ...[
+        if (twoFactorModel.hasBackupCodes) ...[
           SizedBox(
             width: double.infinity,
             child: AMButton(

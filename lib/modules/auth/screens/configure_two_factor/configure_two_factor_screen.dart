@@ -1,18 +1,21 @@
 //@dart=2.9
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/modules/auth/screens/configure_two_factor/configure_two_factor_route.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/mail_logo.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:aurora_ui_kit/components/am_button.dart';
 import 'package:flutter/material.dart';
 import 'package:theme/app_theme.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class UpgradePlanWidget extends StatelessWidget {
-  final String message;
+class ConfigureTwoFactorScreen extends StatelessWidget {
+  final ConfigureTwoFactorRouteArgs args;
 
-  const UpgradePlanWidget(this.message);
+  const ConfigureTwoFactorScreen({this.args, Key key}) : super(key: key);
 
   Widget _gradientWrap(Widget child) {
     return themeWrap(
@@ -22,18 +25,31 @@ class UpgradePlanWidget extends StatelessWidget {
     );
   }
 
-  Widget themeWrap(Widget widget) {
+  Widget themeWrap(Widget child) {
     if (AppTheme.login != null) {
       return Theme(
         data: AppTheme.login,
-        child: widget,
+        child: child,
       );
     }
-    return widget;
+    return child;
+  }
+
+  Future<void> _onButtonTap(BuildContext context) async {
+    final webUrl = args.webVersionUrl;
+    if (webUrl.isNotEmpty) {
+      launchUrl(Uri.parse(webUrl));
+    } else {
+      Navigator.of(context).pop();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final buttonLabel = args.webVersionUrl.isNotEmpty
+        ? S.of(context).btn_login_open_web_version
+        : S.of(context).btn_login_back_to_login;
+
     return Scaffold(
       body: _gradientWrap(
         Stack(
@@ -59,8 +75,7 @@ class UpgradePlanWidget extends StatelessWidget {
                       Column(
                         children: <Widget>[
                           Text(
-                            message ??
-                                S.of(context).hint_login_upgrade_your_plan,
+                            S.of(context).hint_login_configure_2FA,
                             style: Theme.of(context)
                                 .textTheme
                                 .subtitle1
@@ -80,9 +95,11 @@ class UpgradePlanWidget extends StatelessWidget {
                               BuildProperty.disableShadowFloatingActionButton
                                   ? null
                                   : const BoxShadow(),
-                          child: Text(S.of(context).btn_login_back_to_login,
-                              style: TextStyle(color: Colors.white)),
-                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text(
+                            buttonLabel,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () => _onButtonTap(context),
                         ),
                       ),
                     ],

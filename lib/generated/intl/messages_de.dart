@@ -123,6 +123,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn_login": MessageLookupByLibrary.simpleMessage("Anmelden"),
         "btn_login_back_to_login":
             MessageLookupByLibrary.simpleMessage("Zurück zur Anmeldung"),
+        "btn_login_open_web_version":
+            MessageLookupByLibrary.simpleMessage("Webversion öffnen"),
         "btn_message_advanced_search":
             MessageLookupByLibrary.simpleMessage("Erweiterte Suche"),
         "btn_message_empty_spam_folder":
@@ -685,6 +687,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "hint_log_delete_all": MessageLookupByLibrary.simpleMessage(
             "Sind Sie sicher, dass Sie alle Protokolle löschen möchten?"),
         "hint_log_delete_record": m15,
+        "hint_login_configure_2FA": MessageLookupByLibrary.simpleMessage(
+            "Aus Sicherheitsgründen erfordert der Zugriff auf die Anwendung eine Zwei-Faktor-Authentifizierung (2FA).\nBitte konfigurieren Sie 2FA in der Webversion über die Sicherheitseinstellungen."),
         "hint_login_upgrade_your_plan": MessageLookupByLibrary.simpleMessage(
             "Mobile Apps sind in Ihrem Konto nicht erlaubt."),
         "hint_message_empty_folder": m16,

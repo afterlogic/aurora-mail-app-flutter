@@ -120,6 +120,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn_login": MessageLookupByLibrary.simpleMessage("Accedi"),
         "btn_login_back_to_login":
             MessageLookupByLibrary.simpleMessage("Torna al login"),
+        "btn_login_open_web_version":
+            MessageLookupByLibrary.simpleMessage("Apri la versione web"),
         "btn_message_advanced_search":
             MessageLookupByLibrary.simpleMessage("Ricerca avanzata"),
         "btn_message_empty_spam_folder":
@@ -672,6 +674,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "hint_log_delete_all": MessageLookupByLibrary.simpleMessage(
             "Sei sicuro di voler eliminare tutti i log?"),
         "hint_log_delete_record": m15,
+        "hint_login_configure_2FA": MessageLookupByLibrary.simpleMessage(
+            "Per motivi di sicurezza, l\'accesso all\'applicazione richiede l\'autenticazione a due fattori (2FA).\nSi prega di configurare 2FA nella versione web tramite le impostazioni di sicurezza."),
         "hint_login_upgrade_your_plan": MessageLookupByLibrary.simpleMessage(
             "Le app mobili non sono consentite nel tuo account."),
         "hint_message_empty_folder": m16,
