@@ -2,13 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.afterlogic.aurora.mail.aurora_mail">
 
-    <!-- io.flutter.app.FlutterApplication is an android.app.Application that
-         calls FlutterMain.startInitialization(this); in its onCreate method.
-         In most cases you can leave this as-is, but you if you want to provide
-         additional functionality it is fine to subclass or reimplement
-         FlutterApplication and put your custom class here. -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="33" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -46,7 +42,6 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -74,7 +69,6 @@
             android:authorities="${applicationId}.workmanager-init"
             android:enabled="false"
             android:exported="false" /> -->
-
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
@@ -85,7 +79,6 @@
                 android:value="androidx.startup"
                 tools:node="remove" />
         </provider>
-
         <provider
             android:name="com.bluechilli.flutteruploader.FlutterUploaderInitializer"
             android:authorities="${applicationId}.flutter-upload-init"
@@ -109,7 +102,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
         <!-- <provider
             android:name="androidx.work.impl.WorkManagerInitializer"
             android:authorities="${applicationId}.workmanager-init"
@@ -118,7 +110,8 @@
 
         <service
             android:name=".AppService"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
         <receiver
             android:name="com.afterlogic.alarm_service.AlarmBroadcast"
             android:exported="false" />
