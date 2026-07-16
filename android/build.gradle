@@ -36,6 +36,23 @@ subprojects {
         }
     }
 
+    // Workaround for old plugins (e.g. connectivity) that don't declare a
+    // namespace, which AGP 8+ requires. Derives it from the manifest package.
+    beforeEvaluate { project ->
+        project.plugins.withId("com.android.library") {
+            def androidExt = project.extensions.findByName("android")
+            if (androidExt != null && androidExt.namespace == null) {
+                def manifestFile = project.file("src/main/AndroidManifest.xml")
+                if (manifestFile.exists()) {
+                    def matcher = (manifestFile.text =~ /package="([^"]+)"/)
+                    if (matcher.find()) {
+                        androidExt.namespace = matcher.group(1)
+                    }
+                }
+            }
+        }
+    }
+
     afterEvaluate { project ->
         // Enable buildConfig feature in subprojects
         if (project.hasProperty('android')) {
