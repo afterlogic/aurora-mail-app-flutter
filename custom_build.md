@@ -71,3 +71,29 @@ Build flags:
 * expandMessageThread - allows for opening message thread by clicking number of messages in thread on message list screen
 * logger - debug logging of the application
 * pushNotification - reporting new incoming messages using push-notifications
+
+16. Auto-filling login credentials in debug mode.
+
+To speed up local testing, the login screen can pre-fill the email and password fields when the app runs in debug mode. This only works with `flutter run` (debug builds), it has no effect on release builds.
+
+To use it, pass the values with `--dart-define` when running the app:
+
+```
+flutter run --dart-define=DEBUG_EMAIL=your@email.com --dart-define=DEBUG_PASSWORD=yourpassword
+```
+
+If you use VS Code, you can add these to the `args` of your launch configuration in `.vscode/launch.json` instead:
+
+```json
+{
+    "name": "aurora_mail (debug)",
+    "request": "launch",
+    "type": "dart",
+    "args": [
+        "--dart-define=DEBUG_EMAIL=your@email.com",
+        "--dart-define=DEBUG_PASSWORD=yourpassword"
+    ]
+}
+```
+
+Do not commit real credentials to the repository. Keep them only in your local run configuration.

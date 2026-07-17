@@ -47,8 +47,12 @@ class LoginAndroid extends StatefulWidget {
 
 class _LoginAndroidState extends BState<LoginAndroid> {
   final hostCtrl = TextEditingController();
-  final emailCtrl = TextEditingController();
-  final passwordCtrl = TextEditingController();
+  final emailCtrl = TextEditingController(
+    text: kDebugMode ? const String.fromEnvironment('DEBUG_EMAIL') : '',
+  );
+  final passwordCtrl = TextEditingController(
+    text: kDebugMode ? const String.fromEnvironment('DEBUG_PASSWORD') : '',
+  );
 
   bool _showHostField = false;
 
