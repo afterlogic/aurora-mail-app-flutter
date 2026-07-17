@@ -85,7 +85,7 @@ disableScreenShadowFloatingActionButton: false # disable shadow for floating act
 usePlusIconForActionButtons: false # use plus icon for floating action buttons
 
 # Custom Drawer
-useDrawerGradient: false # use gradient for drawer
+useDrawerGradient: false # use gradient for drawer. drawer_gradient.jpg image should be placed in the images folder
 useCustomDrawerIcons: false # use custom drawer folder icons
 useCustomDrawerIconColors: false # use custom colors for drawer icons
 hideCalendarImportICSFile: false # hide import ICS file option

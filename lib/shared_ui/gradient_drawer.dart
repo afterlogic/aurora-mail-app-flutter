@@ -17,7 +17,7 @@ class GradientDrawer extends StatelessWidget {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(
-                      BuildProperty.image_dir + '/login_background.jpg'),
+                      BuildProperty.image_dir + '/drawer_gradient.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
