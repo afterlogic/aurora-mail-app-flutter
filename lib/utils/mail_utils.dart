@@ -538,6 +538,8 @@ class MailUtils {
                 min-height: 100vh;
                 display: flex;
                 flex-direction: column;
+                padding-bottom: ${paddingBottom}px;
+                box-sizing: border-box;
               }
               .flex {
                 display: flex;
@@ -570,7 +572,6 @@ class MailUtils {
               }
               .attachments {
                 margin-top: 20px;
-                padding-bottom: ${paddingBottom}px;
               }
               .attachment {
                 display: flex;

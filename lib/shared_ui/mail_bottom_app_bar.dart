@@ -147,7 +147,9 @@ class MailBottomAppBar extends StatelessWidget {
       );
     }
     return BottomAppBar(
-      child: row,
+      child: SafeArea(
+        child: row,
+      ),
     );
   }
 }
