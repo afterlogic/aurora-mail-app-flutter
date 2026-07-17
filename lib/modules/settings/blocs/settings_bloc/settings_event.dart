@@ -3,7 +3,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class SettingsEvent extends Equatable {

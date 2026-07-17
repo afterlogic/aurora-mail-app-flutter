@@ -18,7 +18,7 @@ import 'package:flutter_uploader/flutter_uploader.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class MailApi {
@@ -369,7 +369,7 @@ class MailApi {
       final tempDir = await getTemporaryDirectory();
       final file = await new File('${tempDir.path}/$name').create();
       await file.writeAsBytes(bytes);
-      await Share.shareFiles([file.path],
+      await Share.shareXFiles([XFile(file.path)],
           subject: attachment.fileName, sharePositionOrigin: rect);
     }
   }

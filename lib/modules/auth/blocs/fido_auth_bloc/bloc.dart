@@ -13,7 +13,7 @@ import 'package:aurora_mail/modules/auth/repository/auth_api.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uni_links/uni_links.dart';
+import 'package:app_links/app_links.dart';
 import 'package:yubico_flutter/yubico_flutter.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as tab;
 
@@ -27,10 +27,9 @@ class FidoAuthBloc extends Bloc<FidoAuthEvent, FidoAuthState> {
   StreamSubscription sub;
 
   FidoAuthBloc(this.host, this.login, this.password, this.authBloc) : super(InitState()) {
-    sub = getLinksStream().listen((event) {
-      final uri = Uri.parse(event);
+    sub = AppLinks().uriLinkStream.listen((uri) {
       if (uri.host == "u2f") {
-        final query = Uri.parse(event).queryParameters;
+        final query = uri.queryParameters;
         if (query.containsKey("error")) {
           add(Cancel());
         } else if (query.containsKey("attestation")) {

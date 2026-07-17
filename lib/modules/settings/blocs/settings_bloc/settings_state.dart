@@ -2,7 +2,7 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/app_data.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:equatable/equatable.dart';
 import 'package:drift/drift.dart';
 import 'package:timezone/timezone.dart' as tz;

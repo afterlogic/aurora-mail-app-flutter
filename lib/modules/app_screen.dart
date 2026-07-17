@@ -31,7 +31,7 @@ import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/user_app_data_singleton.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -8,7 +8,7 @@ import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:bloc/bloc.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:drift/drift.dart';
 
 import './bloc.dart';

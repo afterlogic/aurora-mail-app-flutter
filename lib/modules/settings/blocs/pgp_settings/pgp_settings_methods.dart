@@ -13,7 +13,7 @@ import 'package:crypto_storage/src/pgp_storage.dart';
 import 'package:crypto_worker/src/pgp/pgp_worker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 class PgpSettingsMethods {
   final CryptoStorage cryptoStorage;

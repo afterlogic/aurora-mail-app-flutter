@@ -22,7 +22,7 @@ dependencies:
   # state management
   provider: ^5.0.0
   flutter_bloc: ^7.0.0
-  bloc_concurrency: any
+  bloc_concurrency: ^0.1.0
   equatable: ^2.0.5
   rxdart: ^0.27.7
 
@@ -45,8 +45,8 @@ dependencies:
   #   path: ./ios/_PackageOverrides/flutter_uploader-3.0.0-beta.4/
 
   flutter_downloader: 1.10.5
-  share: ^2.0.4
-  path_provider: 2.0.2
+  share_plus: ^6.3.4
+  path_provider: ^2.0.14
   video_thumbnail: 0.5.3
   mime: ^1.0.1
   # type ahead
@@ -67,17 +67,16 @@ dependencies:
   intl: 0.17.0
   filesize: ^2.0.1
   permission_handler: ^11.0.0
-  permission_handler_platform_interface: ^3.11.5
   url_launcher: ^6.1.10
-  connectivity: 3.0.6
-  package_info_plus : any
+  connectivity_plus: ^5.0.2
+  package_info_plus: ^3.1.2
   time_machine: ^0.9.17
   device_info_plus: ^8.2.2
-  uni_links: ^0.5.1
+  app_links: ^3.4.5
   flutter_custom_tabs: ^1.0.4
 
   # file encryption
-  encrypt:
+  encrypt: ^5.0.1
 
   #background
   #  android_alarm_manager: 0.4.5+1 not working
