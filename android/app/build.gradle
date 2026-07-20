@@ -76,7 +76,7 @@ android {
     defaultConfig {
         manifestPlaceholders = [deepLink:buildVariableProperties["deepLink"]]
         applicationId buildVariableProperties["packageName"]
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 35
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

@@ -17,7 +17,6 @@ import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_uploader/flutter_uploader.dart';
 
 class ComposeMethods {
   final Account account;
@@ -175,10 +174,11 @@ class ComposeMethods {
     Function(dynamic) onError,
   }) async {
     final taskId = Random().nextInt(1000).toString();
-    final completer = Completer<UploadTaskProgress>();
+    final fileName = message.subject + ".eml";
+    final completer = Completer<UploadProgress>();
     final tempAttachment = new TempAttachmentUpload(
       null,
-      name: message.subject + ".eml",
+      name: fileName,
       size: 1,
       taskId: taskId,
       uploadProgress: completer.future.asStream().asBroadcastStream(),
@@ -189,16 +189,12 @@ class ComposeMethods {
       final attachment = await _mailApi.uploadEmlAttachments(message);
       attachment.guid = tempAttachment.guid;
       attachment.file = tempAttachment.file;
-      completer.complete(
-        UploadTaskProgress(taskId, 100, UploadTaskStatus.complete),
-      );
+      completer.complete(UploadProgress(taskId, 1.0));
       tempAttachment.size = attachment.size;
       onUploadEnd(attachment);
     } catch (e) {
       onError(e);
-      completer.complete(
-        UploadTaskProgress(taskId, 0, UploadTaskStatus.failed),
-      );
+      completer.complete(UploadProgress(taskId, -1.0));
     }
   }
 

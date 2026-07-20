@@ -1,4 +1,5 @@
 //@dart=2.9
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -11,12 +12,13 @@ import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/utils/download_directory.dart';
 import 'package:aurora_mail/utils/file_utils.dart';
+import 'package:background_downloader/background_downloader.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_uploader/flutter_uploader.dart';
+import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:share_plus/share_plus.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
@@ -255,40 +257,93 @@ class MailApi {
     @required Function(ComposeAttachment) onUploadEnd,
     @required Function(dynamic) onError,
   }) async {
-    var _onUploadEnd = onUploadEnd;
-    final uploader = FlutterUploader();
     final parameters = json.encode({"AccountID": _accountId});
     final body =
         new WebMailApiBody(method: "UploadAttachment", parameters: parameters);
     final fileName = FileUtils.getFileNameFromPath(file.path);
     final headers = await _mailModule.getAuthHeaders();
+    final taskId = Uuid().v4();
 
-    final taskId = await uploader.enqueue(MultipartFormDataUpload(
-      url: _mailModule.apiUrl,
-      files: [
-        FileItem(
-          path: file.path,
-          field: "file",
-        )
-      ],
-      method: UploadMethod.POST,
-      headers: headers as Map<String, String>,
-      data: body.toMap("Mail"),
-      tag: fileName,
-    ));
+    final client = http.Client();
+    final progressController = StreamController<UploadProgress>.broadcast();
+    var cancelled = false;
 
     final tempAttachment = new TempAttachmentUpload(
       file,
       name: fileName,
       size: file.lengthSync(),
       taskId: taskId,
-      uploadProgress: uploader.progress,
-      cancel: uploader.cancel,
+      uploadProgress: progressController.stream,
+      cancel: ({String taskId}) {
+        cancelled = true;
+        client.close();
+      },
     );
     onUploadStart(tempAttachment);
-    uploader.result.listen((result) {
-      if (result.taskId == tempAttachment.taskId) {
-        final res = json.decode(result.response);
+
+    // Deliberately not awaited: like the old flutter_uploader (which just
+    // enqueued a native background task and returned immediately), the
+    // caller (ComposeBloc._addAttachment) awaits this method between
+    // picking each file. If we awaited the network request here, the
+    // StartUpload event this triggers via onUploadStart would sit stuck in
+    // the bloc's event queue until the whole upload finished, so nothing
+    // would show up on screen until then.
+    _doUpload(
+      file: file,
+      headers: headers as Map<String, String>,
+      fields: body.toMap("Mail"),
+      tempAttachment: tempAttachment,
+      client: client,
+      isCancelled: () => cancelled,
+      onUploadEnd: onUploadEnd,
+      onError: onError,
+    ).whenComplete(() {
+      progressController.close();
+      client.close();
+    });
+  }
+
+  Future<void> _doUpload({
+    @required File file,
+    @required Map<String, String> headers,
+    @required Map<String, String> fields,
+    @required TempAttachmentUpload tempAttachment,
+    @required http.Client client,
+    @required bool Function() isCancelled,
+    @required Function(ComposeAttachment) onUploadEnd,
+    @required Function(dynamic) onError,
+  }) async {
+    const maxAttempts = 3;
+    // the plain http.Client() used here has no timeout of its own (unlike
+    // _mailModule's client, which has a 15s connectionTimeout), so a stalled
+    // connection would otherwise hang indefinitely instead of failing fast
+    // and retrying
+    const perAttemptTimeout = Duration(seconds: 45);
+
+    for (var attempt = 1; attempt <= maxAttempts; attempt++) {
+      print("Attachment upload: attempt $attempt/$maxAttempts starting");
+      try {
+        // a fresh MultipartRequest/MultipartFile is required on every
+        // attempt: both are single-use, locked as soon as they're sent once
+        final request =
+            http.MultipartRequest("POST", Uri.parse(_mailModule.apiUrl));
+        request.headers.addAll(headers);
+        request.fields.addAll(fields);
+        // matches the field names the server's own web client sends
+        // (confirmed from a working browser upload's request payload)
+        request.fields["jua-post-type"] = "ajax";
+        request.files.add(
+            await http.MultipartFile.fromPath("jua-uploader", file.path));
+
+        final streamedResponse =
+            await client.send(request).timeout(perAttemptTimeout);
+        final responseBody = await streamedResponse.stream
+            .bytesToString()
+            .timeout(perAttemptTimeout);
+        print("Attachment upload: attempt $attempt got response "
+            "status=${streamedResponse.statusCode} body=$responseBody");
+        final res = json.decode(responseBody);
+
         if (res is Map &&
             res["Result"] is Map &&
             res["Result"]["Attachment"] is Map) {
@@ -298,20 +353,36 @@ class MailApi {
           assert(tempAttachment != null && tempAttachment.guid is String);
           composeAttachment.guid = tempAttachment.guid;
           composeAttachment.file = tempAttachment.file;
-          _onUploadEnd(composeAttachment);
-          _onUploadEnd = null;
+          onUploadEnd(composeAttachment);
         } else {
+          print("Attachment upload: unexpected response shape, res=$res");
           onError(WebMailApiError(res));
         }
-      }
-    }, onError: (err) {
-      if (err?.status == UploadTaskStatus.canceled ||
-          err?.code == "flutter_upload_cancelled") {
         return;
+      } catch (err) {
+        // matches flutter_uploader's cancellation behaviour: no error callback
+        if (isCancelled()) return;
+
+        // Some Android devices reset long-lived plain dart:io sockets
+        // mid-upload (e.g. on WiFi/mobile handover), surfacing as
+        // "ClientException: Software caused connection abort", or the
+        // connection just stalls (TimeoutException, from perAttemptTimeout
+        // above). The old flutter_uploader never hit this since it used the
+        // platform's native (OkHttp) HTTP stack, which handles such
+        // handovers/stalls itself. A short retry covers the same case here.
+        final isTransientNetworkError = err is http.ClientException ||
+            err is SocketException ||
+            err is TimeoutException;
+        print("Attachment upload: attempt $attempt failed: "
+            "${err.runtimeType}: $err");
+        if (!isTransientNetworkError || attempt == maxAttempts) {
+          onError(WebMailApiError(err));
+          print("Attachment upload error: $err");
+          return;
+        }
+        await Future.delayed(Duration(seconds: attempt));
       }
-      onError(WebMailApiError(err));
-      print("Attachment upload error: $err");
-    });
+    }
   }
 
   Future<void> downloadAttachment(
@@ -321,15 +392,14 @@ class MailApi {
   }) async {
     final downloadsDirectory = await getDownloadDirectory();
     final headers = await _mailModule.getAuthHeaders();
+    final destinationPath =
+        await _uniqueFilePath(downloadsDirectory, attachment.fileName);
 
     await attachment.startDownload(
       onDownloadStart: () async {
         onDownloadStart();
-        // TODO repair progress updating
-//        FlutterDownloader.registerCallback(MailAttachment.downloadCallback);
       },
-      onDownloadEnd: () =>
-          onDownloadEnd("${downloadsDirectory}/${attachment.fileName}"),
+      onDownloadEnd: () => onDownloadEnd(destinationPath),
       onError: () => onDownloadEnd(null),
     );
 
@@ -337,17 +407,43 @@ class MailApi {
     print(downloadsDirectory);
     print(attachment.fileName);
     print(headers);
-    final _fileNameRegex = RegExp(r'(.+?)(?:\.[^.]*$|$)');
-    final _fileName = _fileNameRegex.firstMatch(attachment.fileName).group(1);
 
-    final taskId = await FlutterDownloader.enqueue(
+    // background_downloader (this version) can only save into one of its own
+    // fixed base directories, so download to a private staging location and
+    // let DownloadTaskProgress move it to downloadsDirectory once complete.
+    final task = DownloadTask(
       url: _mailModule.hostname + '/' + attachment.downloadUrl,
-      savedDir: downloadsDirectory,
-      fileName: _fileName,
-      saveInPublicStorage: true,
+      filename: attachment.fileName,
+      baseDirectory: BaseDirectory.temporary,
       headers: headers as Map<String, String>,
+      updates: Updates.statusAndProgress,
     );
-    attachment.add(taskId, FlutterDownloader.cancel);
+    await FileDownloader().enqueue(task);
+    attachment.add(
+      task,
+      destinationPath,
+      ({String taskId}) => FileDownloader().cancelTaskWithId(taskId),
+    );
+  }
+
+  // If [fileName] already exists in [directory], append " (1)", " (2)", ...
+  // before the extension until a free name is found (matches the
+  // Chrome/Explorer download-collision convention).
+  Future<String> _uniqueFilePath(String directory, String fileName) async {
+    final candidate = "$directory/$fileName";
+    if (!await File(candidate).exists()) return candidate;
+
+    final dotIndex = fileName.lastIndexOf('.');
+    final hasExt = dotIndex > 0;
+    final base = hasExt ? fileName.substring(0, dotIndex) : fileName;
+    final ext = hasExt ? fileName.substring(dotIndex) : '';
+
+    var i = 1;
+    while (true) {
+      final next = "$directory/$base ($i)$ext";
+      if (!await File(next).exists()) return next;
+      i++;
+    }
   }
 
   Future<void> shareAttachment(MailAttachment attachment,

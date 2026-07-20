@@ -1,17 +1,38 @@
 //@dart=2.9
 import 'dart:async';
 import 'dart:convert';
-import 'dart:isolate';
-import 'dart:ui';
+import 'dart:io';
 
+import 'package:background_downloader/background_downloader.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-
-const _DOWNLOAD_PORT_NAME = "downloader_send_port";
 
 class MailAttachment {
   static final currentlyDownloadingAttachments =
       new List<DownloadTaskProgress>();
+
+  static StreamSubscription<TaskUpdate> _subscription;
+
+  // background_downloader delivers updates for every enqueued task on a
+  // single global stream, so we only ever need one listener for the
+  // lifetime of the app; it dispatches to whichever DownloadTaskProgress
+  // matches the update's taskId.
+  static void _ensureListening() {
+    if (_subscription != null) return;
+    _subscription = FileDownloader().updates.listen((update) async {
+      final id = update.task.taskId;
+      final task = currentlyDownloadingAttachments
+          .firstWhere((da) => da.taskId == id, orElse: () => null);
+      if (task == null) return;
+
+      if (update is TaskStatusUpdate) {
+        if (update.status.isFinalState) {
+          await task.finish(update.status);
+        }
+      } else if (update is TaskProgressUpdate) {
+        task.updateProgress(update.progress, TaskStatus.running);
+      }
+    });
+  }
 
   final String fileName;
   final String mimeType;
@@ -43,11 +64,18 @@ class MailAttachment {
     @required this.thumbnailUrl,
   });
 
-  add(String taskId, Function({String taskId}) cancel) {
+  Function() _onDownloadEnd;
+  Function() _onError;
+
+  add(DownloadTask task, String destinationPath,
+      Function({String taskId}) cancel) {
     currentlyDownloadingAttachments.add(new DownloadTaskProgress(
-      taskId: taskId,
+      task: task,
+      destinationPath: destinationPath,
       attachmentHash: hash,
       cancel: cancel,
+      onEnd: _onDownloadEnd,
+      onError: _onError,
     ));
   }
 
@@ -56,30 +84,9 @@ class MailAttachment {
     @required Function() onDownloadEnd,
     @required Function() onError,
   }) async {
-    final port = ReceivePort();
-    IsolateNameServer.registerPortWithName(
-      port.sendPort,
-      _DOWNLOAD_PORT_NAME,
-    );
-    port.listen((data) {
-      String id = data[0] as String;
-      DownloadTaskStatus status = DownloadTaskStatus(data[1] as int);
-      int progress = data[2] as int;
-      if ([
-        DownloadTaskStatus.complete,
-        DownloadTaskStatus.failed,
-        DownloadTaskStatus.canceled
-      ].contains(status)) {
-        onDownloadEnd();
-        endDownloading(id);
-      } else {
-        final task = currentlyDownloadingAttachments
-            .firstWhere((da) => da.taskId == id, orElse: () => null);
-
-        task?.updateProgress(progress, status);
-      }
-    });
-    FlutterDownloader.registerCallback(downloadCallback);
+    _onDownloadEnd = onDownloadEnd;
+    _onError = onError;
+    _ensureListening();
     onDownloadStart();
   }
 
@@ -90,20 +97,6 @@ class MailAttachment {
       process.endProcess();
       currentlyDownloadingAttachments.removeWhere((da) => da.taskId == taskId);
     }
-    IsolateNameServer.removePortNameMapping(_DOWNLOAD_PORT_NAME);
-  }
-
-  static void downloadCallback(
-    String id,
-    int status,
-    int progress,
-  ) {
-    print("Not called");
-
-    ///Status 4 - error
-    final SendPort send =
-        IsolateNameServer.lookupPortByName(_DOWNLOAD_PORT_NAME);
-    send.send([id, status, progress]);
   }
 
   DownloadTaskProgress getDownloadTask() {
@@ -144,13 +137,24 @@ class MailAttachment {
 }
 
 class DownloadTaskProgress {
-  final String taskId;
+  final DownloadTask task;
+  // final absolute path the rest of the app expects the downloaded file at;
+  // background_downloader (this version) can only download into one of its
+  // fixed BaseDirectory locations, so the task saves to a private staging
+  // location and this is where it's moved to once complete.
+  final String destinationPath;
   final String attachmentHash;
   final Function({String taskId}) cancel;
-  DownloadTaskStatus _status;
+  final Function() onEnd;
+  final Function() onError;
+  TaskStatus _status;
 
-  DownloadTaskStatus get status => _status;
+  String get taskId => task.taskId;
 
+  TaskStatus get status => _status;
+
+  // kept as an int 0-100 (rather than background_downloader's 0.0-1.0
+  // double) so the existing progress UI doesn't need to change.
   int _currentProgress;
   final _controller = new StreamController<int>.broadcast();
 
@@ -158,10 +162,30 @@ class DownloadTaskProgress {
 
   Stream<int> get progressStream => _controller.stream.asBroadcastStream();
 
-  void updateProgress(int num, DownloadTaskStatus status) {
-    _currentProgress = num;
+  void updateProgress(double progress, TaskStatus status) {
+    _currentProgress = (progress.clamp(0, 1) * 100).round();
     _status = status;
-    _controller.sink.add(num);
+    _controller.sink.add(_currentProgress);
+  }
+
+  Future<void> finish(TaskStatus status) async {
+    var finalStatus = status;
+    if (status == TaskStatus.complete && destinationPath != null) {
+      try {
+        final tempPath = await task.filePath();
+        await File(destinationPath).parent.create(recursive: true);
+        await File(tempPath).copy(destinationPath);
+        await File(tempPath).delete();
+      } catch (e) {
+        finalStatus = TaskStatus.failed;
+      }
+    }
+    updateProgress(finalStatus == TaskStatus.complete ? 1.0 : 0.0, finalStatus);
+    if (finalStatus == TaskStatus.complete) {
+      onEnd?.call();
+    } else {
+      onError?.call();
+    }
   }
 
   void endProcess() {
@@ -170,8 +194,11 @@ class DownloadTaskProgress {
   }
 
   DownloadTaskProgress({
-    @required this.taskId,
+    @required this.task,
+    this.destinationPath,
     @required this.attachmentHash,
     @required this.cancel,
+    this.onEnd,
+    this.onError,
   });
 }

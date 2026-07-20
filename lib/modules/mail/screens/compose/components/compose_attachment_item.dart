@@ -7,7 +7,6 @@ import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/thumbnail_widget.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_uploader/flutter_uploader.dart';
 
 class ComposeAttachmentItem extends StatelessWidget {
   final dynamic attachment;
@@ -42,11 +41,12 @@ class ComposeAttachmentItem extends StatelessWidget {
                     title: Text(attachment.name as String),
                     subtitle: StreamBuilder(
                       stream: (attachment.uploadProgress
-                              as Stream<UploadTaskProgress>)
+                              as Stream<UploadProgress>)
                           .where(
                         (item) => item.taskId == attachment.taskId,
                       ),
-                      builder: (_, AsyncSnapshot<UploadTaskProgress> snapshot) {
+                      builder:
+                          (_, AsyncSnapshot<UploadProgress> snapshot) {
                         return SizedBox(
                           height: 3.0,
                           child: LinearProgressIndicator(
@@ -55,7 +55,9 @@ class ComposeAttachmentItem extends StatelessWidget {
                             value: snapshot.connectionState ==
                                         ConnectionState.active &&
                                     snapshot.hasData
-                                ? snapshot.data.progress / 100
+                                ? (snapshot.data.progress >= 0
+                                        ? snapshot.data.progress
+                                        : null)
                                 : null,
                           ),
                         );
@@ -87,16 +89,18 @@ class ComposeAttachmentItem extends StatelessWidget {
         leading: Icon(Icons.attach_file),
         title: Text(attachment.name as String),
         subtitle: StreamBuilder(
-          stream: (attachment.uploadProgress as Stream<UploadTaskProgress>)
+          stream: (attachment.uploadProgress as Stream<UploadProgress>)
               .where((item) => item.taskId == attachment.taskId),
-          builder: (_, AsyncSnapshot<UploadTaskProgress> snapshot) {
+          builder: (_, AsyncSnapshot<UploadProgress> snapshot) {
             return SizedBox(
               height: 3.0,
               child: LinearProgressIndicator(
                 backgroundColor: theme.disabledColor.withOpacity(0.1),
                 value: snapshot.connectionState == ConnectionState.active &&
                         snapshot.hasData
-                    ? snapshot.data.progress / 100
+                    ? (snapshot.data.progress >= 0
+                            ? snapshot.data.progress
+                            : null)
                     : null,
               ),
             );

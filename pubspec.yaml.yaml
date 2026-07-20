@@ -38,13 +38,7 @@ dependencies:
 
   # file downloading/uploading
   file_picker: 5.2.10
-
-  ### override package wiht local copy to update dependencies
-  flutter_uploader: 3.0.0-beta.4
-  # flutter_uploader:
-  #   path: ./ios/_PackageOverrides/flutter_uploader-3.0.0-beta.4/
-
-  flutter_downloader: 1.10.5
+  background_downloader: ^6.3.3
   share_plus: ^6.3.4
   path_provider: ^2.0.14
   video_thumbnail: 0.5.3

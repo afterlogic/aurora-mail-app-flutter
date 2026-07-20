@@ -1,8 +1,7 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
-import 'package:aurora_mail/utils/download_directory.dart';
 import 'package:aurora_mail/utils/permissions.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:background_downloader/background_downloader.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 Future downloadFromUrl(
@@ -18,15 +17,21 @@ Future downloadFromUrl(
     );
 
     final headers = await module.getAuthHeaders();
-    final downloadsDirectory = await getDownloadDirectory();
 
-    final taskId = await FlutterDownloader.enqueue(
+    // downloaded to a private staging location first, then moved into the
+    // public Downloads folder (mirrors flutter_downloader's
+    // saveInPublicStorage: true)
+    final task = DownloadTask(
       url: url,
-      savedDir: downloadsDirectory,
-      fileName: '${fileName}.ics',
-      saveInPublicStorage: true,
+      filename: '${fileName}.ics',
+      baseDirectory: BaseDirectory.temporary,
       headers: headers as Map<String, String>,
     );
+    final result = await FileDownloader().download(task);
+    if (result.status == TaskStatus.complete) {
+      await FileDownloader()
+          .moveFileToSharedStorage(await task.filePath(), SharedStorage.downloads);
+    }
   }catch (e, st){
     print(e);
   }

@@ -19,3 +19,13 @@
 -dontwarn org.openjsse.javax.net.ssl.SSLParameters
 -dontwarn org.openjsse.javax.net.ssl.SSLSocket
 -dontwarn org.openjsse.net.ssl.OpenJSSE
+
+## Gson (used internally by background_downloader to (de)serialize tasks).
+## Without -keepattributes Signature, R8 strips generic type info and
+## TypeToken-based deserialization crashes at startup with
+## "java.lang.RuntimeException: Missing type parameter."
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class com.google.gson.reflect.TypeToken { *; }
+-keep,allowobfuscation,allowshrinking class * extends com.google.gson.reflect.TypeToken
+-keep class com.bbflight.background_downloader.** { *; }

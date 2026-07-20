@@ -20,7 +20,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 
 import 'background/background_helper.dart';
@@ -118,11 +117,6 @@ void main() async {
   AlarmService.onNotification(mapMessageHandler);
   Bloc.observer = BlocLogger();
   tz.initializeTimeZones();
-  try {
-    if (Platform.isAndroid) FlutterDownloader.initialize();
-  } catch (e) {
-    e;
-  }
 }
 
 Set<String> updateFromNotification = {};
