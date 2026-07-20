@@ -23,7 +23,7 @@ printf "${BG_G} Building ${PackageName} ${NC}\n"
 if [ "$1" = "apk" ] || [ "$1" = "" ]; then
     printf "\n${Y} Building apk ${NC}\n";
 
-    flutter build apk
+    fvm flutter build apk
 
     if test -f "$ApkFile"; then
         printf "${Y} Moving .apk to the output dir ${NC}\n"
@@ -36,7 +36,7 @@ fi
 if [ "$1" = "bundle" ] || [ "$1" = "" ]; then
     printf "\n${Y} Building bundle ${NC}\n";
 
-    flutter build appbundle
+    fvm flutter build appbundle
 
     if test -f "$BundleFile"; then
         printf "${Y} Moving .aab to the output dir ${NC}\n"
