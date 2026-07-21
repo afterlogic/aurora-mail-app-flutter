@@ -9995,7 +9995,6 @@ class ContactsStoragesTable extends DataClass
   final String? ownerMail;
   final bool? isShared;
   final int? accessCode;
-  final List<ContactInfoItem>? contactsInfo;
   ContactsStoragesTable(
       {this.sqliteId,
       required this.userLocalId,
@@ -10008,8 +10007,7 @@ class ContactsStoragesTable extends DataClass
       required this.displayName,
       this.ownerMail,
       this.isShared,
-      this.accessCode,
-      this.contactsInfo});
+      this.accessCode});
   factory ContactsStoragesTable.fromData(Map<String, dynamic> data,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -10038,9 +10036,6 @@ class ContactsStoragesTable extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}is_shared']),
       accessCode: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}access_code']),
-      contactsInfo: $ContactsStoragesTable.$converter0.mapToDart(
-          const StringType().mapFromDatabaseResponse(
-              data['${effectivePrefix}contacts_info'])),
     );
   }
   @override
@@ -10065,11 +10060,6 @@ class ContactsStoragesTable extends DataClass
     }
     if (!nullToAbsent || accessCode != null) {
       map['access_code'] = Variable<int?>(accessCode);
-    }
-    if (!nullToAbsent || contactsInfo != null) {
-      final converter = $ContactsStoragesTable.$converter0;
-      map['contacts_info'] =
-          Variable<String?>(converter.mapToSql(contactsInfo));
     }
     return map;
   }
@@ -10096,9 +10086,6 @@ class ContactsStoragesTable extends DataClass
       accessCode: accessCode == null && nullToAbsent
           ? const Value.absent()
           : Value(accessCode),
-      contactsInfo: contactsInfo == null && nullToAbsent
-          ? const Value.absent()
-          : Value(contactsInfo),
     );
   }
 
@@ -10118,8 +10105,6 @@ class ContactsStoragesTable extends DataClass
       ownerMail: serializer.fromJson<String?>(json['ownerMail']),
       isShared: serializer.fromJson<bool?>(json['isShared']),
       accessCode: serializer.fromJson<int?>(json['accessCode']),
-      contactsInfo:
-          serializer.fromJson<List<ContactInfoItem>?>(json['contactsInfo']),
     );
   }
   @override
@@ -10138,7 +10123,6 @@ class ContactsStoragesTable extends DataClass
       'ownerMail': serializer.toJson<String?>(ownerMail),
       'isShared': serializer.toJson<bool?>(isShared),
       'accessCode': serializer.toJson<int?>(accessCode),
-      'contactsInfo': serializer.toJson<List<ContactInfoItem>?>(contactsInfo),
     };
   }
 
@@ -10154,8 +10138,7 @@ class ContactsStoragesTable extends DataClass
           String? displayName,
           String? ownerMail,
           bool? isShared,
-          int? accessCode,
-          List<ContactInfoItem>? contactsInfo}) =>
+          int? accessCode}) =>
       ContactsStoragesTable(
         sqliteId: sqliteId ?? this.sqliteId,
         userLocalId: userLocalId ?? this.userLocalId,
@@ -10169,7 +10152,6 @@ class ContactsStoragesTable extends DataClass
         ownerMail: ownerMail ?? this.ownerMail,
         isShared: isShared ?? this.isShared,
         accessCode: accessCode ?? this.accessCode,
-        contactsInfo: contactsInfo ?? this.contactsInfo,
       );
   @override
   String toString() {
@@ -10185,8 +10167,7 @@ class ContactsStoragesTable extends DataClass
           ..write('displayName: $displayName, ')
           ..write('ownerMail: $ownerMail, ')
           ..write('isShared: $isShared, ')
-          ..write('accessCode: $accessCode, ')
-          ..write('contactsInfo: $contactsInfo')
+          ..write('accessCode: $accessCode')
           ..write(')'))
         .toString();
   }
@@ -10204,8 +10185,7 @@ class ContactsStoragesTable extends DataClass
       displayName,
       ownerMail,
       isShared,
-      accessCode,
-      contactsInfo);
+      accessCode);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -10221,8 +10201,7 @@ class ContactsStoragesTable extends DataClass
           other.displayName == this.displayName &&
           other.ownerMail == this.ownerMail &&
           other.isShared == this.isShared &&
-          other.accessCode == this.accessCode &&
-          other.contactsInfo == this.contactsInfo);
+          other.accessCode == this.accessCode);
 }
 
 class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
@@ -10238,7 +10217,6 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
   final Value<String?> ownerMail;
   final Value<bool?> isShared;
   final Value<int?> accessCode;
-  final Value<List<ContactInfoItem>?> contactsInfo;
   const ContactsStoragesCompanion({
     this.sqliteId = const Value.absent(),
     this.userLocalId = const Value.absent(),
@@ -10252,7 +10230,6 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
     this.ownerMail = const Value.absent(),
     this.isShared = const Value.absent(),
     this.accessCode = const Value.absent(),
-    this.contactsInfo = const Value.absent(),
   });
   ContactsStoragesCompanion.insert({
     this.sqliteId = const Value.absent(),
@@ -10267,7 +10244,6 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
     this.ownerMail = const Value.absent(),
     this.isShared = const Value.absent(),
     this.accessCode = const Value.absent(),
-    this.contactsInfo = const Value.absent(),
   })  : userLocalId = Value(userLocalId),
         idUser = Value(idUser),
         serverId = Value(serverId),
@@ -10288,7 +10264,6 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
     Expression<String?>? ownerMail,
     Expression<bool?>? isShared,
     Expression<int?>? accessCode,
-    Expression<List<ContactInfoItem>?>? contactsInfo,
   }) {
     return RawValuesInsertable({
       if (sqliteId != null) 'sqlite_id': sqliteId,
@@ -10303,7 +10278,6 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
       if (ownerMail != null) 'owner_mail': ownerMail,
       if (isShared != null) 'is_shared': isShared,
       if (accessCode != null) 'access_code': accessCode,
-      if (contactsInfo != null) 'contacts_info': contactsInfo,
     });
   }
 
@@ -10319,8 +10293,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
       Value<String>? displayName,
       Value<String?>? ownerMail,
       Value<bool?>? isShared,
-      Value<int?>? accessCode,
-      Value<List<ContactInfoItem>?>? contactsInfo}) {
+      Value<int?>? accessCode}) {
     return ContactsStoragesCompanion(
       sqliteId: sqliteId ?? this.sqliteId,
       userLocalId: userLocalId ?? this.userLocalId,
@@ -10334,7 +10307,6 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
       ownerMail: ownerMail ?? this.ownerMail,
       isShared: isShared ?? this.isShared,
       accessCode: accessCode ?? this.accessCode,
-      contactsInfo: contactsInfo ?? this.contactsInfo,
     );
   }
 
@@ -10377,11 +10349,6 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
     if (accessCode.present) {
       map['access_code'] = Variable<int?>(accessCode.value);
     }
-    if (contactsInfo.present) {
-      final converter = $ContactsStoragesTable.$converter0;
-      map['contacts_info'] =
-          Variable<String?>(converter.mapToSql(contactsInfo.value));
-    }
     return map;
   }
 
@@ -10399,8 +10366,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
           ..write('displayName: $displayName, ')
           ..write('ownerMail: $ownerMail, ')
           ..write('isShared: $isShared, ')
-          ..write('accessCode: $accessCode, ')
-          ..write('contactsInfo: $contactsInfo')
+          ..write('accessCode: $accessCode')
           ..write(')'))
         .toString();
   }
@@ -10484,15 +10450,6 @@ class $ContactsStoragesTable extends ContactsStorages
   late final GeneratedColumn<int?> accessCode = GeneratedColumn<int?>(
       'access_code', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _contactsInfoMeta =
-      const VerificationMeta('contactsInfo');
-  @override
-  late final GeneratedColumnWithTypeConverter<List<ContactInfoItem>, String?>
-      contactsInfo = GeneratedColumn<String?>(
-              'contacts_info', aliasedName, true,
-              type: const StringType(), requiredDuringInsert: false)
-          .withConverter<List<ContactInfoItem>>(
-              $ContactsStoragesTable.$converter0);
   @override
   List<GeneratedColumn> get $columns => [
         sqliteId,
@@ -10506,8 +10463,7 @@ class $ContactsStoragesTable extends ContactsStorages
         displayName,
         ownerMail,
         isShared,
-        accessCode,
-        contactsInfo
+        accessCode
       ];
   @override
   String get aliasedName => _alias ?? 'contacts_storages';
@@ -10589,7 +10545,6 @@ class $ContactsStoragesTable extends ContactsStorages
           accessCode.isAcceptableOrUnknown(
               data['access_code']!, _accessCodeMeta));
     }
-    context.handle(_contactsInfoMeta, const VerificationResult.success());
     return context;
   }
 
@@ -10605,9 +10560,369 @@ class $ContactsStoragesTable extends ContactsStorages
   $ContactsStoragesTable createAlias(String alias) {
     return $ContactsStoragesTable(attachedDatabase, alias);
   }
+}
 
-  static TypeConverter<List<ContactInfoItem>, String> $converter0 =
-      const ContactsInfoConverter();
+class ContactInfoRow extends DataClass implements Insertable<ContactInfoRow> {
+  final int sqliteId;
+  final int userLocalId;
+  final String storage;
+  final String uuid;
+  final String? eTag;
+  final bool hasBody;
+  final bool needsUpdate;
+  ContactInfoRow(
+      {required this.sqliteId,
+      required this.userLocalId,
+      required this.storage,
+      required this.uuid,
+      this.eTag,
+      required this.hasBody,
+      required this.needsUpdate});
+  factory ContactInfoRow.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return ContactInfoRow(
+      sqliteId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}sqlite_id'])!,
+      userLocalId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id'])!,
+      storage: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}storage'])!,
+      uuid: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}uuid'])!,
+      eTag: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}e_tag']),
+      hasBody: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}has_body'])!,
+      needsUpdate: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}needs_update'])!,
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['sqlite_id'] = Variable<int>(sqliteId);
+    map['user_local_id'] = Variable<int>(userLocalId);
+    map['storage'] = Variable<String>(storage);
+    map['uuid'] = Variable<String>(uuid);
+    if (!nullToAbsent || eTag != null) {
+      map['e_tag'] = Variable<String?>(eTag);
+    }
+    map['has_body'] = Variable<bool>(hasBody);
+    map['needs_update'] = Variable<bool>(needsUpdate);
+    return map;
+  }
+
+  ContactInfosCompanion toCompanion(bool nullToAbsent) {
+    return ContactInfosCompanion(
+      sqliteId: Value(sqliteId),
+      userLocalId: Value(userLocalId),
+      storage: Value(storage),
+      uuid: Value(uuid),
+      eTag: eTag == null && nullToAbsent ? const Value.absent() : Value(eTag),
+      hasBody: Value(hasBody),
+      needsUpdate: Value(needsUpdate),
+    );
+  }
+
+  factory ContactInfoRow.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ContactInfoRow(
+      sqliteId: serializer.fromJson<int>(json['sqliteId']),
+      userLocalId: serializer.fromJson<int>(json['userLocalId']),
+      storage: serializer.fromJson<String>(json['storage']),
+      uuid: serializer.fromJson<String>(json['uuid']),
+      eTag: serializer.fromJson<String?>(json['eTag']),
+      hasBody: serializer.fromJson<bool>(json['hasBody']),
+      needsUpdate: serializer.fromJson<bool>(json['needsUpdate']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'sqliteId': serializer.toJson<int>(sqliteId),
+      'userLocalId': serializer.toJson<int>(userLocalId),
+      'storage': serializer.toJson<String>(storage),
+      'uuid': serializer.toJson<String>(uuid),
+      'eTag': serializer.toJson<String?>(eTag),
+      'hasBody': serializer.toJson<bool>(hasBody),
+      'needsUpdate': serializer.toJson<bool>(needsUpdate),
+    };
+  }
+
+  ContactInfoRow copyWith(
+          {int? sqliteId,
+          int? userLocalId,
+          String? storage,
+          String? uuid,
+          String? eTag,
+          bool? hasBody,
+          bool? needsUpdate}) =>
+      ContactInfoRow(
+        sqliteId: sqliteId ?? this.sqliteId,
+        userLocalId: userLocalId ?? this.userLocalId,
+        storage: storage ?? this.storage,
+        uuid: uuid ?? this.uuid,
+        eTag: eTag ?? this.eTag,
+        hasBody: hasBody ?? this.hasBody,
+        needsUpdate: needsUpdate ?? this.needsUpdate,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('ContactInfoRow(')
+          ..write('sqliteId: $sqliteId, ')
+          ..write('userLocalId: $userLocalId, ')
+          ..write('storage: $storage, ')
+          ..write('uuid: $uuid, ')
+          ..write('eTag: $eTag, ')
+          ..write('hasBody: $hasBody, ')
+          ..write('needsUpdate: $needsUpdate')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      sqliteId, userLocalId, storage, uuid, eTag, hasBody, needsUpdate);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ContactInfoRow &&
+          other.sqliteId == this.sqliteId &&
+          other.userLocalId == this.userLocalId &&
+          other.storage == this.storage &&
+          other.uuid == this.uuid &&
+          other.eTag == this.eTag &&
+          other.hasBody == this.hasBody &&
+          other.needsUpdate == this.needsUpdate);
+}
+
+class ContactInfosCompanion extends UpdateCompanion<ContactInfoRow> {
+  final Value<int> sqliteId;
+  final Value<int> userLocalId;
+  final Value<String> storage;
+  final Value<String> uuid;
+  final Value<String?> eTag;
+  final Value<bool> hasBody;
+  final Value<bool> needsUpdate;
+  const ContactInfosCompanion({
+    this.sqliteId = const Value.absent(),
+    this.userLocalId = const Value.absent(),
+    this.storage = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.eTag = const Value.absent(),
+    this.hasBody = const Value.absent(),
+    this.needsUpdate = const Value.absent(),
+  });
+  ContactInfosCompanion.insert({
+    this.sqliteId = const Value.absent(),
+    required int userLocalId,
+    required String storage,
+    required String uuid,
+    this.eTag = const Value.absent(),
+    this.hasBody = const Value.absent(),
+    this.needsUpdate = const Value.absent(),
+  })  : userLocalId = Value(userLocalId),
+        storage = Value(storage),
+        uuid = Value(uuid);
+  static Insertable<ContactInfoRow> custom({
+    Expression<int>? sqliteId,
+    Expression<int>? userLocalId,
+    Expression<String>? storage,
+    Expression<String>? uuid,
+    Expression<String?>? eTag,
+    Expression<bool>? hasBody,
+    Expression<bool>? needsUpdate,
+  }) {
+    return RawValuesInsertable({
+      if (sqliteId != null) 'sqlite_id': sqliteId,
+      if (userLocalId != null) 'user_local_id': userLocalId,
+      if (storage != null) 'storage': storage,
+      if (uuid != null) 'uuid': uuid,
+      if (eTag != null) 'e_tag': eTag,
+      if (hasBody != null) 'has_body': hasBody,
+      if (needsUpdate != null) 'needs_update': needsUpdate,
+    });
+  }
+
+  ContactInfosCompanion copyWith(
+      {Value<int>? sqliteId,
+      Value<int>? userLocalId,
+      Value<String>? storage,
+      Value<String>? uuid,
+      Value<String?>? eTag,
+      Value<bool>? hasBody,
+      Value<bool>? needsUpdate}) {
+    return ContactInfosCompanion(
+      sqliteId: sqliteId ?? this.sqliteId,
+      userLocalId: userLocalId ?? this.userLocalId,
+      storage: storage ?? this.storage,
+      uuid: uuid ?? this.uuid,
+      eTag: eTag ?? this.eTag,
+      hasBody: hasBody ?? this.hasBody,
+      needsUpdate: needsUpdate ?? this.needsUpdate,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (sqliteId.present) {
+      map['sqlite_id'] = Variable<int>(sqliteId.value);
+    }
+    if (userLocalId.present) {
+      map['user_local_id'] = Variable<int>(userLocalId.value);
+    }
+    if (storage.present) {
+      map['storage'] = Variable<String>(storage.value);
+    }
+    if (uuid.present) {
+      map['uuid'] = Variable<String>(uuid.value);
+    }
+    if (eTag.present) {
+      map['e_tag'] = Variable<String?>(eTag.value);
+    }
+    if (hasBody.present) {
+      map['has_body'] = Variable<bool>(hasBody.value);
+    }
+    if (needsUpdate.present) {
+      map['needs_update'] = Variable<bool>(needsUpdate.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ContactInfosCompanion(')
+          ..write('sqliteId: $sqliteId, ')
+          ..write('userLocalId: $userLocalId, ')
+          ..write('storage: $storage, ')
+          ..write('uuid: $uuid, ')
+          ..write('eTag: $eTag, ')
+          ..write('hasBody: $hasBody, ')
+          ..write('needsUpdate: $needsUpdate')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ContactInfosTable extends ContactInfos
+    with TableInfo<$ContactInfosTable, ContactInfoRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ContactInfosTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _sqliteIdMeta = const VerificationMeta('sqliteId');
+  @override
+  late final GeneratedColumn<int?> sqliteId = GeneratedColumn<int?>(
+      'sqlite_id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _userLocalIdMeta =
+      const VerificationMeta('userLocalId');
+  @override
+  late final GeneratedColumn<int?> userLocalId = GeneratedColumn<int?>(
+      'user_local_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _storageMeta = const VerificationMeta('storage');
+  @override
+  late final GeneratedColumn<String?> storage = GeneratedColumn<String?>(
+      'storage', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String?> uuid = GeneratedColumn<String?>(
+      'uuid', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _eTagMeta = const VerificationMeta('eTag');
+  @override
+  late final GeneratedColumn<String?> eTag = GeneratedColumn<String?>(
+      'e_tag', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _hasBodyMeta = const VerificationMeta('hasBody');
+  @override
+  late final GeneratedColumn<bool?> hasBody = GeneratedColumn<bool?>(
+      'has_body', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (has_body IN (0, 1))',
+      defaultValue: Constant(false));
+  final VerificationMeta _needsUpdateMeta =
+      const VerificationMeta('needsUpdate');
+  @override
+  late final GeneratedColumn<bool?> needsUpdate = GeneratedColumn<bool?>(
+      'needs_update', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (needs_update IN (0, 1))',
+      defaultValue: Constant(false));
+  @override
+  List<GeneratedColumn> get $columns =>
+      [sqliteId, userLocalId, storage, uuid, eTag, hasBody, needsUpdate];
+  @override
+  String get aliasedName => _alias ?? 'contact_infos';
+  @override
+  String get actualTableName => 'contact_infos';
+  @override
+  VerificationContext validateIntegrity(Insertable<ContactInfoRow> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('sqlite_id')) {
+      context.handle(_sqliteIdMeta,
+          sqliteId.isAcceptableOrUnknown(data['sqlite_id']!, _sqliteIdMeta));
+    }
+    if (data.containsKey('user_local_id')) {
+      context.handle(
+          _userLocalIdMeta,
+          userLocalId.isAcceptableOrUnknown(
+              data['user_local_id']!, _userLocalIdMeta));
+    } else if (isInserting) {
+      context.missing(_userLocalIdMeta);
+    }
+    if (data.containsKey('storage')) {
+      context.handle(_storageMeta,
+          storage.isAcceptableOrUnknown(data['storage']!, _storageMeta));
+    } else if (isInserting) {
+      context.missing(_storageMeta);
+    }
+    if (data.containsKey('uuid')) {
+      context.handle(
+          _uuidMeta, uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta));
+    } else if (isInserting) {
+      context.missing(_uuidMeta);
+    }
+    if (data.containsKey('e_tag')) {
+      context.handle(
+          _eTagMeta, eTag.isAcceptableOrUnknown(data['e_tag']!, _eTagMeta));
+    }
+    if (data.containsKey('has_body')) {
+      context.handle(_hasBodyMeta,
+          hasBody.isAcceptableOrUnknown(data['has_body']!, _hasBodyMeta));
+    }
+    if (data.containsKey('needs_update')) {
+      context.handle(
+          _needsUpdateMeta,
+          needsUpdate.isAcceptableOrUnknown(
+              data['needs_update']!, _needsUpdateMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {sqliteId};
+  @override
+  ContactInfoRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return ContactInfoRow.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $ContactInfosTable createAlias(String alias) {
+    return $ContactInfosTable(attachedDatabase, alias);
+  }
 }
 
 class LocalPgpKey extends DataClass implements Insertable<LocalPgpKey> {
@@ -11873,6 +12188,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $ContactsGroupsTable contactsGroups = $ContactsGroupsTable(this);
   late final $ContactsStoragesTable contactsStorages =
       $ContactsStoragesTable(this);
+  late final $ContactInfosTable contactInfos = $ContactInfosTable(this);
   late final $PgpKeyModelTable pgpKeyModel = $PgpKeyModelTable(this);
   late final $AccountIdentityTableTable accountIdentityTable =
       $AccountIdentityTableTable(this);
@@ -11891,6 +12207,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         contactsTable,
         contactsGroups,
         contactsStorages,
+        contactInfos,
         pgpKeyModel,
         accountIdentityTable,
         aliasesTable,
