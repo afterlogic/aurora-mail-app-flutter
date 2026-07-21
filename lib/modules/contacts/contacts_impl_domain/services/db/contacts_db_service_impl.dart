@@ -9,7 +9,9 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/mappers/contac
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_dao.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts_db_service.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/groups/contacts_groups_dao.dart';
+import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contact_infos_dao.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contacts_storages_dao.dart';
+import 'package:drift/drift.dart' show Value;
 
 class ContactsDbServiceImpl implements ContactsDbService {
   static final ContactsDbServiceImpl _singleton =
@@ -26,6 +28,29 @@ class ContactsDbServiceImpl implements ContactsDbService {
   final _contactsDao = ContactsDao(_db);
   final _groupsDao = ContactsGroupsDao(_db);
   final _storagesDao = ContactsStoragesDao(_db);
+  final _contactInfosDao = ContactInfosDao(_db);
+
+  static ContactInfoItem _contactInfoFromRow(ContactInfoRow row) {
+    return ContactInfoItem(
+      uuid: row.uuid,
+      storage: row.storage,
+      eTag: row.eTag,
+      hasBody: row.hasBody,
+      needsUpdate: row.needsUpdate,
+    );
+  }
+
+  static ContactInfosCompanion _contactInfoToCompanion(
+      int userLocalId, ContactInfoItem item) {
+    return ContactInfosCompanion.insert(
+      userLocalId: userLocalId,
+      storage: item.storage,
+      uuid: item.uuid,
+      eTag: Value(item.eTag),
+      hasBody: Value(item.hasBody),
+      needsUpdate: Value(item.needsUpdate),
+    );
+  }
 
   @override
   Future<void> addContacts(List<Contact> newContacts) async {
@@ -46,8 +71,23 @@ class ContactsDbServiceImpl implements ContactsDbService {
     final formatted = ContactsStorageMapper.toDB(newStorages!, userId);
     try {
       await _storagesDao.addStorages(formatted);
+      await _persistContactInfos(newStorages);
     } catch (err) {
       print('ERROR ContactsDbServiceImpl.addStorages(): $err');
+    }
+  }
+
+  Future<void> _persistContactInfos(List<ContactsStorage> storages) async {
+    for (final storage in storages) {
+      if (storage.contactsInfo == null) continue;
+      final companions = storage.contactsInfo
+          .map((i) => _contactInfoToCompanion(storage.userLocalId, i))
+          .toList();
+      await _contactInfosDao.replaceForStorage(
+        storage.userLocalId,
+        storage.id,
+        companions,
+      );
     }
   }
 
@@ -112,7 +152,19 @@ class ContactsDbServiceImpl implements ContactsDbService {
   @override
   Future<List<ContactsStorage>> getStorages(int userLocalId) async {
     final result = await _storagesDao.getStorages(userLocalId);
-    return ContactsStorageMapper.fromDB(result);
+    final storages = ContactsStorageMapper.fromDB(result);
+
+    final infosByStorage = await _contactInfosDao.getForStorages(
+      userLocalId,
+      storages.map((s) => s.id).toList(),
+    );
+
+    return storages.map((s) {
+      final rows = infosByStorage[s.id] ?? const <ContactInfoRow>[];
+      return s.copyWith(
+        contactsInfo: rows.map(_contactInfoFromRow).toList(),
+      );
+    }).toList();
   }
 
   @override
@@ -126,11 +178,12 @@ class ContactsDbServiceImpl implements ContactsDbService {
 
   @override
   Future<void> updateStorages(List<ContactsStorage> updatedStorages, int userId,
-      {bool nullToAbsent = true}) {
+      {bool nullToAbsent = true}) async {
     final formatted = ContactsStorageMapper.toDB(updatedStorages, userId);
     final companions =
         formatted.map((c) => c.toCompanion(nullToAbsent)).toList();
-    return _storagesDao.updateStorages(companions);
+    await _storagesDao.updateStorages(companions);
+    await _persistContactInfos(updatedStorages);
   }
 
   Future<void> editGroups(List<ContactsGroup> newGroups) {

@@ -17,8 +17,8 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_sto
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_table.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/converters/list_string_converter.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/groups/contacts_groups_table.dart';
+import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contact_infos_table.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contacts_storages_table.dart';
-import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/converters/contacts_info_converter.dart';
 import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
@@ -32,6 +32,7 @@ import 'migration/m5.dart';
 import 'migration/m6.dart';
 import 'migration/m7.dart';
 import 'migration/m8.dart';
+import 'migration/m9.dart';
 import 'users/users_table.dart';
 
 part 'app_database.g.dart';
@@ -52,6 +53,7 @@ class DBInstances {
   ContactsTable,
   ContactsGroups,
   ContactsStorages,
+  ContactInfos,
   PgpKeyModel,
   AccountIdentityTable,
   AliasesTable,
@@ -72,6 +74,7 @@ class AppDatabase extends _$AppDatabase {
         6: m6,
         7: m7,
         8: m8,
+        9: m9,
       };
 
   @override
@@ -100,5 +103,5 @@ class AppDatabase extends _$AppDatabase {
   // you should bump this number whenever you change or add a table definition. Migrations
   // are covered later in this readme.
   @override
-  int get schemaVersion => 9;
+  int get schemaVersion => 10;
 }

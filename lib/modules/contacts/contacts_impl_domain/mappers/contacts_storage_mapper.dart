@@ -3,6 +3,11 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 
 class ContactsStorageMapper {
+  // Note: `contactsInfo` is intentionally not mapped here. It no longer lives
+  // on the contacts_storages row (see ContactInfosDao / contact_infos table)
+  // and is attached/persisted separately by ContactsDbServiceImpl, which has
+  // async DB access these pure mapping functions don't.
+
   static List<ContactsStorage> fromDB(List<ContactsStoragesTable> items) {
     return items.map((i) {
       return new ContactsStorage(
@@ -14,7 +19,7 @@ class ContactsStorageMapper {
           cTag: i.cTag,
           display: i.display,
           displayName: i.displayName,
-          contactsInfo: i.contactsInfo,
+          contactsInfo: null,
           ownerMail: i.ownerMail,
           isShared: i.isShared,
           accessCode: i.accessCode);
@@ -34,7 +39,6 @@ class ContactsStorageMapper {
           cTag: i.cTag!,
           display: i.display,
           displayName: i.displayName!,
-          contactsInfo: i.contactsInfo,
           ownerMail: i.ownerMail,
           isShared: i.isShared,
           accessCode: i.accessCode);
