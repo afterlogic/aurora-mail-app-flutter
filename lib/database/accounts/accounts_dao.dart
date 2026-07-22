@@ -23,14 +23,14 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
       ..where(accounts.userLocalId.equals(userLocalId))
       ..addColumns([accounts.localId]);
 
-    final Set<int?> accountLocalIds =
+    final Set<int> accountLocalIds =
         (await accountLocalIdsQuery.map((a) => a.read(accounts.localId)).get())
+            .whereType<int>()
             .toSet();
 
     final Map<int, String?> signatureMap = {};
 
-    for (int? accountLocalId in accountLocalIds) {
-      if (accountLocalId == null) continue;
+    for (int accountLocalId in accountLocalIds) {
       final signatureQuery = selectOnly(accounts)
         ..where(accounts.localId.equals(accountLocalId))
         ..addColumns([accounts.signature]);
@@ -178,6 +178,6 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future updateAccount(Account server, int localId) {
-    return update(accounts).replace(server.copyWith(localId: localId));
+    return update(accounts).replace(server.copyWith(localId: Value(localId)));
   }
 }

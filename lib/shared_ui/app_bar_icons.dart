@@ -1,15 +1,15 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/shared_ui/asset_svg_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:theme/app_color.dart';
 
 class AppBarIcons {
   // burger icon
-  static Widget burger({BuildContext context, Color color}) {
+  static Widget burger({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -24,9 +24,9 @@ class AppBarIcons {
   }
 
   // search
-  static Widget search({BuildContext context, Color color}) {
+  static Widget search({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -41,9 +41,9 @@ class AppBarIcons {
   }
 
   // close
-  static Widget close({BuildContext context, Color color}) {
+  static Widget close({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -58,9 +58,9 @@ class AppBarIcons {
   }
 
   // back
-  static Widget back({BuildContext context, Color color}) {
+  static Widget back({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -75,9 +75,9 @@ class AppBarIcons {
   }
 
   // info
-  static Widget info({BuildContext context, Color color}) {
+  static Widget info({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -92,9 +92,9 @@ class AppBarIcons {
   }
 
   // send
-  static Widget send({BuildContext context, Color color}) {
+  static Widget send({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -109,9 +109,9 @@ class AppBarIcons {
   }
 
   // menu
-  static Widget menu({BuildContext context, Color color}) {
+  static Widget menu({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -126,9 +126,9 @@ class AppBarIcons {
   }
 
   // drafts
-  static Widget drafts({BuildContext context, Color color}) {
+  static Widget drafts({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -143,9 +143,9 @@ class AppBarIcons {
   }
 
   // edit
-  static Widget edit({BuildContext context, Color color}) {
+  static Widget edit({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -160,9 +160,9 @@ class AppBarIcons {
   }
 
   // edit-underline
-  static Widget editUnderline({BuildContext context, Color color}) {
+  static Widget editUnderline({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -177,9 +177,9 @@ class AppBarIcons {
   }
 
   // delete
-  static Widget delete({BuildContext context, Color color}) {
+  static Widget delete({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -194,9 +194,9 @@ class AppBarIcons {
   }
 
   // delete
-  static Widget deleteEmpty({BuildContext context, Color color}) {
+  static Widget deleteEmpty({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -211,9 +211,9 @@ class AppBarIcons {
   }
 
   // reply
-  static Widget reply({BuildContext context, Color color}) {
+  static Widget reply({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -228,9 +228,9 @@ class AppBarIcons {
   }
 
   // reply_all
-  static Widget replyAll({BuildContext context, Color color}) {
+  static Widget replyAll({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -245,9 +245,9 @@ class AppBarIcons {
   }
 
   // forward
-  static Widget forward({BuildContext context, Color color}) {
+  static Widget forward({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -262,9 +262,9 @@ class AppBarIcons {
   }
 
   // move
-  static Widget move({BuildContext context, Color color}) {
+  static Widget move({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -279,9 +279,9 @@ class AppBarIcons {
   }
 
   // headers
-  static Widget headers({BuildContext context, Color color}) {
+  static Widget headers({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -297,9 +297,9 @@ class AppBarIcons {
   }
 
   // forward_as_attachment
-  static Widget forwardAsAttachment({BuildContext context, Color color}) {
+  static Widget forwardAsAttachment({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -314,9 +314,9 @@ class AppBarIcons {
   }
 
   // resend
-  static Widget resend({BuildContext context, Color color}) {
+  static Widget resend({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -331,9 +331,9 @@ class AppBarIcons {
   }
 
   // spam
-  static Widget spam({BuildContext context, Color color}) {
+  static Widget spam({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 
@@ -348,9 +348,9 @@ class AppBarIcons {
   }
 
   // not-spam
-  static Widget not_spam({BuildContext context, Color color}) {
+  static Widget not_spam({BuildContext? context, Color? color}) {
     final iconColor = color ??
-        (Theme.of(context).brightness == Brightness.light
+        (Theme.of(context!).brightness == Brightness.light
             ? AppColor.appBarIconLight
             : AppColor.appBarIconDark);
 

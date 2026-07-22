@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -14,29 +14,29 @@ import 'package:crypto_worker/src/pgp/pgp_worker.dart';
 import 'package:flutter/widgets.dart';
 
 class MessageViewMethods {
-  MailApi _mailApi;
-  PgpWorker pgpWorker;
-  final Account account;
+  late MailApi _mailApi;
+  PgpWorker? pgpWorker;
+  final Account? account;
   final User user;
   final _foldersDao = FoldersDao(DBInstances.appDB);
   final _whiteMailDao = WhiteMailDao(DBInstances.appDB);
 
   MessageViewMethods({
-    @required this.user,
-    @required this.account,
+    required this.user,
+    required this.account,
     this.pgpWorker,
   }) {
     _mailApi = new MailApi(
       user: user,
       account: account,
-      interceptor: DefaultApiInterceptor.get(),
+      interceptor: DefaultApiInterceptor.get()!,
     );
   }
 
   Future<bool> changeEventInviteStatus(
-      {@required String status,
-      @required String calendarId,
-      @required String fileName}) {
+      {required String status,
+      required String calendarId,
+      required String fileName}) {
     return _mailApi.changeEventInviteStatus(
         status: status,
         calendarId: calendarId,
@@ -45,9 +45,9 @@ class MessageViewMethods {
 
   void downloadAttachment(
     MailAttachment attachment, {
-    @required Function(String) onDownloadEnd,
-    @required Function() onDownloadStart,
-    Rect rect,
+    required Function(String?)? onDownloadEnd,
+    required Function() onDownloadStart,
+    Rect? rect,
   }) {
     if (Platform.isIOS) {
       _mailApi.shareAttachment(attachment, onDownloadEnd, rect);
@@ -61,7 +61,7 @@ class MessageViewMethods {
   }
 
   EncryptType checkEncrypt(String text) {
-    return pgpWorker.encryptType(text);
+    return pgpWorker!.encryptType(text);
   }
 
   Future<Decrypted> decryptBody(
@@ -70,7 +70,7 @@ class MessageViewMethods {
     String sender,
     String body,
   ) {
-    final encryptDecrypt = pgpWorker.encryptDecrypt(sender, [account.email]);
+    final encryptDecrypt = pgpWorker!.encryptDecrypt(sender, [account!.email]);
     if (type == EncryptType.Encrypt) {
       return encryptDecrypt.decrypt(body, password);
     } else {
@@ -78,18 +78,18 @@ class MessageViewMethods {
     }
   }
 
-  Future<FolderType> getFolderType(String folder) async {
+  Future<FolderType?> getFolderType(String folder) async {
     return Folder.getFolderTypeFromNumber(
-        (await _foldersDao.getByName(folder, account.localId))?.type);
+        (await _foldersDao.getByName(folder, account!.localId))?.type);
   }
 
   Future<bool> checkInWhiteList(Message message) async {
-    final List<String> emails =
-        (json.decode(message.fromInJson)["@Collection"] as List)
-            .map((item) => item["Email"] as String)
+    final List<String?> emails =
+        (json.decode(message.fromInJson!)["@Collection"] as List)
+            .map((item) => item["Email"] as String?)
             .toList();
     if (message.safety == true) {
-      await _whiteMailDao.add(emails);
+      await _whiteMailDao.add(emails.whereType<String>().toList());
       return true;
     } else {
       final whiteEmails = await _whiteMailDao.get();
@@ -106,10 +106,10 @@ class MessageViewMethods {
   }
 
   Future addInWhiteList(Message message) async {
-    final List<String> emails =
-        (json.decode(message.fromInJson)["@Collection"] as List)
-            .map((item) => item["Email"] as String)
+    final List<String?> emails =
+        (json.decode(message.fromInJson!)["@Collection"] as List)
+            .map((item) => item["Email"] as String?)
             .toList();
-    await _whiteMailDao.add(emails);
+    await _whiteMailDao.add(emails.whereType<String>().toList());
   }
 }

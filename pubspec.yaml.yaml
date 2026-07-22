@@ -4,7 +4,7 @@ description: Mail client for {{appName}}.
 version: "{{version}}+{{build}}"
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -14,10 +14,10 @@ dependencies:
     sdk: flutter
 
   # Firebase
-  firebase_core: ^2.8.0
-  firebase_crashlytics: ^3.0.17
-  firebase_messaging: ^14.0.2
-  firebase_app_check: any
+  firebase_core: ^4.12.1
+  firebase_crashlytics: ^5.2.6
+  firebase_messaging: ^16.4.3
+  firebase_app_check: ^0.4.5+2
 
   # state management
   provider: ^5.0.0
@@ -27,30 +27,31 @@ dependencies:
   rxdart: ^0.27.7
 
   # http
-  http: 0.13.3
+  http: ^1.6.0
   webmail_api_client:
     path: ./core/webmail_api_client
   html: ^0.15.0
 
   # local storage
-  drift_sqflite: ^1.0.0
-  shared_preferences: ^2.1.1
+  drift_sqflite: ^2.0.1
+  sqflite: ^2.4.2
+  shared_preferences: ^2.5.5
 
   # file downloading/uploading
-  file_picker: 5.2.10
-  background_downloader: ^6.3.3
-  share_plus: ^6.3.4
-  path_provider: ^2.0.14
+  file_picker: ^11.0.2
+  background_downloader: ^8.7.0
+  share_plus: ^12.0.2
+  path_provider: ^2.1.6
   video_thumbnail: 0.5.3
-  mime: ^1.0.1
+  mime: ^2.0.0
   # type ahead
 
   # ui
   flutter_svg: ^1.1.6
-  material_design_icons_flutter: ^7.0.7296
-  webview_flutter: ^4.0.7
+  flutter_material_design_icons: ^3.1.0+7447
+  webview_flutter: ^4.14.1
   flutter_speed_dial: ^7.0.0
-  fluttertoast: 8.2.2
+  fluttertoast: ^9.1.0
   shimmer: ^3.0.0
   table_calendar: ^3.0.8
 
@@ -58,16 +59,16 @@ dependencies:
 #  localizator_interface: 0.4.0
   # misc
   uuid: ^4.1.0
-  intl: 0.17.0
+  intl: 0.20.2
   filesize: ^2.0.1
-  permission_handler: ^11.0.0
-  url_launcher: ^6.1.10
-  connectivity_plus: ^5.0.2
-  package_info_plus: ^3.1.2
+  permission_handler: ^12.0.3
+  url_launcher: ^6.3.2
+  connectivity_plus: ^7.3.0
+  package_info_plus: ^9.0.1
   time_machine: ^0.9.17
-  device_info_plus: ^8.2.2
-  app_links: ^3.4.5
-  flutter_custom_tabs: ^1.0.4
+  device_info_plus: ^11.3.0
+  app_links: ^7.2.1
+  flutter_custom_tabs: ^2.5.0
 
   # file encryption
   encrypt: ^5.0.1
@@ -83,17 +84,18 @@ dependencies:
   aurora_ui_kit:
     git:
       url: https://github.com/afterlogic/aurora_ui_kit_flutter.git
+      ref: flutter_3.44
 
   receive_sharing:
     git:
       url: https://github.com/afterlogic/receive_sharing.git
-      ref: flutter_3
+      ref: flutter_3.44
 
   #notification
-  flutter_local_notifications: ^9.5.3+1
+  flutter_local_notifications: ^19.4.2
   ios_notification_handler:
     path: core/ios_notification_handler
-  keyboard_actions: ^4.2.0
+  keyboard_actions: ^4.2.1
   flutter_keyboard_visibility: ^6.0.0
 
   theme:
@@ -105,12 +107,12 @@ dependencies:
     path: module/crypto/crypto_storage
   crypto_worker:
     path: module/crypto/crypto_worker
-  flutter_secure_storage: ^4.2.1
+  flutter_secure_storage: ^10.3.1
   # if: cryptoEnable
   crypto_stream:
     git:
       url: https://github.com/afterlogic/flutter_crypto_stream
-      ref: flutter_3.3
+      ref: flutter_3.44
   crypto_storage_impl:
     path: module/crypto/crypto_storage_impl
   crypto_worker_impl:
@@ -126,7 +128,7 @@ dependencies:
   aurora_logger:
     git:
       url: https://github.com/afterlogic/aurora_logger_flutter
-      ref: master
+      ref: flutter_3.44
   calendar_view:
     git:
       url: https://github.com/HtonicSava/flutter_calendar_view.git
@@ -139,15 +141,15 @@ dev_dependencies:
     sdk: flutter
 #  dm_gen should be commented for moor_generator/drift_dev work
 #  dm_gen: ^0.5.1+1
-  build_runner: ^2.3.3
-  drift_dev: ^1.7.1
+  build_runner: 2.15.1
+  drift_dev: ^2.34.4
   build_variant:
     git:
       url: "https://github.com/afterlogic/build_variant"
-      ref: master
+      ref: flutter_3.44
 
-  flutter_launcher_icons: ^0.11.0
-  intl_utils: ^2.7.0
+  flutter_launcher_icons: ^0.14.4
+  intl_utils: ^2.8.16
 #  localizator: ^0.4.2
 
 #dependency_overrides:

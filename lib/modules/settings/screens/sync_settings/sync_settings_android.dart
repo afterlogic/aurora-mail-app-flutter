@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
@@ -13,7 +13,7 @@ import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:theme/app_color.dart';
 
 import 'components/period_selection_dialog.dart';
@@ -46,9 +46,9 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
 
   // Custom trailing arrow for sync settings
   Widget _buildTrailingArrow() {
-    Color arrowColor = theme.primaryColor;
+    Color arrowColor = theme!.primaryColor;
     if (BuildProperty.useCustomSettingsColors) {
-      final isDarkTheme = theme.brightness == Brightness.dark;
+      final isDarkTheme = theme!.brightness == Brightness.dark;
       arrowColor = isDarkTheme
           ? AppColor.settingsArrowDark
           : AppColor.settingsArrowLight;
@@ -67,9 +67,9 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
   @override
   Widget build(BuildContext context) {
     final isTablet = LayoutConfig.of(context).isTablet;
-    final iconBG = theme.brightness == Brightness.dark
-        ? theme.colorScheme.onPrimary.withOpacity(0.20)
-        : theme.colorScheme.primary.withOpacity(0.08);
+    final iconBG = theme!.brightness == Brightness.dark
+        ? theme!.colorScheme.onPrimary.withOpacity(0.20)
+        : theme!.colorScheme.primary.withOpacity(0.08);
     return Scaffold(
       appBar: isTablet
           ? null
@@ -105,7 +105,7 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
                             defaultIcon: Icons.av_timer,
                             iconName: 'sync-frequency',
                             iconFolder: 'sync',
-                            color: theme.primaryColor,
+                            color: theme!.primaryColor,
                             background: iconBG,
                           ),
                           title: Text(S.of(context).settings_sync_frequency),
@@ -113,8 +113,8 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                SyncFreq.freqToString(context, freq),
-                                style: theme.textTheme.caption,
+                                SyncFreq.freqToString(context, freq)!,
+                                style: theme!.textTheme.bodySmall,
                               ),
                               SizedBox(width: 8),
                               _buildTrailingArrow(),
@@ -128,7 +128,7 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
                           defaultIcon: MdiIcons.calendarSync,
                           iconName: 'sync-period',
                           iconFolder: 'sync',
-                          color: theme.primaryColor,
+                          color: theme!.primaryColor,
                           background: iconBG,
                         ),
                         title: Text(S.of(context).settings_sync_period),
@@ -136,8 +136,8 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              SyncPeriod.periodToTitle(context, period),
-                              style: theme.textTheme.caption,
+                              SyncPeriod.periodToTitle(context, period)!,
+                              style: theme!.textTheme.bodySmall,
                             ),
                             SizedBox(width: 8),
                             _buildTrailingArrow(),

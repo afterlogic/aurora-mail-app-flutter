@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
@@ -10,10 +10,10 @@ class DateFormatting {
   }
 
   static String getShortMessageDate({
-    @required int timestamp,
-    @required String locale,
-    @required String yesterdayWord,
-    @required bool is24,
+    required int timestamp,
+    required String locale,
+    required String yesterdayWord,
+    required bool is24,
   }) {
     final date = DateTime.fromMillisecondsSinceEpoch((timestamp * 1000));
     final now = DateTime.now();
@@ -42,10 +42,10 @@ class DateFormatting {
   }
 
   static String getDetailedMessageDate({
-    @required int timestamp,
-    @required String locale,
-    @required String yesterdayWord,
-    @required bool is24,
+    required int timestamp,
+    required String locale,
+    required String yesterdayWord,
+    required bool is24,
   }) {
     final date = DateTime.fromMillisecondsSinceEpoch((timestamp * 1000));
 
@@ -57,22 +57,22 @@ class DateFormatting {
   }
 
   static String formatBirthday({
-    @required int day,
-    @required int month,
-    @required int year,
-    @required String locale,
-    @required String format,
+    required int? day,
+    required int? month,
+    required int? year,
+    required String locale,
+    required String format,
   }) {
     if (year == 0 && month == 0 && year == 0) return "";
-    return DateFormat(format, locale).format(DateTime(year, month, day));
+    return DateFormat(format, locale).format(DateTime(year!, month!, day!));
   }
 
   static String formatEventDates({
     // @required int timestamp,
-    @required DateTime startDate,
-    @required DateTime endDate,
-    String locale,
-    @required bool is24,
+    required DateTime startDate,
+    required DateTime endDate,
+    String? locale,
+    required bool is24,
   }) {
     final now = DateTime.now();
     String sStartDate = '';

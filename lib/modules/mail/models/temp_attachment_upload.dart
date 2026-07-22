@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -15,18 +15,18 @@ class UploadProgress {
 class TempAttachmentUpload {
   final String guid = new Uuid().v4();
   final String name;
-  int size;
+  int? size;
   final String taskId;
   final Stream<UploadProgress> uploadProgress;
-  final Function({String taskId}) cancel;
-  final File file;
+  final Function({String? taskId}) cancel;
+  final File? file;
 
   TempAttachmentUpload(
     this.file, {
-    @required this.name,
-    @required this.size,
-    @required this.taskId,
-    @required this.uploadProgress,
-    @required this.cancel,
+    required this.name,
+    required this.size,
+    required this.taskId,
+    required this.uploadProgress,
+    required this.cancel,
   });
 }

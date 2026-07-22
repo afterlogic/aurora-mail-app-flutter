@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -22,18 +22,19 @@ class NotificationManager {
     final initializationSettings = InitializationSettings(
       //todo VO res/drawable/app_icon.png
       android: AndroidInitializationSettings('app_icon'),
-      iOS: IOSInitializationSettings(),
+      iOS: DarwinInitializationSettings(),
     );
 
     plugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification);
+        onDidReceiveNotificationResponse: (response) =>
+            onSelectNotification(response.payload));
     _openFromNotification();
   }
 
   Future<void> _openFromNotification() async {
-    final notification = await plugin.getNotificationAppLaunchDetails();
+    final notification = (await plugin.getNotificationAppLaunchDetails())!;
     if (notification.didNotificationLaunchApp) {
-      onSelectNotification(notification.payload);
+      onSelectNotification(notification.notificationResponse?.payload);
     }
   }
 
@@ -52,25 +53,25 @@ class NotificationManager {
   }
 
   Future<void> showNotification(
-    String from,
-    String subject,
+    String? from,
+    String? subject,
     Account account,
     User user,
-    int localId, {
-    Map<String, dynamic> forcePayload,
+    int? localId, {
+    Map<String, dynamic>? forcePayload,
   }) async {
     final packageName = (await PackageInfo.fromPlatform()).packageName;
     bool isFirstNotification = false;
     if (!Platform.isIOS) {
       final activeNotifications =
-          await NotificationsUtils.getActiveNotifications();
+          (await NotificationsUtils.getActiveNotifications())!;
       isFirstNotification = activeNotifications.where((n) {
         return n.packageName == packageName &&
             n.groupKey.contains(user.emailFromLogin);
       }).isEmpty;
     }
 
-    String payload;
+    String? payload;
     if (forcePayload != null) {
       payload = jsonEncode(forcePayload);
     } else {
@@ -99,25 +100,25 @@ class NotificationManager {
   }
 }
 
-Future onSelectNotification(String payload) async {
+Future onSelectNotification(String? payload) async {
   if (payload == null) {
     return;
   }
 
   final json = jsonDecode(payload) as Map<String, dynamic>;
-  final type = json["Type"] as String;
+  final type = json["Type"] as String?;
 
   if (RouteWrap.staticState != null) {
     switch (type) {
       case 'event':
       case 'task':
-        RouteWrap.staticState.onCalendar(json);
+        RouteWrap.staticState!.onCalendar(json);
         break;
       case 'email':
-        RouteWrap.staticState.onMessage(json);
+        RouteWrap.staticState!.onMessage(json);
         break;
       default:
-        RouteWrap.staticState.onMessage(json);
+        RouteWrap.staticState!.onMessage(json);
         break;
     }
   } else {

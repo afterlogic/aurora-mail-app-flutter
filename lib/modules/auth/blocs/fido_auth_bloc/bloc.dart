@@ -1,11 +1,9 @@
-//@dart=2.9
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/generated/l10n.dart';
-import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/event.dart';
 import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/state.dart';
@@ -15,7 +13,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:app_links/app_links.dart';
 import 'package:yubico_flutter/yubico_flutter.dart';
-import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as tab;
 
 class FidoAuthBloc extends Bloc<FidoAuthEvent, FidoAuthState> {
   final String host;
@@ -23,8 +20,8 @@ class FidoAuthBloc extends Bloc<FidoAuthEvent, FidoAuthState> {
   final String password;
   final AuthBloc authBloc;
   final authApi = AuthApi();
-  FidoAuthRequest fidoRequest;
-  StreamSubscription sub;
+  FidoAuthRequest? fidoRequest;
+  late StreamSubscription sub;
 
   FidoAuthBloc(this.host, this.login, this.password, this.authBloc) : super(InitState()) {
     sub = AppLinks().uriLinkStream.listen((uri) {
@@ -33,7 +30,7 @@ class FidoAuthBloc extends Bloc<FidoAuthEvent, FidoAuthState> {
         if (query.containsKey("error")) {
           add(Cancel());
         } else if (query.containsKey("attestation")) {
-          final json = jsonDecode(query["attestation"]) as Map;
+          final json = jsonDecode(query["attestation"]!) as Map;
           add(KeyResult(json));
         }
       }
@@ -91,21 +88,6 @@ class FidoAuthBloc extends Bloc<FidoAuthEvent, FidoAuthState> {
   Stream<FidoAuthState> _startAuth(StartAuth event) async* {
     try {
       yield SendingBeginAuthRequestState();
-      if (Platform.isAndroid && false) {
-        final uri = Uri.parse(
-            "${host}?verify-security-key&login=$login&password=$password&package_name=${BuildProperty.packageName}");
-
-        tab.launch(uri.toString(),
-            customTabsOption: tab.CustomTabsOption(
-              enableUrlBarHiding: true,
-              enableInstantApps: true,
-              extraCustomTabs: <String>[
-                "com.android.chrome",
-              ],
-            ));
-        yield WaitWebView();
-        return;
-      }
       final request =
           await authApi.verifySecurityKeyBegin(host, login, password);
       yield WaitKeyState();
@@ -120,12 +102,12 @@ class FidoAuthBloc extends Bloc<FidoAuthEvent, FidoAuthState> {
         request.allowCredentials,
       );
       final isNFC =
-          await fidoRequest.waitConnection(event.message, event.success);
+          await fidoRequest!.waitConnection(event.message, event.success);
 
       if (isNFC == false) {
         yield TouchKeyState();
       }
-      fidoRequest
+      fidoRequest!
           .start()
           .then((value) => add(KeyResult(value)))
           .catchError((e) => add(Cancel(e)));
@@ -141,7 +123,7 @@ class FidoAuthBloc extends Bloc<FidoAuthEvent, FidoAuthState> {
     if (e is FidoError) {
       if (e.errorCase == FidoErrorCase.Canceled) {
         return ErrorState(null);
-      } else if (e.message?.isNotEmpty == true) {
+      } else if (e.message.isNotEmpty == true) {
         return ErrorState(ErrorToShow.message(e.message));
       } else {
         return ErrorState(ErrorToShow.message("The system misconfigured"));

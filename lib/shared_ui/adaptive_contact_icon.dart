@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:flutter/material.dart';
 
@@ -6,16 +6,16 @@ import 'asset_svg_icon.dart';
 
 class AdaptiveContactIcon extends StatelessWidget {
   final IconData defaultIcon;
-  final String iconName;
-  final Color color;
+  final String? iconName;
+  final Color? color;
   final double size;
 
   const AdaptiveContactIcon({
-    @required this.defaultIcon,
-    @required this.iconName,
+    required this.defaultIcon,
+    required this.iconName,
     this.color,
     this.size = 24.0,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

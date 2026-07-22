@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/folder.dart';
@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SelectAppBar extends StatefulWidget {
-  final SelectionController<int, Message> controller;
+  final SelectionController<int, Message>? controller;
   final bool isAppBar;
 
   const SelectAppBar(
@@ -30,14 +30,14 @@ class _SelectAppBarState extends BState<SelectAppBar> {
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener(update);
+    widget.controller!.addListener(update);
   }
 
   @override
   void dispose() {
     super.dispose();
 
-    widget.controller.removeListener(update);
+    widget.controller!.removeListener(update);
   }
 
   update() {
@@ -50,7 +50,7 @@ class _SelectAppBarState extends BState<SelectAppBar> {
       buildWhen: (_, state) => state is FoldersLoaded,
       builder: (context, state) {
         final folderType =
-            state is FoldersLoaded ? state.selectedFolder.folderType : null;
+            state is FoldersLoaded ? state.selectedFolder!.folderType : null;
         final actions = folderType == null
             ? null
             : <Widget>[
@@ -84,9 +84,9 @@ class _SelectAppBarState extends BState<SelectAppBar> {
             icon: Icon(
               Icons.close,
             ),
-            onPressed: () => widget.controller.enable = false,
+            onPressed: () => widget.controller!.enable = false,
           ),
-          title: Text(widget.controller.selected.length.toString()),
+          title: Text(widget.controller!.selected.length.toString()),
           actions: actions,
         );
       },
@@ -94,18 +94,18 @@ class _SelectAppBarState extends BState<SelectAppBar> {
   }
 
   void _spam(bool into) {
-    final messages = widget.controller.selected.values.toList();
+    final messages = widget.controller!.selected.values.toList();
     BlocProvider.of<MessagesListBloc>(context).add(
       MoveMessages(
         messages,
         into ? FolderType.spam : FolderType.inbox,
       ),
     );
-    widget.controller.enable = false;
+    widget.controller!.enable = false;
   }
 
   void _delete() async {
-    final messages = widget.controller.selected.values.toList();
+    final messages = widget.controller!.selected.values.toList();
     final delete = await ConfirmationDialog.show(
       context,
       S.of(context).messages_delete_title_with_count,
@@ -117,13 +117,13 @@ class _SelectAppBarState extends BState<SelectAppBar> {
       BlocProvider.of<MessagesListBloc>(context).add(DeleteMessages(
         messages: messages,
       ));
-      widget.controller.enable = false;
+      widget.controller!.enable = false;
     }
   }
 
   void _move() async {
-    final messages = widget.controller.selected.values.toList();
-    widget.controller.enable = false;
+    final messages = widget.controller!.selected.values.toList();
+    widget.controller!.enable = false;
     AMDialog.show(
       context: context,
       builder: (_) => MoveMessageDialog(

@@ -221,13 +221,15 @@ class CalendarUseCaseImpl implements CalendarUseCase {
       end: _selectedEndEventsInterval!,
       calendarIds: selectedCalendarIds,
     );
+    final calendarsForEvents = _calendarsSubject.value ?? [];
     final eventViews = allEvents
-        .map((e) => ViewEvent.tryFromEvent(
-              e,
-              color: _calendarsSubject.value!
-                  .firstWhere((c) => c.id == e.calendarId)
-                  .color,
-            ))
+        .map((e) {
+          final calendar =
+              calendarsForEvents.firstWhereOrNull((c) => c.id == e.calendarId);
+          return calendar == null
+              ? null
+              : ViewEvent.tryFromEvent(e, color: calendar.color);
+        })
         .whereNotNull()
         .map(
           (e) => e.copyWith(
@@ -246,12 +248,15 @@ class CalendarUseCaseImpl implements CalendarUseCase {
 
   Future<void> _getLocalTasks() async {
     final allTasks = await repository.getTasks(_tasksFilter);
+    final calendarsForTasks = _calendarsSubject.value ?? [];
     final taskViews = allTasks
-        .map((e) => e.toDisplayable(
-              color: _calendarsSubject.value!
-                  .firstWhere((c) => c.id == e.calendarId)
-                  .color,
-            ))
+        .map((e) {
+          final calendar =
+              calendarsForTasks.firstWhereOrNull((c) => c.id == e.calendarId);
+          return calendar == null
+              ? null
+              : e.toDisplayable(color: calendar.color);
+        })
         .whereNotNull()
         .map(
           (e) => e.copyWith(

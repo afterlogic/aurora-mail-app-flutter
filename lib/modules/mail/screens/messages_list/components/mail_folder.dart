@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:math';
 
 import 'package:aurora_mail/config.dart';
@@ -8,7 +8,7 @@ import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_
 import 'package:aurora_mail/shared_ui/adaptive_drawer_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 
 class MailFolder extends StatelessWidget {
   final Folder mailFolder;
@@ -16,11 +16,11 @@ class MailFolder extends StatelessWidget {
   final List<Widget> children;
 
   const MailFolder(
-      {Key key,
-      @required this.mailFolder,
-      @required this.isSelected,
-      int paddingCount,
-      @required this.children})
+      {Key? key,
+      required this.mailFolder,
+      required this.isSelected,
+      int? paddingCount,
+      required this.children})
       : super(key: key);
 
   void _selectFolder(BuildContext context) {
@@ -42,11 +42,11 @@ class MailFolder extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    Widget _buildMessageCounter(BuildContext context) {
-      if (mailFolder.unread != null && mailFolder.unread > 0 ||
+    Widget? _buildMessageCounter(BuildContext context) {
+      if (mailFolder.unread != null && mailFolder.unread! > 0 ||
           mailFolder.folderType == FolderType.drafts &&
               mailFolder.count != null &&
-              mailFolder.count > 0) {
+              mailFolder.count! > 0) {
         return InkWell(
           onTap: mailFolder.folderType != FolderType.drafts
               ? () => _selectUnreadOnly(context)
@@ -72,7 +72,7 @@ class MailFolder extends StatelessWidget {
 
     var paddingCount =
         mailFolder.delimiter.allMatches(mailFolder.fullName).length;
-    if (mailFolder.nameSpace?.isNotEmpty == true &&
+    if (mailFolder.nameSpace.isNotEmpty == true &&
         mailFolder.fullName.startsWith(mailFolder.nameSpace)) {
       paddingCount -= 1;
     }
@@ -106,7 +106,7 @@ class FolderHelper {
     return folder.displayName(context);
   }
 
-  static Widget getIcon(Folder folder) {
+  static Widget? getIcon(Folder folder) {
     switch (folder.folderType) {
       case FolderType.notes:
         return AdaptiveDrawerIcon(

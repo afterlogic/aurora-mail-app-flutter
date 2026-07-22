@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
@@ -32,9 +32,9 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
 
   // Custom trailing arrow for common settings
   Widget _buildTrailingArrow() {
-    Color arrowColor = theme.primaryColor;
+    Color arrowColor = theme!.primaryColor;
     if (BuildProperty.useCustomSettingsColors) {
-      final isDarkTheme = theme.brightness == Brightness.dark;
+      final isDarkTheme = theme!.brightness == Brightness.dark;
       arrowColor = isDarkTheme
           ? AppColor.settingsArrowDark
           : AppColor.settingsArrowLight;
@@ -53,9 +53,9 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
   @override
   Widget build(BuildContext context) {
     // ignore: close_sinks
-    final iconBG = theme.brightness == Brightness.dark
-        ? theme.colorScheme.onPrimary.withOpacity(0.20)
-        : theme.colorScheme.primary.withOpacity(0.08);
+    final iconBG = theme!.brightness == Brightness.dark
+        ? theme!.colorScheme.onPrimary.withOpacity(0.20)
+        : theme!.colorScheme.primary.withOpacity(0.08);
     final bloc = BlocProvider.of<SettingsBloc>(context);
     final isTablet = LayoutConfig.of(context).isTablet;
     return Scaffold(
@@ -90,7 +90,7 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                                 defaultIcon: Icons.access_time,
                                 iconName: '24-hour-format',
                                 iconFolder: 'common',
-                                color: theme.primaryColor,
+                                color: theme!.primaryColor,
                                 background: iconBG,
                               ),
                               SizedBox(width: 16.0),
@@ -101,8 +101,8 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                               ),
                             ],
                           ),
-                          activeColor: theme.primaryColor,
-                          value: state.is24,
+                          activeColor: theme!.primaryColor,
+                          value: state.is24!,
                           onChanged: (val) => bloc.add(SetTimeFormat(val))),
                       _buildDivider(),
                       if (BuildProperty.showThemeSelection)
@@ -111,7 +111,7 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                             defaultIcon: Icons.color_lens,
                             iconName: 'app-theme',
                             iconFolder: 'common',
-                            color: theme.primaryColor,
+                            color: theme!.primaryColor,
                             background: iconBG,
                           ),
                           title: Text(S.of(context).settings_dark_theme),
@@ -128,7 +128,7 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                             defaultIcon: Icons.translate,
                             iconName: 'language',
                             iconFolder: 'common',
-                            color: theme.primaryColor,
+                            color: theme!.primaryColor,
                             background: iconBG,
                           ),
                           title: Text(S.of(context).settings_language),

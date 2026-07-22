@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 
 import 'package:aurora_mail/generated/l10n.dart';
@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 class SearchBar extends StatefulWidget {
   final Function onCancel;
-  final TextEditingController searchCtrl;
+  final TextEditingController? searchCtrl;
   final Function(String) onSearch;
   final bool isAppBar;
 
@@ -17,7 +17,7 @@ class SearchBar extends StatefulWidget {
     this.searchCtrl,
     this.onCancel,
     this.onSearch, {
-    Key key,
+    Key? key,
     this.isAppBar = true,
   }) : super(key: key);
 
@@ -26,19 +26,19 @@ class SearchBar extends StatefulWidget {
 }
 
 class SearchBarState extends BState<SearchBar> {
-  Timer debounce;
+  Timer? debounce;
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.searchCtrl.text.isNotEmpty) {
-      _getMessages(widget.searchCtrl.text);
+    if (widget.searchCtrl!.text.isNotEmpty) {
+      _getMessages(widget.searchCtrl!.text);
     }
   }
 
   void _getMessages(String val) {
-    if (debounce?.isActive == true) debounce.cancel();
+    if (debounce?.isActive == true) debounce!.cancel();
     debounce = Timer(Duration(milliseconds: val == null ? 0 : 500), () {
       widget.onSearch(val);
     });
@@ -75,10 +75,10 @@ class SearchBarState extends BState<SearchBar> {
               icon: Icon(Icons.close),
               onPressed: () {
                 setState(() {
-                  widget.searchCtrl.clear();
+                  widget.searchCtrl!.clear();
                   widget.onCancel();
                 });
-                widget.onSearch(null);
+                widget.onSearch('');
               },
             ),
           ],
@@ -108,10 +108,10 @@ class SearchBarState extends BState<SearchBar> {
             icon: Icon(Icons.close),
             onPressed: () {
               setState(() {
-                widget.searchCtrl.clear();
+                widget.searchCtrl!.clear();
                 widget.onCancel();
               });
-              widget.onSearch(null);
+              widget.onSearch('');
             },
           ),
         ],

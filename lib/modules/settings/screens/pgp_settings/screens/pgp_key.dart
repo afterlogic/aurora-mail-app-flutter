@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:io';
 
 import 'package:aurora_mail/build_property.dart';
@@ -17,7 +17,7 @@ import 'package:theme/app_color.dart';
 class PgpKeyScreen extends StatefulWidget {
   final PgpSettingsBloc bloc;
   final PgpKey pgpKey;
-  final Function() onDelete;
+  final Function()? onDelete;
   final bool withAppBar;
 
   const PgpKeyScreen(this.pgpKey, this.onDelete, this.withAppBar, this.bloc);
@@ -27,11 +27,11 @@ class PgpKeyScreen extends StatefulWidget {
 }
 
 class _PgpKeyScreenState extends State<PgpKeyScreen> {
-  PgpSettingsBloc bloc;
-  PgpKey pgpKey;
-  Function() onDelete;
-  bool withAppBar;
-  bool isAndroid9orLow;
+  late PgpSettingsBloc bloc;
+  PgpKey? pgpKey;
+  Function()? onDelete;
+  late bool withAppBar;
+  late bool isAndroid9orLow;
 
   @override
   void initState() {
@@ -65,7 +65,7 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
           ? null
           : AMAppBar(
               title: Text(
-                pgpKey.isPrivate
+                pgpKey!.isPrivate
                     ? S.of(context).label_pgp_private_key
                     : S.of(context).label_pgp_public_key,
               ),
@@ -89,22 +89,22 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
                       width: double.infinity,
                       child: Center(
                         child: Text(
-                          pgpKey.isPrivate
+                          pgpKey!.isPrivate
                               ? S.of(context).label_pgp_private_key
                               : S.of(context).label_pgp_public_key,
-                          style: theme.textTheme.headline6,
+                          style: theme.textTheme.titleLarge,
                         ),
                       ),
                     ),
                   ),
                 Text(
-                  pgpKey.formatName(),
-                  style: theme.textTheme.headline6,
+                  pgpKey!.formatName(),
+                  style: theme.textTheme.titleLarge,
                 ),
                 SizedBox(
                   height: 20,
                 ),
-                SelectableText(pgpKey.key),
+                SelectableText(pgpKey!.key),
               ],
             ),
           ),
@@ -131,7 +131,7 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
         child: Text(S.of(context).btn_share,
             style: TextStyle(color: Colors.white)),
         onPressed: () async {
-          final result = pgpKey.isPrivate
+          final result = pgpKey!.isPrivate
               ? await ConfirmationDialog.show(
                   context,
                   S.of(context).label_pgp_share_warning,
@@ -176,12 +176,12 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
           final result = await ConfirmationDialog.show(
             context,
             "",
-            S.of(context).hint_pgp_delete_user_key_confirm(pgpKey.mail),
+            S.of(context).hint_pgp_delete_user_key_confirm(pgpKey!.mail),
             S.of(context).btn_delete,
           );
           if (result == true) {
             if (onDelete != null) {
-              onDelete();
+              onDelete!();
             } else {
               bloc.add(DeleteKey(pgpKey));
             }

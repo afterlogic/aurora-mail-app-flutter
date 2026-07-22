@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
@@ -41,9 +41,9 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
   final Function(MailViewAppBarAction) onAppBarActionSelected;
-  final MessageViewBloc bloc;
+  final MessageViewBloc? bloc;
 
-  const MailViewAppBar(this.onAppBarActionSelected, this.bloc, {Key key})
+  const MailViewAppBar(this.onAppBarActionSelected, this.bloc, {Key? key})
       : super(key: key);
 
   @override

@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
@@ -6,46 +6,46 @@ import 'package:flutter/widgets.dart';
 import 'mail_attachment.dart';
 
 class ComposeAttachment {
-  final String fileName;
-  final String name;
-  final String tempName;
-  final String mimeType;
-  final int size;
-  final String hash;
-  final String viewUrl;
-  final String downloadUrl;
-  final String thumbnailUrl;
-  String
+  final String? fileName;
+  final String? name;
+  final String? tempName;
+  final String? mimeType;
+  final int? size;
+  final String? hash;
+  final String? viewUrl;
+  final String? downloadUrl;
+  final String? thumbnailUrl;
+  String?
       guid; // to replace temp attachment with progress with the one from server
-  File file;
+  File? file;
 
   ComposeAttachment({
-    @required this.fileName,
-    @required this.name,
-    @required this.tempName,
-    @required this.mimeType,
-    @required this.size,
-    @required this.hash,
-    @required this.viewUrl,
-    @required this.downloadUrl,
-    @required this.thumbnailUrl,
+    required this.fileName,
+    required this.name,
+    required this.tempName,
+    required this.mimeType,
+    required this.size,
+    required this.hash,
+    required this.viewUrl,
+    required this.downloadUrl,
+    required this.thumbnailUrl,
   });
 
   factory ComposeAttachment.fromNetwork(Map item) {
     return new ComposeAttachment(
-      fileName: item["FileName"] as String,
-      name: item["Name"] as String,
-      tempName: item["TempName"] as String,
-      mimeType: item["MimeType"] as String,
-      size: item["Size"] as int,
-      hash: item["Hash"] as String,
+      fileName: item["FileName"] as String?,
+      name: item["Name"] as String?,
+      tempName: item["TempName"] as String?,
+      mimeType: item["MimeType"] as String?,
+      size: item["Size"] as int?,
+      hash: item["Hash"] as String?,
       viewUrl: item["Actions"] is Map
-          ? item["Actions"]["view"]["url"] as String
+          ? item["Actions"]["view"]["url"] as String?
           : null,
       downloadUrl: item["Actions"] is Map
-          ? item["Actions"]["download"]["url"] as String
+          ? item["Actions"]["download"]["url"] as String?
           : null,
-      thumbnailUrl: item["ThumbnailUrl"] as String,
+      thumbnailUrl: item["ThumbnailUrl"] as String?,
     );
   }
 

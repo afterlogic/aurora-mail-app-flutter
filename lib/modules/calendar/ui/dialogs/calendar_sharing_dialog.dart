@@ -128,7 +128,7 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
                             if (c == addAllContact) {
                               _addEmail(ParticipantAll.addAllIdentifier);
                             } else {
-                              _addEmail(MailUtils.getFriendlyName(c));
+                              _addEmail(MailUtils.getFriendlyName(c) ?? '');
                             }
                           },
                           child: Padding(
@@ -150,7 +150,9 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
                                                   .of(context)
                                                   .calendar_sharing_all
                                               : MailUtils
-                                                  .displayNameFromFriendly(e);
+                                                      .displayNameFromFriendly(
+                                                          e) ??
+                                                  '';
 
                                           return SizedBox(
                                             height: 43.0,
@@ -312,8 +314,8 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
             permissions: ParticipantPermissions.read,
           )
         : Participant(
-            email: MailUtils.emailFromFriendly(e),
-            name: MailUtils.displayNameFromFriendly(e),
+            email: MailUtils.emailFromFriendly(e) ?? '',
+            name: MailUtils.displayNameFromFriendly(e) ?? '',
             permissions: ParticipantPermissions.read));
     _participants.removeWhere((e) => emails.contains(e.email));
     _participants.addAll(participants);
@@ -334,7 +336,7 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
         _composeTypeAheadFieldKey.currentState?.clear();
       }
     } else {
-      _addEmail(MailUtils.getFriendlyName(lastSuggestions.first));
+      _addEmail(MailUtils.getFriendlyName(lastSuggestions.first) ?? '');
       _composeTypeAheadFieldKey.currentState?.clear();
     }
     _participantsFocusNode.unfocus();
@@ -373,7 +375,7 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
           (element) => element.storage == "personal",
           orElse: () => emailContacts.first,
         );
-        final displayName = MailUtils.getFriendlyName(contact);
+        final displayName = MailUtils.getFriendlyName(contact) ?? '';
         contacts[displayName] = contact;
       }
     }
@@ -389,7 +391,7 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
       _search = pattern;
       final contacts = await _contactsBloc.getTypeAheadContacts(pattern);
 
-      contacts.removeWhere((i) => i.viewEmail.isEmpty);
+      contacts.removeWhere((i) => (i.viewEmail ?? '').isEmpty);
       contacts
           .removeWhere((i) => emails.contains(MailUtils.getFriendlyName(i)));
       contacts.add(addAllContact);
@@ -420,7 +422,7 @@ class _SearchContact extends StatelessWidget {
               if (contact.fullName?.isNotEmpty == true)
                 RichText(
                   text: _searchMatch(
-                      match: contact.fullName,
+                      match: contact.fullName ?? '',
                       search: search,
                       context: context),
                   maxLines: 1,
@@ -428,7 +430,7 @@ class _SearchContact extends StatelessWidget {
               if (contact.viewEmail?.isNotEmpty == true)
                 RichText(
                   text: _searchMatch(
-                      match: contact.viewEmail,
+                      match: contact.viewEmail ?? '',
                       search: search,
                       context: context),
                   maxLines: 1,
@@ -445,7 +447,7 @@ TextSpan _searchMatch(
     {required String match,
     required String search,
     required BuildContext context}) {
-  final color = Theme.of(context).textTheme.bodyText2?.color;
+  final color = Theme.of(context).textTheme.bodyMedium?.color;
   final posRes = TextStyle(fontWeight: FontWeight.w700, color: color);
   final negRes = TextStyle(fontWeight: FontWeight.w400, color: color);
 

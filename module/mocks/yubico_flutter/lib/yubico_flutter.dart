@@ -2,7 +2,7 @@ class FidoAuthRequest {
   final String domainUrl;
   final double timeout;
   final String challenge;
-  final String requestId;
+  final String? requestId;
   final String rpId;
   final List<String> credentials;
 

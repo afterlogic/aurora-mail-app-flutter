@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
@@ -10,17 +10,17 @@ abstract class SettingsEvent extends Equatable {
   const SettingsEvent();
 
   @override
-  List<Object> get props => null;
+  List<Object?> get props => [];
 }
 
 class InitSettings extends SettingsEvent {
-  final User user;
-  final List<User> users;
+  final User? user;
+  final List<User?>? users;
 
   const InitSettings(this.user, this.users);
 
   @override
-  List<Object> get props => [user];
+  List<Object?> get props => [user];
 }
 
 class SetFrequency extends SettingsEvent {
@@ -42,12 +42,12 @@ class SetPeriod extends SettingsEvent {
 }
 
 class SetDarkTheme extends SettingsEvent {
-  final bool darkThemeEnabled;
+  final bool? darkThemeEnabled;
 
   const SetDarkTheme(this.darkThemeEnabled);
 
   @override
-  List<Object> get props => [darkThemeEnabled];
+  List<Object?> get props => [darkThemeEnabled];
 }
 
 class SetTimeFormat extends SettingsEvent {
@@ -60,12 +60,12 @@ class SetTimeFormat extends SettingsEvent {
 }
 
 class SetLanguage extends SettingsEvent {
-  final Language language;
+  final Language? language;
 
   const SetLanguage(this.language);
 
   @override
-  List<Object> get props => [language];
+  List<Object?> get props => [language];
 }
 
 class UpdateConnectivity extends SettingsEvent {

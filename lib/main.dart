@@ -1,4 +1,4 @@
-//@dart=2.9
+
 
 import 'dart:async';
 import 'dart:io';
@@ -119,13 +119,13 @@ void main() async {
   tz.initializeTimeZones();
 }
 
-Set<String> updateFromNotification = {};
+Set<String?> updateFromNotification = {};
 
 @pragma('vm:entry-point')
 Future<bool> onAlarm({
   bool showNotification = true,
-  NotificationData data,
-  bool isBackgroundForce,
+  NotificationData? data,
+  bool? isBackgroundForce,
   bool recordLog = true,
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -135,7 +135,7 @@ Future<bool> onAlarm({
   recordLog ??= true;
   if (recordLog && isDebug) {
     isolatedLogger =
-        Logger.backgroundSync(LoggerInterceptorAdapter(interceptor));
+        Logger.backgroundSync(LoggerInterceptorAdapter(interceptor!));
     isolatedLogger.start();
   }
   final isBackground = isBackgroundForce ?? BackgroundHelper.isBackground;

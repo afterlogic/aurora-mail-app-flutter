@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -9,23 +9,23 @@ enum ValidationType {
   uniqueName,
 }
 
-String validateInput(
+String? validateInput(
   BuildContext context,
-  String value,
+  String? value,
   List<ValidationType> types, [
-  List otherItems,
-  String fileExtension,
+  List? otherItems,
+  String? fileExtension,
 ]) {
   if (types.contains(ValidationType.uniqueName) && otherItems is! List) {
     throw "In order to check if a name is unique the list must be provided";
   }
-  if (types.contains(ValidationType.empty) && value.isEmpty) {
+  if (types.contains(ValidationType.empty) && value!.isEmpty) {
     return S.of(context).error_input_validation_empty;
   }
-  if (types.contains(ValidationType.email) && !isEmailValid(value)) {
+  if (types.contains(ValidationType.email) && !isEmailValid(value!)) {
     return S.of(context).error_input_validation_email;
   }
-  if (types.contains(ValidationType.fileName) && !_isFileNameValid(value)) {
+  if (types.contains(ValidationType.fileName) && !_isFileNameValid(value!)) {
     return S.of(context).error_input_validation_name_illegal_symbol;
   }
   if (otherItems is List && types.contains(ValidationType.uniqueName)) {

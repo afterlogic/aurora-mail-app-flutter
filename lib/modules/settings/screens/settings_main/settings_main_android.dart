@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
@@ -36,7 +36,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
   bool showDebug = false;
   final storage = LoggerStorage();
   final navigatorKey = GlobalKey<SettingsNavigatorState>();
-  PgpSettingsBloc pgpSettingsBloc;
+  late PgpSettingsBloc pgpSettingsBloc;
 
   @override
   initState() {
@@ -63,9 +63,9 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
 
   // Custom trailing arrow for settings menu
   Widget _buildTrailingArrow() {
-    Color arrowColor = theme.primaryColor;
+    Color arrowColor = theme!.primaryColor;
     if (BuildProperty.useCustomSettingsColors) {
-      final isDarkTheme = theme.brightness == Brightness.dark;
+      final isDarkTheme = theme!.brightness == Brightness.dark;
       arrowColor = isDarkTheme
           ? AppColor.settingsArrowDark
           : AppColor.settingsArrowLight;
@@ -84,9 +84,9 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
 
   @override
   Widget build(BuildContext context) {
-    final iconBG = theme.brightness == Brightness.dark
-        ? theme.colorScheme.onPrimary.withOpacity(0.20)
-        : theme.colorScheme.primary.withOpacity(0.08);
+    final iconBG = theme!.brightness == Brightness.dark
+        ? theme!.colorScheme.onPrimary.withOpacity(0.20)
+        : theme!.colorScheme.primary.withOpacity(0.08);
     final isTablet = LayoutConfig.of(context).isTablet;
     final current = isTablet
         ? (navigatorKey?.currentState?.current?.name ??
@@ -99,12 +99,12 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
           leading: AdaptiveSettingsMenuIcon(
             defaultIcon: Icons.tune,
             iconName: 'common',
-            color: theme.primaryColor,
+            color: theme!.primaryColor,
             background: iconBG,
           ),
           title: Text(S.of(context).settings_common),
           trailing: _buildTrailingArrow(),
-          onTap: () => navigator().setRoot(CommonSettingsRoute.name),
+          onTap: () => navigator()!.setRoot(CommonSettingsRoute.name),
         ),
         _buildDivider(),
         ListTile(
@@ -112,12 +112,12 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
           leading: AdaptiveSettingsMenuIcon(
             defaultIcon: Icons.sync,
             iconName: 'sync',
-            color: theme.primaryColor,
+            color: theme!.primaryColor,
             background: iconBG,
           ),
           title: Text(S.of(context).settings_sync),
           trailing: _buildTrailingArrow(),
-          onTap: () => navigator().setRoot(SyncSettingsRoute.name),
+          onTap: () => navigator()!.setRoot(SyncSettingsRoute.name),
         ),
         _buildDivider(),
         if (BuildProperty.enablePushNotification &&
@@ -127,12 +127,12 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             leading: AdaptiveSettingsMenuIcon(
               defaultIcon: Icons.notifications,
               iconName: 'notifications',
-              color: theme.primaryColor,
+              color: theme!.primaryColor,
               background: iconBG,
             ),
             title: Text(S.of(context).label_notifications_settings),
             trailing: _buildTrailingArrow(),
-            onTap: () => navigator().setRoot(NotificationsSettingsRoute.name),
+            onTap: () => navigator()!.setRoot(NotificationsSettingsRoute.name),
           ),
         if (BuildProperty.enablePushNotification &&
             BuildProperty.showPushNotificatonsSettings)
@@ -143,12 +143,12 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             leading: AdaptiveSettingsMenuIcon(
               defaultIcon: Icons.vpn_key,
               iconName: 'openPGP',
-              color: theme.primaryColor,
+              color: theme!.primaryColor,
               background: iconBG,
             ),
             title: Text(S.of(context).label_pgp_settings),
             trailing: _buildTrailingArrow(),
-            onTap: () => navigator().setRoot(
+            onTap: () => navigator()!.setRoot(
               PgpSettingsRoute.name,
               arguments: PgpSettingsRouteArg(pgpSettingsBloc),
             ),
@@ -160,12 +160,12 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             leading: AdaptiveSettingsMenuIcon(
               defaultIcon: Icons.account_circle,
               iconName: 'account',
-              color: theme.primaryColor,
+              color: theme!.primaryColor,
               background: iconBG,
             ),
             title: Text(S.of(context).settings_accounts_manage),
             trailing: _buildTrailingArrow(),
-            onTap: () => navigator().setRoot(ManageUsersRoute.name),
+            onTap: () => navigator()!.setRoot(ManageUsersRoute.name),
           ),
         if (BuildProperty.multiUserEnable) _buildDivider(),
         ListTile(
@@ -173,7 +173,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
           leading: AdaptiveSettingsMenuIcon(
             defaultIcon: Icons.info_outline,
             iconName: 'about',
-            color: theme.primaryColor,
+            color: theme!.primaryColor,
             background: iconBG,
           ),
           title: Text(S.of(context).settings_about),
@@ -184,7 +184,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
                   setState(() => showDebug = true);
                 }
               : null,
-          onTap: () => navigator().setRoot(AboutRoute.name),
+          onTap: () => navigator()!.setRoot(AboutRoute.name),
         ),
         _buildDivider(),
         if (showDebug)
@@ -193,12 +193,12 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             leading: AdaptiveSettingsMenuIcon(
               defaultIcon: Icons.perm_device_information,
               iconName: 'debug',
-              color: theme.primaryColor,
+              color: theme!.primaryColor,
               background: iconBG,
             ),
             title: Text("Debug"),
             trailing: _buildTrailingArrow(),
-            onTap: () => navigator().setRoot(DebugRoute.name),
+            onTap: () => navigator()!.setRoot(DebugRoute.name),
           ),
         if (showDebug) _buildDivider(),
         if (BuildProperty.deleteAccountLink.isNotEmpty)
@@ -206,7 +206,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             leading: AdaptiveSettingsMenuIcon(
               defaultIcon: Icons.delete_outline,
               iconName: 'delete-account',
-              color: theme.primaryColor,
+              color: theme!.primaryColor,
               background: iconBG,
             ),
             title: Text(S.current.settings_delete_account),
@@ -219,7 +219,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             leading: AdaptiveSettingsMenuIcon(
               defaultIcon: Icons.exit_to_app,
               iconName: 'exit',
-              color: theme.primaryColor,
+              color: theme!.primaryColor,
               background: iconBG,
             ),
             title: Text(S.of(context).messages_list_app_bar_logout),
@@ -255,7 +255,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
                           child: Drawer(
                             child: ListTileTheme(
                               style: ListTileStyle.drawer,
-                              selectedColor: theme.primaryColor,
+                              selectedColor: theme!.primaryColor,
                               child: SafeArea(child: body),
                             ),
                           ),
@@ -321,7 +321,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
     );
     if (result is OptionalDialogResult && result.generalResult == true) {
       final authBloc = BlocProvider.of<AuthBloc>(context);
-      if (result.options[clearCacheText] == true) {
+      if (result.options![clearCacheText] == true) {
         authBloc.add(DeleteUser(authBloc.currentUser));
       } else {
         authBloc.add(InvalidateCurrentUserToken());
@@ -329,7 +329,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
     }
   }
 
-  SettingsNavigator navigator() {
+  SettingsNavigator? navigator() {
     if (navigatorKey.currentState != null) {
       return navigatorKey.currentState;
     } else {

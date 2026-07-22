@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -15,7 +15,7 @@ class KeyRequestDialog extends StatefulWidget {
     return _KeyRequestDialogState();
   }
 
-  static Future<String> request(BuildContext context, String pgpKey) async {
+  static Future<String?> request(BuildContext context, String pgpKey) async {
     final password = await showDialog<String>(
       context: context,
       builder: (context) {
@@ -36,7 +36,7 @@ class InvalidKeyPassword extends Error {
 class _KeyRequestDialogState extends BState<KeyRequestDialog> {
   final passCtrl = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  String error;
+  String? error;
   bool progress = false;
   bool _obscure = true;
 
@@ -59,7 +59,7 @@ class _KeyRequestDialogState extends BState<KeyRequestDialog> {
                 labelText: S.of(context).login_input_password,
                 obscureText: _obscure,
                 validator: (v) {
-                  if (v.isEmpty) {
+                  if (v!.isEmpty) {
                     return S.of(context).error_password_is_empty;
                   }
                   if (error != null) {
@@ -93,7 +93,7 @@ class _KeyRequestDialogState extends BState<KeyRequestDialog> {
             : TextButton(
                 child: Text(S.of(context).btn_ok),
                 onPressed: () {
-                  if (formKey.currentState.validate()) {
+                  if (formKey.currentState!.validate()) {
                     _check();
                   }
                 },
@@ -110,7 +110,7 @@ class _KeyRequestDialogState extends BState<KeyRequestDialog> {
         .pgpWorker()
         .checkKeyPassword(widget.pgpKey, passCtrl.text)) {
       error = "Invalid password";
-      formKey.currentState.validate();
+      formKey.currentState!.validate();
       setState(() {
         progress = false;
       });

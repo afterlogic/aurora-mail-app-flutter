@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 import 'dart:io';
 
@@ -28,7 +28,7 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
           _cryptoWorker,
           authBloc.currentUser,
           ContactsRepositoryImpl(
-              user: authBloc.currentUser, appDB: DBInstances.appDB),
+              user: authBloc.currentUser!, appDB: DBInstances.appDB),
         ), super(ProgressState());
 
   @override
@@ -79,9 +79,9 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
 
     try {
       await _methods.generateKeys(
-        event.name,
-        event.mail,
-        event.length,
+        event.name!,
+        event.mail!,
+        event.length!,
         event.password,
       );
     } catch (e) {
@@ -91,7 +91,7 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
   }
 
   Stream<PgpSettingsState> _parseKey(ParseKey event) async* {
-    final keys = await _methods.parseKey(event.key);
+    final keys = await _methods.parseKey(event.key!);
     if (keys.isEmpty) {
       yield ErrorState(ErrorToShow.message(S.current.error_pgp_keys_not_found));
       return;
@@ -121,8 +121,8 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
     return SelectKeyForImport(sortKey.userKey, sortKey.contactKey);
   }
 
-  Future<String> getKeyFromFile() async {
-    Future<String> result;
+  Future<String?>? getKeyFromFile() async {
+    Future<String?>? result;
     try {
       result = _methods.pickFileContent();
     } catch (err) {
@@ -136,7 +136,7 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
   }
 
   Stream<PgpSettingsState> _importKeyFromFile() async* {
-    String file;
+    String? file;
     try {
       file = await _methods.pickFileContent();
     } catch (err) {
@@ -162,13 +162,13 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
     try{
       if (event.pgpKey is PgpKeyWithContact) {
         await _methods.deleteContactKey(
-          event.pgpKey.mail,
+          event.pgpKey!.mail,
         );
       } else {
         await _methods.deleteKey(
-          event.pgpKey.name,
-          event.pgpKey.mail,
-          event.pgpKey.isPrivate,
+          event.pgpKey!.name!,
+          event.pgpKey!.mail,
+          event.pgpKey!.isPrivate,
         );
       }
     }catch(err){
@@ -182,7 +182,7 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
     try {
       File file;
       if (event.pgpKeys.length == 1) {
-        file = await _methods.downloadKey(event.pgpKeys.first);
+        file = await _methods.downloadKey(event.pgpKeys.first!);
       } else {
         file = await _methods.downloadKeys(event.pgpKeys);
       }
@@ -194,7 +194,7 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
 
   Stream<PgpSettingsState> _shareKeys(ShareKeys event) async* {
     if (event.pgpKeys.length == 1) {
-      await _methods.shareKey(event.pgpKeys.first, event.rect);
+      await _methods.shareKey(event.pgpKeys.first!, event.rect);
     } else {
       await _methods.shareKeys(event.pgpKeys, event.rect);
     }

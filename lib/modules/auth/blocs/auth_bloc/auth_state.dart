@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_api_models.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
@@ -10,7 +10,7 @@ abstract class AuthState extends Equatable {
   const AuthState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class InitialAuthState extends AuthState {}
@@ -18,24 +18,24 @@ class InitialAuthState extends AuthState {}
 class UserSelected extends AuthState with AlwaysNonEqualObject {}
 
 class InitializedUserAndAccounts extends AuthState {
-  final List<User> users;
-  final User user;
-  final List<Account> accounts;
-  final Account account;
+  final List<User?>? users;
+  final User? user;
+  final List<Account>? accounts;
+  final Account? account;
   final bool needsLogin;
-  final AccountIdentity identity;
+  final AccountIdentity? identity;
 
   const InitializedUserAndAccounts({
-    @required this.user,
-    @required this.users,
-    @required this.needsLogin,
-    @required this.accounts,
-    @required this.account,
+    required this.user,
+    required this.users,
+    required this.needsLogin,
+    required this.accounts,
+    required this.account,
     this.identity,
   }) : assert(needsLogin != null);
 
   @override
-  List<Object> get props =>
+  List<Object?> get props =>
       [user, account, needsLogin, account, users, accounts, identity];
 }
 
@@ -67,7 +67,7 @@ class TwoFactor extends AuthState with AlwaysNonEqualObject {
 class NeedsHost extends AuthState {}
 
 class UpgradePlan extends AuthState with AlwaysNonEqualObject {
-  final ErrorToShow err;
+  final ErrorToShow? err;
 
   UpgradePlan(this.err);
 }

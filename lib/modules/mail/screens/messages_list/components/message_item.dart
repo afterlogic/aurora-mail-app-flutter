@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
@@ -12,33 +12,33 @@ import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 
 import 'star.dart';
 
-final _expandedUids = new List<int>();
+final _expandedUids = <int>[];
 
 class MessageItem extends StatefulWidget {
   final List<Message> children;
   final Message message;
-  final Key key;
+  final Key? key;
   final bool isSent;
   final bool isNote;
   final Function(Message) onItemSelected;
   final Function(Message, bool) onStarMessage;
   final Function(Message) onDeleteMessage;
-  final Function(Message, bool) onUnreadMessage;
-  final SelectionController selectionController;
+  final Function(Message, bool)? onUnreadMessage;
+  final SelectionController? selectionController;
 
   const MessageItem(
     this.isSent,
     this.message,
     this.children, {
     this.key,
-    @required this.onItemSelected,
-    @required this.isNote,
-    @required this.onDeleteMessage,
-    @required this.onStarMessage,
+    required this.onItemSelected,
+    required this.isNote,
+    required this.onDeleteMessage,
+    required this.onStarMessage,
     this.selectionController,
     this.onUnreadMessage,
   }) : super(key: key);
@@ -70,7 +70,7 @@ class _MessageItemState extends BState<MessageItem> {
     widget.onStarMessage(widget.message, isStarred);
   }
 
-  String _getEmailTitle() {
+  String? _getEmailTitle() {
     final m = widget.message;
     if (widget.isSent) {
       if (m.toToDisplay == "messages_unknown_recipient") {
@@ -96,7 +96,7 @@ class _MessageItemState extends BState<MessageItem> {
         .where((i) => !i.flagsInJson.contains("\\seen"))
         .isNotEmpty;
     final isUnread = !m.flagsInJson.contains("\\seen");
-    final selected = widget.selectionController.isSelected(m.localId);
+    final selected = widget.selectionController!.isSelected(m.localId);
     final flags = Mail.getFlags(m.flagsInJson);
 
     final fontWeight =
@@ -106,20 +106,20 @@ class _MessageItemState extends BState<MessageItem> {
       return Container(
         padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
         decoration: BoxDecoration(
-          color: hasUnread ? theme.primaryColor : null,
+          color: hasUnread ? theme!.primaryColor : null,
           borderRadius: BorderRadius.all(Radius.circular(50.0)),
-          border: Border.all(color: theme.primaryColor, width: 2.0),
+          border: Border.all(color: theme!.primaryColor, width: 2.0),
         ),
         child: Text(
           widget.children.length.toString(),
           style:
-              TextStyle(color: hasUnread ? Colors.white : theme.primaryColor),
+              TextStyle(color: hasUnread ? Colors.white : theme!.primaryColor),
         ),
       );
     }
 
     Widget dismissibleWrap(Widget child) {
-      if (widget.selectionController.enable) {
+      if (widget.selectionController!.enable) {
         return child;
       } else {
         return Dismissible(
@@ -130,12 +130,12 @@ class _MessageItemState extends BState<MessageItem> {
               return ConfirmationDialog.show(
                 context,
                 S.of(context).messages_delete_title,
-                S.of(context).messages_delete_desc_with_subject(m.subject),
+                S.of(context).messages_delete_desc_with_subject(m.subject!),
                 S.of(context).btn_delete,
                 destructibleAction: true,
               );
             } else if (direction == DismissDirection.startToEnd) {
-              await widget.onUnreadMessage(m, isUnread);
+              await widget.onUnreadMessage!(m, isUnread);
             }
             return false;
           },
@@ -145,7 +145,7 @@ class _MessageItemState extends BState<MessageItem> {
             }
           },
           background: Container(
-            color: theme.primaryColor,
+            color: theme!.primaryColor,
             child: Stack(
               children: <Widget>[
                 Align(
@@ -172,7 +172,7 @@ class _MessageItemState extends BState<MessageItem> {
             ),
           ),
           secondaryBackground: Container(
-            color: theme.errorColor,
+            color: theme!.colorScheme.error,
             child: Stack(
               children: <Widget>[
                 Align(
@@ -214,7 +214,7 @@ class _MessageItemState extends BState<MessageItem> {
         children: <Widget>[
           InkWell(
             onLongPress: changeEnable,
-            onTap: widget.selectionController.enable
+            onTap: widget.selectionController!.enable
                 ? changeEnable
                 : BuildProperty.expandMessageThread &&
                         widget.children.isNotEmpty &&
@@ -226,15 +226,15 @@ class _MessageItemState extends BState<MessageItem> {
                   ? ListTile(
                       key: Key(m.uid.toString()),
                       title: Text(
-                        m.subject.isNotEmpty
-                            ? m.subject
+                        m.subject!.isNotEmpty
+                            ? m.subject!
                             : S.of(context).messages_no_subject,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontWeight: fontWeight,
                           fontSize: 16.0,
-                          color: theme.textTheme.headline6.color,
+                          color: theme!.textTheme.titleLarge!.color,
                         ),
                       ),
                       trailing: Column(
@@ -248,7 +248,7 @@ class _MessageItemState extends BState<MessageItem> {
                               BlocBuilder<SettingsBloc, SettingsState>(
                                 builder: (_, state) => Text(
                                   DateFormatting.getShortMessageDate(
-                                    timestamp: m.timeStampInUTC,
+                                    timestamp: m.timeStampInUTC!,
                                     locale: Localizations.localeOf(context)
                                         .languageCode,
                                     yesterdayWord:
@@ -258,12 +258,12 @@ class _MessageItemState extends BState<MessageItem> {
                                   ),
                                   style: TextStyle(
                                     fontSize: 14.0,
-                                    color: theme.disabledColor.withAlpha(
-                                        theme.disabledColor.alpha ~/ 2),
+                                    color: theme!.disabledColor.withAlpha(
+                                        theme!.disabledColor.alpha ~/ 2),
                                   ),
                                 ),
                               ),
-                              if (widget.selectionController.enable)
+                              if (widget.selectionController!.enable)
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8.0),
@@ -274,10 +274,10 @@ class _MessageItemState extends BState<MessageItem> {
                                         border: selected
                                             ? null
                                             : Border.all(
-                                                color: theme.primaryColor,
+                                                color: theme!.primaryColor,
                                                 width: 2),
                                         color: selected
-                                            ? theme.primaryColor
+                                            ? theme!.primaryColor
                                             : null,
                                       ),
                                       child: SizedBox(
@@ -294,11 +294,11 @@ class _MessageItemState extends BState<MessageItem> {
                     )
                   : ListTile(
                       key: Key(m.uid.toString()),
-                      title: Text(_getEmailTitle(),
+                      title: Text(_getEmailTitle()!,
                           style: TextStyle(
                             fontWeight: fontWeight,
                             fontSize: 14.0,
-                            color: theme.disabledColor,
+                            color: theme!.disabledColor,
                           )),
                       subtitle: Padding(
                         padding: const EdgeInsets.only(top: 6.0),
@@ -315,17 +315,17 @@ class _MessageItemState extends BState<MessageItem> {
                               SizedBox(width: 6.0),
                             Flexible(
                               child: Opacity(
-                                opacity: m.subject.isEmpty ? 0.44 : 1.0,
+                                opacity: m.subject!.isEmpty ? 0.44 : 1.0,
                                 child: Text(
-                                  m.subject.isNotEmpty
-                                      ? m.subject
+                                  m.subject!.isNotEmpty
+                                      ? m.subject!
                                       : S.of(context).messages_no_subject,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontWeight: fontWeight,
                                     fontSize: 16.0,
-                                    color: theme.textTheme.headline6.color,
+                                    color: theme!.textTheme.titleLarge!.color,
                                   ),
                                 ),
                               ),
@@ -341,7 +341,7 @@ class _MessageItemState extends BState<MessageItem> {
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
-                              if (m.hasAttachments)
+                              if (m.hasAttachments!)
                                 if (eventInfoFromMessage != null)
                                   Icon(
                                     Icons.calendar_month,
@@ -353,7 +353,7 @@ class _MessageItemState extends BState<MessageItem> {
                               BlocBuilder<SettingsBloc, SettingsState>(
                                 builder: (_, state) => Text(
                                   DateFormatting.getShortMessageDate(
-                                    timestamp: m.timeStampInUTC,
+                                    timestamp: m.timeStampInUTC!,
                                     locale: Localizations.localeOf(context)
                                         .languageCode,
                                     yesterdayWord:
@@ -363,8 +363,8 @@ class _MessageItemState extends BState<MessageItem> {
                                   ),
                                   style: TextStyle(
                                     fontSize: 14.0,
-                                    color: theme.disabledColor.withAlpha(
-                                        theme.disabledColor.alpha ~/ 2),
+                                    color: theme!.disabledColor.withAlpha(
+                                        theme!.disabledColor.alpha ~/ 2),
                                   ),
                                 ),
                               ),
@@ -384,7 +384,7 @@ class _MessageItemState extends BState<MessageItem> {
                                   padding: const EdgeInsets.only(left: .0),
                                   child: Icon(MdiIcons.share),
                                 ),
-                              if (widget.selectionController.enable)
+                              if (widget.selectionController!.enable)
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8.0),
@@ -395,10 +395,10 @@ class _MessageItemState extends BState<MessageItem> {
                                         border: selected
                                             ? null
                                             : Border.all(
-                                                color: theme.primaryColor,
+                                                color: theme!.primaryColor,
                                                 width: 2),
                                         color: selected
-                                            ? theme.primaryColor
+                                            ? theme!.primaryColor
                                             : null,
                                       ),
                                       child: SizedBox(
@@ -459,7 +459,7 @@ class _MessageItemState extends BState<MessageItem> {
                     bottom: 0,
                     child: Container(
                       width: 4.0,
-                      color: theme.primaryColor,
+                      color: theme!.primaryColor,
                     ),
                   ),
                 ],
@@ -472,7 +472,7 @@ class _MessageItemState extends BState<MessageItem> {
 
   changeEnable() {
     final m = widget.message;
-    widget.selectionController.addOrRemove(m.localId, m);
+    widget.selectionController!.addOrRemove(m.localId, m);
     setState(() {});
   }
 }

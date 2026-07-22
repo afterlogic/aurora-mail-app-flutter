@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 
 import 'package:aurora_mail/build_property.dart';
@@ -12,6 +12,7 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/components/starre
 import 'package:aurora_mail/shared_ui/gradient_drawer.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -40,7 +41,7 @@ class _MainDrawerState extends BState<MainDrawer> {
     return GradientDrawer(
       child: ListTileTheme(
         style: ListTileStyle.drawer,
-        selectedColor: theme.primaryColor,
+        selectedColor: theme!.primaryColor,
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,13 +60,13 @@ class _MainDrawerState extends BState<MainDrawer> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          authBloc.currentAccount.friendlyName,
-                          style: theme.textTheme.headline6,
+                          authBloc.currentAccount!.friendlyName,
+                          style: theme!.textTheme.titleLarge,
                         ),
                         SizedBox(height: 8.0),
                         Row(
                           children: <Widget>[
-                            Text(authBloc.currentAccount.email),
+                            Text(authBloc.currentAccount!.email),
                             if (multiAccountEnable &&
                                 authBloc.accounts.length > 1)
                               Icon(mode == _DrawerMode.folders
@@ -87,7 +88,7 @@ class _MainDrawerState extends BState<MainDrawer> {
                 Expanded(
                   child: BlocListener(
                     bloc: BlocProvider.of<MailBloc>(context),
-                    listener: (BuildContext context, state) {
+                    listener: (BuildContext context, dynamic state) {
                       if (state is FoldersLoaded || state is FoldersError) {
                         _refreshCompleter?.complete();
                         _refreshCompleter = new Completer();
@@ -127,12 +128,12 @@ class _MainDrawerState extends BState<MainDrawer> {
   Widget _buildAccounts(AuthBloc authBloc) {
     return BlocBuilder(
       bloc: authBloc,
-      builder: (context, _) {
-        Account current = authBloc.currentAccount;
+      builder: (context, dynamic _) {
+        Account? current = authBloc.currentAccount;
         List<Account> accounts = authBloc.accounts;
 
         final _accounts =
-            accounts.where((item) => item.email != current.email).toList();
+            accounts.where((item) => item.email != current!.email).toList();
         return RefreshIndicator(
           onRefresh: () {
             final completer = Completer();
@@ -173,15 +174,14 @@ class _MainDrawerState extends BState<MainDrawer> {
 
   Widget _buildFolders(FoldersLoaded state) {
     final items = _getFolderWidgets(
-      state.folders,
+      state.folders!,
       state.selectedFolder?.guid ?? "",
       state.filter,
     );
     final folderWidgets = new List<Widget>.from(items);
 
-    final inboxFolder = state.folders.firstWhere(
+    final inboxFolder = state.folders!.firstWhereOrNull(
       (f) => f.folderType == FolderType.inbox,
-      orElse: () => null,
     );
     if (inboxFolder != null) {
       folderWidgets.insert(
@@ -201,14 +201,14 @@ class _MainDrawerState extends BState<MainDrawer> {
     List<Folder> folders,
     String selected,
     MessagesFilter filter, [
-    String parentGuid,
+    String? parentGuid,
   ]) {
     // TODO: redo on Folder.getFolderTree()
     folders.sort((a, b) => a.order - b.order);
     final List<MailFolder> result = [];
     var rootFolders = folders.where((e) => e.parentGuid == parentGuid).toList();
     final isUsedNameSpace = rootFolders.length == 1 &&
-        rootFolders[0].nameSpace?.isNotEmpty == true &&
+        rootFolders[0].nameSpace.isNotEmpty == true &&
         rootFolders[0].fullNameRaw ==
             rootFolders[0].nameSpace.replaceAll(rootFolders[0].delimiter, '');
     if (isUsedNameSpace) {

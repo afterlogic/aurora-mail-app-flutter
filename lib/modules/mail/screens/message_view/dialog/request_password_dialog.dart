@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
@@ -64,7 +64,7 @@ class _RequestPasswordDialogState extends BState<RequestPasswordDialog> {
   }
 
   _decrypt() {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       Navigator.pop(context, RequestPasswordDialogResult(_passCtrl.text));
     }
   }

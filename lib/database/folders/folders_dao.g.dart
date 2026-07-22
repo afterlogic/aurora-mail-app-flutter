@@ -1,12 +1,16 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// @dart=2.9
 
 part of 'folders_dao.dart';
 
-// **************************************************************************
-// DaoGenerator
-// **************************************************************************
-
+// ignore_for_file: type=lint
 mixin _$FoldersDaoMixin on DatabaseAccessor<AppDatabase> {
   $FoldersTable get folders => attachedDatabase.folders;
+  FoldersDaoManager get managers => FoldersDaoManager(this);
+}
+
+class FoldersDaoManager {
+  final _$FoldersDaoMixin _db;
+  FoldersDaoManager(this._db);
+  $$FoldersTableTableManager get folders =>
+      $$FoldersTableTableManager(_db.attachedDatabase, _db.folders);
 }

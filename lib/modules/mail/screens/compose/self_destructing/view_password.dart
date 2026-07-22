@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:math';
 
 import 'package:aurora_mail/generated/l10n.dart';
@@ -39,7 +39,7 @@ class _ViewPasswordState extends State<ViewPassword> with NotSavedChangesMixin {
                 Text(
 
                       S.of(context).hint_self_destructing_supports_plain_text_only,
-                  style: theme.textTheme.caption,
+                  style: theme.textTheme.bodySmall,
                 ),
                 SizedBox(height: 20),
                 Column(
@@ -50,12 +50,12 @@ class _ViewPasswordState extends State<ViewPassword> with NotSavedChangesMixin {
                 SizedBox(height: 20),
                 ClipboardLabel(widget.password, "Encrypted message password.",
                     () {
-                  toastKey.currentState.show(S.of(context).hint_self_destructing_password_coppied_to_clipboard);
+                  toastKey.currentState!.show(S.of(context).hint_self_destructing_password_coppied_to_clipboard);
                 }),
                 SizedBox(height: 20),
                 Text(
                   S.of(context).hint_self_destructing_sent_password_using_different_channel,
-                  style: theme.textTheme.caption,
+                  style: theme.textTheme.bodySmall,
                 ),
               ],
             ),

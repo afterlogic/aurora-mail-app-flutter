@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:math';
 
 import 'package:aurora_logger/aurora_logger.dart';
@@ -35,9 +35,9 @@ class BackgroundSync {
   Future<bool> sync(
     bool isBackground,
     bool showNotification,
-    NotificationData notification,
+    NotificationData? notification,
     Logger isolatedLogger,
-    ApiInterceptor interceptor,
+    ApiInterceptor? interceptor,
   ) async {
     final start = DateTime.now().millisecondsSinceEpoch;
     if (notification == null && MailMethods.syncQueue.isNotEmpty) {
@@ -55,7 +55,7 @@ class BackgroundSync {
       for (final user in users) {
         await _backgroundCalendarsSync(
             interceptor: interceptor, user: user, logger: isolatedLogger);
-        var accounts = await _accountsDao.getAccounts(user.localId);
+        var accounts = await _accountsDao.getAccounts(user.localId!);
         if (notification != null) {
           accounts =
               accounts.where((item) => item.email == notification.to).toList();
@@ -73,7 +73,7 @@ class BackgroundSync {
                 .log("MailSync: ${newMessages.length} new message(s)");
             for (final entity in newMessages.entries) {
               entity.value
-                  .sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
+                  .sort((a, b) => a.timeStampInUTC!.compareTo(b.timeStampInUTC!));
               for (final message in entity.value) {
                 await _showNewMessage(message, entity.key, user);
               }
@@ -98,9 +98,9 @@ class BackgroundSync {
   }
 
   Future<void> _backgroundCalendarsSync(
-      {@required ApiInterceptor interceptor,
-      @required User user,
-      @required Logger logger}) async {
+      {required ApiInterceptor? interceptor,
+      required User user,
+      required Logger logger}) async {
     try {
       logger.log("Calendars background sync started");
       final calendarRepository = CalendarRepository(
@@ -115,7 +115,7 @@ class BackgroundSync {
     bool isBackground,
     User user,
     List<Account> accounts,
-    ApiInterceptor interceptor,
+    ApiInterceptor? interceptor,
     Logger isolatedLogger,
   ) async {
     final newMessages = <Account, List<Message>>{};
@@ -128,7 +128,7 @@ class BackgroundSync {
       if (inboxFolders.isEmpty) continue;
 
       final foldersToUpdate =
-          (await _updateFolderHash(inboxFolders, user, account, interceptor))
+          (await _updateFolderHash(inboxFolders, user, account, interceptor!))!
               .toList();
 
       if (account == null) continue;
@@ -147,7 +147,7 @@ class BackgroundSync {
       for (Folder folderToUpdate in foldersToUpdate) {
         final messagesInfo = await FolderMessageInfo.getMessageInfo(
           folderToUpdate.fullNameRaw,
-          account.localId,
+          account.localId!,
         );
         final allowUpdateMessage = folderGuidToUpdateMessage.firstWhere(
               (element) => folderToUpdate.guid == element,
@@ -180,7 +180,7 @@ class BackgroundSync {
             folderName: folderToUpdate.fullNameRaw, search: "date:$periodStr/");
 
         List<MessageInfo> newMessagesInfo =
-            MessageInfo.flattenMessagesInfo(rawInfo);
+            MessageInfo.flattenMessagesInfo(rawInfo)!;
 
         final result = await Folders.calculateMessagesInfoDiffAsync(
           messagesInfo,
@@ -212,14 +212,14 @@ class BackgroundSync {
             await Mail.getMessageObjFromServerAndUpdateInfoHasBody(
           rawBodies,
           messageBody,
-          user.localId,
+          user.localId!,
           account,
         );
 
         await _mailDao.fillMessages(newMessageBodies);
         await FolderMessageInfo.setMessageInfo(
           folderToUpdate.fullNameRaw,
-          account.localId,
+          account.localId!,
           newMessagesInfo,
         );
         final notSeenMessagesUids = result.addedMessages
@@ -237,7 +237,7 @@ class BackgroundSync {
   Future<Map<Account, List<Message>>> _getNewMessages(
     User user,
     List<Account> accounts,
-    ApiInterceptor interceptor,
+    ApiInterceptor? interceptor,
     Logger isolatedLogger,
   ) async {
     final newMessages = <Account, List<Message>>{};
@@ -250,7 +250,7 @@ class BackgroundSync {
       for (LocalFolder folderToUpdate in inboxFolders) {
         final messagesInfo = await FolderMessageInfo.getMessageInfo(
           folderToUpdate.fullNameRaw,
-          account.localId,
+          account.localId!,
         );
 
         if (messagesInfo == null) {
@@ -261,7 +261,7 @@ class BackgroundSync {
         final mailApi = MailApi(
           user: user,
           account: account,
-          interceptor: interceptor,
+          interceptor: interceptor!,
         );
 
         final rawInfo = await mailApi.getMessagesInfo(
@@ -271,7 +271,7 @@ class BackgroundSync {
         );
 
         List<MessageInfo> newMessagesInfo =
-            MessageInfo.flattenMessagesInfo(rawInfo);
+            MessageInfo.flattenMessagesInfo(rawInfo)!;
 
         final result = await Folders.calculateMessagesInfoDiffAsync(
           messagesInfo,
@@ -308,14 +308,14 @@ class BackgroundSync {
             await Mail.getMessageObjFromServerAndUpdateInfoHasBody(
           rawBodies,
           messageBody,
-          user.localId,
+          user.localId!,
           account,
         );
 
         await _mailDao.fillMessages(newMessageBodies);
         await FolderMessageInfo.setMessageInfo(
           folderToUpdate.fullNameRaw,
-          account.localId,
+          account.localId!,
           mergeMessageInfo,
         );
         final notSeenMessagesUids = result.addedMessages
@@ -375,7 +375,7 @@ class BackgroundSync {
     return mergeMessageInfo;
   }
 
-  Future<List<Folder>> _updateFolderHash(
+  Future<List<Folder>?> _updateFolderHash(
     List<LocalFolder> folders,
     User user,
     Account account,
@@ -386,8 +386,8 @@ class BackgroundSync {
       account: account,
       interceptor: interceptor,
     );
-    final newFolders = await _foldersApi.getRelevantFoldersInformation(
-        folders.map((e) => e.fullNameRaw).toList());
+    final newFolders = (await _foldersApi.getRelevantFoldersInformation(
+        folders.map((e) => e.fullNameRaw).toList()))!;
     final outFolder = <LocalFolder>[];
     newFolders.keys.forEach((fName) {
       final updatedFolder = newFolders[fName];
@@ -401,9 +401,9 @@ class BackgroundSync {
       final needsInfoUpdate = folder.fullNameHash != newHash || shouldUpdate;
 
       outFolder.add(folder.copyWith(
-        count: count as int,
-        unread: unread as int,
-        fullNameHash: newHash as String,
+        count: Value(count as int?),
+        unread: Value(unread as int?),
+        fullNameHash: newHash as String?,
         needsInfoUpdate: needsInfoUpdate,
       ));
     });

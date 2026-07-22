@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 
 import 'package:aurora_mail/database/app_database.dart';
@@ -7,15 +7,15 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/components/select
 import 'package:flutter/material.dart';
 
 class StreamPaginationList extends StatefulWidget {
-  final Widget Function(BuildContext, Message, List<Message>) builder;
-  final Widget Function(BuildContext, dynamic e) onError;
-  final Stream<List<Message>> Function(int) fetch;
-  final Widget Function(BuildContext) emptyWidget;
-  final Function(int count) onSelect;
-  final Widget progressWidget;
-  final Widget Function(int) header;
-  final String folder;
-  final SelectionController selectionController;
+  final Widget Function(BuildContext, Message, List<Message>)? builder;
+  final Widget Function(BuildContext, dynamic e)? onError;
+  final Stream<List<Message>> Function(int)? fetch;
+  final Widget Function(BuildContext)? emptyWidget;
+  final Function(int count)? onSelect;
+  final Widget? progressWidget;
+  final Widget Function(int?)? header;
+  final String? folder;
+  final SelectionController? selectionController;
 
   const StreamPaginationList({
     this.builder,
@@ -23,7 +23,7 @@ class StreamPaginationList extends StatefulWidget {
     this.progressWidget,
     this.onError,
     this.emptyWidget,
-    Key key,
+    Key? key,
     this.folder,
     this.onSelect,
     this.selectionController,
@@ -36,26 +36,26 @@ class StreamPaginationList extends StatefulWidget {
 
 class _StreamPaginationListState extends State<StreamPaginationList> {
   Map<int, _ListPart> parts = {0: _ListPart()};
-  bool selectEnable;
+  bool? selectEnable;
 
   @override
   void initState() {
     super.initState();
-    widget.selectionController.addListener(onSelect);
-    widget.selectionController.enable = false;
+    widget.selectionController!.addListener(onSelect);
+    widget.selectionController!.enable = false;
     selectEnable = false;
   }
 
   @override
   void dispose() {
     super.dispose();
-    widget.selectionController.removeListener(onSelect);
-    widget.selectionController.enable = false;
+    widget.selectionController!.removeListener(onSelect);
+    widget.selectionController!.enable = false;
   }
 
   onSelect() {
-    if (widget.selectionController.enable != selectEnable) {
-      selectEnable = widget.selectionController.enable;
+    if (widget.selectionController!.enable != selectEnable) {
+      selectEnable = widget.selectionController!.enable;
       setState(() {});
     }
   }
@@ -65,7 +65,7 @@ class _StreamPaginationListState extends State<StreamPaginationList> {
     final threads = <Message>[];
     for (var part in parts.values) {
       if (part?.items != null) {
-        threads.addAll(part.threads);
+        threads.addAll(part.threads!);
       }
     }
     final existHeader = widget.header != null;
@@ -76,7 +76,7 @@ class _StreamPaginationListState extends State<StreamPaginationList> {
         var id = _id;
         if (existHeader) {
           if (id == 0) {
-            return widget.header(parts[0].items?.length);
+            return widget.header!(parts[0]!.items?.length);
           }
           id--;
         }
@@ -84,7 +84,7 @@ class _StreamPaginationListState extends State<StreamPaginationList> {
           id,
           parts[id],
           widget.fetch,
-          (context, item) => widget.builder(context, item, threads),
+          (context, item) => widget.builder!(context, item, threads),
           onInit,
           widget.progressWidget,
           widget.onError,
@@ -109,14 +109,14 @@ class _StreamPaginationListState extends State<StreamPaginationList> {
 
 class _ListPartWidget extends StatefulWidget {
   final int id;
-  final _ListPart part;
-  final Stream<List<Message>> Function(int) fetch;
+  final _ListPart? part;
+  final Stream<List<Message>> Function(int)? fetch;
   final Widget Function(BuildContext, Message) builder;
-  final Widget Function(BuildContext, dynamic e) onError;
-  final Widget Function(BuildContext) empty;
+  final Widget Function(BuildContext, dynamic e)? onError;
+  final Widget Function(BuildContext)? empty;
   final Function(int, bool) onInit;
-  final Widget progress;
-  final String folder;
+  final Widget? progress;
+  final String? folder;
   final bool isEnd;
 
   _ListPartWidget(
@@ -139,7 +139,7 @@ class _ListPartWidget extends StatefulWidget {
 class _ListPartWidgetState extends State<_ListPartWidget> {
   bool isInit = false;
   dynamic error;
-  StreamSubscription<List<Message>> subscription;
+  StreamSubscription<List<Message>>? subscription;
 
   @override
   void initState() {
@@ -157,17 +157,17 @@ class _ListPartWidgetState extends State<_ListPartWidget> {
   Widget build(BuildContext context) {
     if (error != null) {
       print(error);
-      return widget.onError(context, error);
+      return widget.onError!(context, error);
     }
-    if (widget.part.items != null) {
-      final messages = widget.part.messages;
+    if (widget.part!.items != null) {
+      final messages = widget.part!.messages!;
       if (messages.isEmpty == true) {
         if (widget.id == 0) {
-          return widget.empty(context);
+          return widget.empty!(context);
         } else if (widget.isEnd &&
             MailMethods.currentFolderUpdate != null &&
             widget.folder == MailMethods.currentFolderUpdate) {
-          return widget.progress;
+          return widget.progress!;
         } else {
           return SizedBox.shrink();
         }
@@ -190,8 +190,8 @@ class _ListPartWidgetState extends State<_ListPartWidget> {
         mainAxisSize: MainAxisSize.min,
         children: widgets,
       );
-    } else if (widget.part.size != null) {
-      return SizedBox.fromSize(size: widget.part.size);
+    } else if (widget.part!.size != null) {
+      return SizedBox.fromSize(size: widget.part!.size);
     } else {
       return SizedBox(
         height: MediaQuery.of(context).size.height,
@@ -200,7 +200,7 @@ class _ListPartWidgetState extends State<_ListPartWidget> {
   }
 
   Future<void> _load() async {
-    subscription = widget.fetch(widget.id).listen((items) {
+    subscription = widget.fetch!(widget.id).listen((items) {
       error = null;
       if (!isInit) {
         if (items.isNotEmpty) {
@@ -210,7 +210,7 @@ class _ListPartWidgetState extends State<_ListPartWidget> {
           widget.onInit(widget.id, false);
         }
       }
-      widget.part.items = items;
+      widget.part!.items = items;
       if (mounted) setState(() {});
     }, onError: (e) {
       error = e;
@@ -222,22 +222,22 @@ class _ListPartWidgetState extends State<_ListPartWidget> {
     subscription?.cancel();
     subscription = null;
     try {
-      widget.part.size = (context.findRenderObject() as RenderBox).size;
+      widget.part!.size = (context.findRenderObject() as RenderBox).size;
     } catch (e) {}
-    widget.part.items = null;
+    widget.part!.items = null;
   }
 }
 
 class _ListPart {
-  Size size;
-  List<Message> _items;
-  List<Message> _messages;
+  Size? size;
+  List<Message>? _items;
+  List<Message>? _messages;
 
-  List<Message> _threads;
+  List<Message>? _threads;
 
-  List<Message> get items => _items;
+  List<Message>? get items => _items;
 
-  set items(List<Message> value) {
+  set items(List<Message>? value) {
     _items = value;
     if (value == null) {
       _messages = null;
@@ -248,14 +248,14 @@ class _ListPart {
     _threads = [];
     value.forEach((item) {
       if (item.parentUid == null) {
-        _messages.add(item);
+        _messages!.add(item);
       } else {
-        _threads.add(item);
+        _threads!.add(item);
       }
     });
   }
 
-  List<Message> get messages => _messages;
+  List<Message>? get messages => _messages;
 
-  List<Message> get threads => _threads;
+  List<Message>? get threads => _threads;
 }

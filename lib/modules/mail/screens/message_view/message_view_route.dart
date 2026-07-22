@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
@@ -11,15 +11,15 @@ class MessageViewRoute {
 
 class MessageViewScreenArgs {
   final Message message;
-  final MailBloc mailBloc;
-  final ContactsBloc contactsBloc;
-  final MessagesListBloc messagesListBloc;
+  final MailBloc? mailBloc;
+  final ContactsBloc? contactsBloc;
+  final MessagesListBloc? messagesListBloc;
 
   const MessageViewScreenArgs({
-    @required this.message,
-    @required this.mailBloc,
-    @required this.messagesListBloc,
-    @required this.contactsBloc,
+    required this.message,
+    required this.mailBloc,
+    required this.messagesListBloc,
+    required this.contactsBloc,
   });
 }
 
@@ -28,15 +28,15 @@ class MessageProgressRoute {
 }
 
 class MessageProgressRouteArg {
-  final Future<Message> futureMessage;
-  final MailBloc mailBloc;
-  final ContactsBloc contactsBloc;
-  final MessagesListBloc messagesListBloc;
+  final Future<Message?> futureMessage;
+  final MailBloc? mailBloc;
+  final ContactsBloc? contactsBloc;
+  final MessagesListBloc? messagesListBloc;
 
   const MessageProgressRouteArg({
-    @required this.futureMessage,
-    @required this.mailBloc,
-    @required this.messagesListBloc,
-    @required this.contactsBloc,
+    required this.futureMessage,
+    required this.mailBloc,
+    required this.messagesListBloc,
+    required this.contactsBloc,
   });
 }

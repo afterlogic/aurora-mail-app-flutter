@@ -11,7 +11,7 @@ class TrustDeviceMethods {
     final deviceId = await DeviceIdStorage.getDeviceId();
     final deviceName = await DeviceIdStorage.getDeviceName();
     return _authApi.trustDevice(
-      deviceId,
+      deviceId ?? '',
       deviceName,
       user.hostname,
       user.token,

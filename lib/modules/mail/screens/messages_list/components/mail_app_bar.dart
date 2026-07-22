@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
@@ -16,20 +16,20 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_s
 import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide SearchBar;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MailAppBar extends StatefulWidget implements PreferredSizeWidget {
-  final String initSearch;
-  final SelectionController<int, Message> selectionController;
-  final Function(bool value) onSearch;
+  final String? initSearch;
+  final SelectionController<int, Message>? selectionController;
+  final Function(bool value)? onSearch;
   final bool enable;
   final bool isAppBar;
 
   const MailAppBar({
     this.initSearch,
     this.selectionController,
-    Key key,
+    Key? key,
     this.onSearch,
     this.enable = true,
     this.isAppBar = true,
@@ -44,9 +44,9 @@ class MailAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class MailAppBarState extends BState<MailAppBar> {
   final searchKey = GlobalKey<SearchBarState>();
-  MailBloc _mailBloc;
-  MessagesListBloc _messagesListBloc;
-  TextEditingController _searchCtrl;
+  MailBloc? _mailBloc;
+  late MessagesListBloc _messagesListBloc;
+  TextEditingController? _searchCtrl;
   bool isSelectMode = false;
   bool _isSearchMode = false;
 
@@ -54,10 +54,10 @@ class MailAppBarState extends BState<MailAppBar> {
 
   void set isSearchMode(bool value) {
     _isSearchMode = value;
-    widget.onSearch(value);
+    widget.onSearch!(value);
   }
 
-  String get searchText => _searchCtrl?.text;
+  String? get searchText => _searchCtrl?.text;
 
   @override
   void initState() {
@@ -70,25 +70,25 @@ class MailAppBarState extends BState<MailAppBar> {
     if (search.isNotEmpty) {
       _isSearchMode = true;
     }
-    widget.selectionController.addListener(onSelect);
+    widget.selectionController!.addListener(onSelect);
   }
 
   @override
   void dispose() {
     super.dispose();
-    widget.selectionController.removeListener(onSelect);
+    widget.selectionController!.removeListener(onSelect);
   }
 
   void onSelect() {
-    if (widget.selectionController.enable != isSelectMode) {
-      isSelectMode = widget.selectionController.enable;
+    if (widget.selectionController!.enable != isSelectMode) {
+      isSelectMode = widget.selectionController!.enable;
       setState(() {});
     }
   }
 
   void search(String text) {
     isSearchMode = true;
-    _searchCtrl.text = text;
+    _searchCtrl!.text = text;
     _search(text);
     setState(() {});
   }
@@ -105,7 +105,7 @@ class MailAppBarState extends BState<MailAppBar> {
       final mainTitle = S.of(context).messages_list_app_bar_mail;
       final subTitle = isStarred
           ? S.of(context).folders_starred
-          : _getTitle(context, state.selectedFolder);
+          : _getTitle(context, state.selectedFolder!);
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -115,7 +115,7 @@ class MailAppBarState extends BState<MailAppBar> {
           Text(
             subTitle,
             style: TextStyle(
-                fontSize: theme.textTheme.bodySmall.fontSize,
+                fontSize: theme.textTheme.bodySmall!.fontSize,
                 fontWeight: FontWeight.w400),
           ),
         ],
@@ -151,7 +151,7 @@ class MailAppBarState extends BState<MailAppBar> {
   }
 
   void _search(String searchText) {
-    final mailState = _mailBloc.state;
+    final MailState mailState = _mailBloc!.state;
     if (mailState is FoldersLoaded) {
       final searchParams = searchUtil.searchParams(searchText);
       _messagesListBloc.add(
@@ -162,7 +162,7 @@ class MailAppBarState extends BState<MailAppBar> {
   }
 
   void changeMode() {
-    _searchCtrl.clear();
+    _searchCtrl!.clear();
     setState(() => isSearchMode = !isSearchMode);
   }
 
@@ -187,7 +187,7 @@ class MailAppBarState extends BState<MailAppBar> {
           if (BuildProperty.multiUserEnable)
             BlocBuilder<AuthBloc, AuthState>(
               builder: (_, state) =>
-                  UserSelectionPopup(BlocProvider.of<AuthBloc>(context).users),
+                  UserSelectionPopup(BlocProvider.of<AuthBloc>(context).users as List<User>),
             ),
         ],
       );
@@ -221,7 +221,7 @@ class MailAppBarState extends BState<MailAppBar> {
               if (BuildProperty.multiUserEnable)
                 BlocBuilder<AuthBloc, AuthState>(
                   builder: (_, state) => UserSelectionPopup(
-                      BlocProvider.of<AuthBloc>(context).users),
+                      BlocProvider.of<AuthBloc>(context).users as List<User>),
                 ),
             ]
           : null,

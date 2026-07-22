@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/shared_ui/adaptive_bottom_bar_icon.dart';
 import 'package:flutter/material.dart';
@@ -14,14 +14,14 @@ class AdaptiveBottomBarButton extends StatelessWidget {
   final double iconSize;
 
   const AdaptiveBottomBarButton({
-    Key key,
-    @required this.mdiIcon,
-    @required this.iconName,
-    @required this.label,
-    @required this.isActive,
-    @required this.activeColor,
-    @required this.inactiveColor,
-    @required this.onPressed,
+    Key? key,
+    required this.mdiIcon,
+    required this.iconName,
+    required this.label,
+    required this.isActive,
+    required this.activeColor,
+    required this.inactiveColor,
+    required this.onPressed,
     this.iconSize = 28.0,
   }) : super(key: key);
 

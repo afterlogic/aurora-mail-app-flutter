@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
@@ -13,7 +13,7 @@ import 'package:aurora_mail/shared_ui/adaptive_bottom_bar_button.dart';
 import 'package:aurora_mail/utils/extensions/bloc_provider_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:theme/app_color.dart';
 
 enum MailBottomAppBarRoutes { mail, contacts, settings, calendar }
@@ -21,7 +21,7 @@ enum MailBottomAppBarRoutes { mail, contacts, settings, calendar }
 class MailBottomAppBar extends StatelessWidget {
   final MailBottomAppBarRoutes selectedRoute;
 
-  const MailBottomAppBar({@required this.selectedRoute});
+  const MailBottomAppBar({required this.selectedRoute});
 
   void _openContacts(BuildContext context) {
     final mailBloc = BlocProvider.of<MailBloc>(context);

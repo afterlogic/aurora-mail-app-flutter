@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/alias_or_account.dart';
@@ -33,13 +33,13 @@ class PgpSettings extends StatefulWidget {
 
 class _PgpSettingsState extends BState<PgpSettings> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  PgpSettingsBloc bloc;
+  PgpSettingsBloc? bloc;
 
   @override
   void initState() {
     super.initState();
     bloc = widget.pgpSettingsBloc;
-    bloc.add(LoadKeys());
+    bloc!.add(LoadKeys());
   }
 
   @override
@@ -146,7 +146,6 @@ class _PgpSettingsState extends BState<PgpSettings> {
     }).toList();
     if (exist.contains(current.mail)) {
       if (notExist.isEmpty) {
-        current = null;
         showSnack(
             isError: false,
             context: context,
@@ -163,9 +162,9 @@ class _PgpSettingsState extends BState<PgpSettings> {
       builder: (_) => GenerateKeyDialog(notExist, current),
     );
     if (result is GenerateKeyDialogResult) {
-      bloc.add(GenerateKeys(
-        result.alias.name,
-        result.alias.mail,
+      bloc!.add(GenerateKeys(
+        result.alias!.name,
+        result.alias!.mail,
         result.length,
         result.password,
       ));
@@ -185,12 +184,12 @@ class _PgpSettingsState extends BState<PgpSettings> {
     }
     SettingsNavigatorWidget.of(context).pushNamed(
       PgpKeyRoute.name,
-      arguments: PgpKeyRouteArg(key, null, false, bloc),
+      arguments: PgpKeyRouteArg(key, null, false, bloc!),
     );
   }
 
-  _importKey(Map<PgpKey, bool> userKeys,
-      Map<PgpKeyWithContact, bool> contactKeys) async {
+  _importKey(Map<PgpKey, bool?> userKeys,
+      Map<PgpKeyWithContact, bool?> contactKeys) async {
     await showDialog(
       context: context,
       builder: (_) => ImportKeyDialog(userKeys, contactKeys, bloc),
@@ -203,18 +202,18 @@ class _PgpSettingsState extends BState<PgpSettings> {
       builder: (_) => ImportFromTextDialog(),
     );
     if (result is String) {
-      bloc.add(ParseKey(result));
+      bloc!.add(ParseKey(result));
     }
   }
 
   _importFromFile() async {
-    bloc.add(ImportFromFile());
+    bloc!.add(ImportFromFile());
   }
 
   _exportAllPublicKeys(List<PgpKey> keys) {
     SettingsNavigatorWidget.of(context).pushNamed(
       PgpKeysRoute.name,
-      arguments: PgpKeysRouteArg(keys, bloc),
+      arguments: PgpKeysRouteArg(keys, bloc!),
     );
   }
 
@@ -229,7 +228,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
     List<PgpKey> public,
     List<PgpKey> private,
     List<PgpKey> contactPublic,
-    String keyProgress,
+    String? keyProgress,
   ) {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -237,7 +236,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
         if (public.isNotEmpty || keyProgress != null)
           Text(
             S.of(context).label_pgp_public_keys,
-            style: theme.textTheme.headline6,
+            style: theme!.textTheme.titleLarge,
           ),
         keysGroup(
           context,
@@ -248,7 +247,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
         if (private.isNotEmpty || keyProgress != null)
           Text(
             S.of(context).label_pgp_private_keys,
-            style: theme.textTheme.headline6,
+            style: theme!.textTheme.titleLarge,
           ),
         keysGroup(
           context,
@@ -261,7 +260,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
           if (contactPublic.isNotEmpty)
             Text(
               S.of(context).label_pgp_contact_public_keys,
-              style: theme.textTheme.headline6,
+              style: theme!.textTheme.titleLarge,
             ),
           keysGroup(
             context,
@@ -276,7 +275,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
   Widget keysGroup(
     BuildContext context,
     List<PgpKey> keys,
-    String keyProgress, [
+    String? keyProgress, [
     bool needPassword = false,
   ]) {
     final List<Widget> widgets = keys

@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_api_models.dart';
 import 'package:aurora_mail/utils/api_utils.dart';

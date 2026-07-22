@@ -122,7 +122,10 @@ class _WeekViewState extends State<WeekView> {
           ),
           headerStringBuilder: (date, {secondaryDate}) => DateFormat('yMMM').format(date),
           timeLineStringBuilder: (date, {secondaryDate}) {
-            String sTimeFormat = ((settingsState as SettingsLoaded).is24 ? 'HH:mm' : 'h a');
+            String sTimeFormat =
+                ((settingsState as SettingsLoaded).is24 ?? false
+                    ? 'HH:mm'
+                    : 'h a');
             return DateFormat(sTimeFormat).format(date);
           },
           weekDayBuilder: (date) {

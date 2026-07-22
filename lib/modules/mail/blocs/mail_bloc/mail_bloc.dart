@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 
 import 'package:aurora_logger/aurora_logger.dart';
@@ -13,28 +13,28 @@ import './bloc.dart';
 import 'mail_methods.dart';
 
 class MailBloc extends Bloc<MailEvent, MailState> {
-  MailMethods _methods;
-  User _user;
-  Account _account;
+  MailMethods? _methods;
+  User? _user;
+  Account? _account;
   final updateMessageCounter = UpdateMessageCounter();
-  static String selectedFolderGuid;
+  static String? selectedFolderGuid;
 
   MailBloc({
-    User user,
-    Account account,
+    required User user,
+    Account? account,
   }) : super(FoldersEmpty()) {
     assert(user != null);
     init(user, account);
     BackgroundHelper.addOnEndAlarmObserver(true, onEndAlarm);
   }
 
-  User get user => _user;
+  User? get user => _user;
 
-  Account get account => _account;
+  Account? get account => _account;
 
-  Folder get selectedFolder => _selectedFolder;
+  Folder? get selectedFolder => _selectedFolder;
 
-  init(User user, Account account) {
+  init(User user, Account? account) {
     _user = user;
     _account = account;
     _methods?.close();
@@ -45,7 +45,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     );
   }
 
-  Folder _selectedFolder;
+  Folder? _selectedFolder;
   MessagesFilter _filter = MessagesFilter.none;
 
   @override
@@ -78,18 +78,18 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
   Stream<MailState> _fetchFolders(FetchFolders event) async* {
     selectedFolderGuid = _selectedFolder?.guid;
-    final previous = state;
+    final MailState previous = state;
     if (state is! FoldersLoaded) yield FoldersLoading();
 
     try {
-      final List<Folder> folders = await _methods.getFolders();
+      final List<Folder> folders = (await _methods!.getFolders())!;
 
       if (folders.isNotEmpty) {
         if (_selectedFolder == null) {
           _selectedFolder = folders[0];
         } else {
           _selectedFolder = folders.firstWhere(
-              (f) => f.guid == _selectedFolder.guid,
+              (f) => f.guid == _selectedFolder!.guid,
               orElse: () => folders[0]);
         }
         selectedFolderGuid = _selectedFolder?.guid;
@@ -99,7 +99,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
           _filter,
           PostFolderLoadedAction.subscribeToMessages,
         );
-        final List<Folder> foldersWithInfo = await _methods.updateFoldersHash(
+        final List<Folder>? foldersWithInfo = await _methods!.updateFoldersHash(
           _selectedFolder,
         );
 
@@ -109,8 +109,8 @@ class MailBloc extends Bloc<MailEvent, MailState> {
           _filter,
         );
 
-        final guid = _selectedFolder.guid;
-        _methods
+        final guid = _selectedFolder!.guid;
+        _methods!
             .syncFolders(guid: guid, syncSystemFolders: true)
             .then((v) => add(UpdateFolders()));
       } else {
@@ -127,10 +127,10 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
   Stream<MailState> _updateFolders(UpdateFolders event) async* {
     try {
-      final List<Folder> folders = await _methods.getFolders();
+      final List<Folder> folders = (await _methods!.getFolders())!;
 
       _selectedFolder = folders.firstWhere(
-        (f) => f.guid == _selectedFolder.guid,
+        (f) => f.guid == _selectedFolder!.guid,
         orElse: () => folders[0],
       );
 
@@ -147,24 +147,24 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   Stream<MailState> _refreshFolders(RefreshFolders event) async* {
-    final previous = state;
+    final MailState previous = state;
     try {
       if (state is! FoldersLoaded) yield FoldersLoading();
 
-      final newFolders = await _methods.refreshFolders();
+      final newFolders = await _methods!.refreshFolders();
 
-      final List<Folder> foldersWithInfo =
-          await _methods.updateFoldersHash(_selectedFolder);
+      final List<Folder>? foldersWithInfo =
+          await _methods!.updateFoldersHash(_selectedFolder);
 
-      if (_selectedFolder == null && newFolders.isNotEmpty) {
+      if (_selectedFolder == null && newFolders!.isNotEmpty) {
         yield FoldersLoaded(
           foldersWithInfo,
           _selectedFolder,
           _filter,
         );
 
-        final guid = _selectedFolder.guid;
-        _methods
+        final guid = _selectedFolder!.guid;
+        _methods!
             .syncFolders(guid: guid, syncSystemFolders: true)
             .then((v) => add(UpdateFolders()));
       } else {
@@ -183,11 +183,11 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   Stream<MailState> _refreshMessages(RefreshMessages event) async* {
-    final previous = state;
+    final MailState previous = state;
     try {
-      final guid = _selectedFolder.guid;
-      await _methods.updateFolderHash(_selectedFolder);
-      _methods
+      final guid = _selectedFolder!.guid;
+      await _methods!.updateFolderHash(_selectedFolder);
+      _methods!
           .syncFolders(
             guid: guid,
             syncSystemFolders: true,
@@ -212,10 +212,10 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
   Stream<MailState> _selectFolder(SelectFolder event) async* {
     try {
-      selectedFolderGuid = event.folder.guid;
-      final List<Folder> folders = state is FoldersLoaded
+      selectedFolderGuid = event.folder!.guid;
+      final List<Folder>? folders = state is FoldersLoaded
           ? (state as FoldersLoaded).folders
-          : await _methods.getFolders();
+          : await _methods!.getFolders();
 
       _selectedFolder = event.folder;
       _filter = event.filter;
@@ -227,8 +227,8 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         PostFolderLoadedAction.subscribeToMessages,
       );
 
-      final guid = event.folder.guid;
-      _methods
+      final guid = event.folder!.guid;
+      _methods!
           .syncFolders(
             guid: guid,
             syncSystemFolders: false,
@@ -244,16 +244,16 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   Stream<MailState> _checkFoldersMessagesChanges(
       CheckFoldersMessagesChanges event) async* {
     try {
-      final state = this.state;
+      final MailState state = this.state;
       if (state is FoldersLoaded) {
         yield state.copyWith(isProgress: true);
       } else {
         if (state is! FoldersLoaded) yield FoldersLoading();
       }
-      final folders = await _methods.updateFoldersHash(_selectedFolder);
+      final folders = await _methods!.updateFoldersHash(_selectedFolder);
 
-      final guid = _selectedFolder.guid;
-      await _methods.syncFolders(guid: guid, syncSystemFolders: true);
+      final guid = _selectedFolder!.guid;
+      await _methods!.syncFolders(guid: guid, syncSystemFolders: true);
 
       yield FoldersLoaded(
         folders,
@@ -269,7 +269,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
   Stream<MailState> _setSeen(SetSeen event) async* {
     try {
-      _methods.setMessagesSeen(
+      _methods!.setMessagesSeen(
         folder: _selectedFolder,
         messages: event.messages,
         isSeen: event.isSeen,
@@ -282,7 +282,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
   Stream<MailState> _setStarred(SetStarred event) async* {
     try {
-      _methods.setMessagesStarred(
+      _methods!.setMessagesStarred(
         folder: _selectedFolder,
         messages: event.messages,
         isStarred: event.isStarred,
@@ -295,7 +295,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
   Stream<MailState> _selectFolderByName(SelectFolderByName event) async* {
     try {
-      final folder = await _methods.getFolderByName(event.name);
+      final folder = await _methods!.getFolderByName(event.name);
       add(SelectFolder(folder));
     } catch (err, s) {
       logger.error(err, s);
@@ -304,31 +304,31 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   Future<Message> getFullMessage(int localId) {
-    return _methods.getMessage(localId);
+    return _methods!.getMessage(localId);
   }
 
   Future<LocalFolder> getFolderByType(FolderType folderType) {
-    return _methods.getFolderByType(folderType);
+    return _methods!.getFolderByType(folderType);
   }
 
-  Future<Folder> updateFolder(Folder selectedFolder) {
-    return _methods.getFolder(selectedFolder.guid);
+  Future<Folder?> updateFolder(Folder selectedFolder) {
+    return _methods!.getFolder(selectedFolder.guid);
   }
 
   Future<Message> getMessageByLocalId(int uid) {
-    return _methods.getMessage(uid);
+    return _methods!.getMessage(uid);
   }
 
-  Future<Message> getMessageById(String messageId, String folder) {
-    return _methods.getMessageById(messageId, folder);
+  Future<Message?> getMessageById(String messageId, String folder) {
+    return _methods!.getMessageById(messageId, folder);
   }
 }
 
 class UpdateMessageCounter {
-  Folder folder;
-  int total;
-  int current;
-  Function onUpdate;
+  Folder? folder;
+  int? total;
+  int? current;
+  Function? onUpdate;
 
   void empty() {
     folder = null;

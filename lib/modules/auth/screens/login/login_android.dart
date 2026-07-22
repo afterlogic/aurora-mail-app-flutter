@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:io';
 
 import 'package:aurora_mail/build_property.dart';
@@ -36,9 +36,9 @@ class LoginAndroid extends StatefulWidget {
   static final _authFormKey = GlobalKey<FormState>();
 
   final bool isDialog;
-  final String email;
+  final String? email;
 
-  const LoginAndroid({Key key, this.isDialog = false, this.email})
+  const LoginAndroid({Key? key, this.isDialog = false, this.email})
       : super(key: key);
 
   @override
@@ -61,7 +61,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
     super.initState();
 
     if (widget.isDialog == true) {
-      if (widget.email != null) emailCtrl.text = widget.email;
+      if (widget.email != null) emailCtrl.text = widget.email!;
     } else {
       BlocProvider.of<AuthBloc>(context).add(GetLastEmail());
     }
@@ -99,7 +99,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
   }
 
   void _login(BuildContext context) {
-    final isValid = LoginAndroid._authFormKey.currentState.validate();
+    final isValid = LoginAndroid._authFormKey.currentState!.validate();
     if (!isValid) return;
 
     // else
@@ -127,7 +127,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
   Widget themeWrap(Widget widget) {
     if (AppTheme.login != null) {
       return Theme(
-        data: AppTheme.login,
+        data: AppTheme.login!,
         child: widget,
       );
     }
@@ -153,7 +153,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
           top: false,
           child: BlocListener(
               bloc: authBloc,
-              listener: (context, state) {
+              listener: (context, dynamic state) {
                 if (state is ShowTrustDeviceDialog) {
                   Navigator.pushNamed(
                     context,
@@ -242,13 +242,13 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                     showErrorSnack(
                       context: context,
                       scaffoldState: Scaffold.of(context),
-                      msg: state.err,
+                      msg: state.err!,
                     );
                   } else {
                     Navigator.pushNamed(
                       context,
                       UpgradePlanRoute.name,
-                      arguments: UpgradePlanArg(null),
+                      arguments: UpgradePlanArg(state.err?.message ?? ''),
                     );
                   }
                 }

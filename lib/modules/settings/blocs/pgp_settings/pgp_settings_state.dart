@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/pgp_settings_methods.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
@@ -9,7 +9,7 @@ import 'package:meta/meta.dart';
 @immutable
 abstract class PgpSettingsState extends Equatable {
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class ProgressState extends PgpSettingsState {}
@@ -20,7 +20,7 @@ class LoadedState extends PgpSettingsState {
   final List<PgpKey> myPublic;
   final List<PgpKey> myPrivate;
   final List<PgpKey> contactPublic;
-  final String keyProgress;
+  final String? keyProgress;
 
   LoadedState(
     this.myPublic,
@@ -30,10 +30,10 @@ class LoadedState extends PgpSettingsState {
   );
 
   LoadedState copyWith({
-    List<PgpKey> public,
-    List<PgpKey> private,
-    List<PgpKey> contactPublic,
-    String keyProgress,
+    List<PgpKey>? public,
+    List<PgpKey>? private,
+    List<PgpKey>? contactPublic,
+    String? keyProgress,
   }) {
     return LoadedState(
       public ?? this.myPublic,
@@ -44,7 +44,7 @@ class LoadedState extends PgpSettingsState {
   }
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         myPublic.hashCode,
         myPrivate.hashCode,
         contactPublic.hashCode,
@@ -53,8 +53,8 @@ class LoadedState extends PgpSettingsState {
 }
 
 class SelectKeyForImport extends PgpSettingsState with AlwaysNonEqualObject {
-  final Map<PgpKey, bool> userKeys;
-  final Map<PgpKeyWithContact, bool> contactKeys;
+  final Map<PgpKey, bool?> userKeys;
+  final Map<PgpKeyWithContact, bool?> contactKeys;
 
   SelectKeyForImport(this.userKeys, this.contactKeys);
 

@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 
@@ -28,12 +28,12 @@ class ContactsStorageMapper {
           sqliteId: i.sqliteId,
           userLocalId: i.userLocalId,
           idUser: userId,
-          serverId: i.id,
+          serverId: i.id!,
           uniqueName: i.uniqueName,
-          name: i.name,
-          cTag: i.cTag,
+          name: i.name!,
+          cTag: i.cTag!,
           display: i.display,
-          displayName: i.displayName,
+          displayName: i.displayName!,
           contactsInfo: i.contactsInfo,
           ownerMail: i.ownerMail,
           isShared: i.isShared,
@@ -52,17 +52,17 @@ class ContactsStorageMapper {
       Map<String, dynamic> rawItems, int userLocalId) {
     return ContactsStorage(
       sqliteId: null,
-      id: rawItems["Id"] as String,
+      id: rawItems["Id"] as String?,
       uniqueName: rawItems["Id"].toString() + userLocalId.toString(),
       userLocalId: userLocalId,
-      name: rawItems["Name"] as String ?? rawItems["Id"] as String,
-      cTag: rawItems["CTag"] as int,
-      display: rawItems["Display"] as bool ?? true,
-      displayName: rawItems["DisplayName"] as String,
+      name: rawItems["Name"] as String? ?? rawItems["Id"] as String?,
+      cTag: rawItems["CTag"] as int?,
+      display: rawItems["Display"] as bool? ?? true,
+      displayName: rawItems["DisplayName"] as String?,
       contactsInfo: null,
-      ownerMail: rawItems["Owner"] as String,
-      isShared: rawItems["Shared"] as bool,
-      accessCode: rawItems["Access"] as int,
+      ownerMail: rawItems["Owner"] as String?,
+      isShared: rawItems["Shared"] as bool?,
+      accessCode: rawItems["Access"] as int?,
     );
   }
 }

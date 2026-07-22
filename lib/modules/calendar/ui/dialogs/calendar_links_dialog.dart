@@ -59,7 +59,7 @@ class _CalendarLinksDialogState extends State<CalendarLinksDialog> {
                       onPressed: () async {
                         if (selectedCalendar == null) return;
                         final user =
-                            BlocProvider.of<AuthBloc>(context).currentUser;
+                            BlocProvider.of<AuthBloc>(context).currentUser!;
                         await downloadFromUrl(
                             url: selectedCalendar.getDownloadUrl(user),
                             user: user,
@@ -117,7 +117,7 @@ class _CalendarLinksDialogState extends State<CalendarLinksDialog> {
                     ),
                     _LinkSection(
                       url: selectedCalendar?.getPublicLink(
-                          BlocProvider.of<AuthBloc>(context).currentUser),
+                          BlocProvider.of<AuthBloc>(context).currentUser!),
                     ),
                   ]
                 ],
@@ -165,7 +165,7 @@ class _LinkSection extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: GestureDetector(
             onTap: () {
-              Clipboard.setData(ClipboardData(text: url));
+              Clipboard.setData(ClipboardData(text: url ?? ''));
               showSnack(
                 isError: false,
                 context: context,

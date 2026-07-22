@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/material.dart';
 
@@ -8,10 +8,10 @@ class FitTextField extends StatefulWidget {
   final double minWidth;
 
   const FitTextField(
-      {Key key,
-      @required this.child,
-      @required this.controller,
-      this.minWidth: 5})
+      {Key? key,
+      required this.child,
+      required this.controller,
+      this.minWidth = 5})
       : super(key: key);
 
   @override

@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:io';
 
 import 'package:aurora_logger/aurora_logger.dart';
@@ -27,11 +27,11 @@ class PushNotificationsManager {
 
   PushNotificationsManager._();
 
-  String deviceId;
-  String token;
-  NotificationData _initNotification = null;
+  String? deviceId;
+  String? token;
+  NotificationData? _initNotification = null;
 
-  NotificationData get initNotification {
+  NotificationData? get initNotification {
     final res = _initNotification;
     _initNotification = null;
 
@@ -63,7 +63,7 @@ class PushNotificationsManager {
     }
   }
 
-  Future<String> getToken() async {
+  Future<String?> getToken() async {
     token = await _firebaseMessaging.getToken();
     print(token);
     return token;
@@ -74,7 +74,7 @@ class PushNotificationsManager {
     await preference.setBool("token_status", status);
   }
 
-  Future<bool> getTokenStatus() async {
+  Future<bool?> getTokenStatus() async {
     final preference = await SharedPreferences.getInstance();
     return preference.getBool("token_status");
   }
@@ -88,13 +88,13 @@ Future<void> onMessageOpenedApp(RemoteMessage message) async {
   if (RouteWrap.staticState != null) {
     switch (notification.type) {
       case NotificationType.email:
-        RouteWrap.staticState.onMessage(payload);
+        RouteWrap.staticState!.onMessage(payload);
         break;
       case NotificationType.event:
-        RouteWrap.staticState.onCalendar(payload);
+        RouteWrap.staticState!.onCalendar(payload);
         break;
       case NotificationType.task:
-        RouteWrap.staticState.onCalendar(payload);
+        RouteWrap.staticState!.onCalendar(payload);
         break;
     }
   } else {
@@ -125,7 +125,7 @@ Future<bool> messageHandler(RemoteMessage message) async {
         final _accountsDao = AccountsDao(DBInstances.appDB);
         final users = await _usersDao.getUsers();
         for (var user in users) {
-          final accounts = await _accountsDao.getAccounts(user.localId);
+          final accounts = await _accountsDao.getAccounts(user.localId!);
           for (var account in accounts) {
             if (account.email == notification.to) {
               final manager = NotificationManager.instance;
@@ -153,7 +153,7 @@ Future<bool> messageHandler(RemoteMessage message) async {
       Logger.errorLog(e, s);
     }
   } else {
-    Logger.errorLog("handle push without user", null);
+    Logger.errorLog("handle push without user", StackTrace.current);
   }
 
   return false;

@@ -1,11 +1,11 @@
-//@dart=2.9
+
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/debug_local_storage.dart';
 import 'package:flutter/material.dart';
 
 class MessageCounterWidget extends StatefulWidget {
-  final Folder folder;
+  final Folder? folder;
   final UpdateMessageCounter messageCounter;
 
   const MessageCounterWidget(this.messageCounter, this.folder);
@@ -16,7 +16,7 @@ class MessageCounterWidget extends StatefulWidget {
 
 class _MessageCounterWidgetState extends State<MessageCounterWidget> {
   final _storage = DebugLocalStorage();
-  bool _enableCounter;
+  bool? _enableCounter;
 
   @override
   void initState() {

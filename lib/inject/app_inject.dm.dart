@@ -1,4 +1,4 @@
-//@dart=2.9
+
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -27,21 +27,21 @@ class AppInjectorImpl extends AppInjector {
   final StorageModule _storageModule;
 
   AppInjectorImpl({
-    CryptoModule cryptoModule,
-    DaoModule daoModule,
-    StorageModule storageModule,
+    CryptoModule? cryptoModule,
+    DaoModule? daoModule,
+    StorageModule? storageModule,
   })  : this._cryptoModule = cryptoModule ?? CryptoModule(),
         this._daoModule = daoModule ?? DaoModule(),
         this._storageModule = storageModule ?? StorageModule();
 
-  CryptoStorage _cryptoStorage;
-  PgpWorker _pgpWorker;
-  PgpKeyDao _pgpKeyDao;
-  UsersDao _usersDao;
-  ContactsDao _contactsDao;
-  FlutterSecureStorage _flutterSecureStorage;
-  SettingsLocalStorage _settingsLocalStorage;
-  AuthLocalStorage _authLocalStorage;
+  CryptoStorage? _cryptoStorage;
+  PgpWorker? _pgpWorker;
+  PgpKeyDao? _pgpKeyDao;
+  UsersDao? _usersDao;
+  ContactsDao? _contactsDao;
+  FlutterSecureStorage? _flutterSecureStorage;
+  SettingsLocalStorage? _settingsLocalStorage;
+  AuthLocalStorage? _authLocalStorage;
 
   Future<AppInjector> init() async {
     return this;

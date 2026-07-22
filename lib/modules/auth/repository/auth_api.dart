@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:convert';
 
 import 'package:aurora_logger/aurora_logger.dart';
@@ -18,14 +18,14 @@ import 'package:webmail_api_client/webmail_api_client.dart';
 class AuthApi {
   AppCheckRepository _appCheckRepository;
 
-  AuthApi({AppCheckRepository appCheckRepository})
+  AuthApi({AppCheckRepository? appCheckRepository})
       : _appCheckRepository = appCheckRepository ?? AppCheckRepositoryImpl();
 
-  Future<Map<String, String>> deviceIdHeader() async {
+  Future<Map<String, String?>> deviceIdHeader() async {
     return {"X-DeviceId": await DeviceIdStorage.getDeviceId()};
   }
 
-  Future<String> autoDiscoverHostname(String email) async {
+  Future<String?> autoDiscoverHostname(String email) async {
     try {
       final dogIndex = email.indexOf("@") + 1;
 
@@ -39,7 +39,7 @@ class AuthApi {
       final res = await http.get(Uri.parse(url));
       final resBody = json.decode(res.body);
       logger.log('autoDiscoverHostname response: ${resBody}');
-      return resBody["url"] as String;
+      return resBody["url"] as String?;
     } catch (err) {
       logger.log('autoDiscoverHostname error: ${err}');
       return null;
@@ -54,7 +54,7 @@ class AuthApi {
     final coreModuleForLogin = WebMailApi(
       moduleName: WebMailModules.core,
       hostname: hostname,
-      interceptor: DefaultApiInterceptor.get(),
+      interceptor: DefaultApiInterceptor.get()!,
     );
 
     final parameters =
@@ -127,7 +127,7 @@ class AuthApi {
       moduleName: WebMailModules.core,
       hostname: user.hostname,
       token: user.token,
-      interceptor: DefaultApiInterceptor.get(),
+      interceptor: DefaultApiInterceptor.get()!,
     );
 
     final body = WebMailApiBody(module: "Core", method: "Logout");
@@ -147,7 +147,7 @@ class AuthApi {
       moduleName: WebMailModules.mail,
       hostname: user.hostname,
       token: user.token,
-      interceptor: DefaultApiInterceptor.get(),
+      interceptor: DefaultApiInterceptor.get()!,
     );
 
     final parameters = json.encode({"UserId": user.serverId});
@@ -160,7 +160,7 @@ class AuthApi {
     );
 
     if (res is List) {
-      final accounts = Accounts.getAccountsObjFromServer(res, user.localId);
+      final accounts = Accounts.getAccountsObjFromServer(res, user.localId!);
 
       return accounts;
     } else {
@@ -177,7 +177,7 @@ class AuthApi {
     final twoFactorModule = WebMailApi(
       moduleName: WebMailModules.twoFactorAuth,
       hostname: hostname,
-      interceptor: DefaultApiInterceptor.get(),
+      interceptor: DefaultApiInterceptor.get()!,
     );
     final parameters = json.encode({
       "Code": pin,
@@ -215,7 +215,7 @@ class AuthApi {
       moduleName: WebMailModules.mail,
       hostname: user.hostname,
       token: user.token,
-      interceptor: DefaultApiInterceptor.get(),
+      interceptor: DefaultApiInterceptor.get()!,
     );
 
     final request = WebMailApiBody(method: "GetIdentities");
@@ -241,7 +241,7 @@ class AuthApi {
       moduleName: "CpanelIntegrator",
       hostname: user.hostname,
       token: user.token,
-      interceptor: DefaultApiInterceptor.get(),
+      interceptor: DefaultApiInterceptor.get()!,
     );
 
     final request = WebMailApiBody(method: "GetAliases");
@@ -262,17 +262,18 @@ class AuthApi {
   }
 
   Future<bool> setPushToken(
-    Map<User, List<String>> userWithAccount,
-    String uid,
-    String fbToken,
+    Map<User?, List<String>> userWithAccount,
+    String? uid,
+    String? fbToken,
   ) async {
-    final map = <String, List<MapEntry<User, List<String>>>>{};
+    final Map<String, List<MapEntry<User?, List<String>>>> map =
+        <String, List<MapEntry<User?, List<String>>>>{};
     bool success = true;
     for (var value in userWithAccount.entries) {
-      var list = map[value.key.hostname];
+      var list = map[value.key!.hostname];
       if (list == null) {
         list = [];
-        map[value.key.hostname] = list;
+        map[value.key!.hostname] = list;
       }
       list.add(value);
     }
@@ -281,12 +282,12 @@ class AuthApi {
         final webMailApi = WebMailApi(
           moduleName: WebMailModules.core,
           hostname: entry.key,
-          interceptor: DefaultApiInterceptor.get(),
+          interceptor: DefaultApiInterceptor.get()!,
         );
         final parameters = json.encode({
           "Users": entry.value
               .map((item) => {
-                    "AuthToken": item.key.token,
+                    "AuthToken": item.key!.token,
                     "Emails": item.value,
                   })
               .toList(),
@@ -319,7 +320,7 @@ class AuthApi {
     final mailModule = WebMailApi(
       moduleName: "TwoFactorAuth",
       hostname: host,
-      interceptor: DefaultApiInterceptor.get(),
+      interceptor: DefaultApiInterceptor.get()!,
     );
 
     final request = WebMailApiBody(
@@ -341,7 +342,8 @@ class AuthApi {
         map["challenge"] as String,
         map["rpId"] as String,
         (map["allowCredentials"] as List)
-            .map((e) => e["id"] as String)
+            .map((e) => e["id"] as String?)
+            .whereType<String>()
             .toList(),
       );
     } else {
@@ -358,7 +360,7 @@ class AuthApi {
     final mailModule = WebMailApi(
       moduleName: "TwoFactorAuth",
       hostname: host,
-      interceptor: DefaultApiInterceptor.get(),
+      interceptor: DefaultApiInterceptor.get()!,
     );
 
     final request = WebMailApiBody(
@@ -398,7 +400,7 @@ class AuthApi {
     final twoFactorModule = WebMailApi(
       moduleName: WebMailModules.twoFactorAuth,
       hostname: hostname,
-      interceptor: DefaultApiInterceptor.get(),
+      interceptor: DefaultApiInterceptor.get()!,
     );
     final parameters = json.encode({
       "BackupCode": code,
@@ -432,7 +434,7 @@ class AuthApi {
   }
 
   Future saveDevice(
-    String deviceId,
+    String? deviceId,
     String deviceName,
     String hostname,
     String token,
@@ -441,7 +443,7 @@ class AuthApi {
       moduleName: WebMailModules.twoFactorAuth,
       hostname: hostname,
       token: token,
-      interceptor: DefaultApiInterceptor.get(),
+      interceptor: DefaultApiInterceptor.get()!,
     );
     final parameters = json.encode({
       "DeviceId": deviceId,
@@ -471,7 +473,7 @@ class AuthApi {
       moduleName: WebMailModules.twoFactorAuth,
       hostname: hostname,
       token: token,
-      interceptor: DefaultApiInterceptor.get(),
+      interceptor: DefaultApiInterceptor.get()!,
     );
     final parameters = json.encode({
       "DeviceId": deviceId,
@@ -492,7 +494,7 @@ class AuthApi {
     final twoFactorModule = WebMailApi(
       moduleName: WebMailModules.twoFactorAuth,
       hostname: hostname,
-      interceptor: DefaultApiInterceptor.get(),
+      interceptor: DefaultApiInterceptor.get()!,
     );
     final body = WebMailApiBody(method: "GetSettings");
 

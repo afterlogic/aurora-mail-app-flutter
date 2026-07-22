@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 
 import 'package:aurora_mail/generated/l10n.dart';
@@ -8,8 +8,8 @@ import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:flutter/material.dart';
 
 class ImportVcfDialog extends StatefulWidget {
-  final ContactsBloc bloc;
-  final String content;
+  final ContactsBloc? bloc;
+  final String? content;
 
   const ImportVcfDialog({this.content, this.bloc});
 
@@ -45,7 +45,7 @@ class _ImportVcfDialogState extends State<ImportVcfDialog> {
 
   importVcf() async {
     final completer = Completer();
-    widget.bloc.add(ImportVcf(widget.content, completer));
+    widget.bloc!.add(ImportVcf(widget.content, completer));
     setState(() => progress = true);
     try {
       await completer.future;

@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/utils/input_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +9,7 @@ class ContactPrimaryInput<T> extends StatefulWidget {
   final List<String> options;
   final T Function(String) optionsToValue;
   final TextEditingController primaryTextCtrl;
-  final TextInputType keyboardType;
+  final TextInputType? keyboardType;
 
   const ContactPrimaryInput(
     this.onChanged,
@@ -19,7 +19,7 @@ class ContactPrimaryInput<T> extends StatefulWidget {
     this.optionsToValue,
     this.primaryTextCtrl, {
     this.keyboardType,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

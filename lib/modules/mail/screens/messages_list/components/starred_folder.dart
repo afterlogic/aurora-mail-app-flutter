@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
@@ -12,9 +12,9 @@ class StarredFolder extends StatelessWidget {
   final bool isSelected;
 
   const StarredFolder({
-    Key key,
-    @required this.mailFolder,
-    @required this.isSelected,
+    Key? key,
+    required this.mailFolder,
+    required this.isSelected,
   }) : super(key: key);
 
   void _selectFolder(BuildContext context) {

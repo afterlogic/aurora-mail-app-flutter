@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +15,12 @@ class AdaptiveSettingsMenuIcon extends StatelessWidget {
   final String iconFolder; // Folder with icons (menu, common, etc.)
 
   const AdaptiveSettingsMenuIcon({
-    @required this.defaultIcon,
-    @required this.iconName,
-    @required this.color,
-    @required this.background,
+    required this.defaultIcon,
+    required this.iconName,
+    required this.color,
+    required this.background,
     this.iconFolder = 'menu', // default mail for backward compatibility
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

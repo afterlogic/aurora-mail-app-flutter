@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
@@ -11,7 +11,7 @@ import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
@@ -79,10 +79,10 @@ class _ManageUsersAndroidState extends BState<ManageUsersAndroid> {
     );
   }
 
-  Widget _buildUsers(BuildContext context, List<User> users) {
+  Widget _buildUsers(BuildContext context, List<User?> users) {
     return ListView.separated(
       itemBuilder: (_, i) {
-        final user = users[i];
+        final user = users[i]!;
         return UserTile(user: user);
       },
       separatorBuilder: (_, i) => Divider(height: 0, indent: 16.0),

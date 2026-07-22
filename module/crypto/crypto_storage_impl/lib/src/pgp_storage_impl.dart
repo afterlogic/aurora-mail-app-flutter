@@ -52,7 +52,7 @@ class CryptoStorageImpl extends CryptoStorage {
           contact.pgpPublicKey!,
           null,
         ),
-        ContactMapper.fromDB(contact),
+        ContactMapper.fromDB(contact)!,
       );
     } else {
       return null;
@@ -82,7 +82,7 @@ class CryptoStorageImpl extends CryptoStorage {
                   item.pgpPublicKey!,
                   null,
                 ),
-                ContactMapper.fromDB(item),
+                ContactMapper.fromDB(item)!,
               ))
           .toList();
     });

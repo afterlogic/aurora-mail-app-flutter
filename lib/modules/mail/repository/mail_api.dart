@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -24,14 +24,14 @@ import 'package:share_plus/share_plus.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class MailApi {
-  final Account account;
+  final Account? account;
 
-  WebMailApi _mailModule;
+  late WebMailApi _mailModule;
 
   MailApi(
-      {@required User user,
-      @required this.account,
-      ApiInterceptor interceptor}) {
+      {required User user,
+      required this.account,
+      required ApiInterceptor interceptor}) {
     _mailModule = WebMailApi(
       moduleName: WebMailModules.mail,
       hostname: user.hostname,
@@ -40,12 +40,12 @@ class MailApi {
     );
   }
 
-  int get _accountId => account.accountId;
+  int get _accountId => account!.accountId;
 
   Future<bool> changeEventInviteStatus(
-      {@required String status,
-      @required String calendarId,
-      @required String fileName}) async {
+      {required String status,
+      required String calendarId,
+      required String fileName}) async {
     final module = WebMailApi(
       moduleName: WebMailModules.calendarMeetingsPlugin,
       hostname: _mailModule.hostname,
@@ -57,7 +57,7 @@ class MailApi {
       "AppointmentAction": status,
       "CalendarId": calendarId,
       "File": fileName,
-      "Attendee": account.email
+      "Attendee": account!.email
     });
 
     final body = new WebMailApiBody(
@@ -68,8 +68,8 @@ class MailApi {
   }
 
   Future<String> getMessagesInfo(
-      {@required String folderName,
-      String search,
+      {required String folderName,
+      String? search,
       bool useThreading = true,
       String sortBy = "date"}) async {
     final parameters = json.encode({
@@ -93,7 +93,7 @@ class MailApi {
   }
 
   Future<List> getMessageBodies(
-      {@required String folderName, @required List<int> uids}) async {
+      {required String folderName, required List<int> uids}) async {
     final parameters = json.encode({
       "Folder": folderName,
       "AccountID": _accountId,
@@ -114,10 +114,10 @@ class MailApi {
 
 
   Future<void> sendNote({
-    @required String folderFullName,
-    @required String subject,
-    @required String text,
-    String uid,
+    required String folderFullName,
+    required String subject,
+    required String? text,
+    String? uid,
   }) async {
     final parameters = {
       "AccountID": _accountId,
@@ -140,18 +140,18 @@ class MailApi {
   }
 
   Future<void> sendMessage({
-    @required String to,
+    required String to,
     String cc = "",
     String bcc = "",
     String subject = "",
-    @required bool isHtml,
-    @required List<ComposeAttachment> composeAttachments,
-    @required String messageText,
-    @required int draftUid,
-    @required String sentFolderName,
-    @required String draftsFolderName,
-    AccountIdentity identity,
-    Aliases alias,
+    required bool isHtml,
+    required List<ComposeAttachment> composeAttachments,
+    required String? messageText,
+    required int? draftUid,
+    required String? sentFolderName,
+    required String? draftsFolderName,
+    AccountIdentity? identity,
+    Aliases? alias,
   }) async {
     final attachments = new Map();
 
@@ -197,18 +197,18 @@ class MailApi {
     }
   }
 
-  Future<int> saveMessage({
-    @required String to,
+  Future<int?> saveMessage({
+    required String to,
     String cc = "",
     String bcc = "",
     String subject = "",
-    @required List<ComposeAttachment> composeAttachments,
-    @required String messageText,
-    @required int draftUid,
-    @required String draftsFolderName,
-    bool isHtml,
-    AccountIdentity identity,
-    Aliases alias,
+    required List<ComposeAttachment> composeAttachments,
+    required String? messageText,
+    required int? draftUid,
+    required String? draftsFolderName,
+    bool? isHtml,
+    AccountIdentity? identity,
+    Aliases? alias,
   }) async {
     final attachments = new Map();
 
@@ -245,7 +245,7 @@ class MailApi {
     final res = await _mailModule.post(body);
 
     if (res is Map) {
-      return res["NewUid"] as int;
+      return res["NewUid"] as int?;
     } else {
       throw WebMailApiError(res);
     }
@@ -253,9 +253,9 @@ class MailApi {
 
   Future<void> uploadAttachment(
     File file, {
-    @required Function(TempAttachmentUpload) onUploadStart,
-    @required Function(ComposeAttachment) onUploadEnd,
-    @required Function(dynamic) onError,
+    required Function(TempAttachmentUpload) onUploadStart,
+    required Function(ComposeAttachment) onUploadEnd,
+    required Function(dynamic) onError,
   }) async {
     final parameters = json.encode({"AccountID": _accountId});
     final body =
@@ -274,7 +274,7 @@ class MailApi {
       size: file.lengthSync(),
       taskId: taskId,
       uploadProgress: progressController.stream,
-      cancel: ({String taskId}) {
+      cancel: ({String? taskId}) {
         cancelled = true;
         client.close();
       },
@@ -290,7 +290,7 @@ class MailApi {
     // would show up on screen until then.
     _doUpload(
       file: file,
-      headers: headers as Map<String, String>,
+      headers: headers,
       fields: body.toMap("Mail"),
       tempAttachment: tempAttachment,
       client: client,
@@ -304,14 +304,14 @@ class MailApi {
   }
 
   Future<void> _doUpload({
-    @required File file,
-    @required Map<String, String> headers,
-    @required Map<String, String> fields,
-    @required TempAttachmentUpload tempAttachment,
-    @required http.Client client,
-    @required bool Function() isCancelled,
-    @required Function(ComposeAttachment) onUploadEnd,
-    @required Function(dynamic) onError,
+    required File file,
+    required Map<String, String>? headers,
+    required Map<String, String> fields,
+    required TempAttachmentUpload tempAttachment,
+    required http.Client client,
+    required bool Function() isCancelled,
+    required Function(ComposeAttachment) onUploadEnd,
+    required Function(dynamic) onError,
   }) async {
     const maxAttempts = 3;
     // the plain http.Client() used here has no timeout of its own (unlike
@@ -327,7 +327,7 @@ class MailApi {
         // attempt: both are single-use, locked as soon as they're sent once
         final request =
             http.MultipartRequest("POST", Uri.parse(_mailModule.apiUrl));
-        request.headers.addAll(headers);
+        request.headers.addAll(headers!);
         request.fields.addAll(fields);
         // matches the field names the server's own web client sends
         // (confirmed from a working browser upload's request payload)
@@ -387,8 +387,8 @@ class MailApi {
 
   Future<void> downloadAttachment(
     MailAttachment attachment, {
-    @required Function() onDownloadStart,
-    @required Function(String) onDownloadEnd,
+    required Function() onDownloadStart,
+    required Function(String?)? onDownloadEnd,
   }) async {
     final downloadsDirectory = await getDownloadDirectory();
     final headers = await _mailModule.getAuthHeaders();
@@ -399,11 +399,11 @@ class MailApi {
       onDownloadStart: () async {
         onDownloadStart();
       },
-      onDownloadEnd: () => onDownloadEnd(destinationPath),
-      onError: () => onDownloadEnd(null),
+      onDownloadEnd: () => onDownloadEnd!(destinationPath),
+      onError: () => onDownloadEnd!(null),
     );
 
-    print(_mailModule.hostname + '/' + attachment.downloadUrl);
+    print(_mailModule.hostname + '/' + attachment.downloadUrl!);
     print(downloadsDirectory);
     print(attachment.fileName);
     print(headers);
@@ -412,30 +412,30 @@ class MailApi {
     // fixed base directories, so download to a private staging location and
     // let DownloadTaskProgress move it to downloadsDirectory once complete.
     final task = DownloadTask(
-      url: _mailModule.hostname + '/' + attachment.downloadUrl,
+      url: _mailModule.hostname + '/' + attachment.downloadUrl!,
       filename: attachment.fileName,
       baseDirectory: BaseDirectory.temporary,
-      headers: headers as Map<String, String>,
+      headers: headers,
       updates: Updates.statusAndProgress,
     );
     await FileDownloader().enqueue(task);
     attachment.add(
       task,
       destinationPath,
-      ({String taskId}) => FileDownloader().cancelTaskWithId(taskId),
+      ({required String taskId}) => FileDownloader().cancelTaskWithId(taskId),
     );
   }
 
   // If [fileName] already exists in [directory], append " (1)", " (2)", ...
   // before the extension until a free name is found (matches the
   // Chrome/Explorer download-collision convention).
-  Future<String> _uniqueFilePath(String directory, String fileName) async {
+  Future<String> _uniqueFilePath(String? directory, String? fileName) async {
     final candidate = "$directory/$fileName";
     if (!await File(candidate).exists()) return candidate;
 
-    final dotIndex = fileName.lastIndexOf('.');
+    final dotIndex = fileName!.lastIndexOf('.');
     final hasExt = dotIndex > 0;
-    final base = hasExt ? fileName.substring(0, dotIndex) : fileName;
+    final String? base = hasExt ? fileName.substring(0, dotIndex) : fileName;
     final ext = hasExt ? fileName.substring(dotIndex) : '';
 
     var i = 1;
@@ -447,13 +447,13 @@ class MailApi {
   }
 
   Future<void> shareAttachment(MailAttachment attachment,
-      Function(String) onIosDownloadEnd, Rect rect) async {
+      Function(String)? onIosDownloadEnd, Rect? rect) async {
     final request = await HttpClient()
-        .getUrl(Uri.parse(_mailModule.hostname + attachment.downloadUrl));
+        .getUrl(Uri.parse(_mailModule.hostname + attachment.downloadUrl!));
     final headers = await _mailModule.getAuthHeaders();
 
     headers.forEach((key, value) {
-      request.headers.add(key as String, value);
+      request.headers.add(key as String, value as Object);
     });
 
     final response = await request.close();
@@ -513,9 +513,9 @@ class MailApi {
   }
 
   Future<void> moveToTrash({
-    @required String folderRawName,
-    @required String trashRawName,
-    @required List<int> uids,
+    required String folderRawName,
+    required String trashRawName,
+    required List<int> uids,
   }) async {
     final parameters = json.encode({
       "Folder": folderRawName,
@@ -535,8 +535,8 @@ class MailApi {
   }
 
   Future<void> deleteMessages({
-    @required String folderRawName,
-    @required List<int> uids,
+    required String folderRawName,
+    required List<int> uids,
   }) async {
     final parameters = json.encode({
       "Folder": folderRawName,
@@ -555,7 +555,7 @@ class MailApi {
   }
 
   Future<void> setMessagesSeen(
-      {@required Folder folder, @required List<int> uids, bool isSeen}) async {
+      {required Folder folder, required List<int> uids, bool? isSeen}) async {
     final parameters = json.encode({
       "Folder": folder.fullNameRaw,
       "AccountID": _accountId,
@@ -574,9 +574,9 @@ class MailApi {
   }
 
   Future<void> setMessagesFlagged({
-    @required Folder folder,
-    @required List<int> uids,
-    @required bool isStarred,
+    required Folder folder,
+    required List<int> uids,
+    required bool isStarred,
   }) async {
     final parameters = json.encode({
       "Folder": folder.fullNameRaw,
@@ -596,7 +596,7 @@ class MailApi {
   }
 
   Future<void> setEmailSafety({
-    @required String senderEmail,
+    required String senderEmail,
   }) async {
     final parameters = json.encode({
       "AccountID": _accountId,
@@ -614,7 +614,7 @@ class MailApi {
   }
 
   Future moveMessage(
-      {List<int> uids, String fromFolder, String toFolder}) async {
+      {required List<int> uids, String? fromFolder, String? toFolder}) async {
     final parameters = json.encode({
       "Folder": fromFolder,
       "ToFolder": toFolder,
@@ -654,7 +654,7 @@ class MailApi {
         "MessageFolder": message.folder,
         "MessageUid": message.uid,
         "FileName": "${message.subject}.eml",
-        "AccountID": account.accountId
+        "AccountID": account!.accountId
       },
     );
 
@@ -670,7 +670,7 @@ class MailApi {
     }
   }
 
-  Future<Map<String, dynamic>> getMessageById(
+  Future<Map<String, dynamic>?> getMessageById(
     String messageId,
     String folder,
     int lastUid,
@@ -680,7 +680,7 @@ class MailApi {
         "Folder": folder,
         "MessageID": messageId,
         "UidFrom": lastUid,
-        "AccountID": account.accountId
+        "AccountID": account!.accountId
       },
     );
 

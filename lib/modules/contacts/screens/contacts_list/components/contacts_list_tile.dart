@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/generated/l10n.dart';
@@ -9,23 +9,24 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/components/select
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
 import 'package:aurora_mail/shared_ui/adaptive_contact_icon.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:theme/app_color.dart';
 
 class ContactsListTile extends StatefulWidget {
   final Contact contact;
   final void Function(Contact) onPressed;
   final void Function(Contact) onDeleteContact;
-  final SelectionController selectionController;
+  final SelectionController? selectionController;
 
   ContactsListTile({
-    @required this.contact,
-    @required this.onPressed,
-    @required this.onDeleteContact,
+    required this.contact,
+    required this.onPressed,
+    required this.onDeleteContact,
     this.selectionController,
-  }) : super(key: Key(contact.uuid));
+  }) : super(key: Key(contact.uuid!));
 
   @override
   State<ContactsListTile> createState() => _ContactsListTileState();
@@ -34,13 +35,13 @@ class ContactsListTile extends StatefulWidget {
 class _ContactsListTileState extends State<ContactsListTile> {
   void initState() {
     super.initState();
-    widget.selectionController.addListener(onSelect);
+    widget.selectionController!.addListener(onSelect);
   }
 
   @override
   void dispose() {
     super.dispose();
-    widget.selectionController.removeListener(onSelect);
+    widget.selectionController!.removeListener(onSelect);
   }
 
   onSelect() {
@@ -83,14 +84,13 @@ class _ContactsListTileState extends State<ContactsListTile> {
 
   Widget _buildTile(BuildContext context) {
     final theme = Theme.of(context);
-    final selected = widget.selectionController.isSelected(widget.contact.uuid);
+    final selected = widget.selectionController!.isSelected(widget.contact.uuid);
     final title = widget.contact.fullName;
     final subTitle = widget.contact.viewEmail;
     final authBloc = BlocProvider.of<AuthBloc>(context);
     final contactsBloc = BlocProvider.of<ContactsBloc>(context);
-    final currentStorage = contactsBloc.state.storages.firstWhere(
-        (s) => s.id == contactsBloc.state.selectedStorage,
-        orElse: () => null);
+    final currentStorage = contactsBloc.state.storages!.firstWhereOrNull(
+        (s) => s.id == contactsBloc.state.selectedStorage);
 
     return ListTile(
       contentPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
@@ -110,7 +110,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
             ),
             child: Center(
               child: Text(
-                title?.isNotEmpty == true ? title[0].toUpperCase() : "C",
+                title?.isNotEmpty == true ? title![0].toUpperCase() : "C",
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.w500,
@@ -123,7 +123,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
       ),
       title: Text(
         title?.isNotEmpty == true
-            ? title
+            ? title!
             : S.of(context).label_contact_with_not_name,
         maxLines: 1,
         style: title?.isNotEmpty == true
@@ -132,7 +132,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
       ),
       subtitle: Text(
         subTitle?.isNotEmpty == true
-            ? subTitle
+            ? subTitle!
             : S.of(context).contacts_email_empty,
         style: TextStyle(
           color: subTitle?.isNotEmpty == true
@@ -147,7 +147,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           if (widget.contact.pgpPublicKey != null &&
-              widget.contact.pgpPublicKey.isNotEmpty)
+              widget.contact.pgpPublicKey!.isNotEmpty)
             Padding(
               padding: EdgeInsets.only(right: 4.0),
               child: AdaptiveContactIcon(
@@ -158,7 +158,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
             ),
           if (currentStorage != null &&
               currentStorage.name == StorageNames.team &&
-              widget.contact.viewEmail == authBloc.currentAccount.email)
+              widget.contact.viewEmail == authBloc.currentAccount!.email)
             Container(
               decoration: BoxDecoration(
                 color: theme.disabledColor.withOpacity(0.1),
@@ -175,7 +175,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
             padding: EdgeInsets.only(right: 4.0),
             child: _getStorageIcon(context),
           ),
-          if (widget.selectionController.enable)
+          if (widget.selectionController!.enable)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Center(
@@ -201,7 +201,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
 
   @override
   Widget build(BuildContext context) {
-    final selected = widget.selectionController.isSelected(widget.contact.uuid);
+    final selected = widget.selectionController!.isSelected(widget.contact.uuid);
 
     Widget contactTile = DecoratedBox(
       decoration: BoxDecoration(
@@ -210,12 +210,12 @@ class _ContactsListTileState extends State<ContactsListTile> {
       ),
       child: InkWell(
         onLongPress: changeEnable,
-        onTap: widget.selectionController.enable
+        onTap: widget.selectionController!.enable
             ? changeEnable
             : () => widget.onPressed(widget.contact),
-        child: allowDeleting && !widget.selectionController.enable
+        child: allowDeleting && !widget.selectionController!.enable
             ? Dismissible(
-                key: Key(widget.contact.uuid),
+                key: Key(widget.contact.uuid!),
                 direction: DismissDirection.endToStart,
                 child: _buildTile(context),
                 onDismissed: (_) => widget.onDeleteContact(widget.contact),
@@ -224,7 +224,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
                   S.of(context).contacts_delete_title,
                   S
                       .of(context)
-                      .contacts_delete_desc_with_name(widget.contact.fullName),
+                      .contacts_delete_desc_with_name(widget.contact.fullName!),
                   S.of(context).btn_delete,
                   destructibleAction: true,
                 ),
@@ -261,6 +261,6 @@ class _ContactsListTileState extends State<ContactsListTile> {
   }
 
   changeEnable() {
-    widget.selectionController.addOrRemove(widget.contact.uuid, widget.contact);
+    widget.selectionController!.addOrRemove(widget.contact.uuid, widget.contact);
   }
 }

@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
@@ -32,7 +32,7 @@ class GroupEditAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Text(
               S.of(context).btn_save,
               style: TextStyle(
-                  color: Theme.of(context)?.appBarTheme?.iconTheme?.color),
+                  color: Theme.of(context).appBarTheme.iconTheme?.color),
             ),
             onPressed: () =>
                 onActionSelected(context, GroupEditAppBarAction.save),

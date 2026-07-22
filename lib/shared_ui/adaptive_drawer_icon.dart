@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:flutter/material.dart';
 import 'package:theme/app_color.dart';
@@ -8,17 +8,17 @@ import 'asset_svg_icon.dart';
 class AdaptiveDrawerIcon extends StatelessWidget {
   final IconData defaultIcon; // Standard icon
   final String iconName; // Icon name for SVG files (without extension)
-  final Color color; // Icon color
+  final Color? color; // Icon color
   final double size; // Icon size
   final String folder; // Folder with icons (mail, contacts, etc.)
 
   const AdaptiveDrawerIcon({
-    @required this.defaultIcon,
-    @required this.iconName,
+    required this.defaultIcon,
+    required this.iconName,
     this.color,
     this.size = 24.0,
     this.folder = 'mail', // default mail for backward compatibility
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -26,7 +26,7 @@ class AdaptiveDrawerIcon extends StatelessWidget {
     final theme = Theme.of(context);
 
     // Defining the icon color
-    Color iconColor;
+    Color? iconColor;
     if (color != null) {
       // If the color is explicitly passed, we use it.
       iconColor = color;

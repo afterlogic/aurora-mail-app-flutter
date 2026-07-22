@@ -1,8 +1,8 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/shared_ui/adaptive_contact_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:theme/app_color.dart';
 
 import 'adaptive_action_button.dart';
@@ -11,17 +11,17 @@ enum InfoAction { email, call, visitWebsite, none }
 
 class ContactsInfoItem extends StatelessWidget {
   final IconData icon;
-  final String iconName;
+  final String? iconName;
   final String label;
   final String value;
   final InfoAction action;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   ContactsInfoItem({
-    @required this.icon,
+    required this.icon,
     this.iconName,
-    @required this.label,
-    @required this.value,
+    required this.label,
+    required this.value,
     this.action = InfoAction.none,
     this.onTap,
   }) : super(key: Key(value));

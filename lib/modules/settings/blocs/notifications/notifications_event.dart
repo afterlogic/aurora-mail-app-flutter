@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 @immutable
 abstract class NotificationsEvent extends Equatable {
   @override
-  List<Object> get props => null;
+  List<Object> get props => [];
 }
 
 class InitToken extends NotificationsEvent with AlwaysNonEqualObject {}

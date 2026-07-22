@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
@@ -12,7 +12,7 @@ class ContactsListScreenArgs {
   final ContactsBloc contactsBloc;
 
   const ContactsListScreenArgs({
-    @required this.mailBloc,
-    @required this.contactsBloc,
+    required this.mailBloc,
+    required this.contactsBloc,
   });
 }

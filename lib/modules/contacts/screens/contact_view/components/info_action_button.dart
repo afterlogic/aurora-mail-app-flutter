@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:flutter/material.dart';
 
 class InfoActionButton extends StatelessWidget {
@@ -6,9 +6,9 @@ class InfoActionButton extends StatelessWidget {
   final void Function() cb;
 
   const InfoActionButton({
-    Key key,
-    @required this.icon,
-    @required this.cb,
+    Key? key,
+    required this.icon,
+    required this.cb,
   }) : super(key: key);
 
   @override

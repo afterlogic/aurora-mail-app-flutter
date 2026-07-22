@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 
 import 'package:aurora_mail/database/app_database.dart';
@@ -12,24 +12,24 @@ import 'bloc.dart';
 import 'messages_list_methods.dart';
 
 class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
-  User _user;
-  Account _account;
-  MessagesListMethods _methods;
+  User? _user;
+  Account? _account;
+  late MessagesListMethods _methods;
 
   List<SearchParams> searchParams = [];
 
   String searchText = '';
 
-  MessagesListBloc({@required User user, @required Account account}) : super(MessagesEmpty()) {
+  MessagesListBloc({required User? user, required Account? account}) : super(MessagesEmpty()) {
     setUserAndAccount(user: user, account: account);
   }
 
-  Account get account => _account;
+  Account? get account => _account;
 
-  void setUserAndAccount({@required User user, @required Account account}) {
+  void setUserAndAccount({required User? user, required Account? account}) {
     _user = user;
     _account = account;
-    _methods = new MessagesListMethods(user: _user, account: _account);
+    _methods = new MessagesListMethods(user: _user!, account: _account);
   }
 
   @override
@@ -49,16 +49,16 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
     searchParams = event.searchParams ?? [];
     searchText = event.searchText ?? '';
     try {
-      final type = Folder.getFolderTypeFromNumber(event.currentFolder.type);
+      final type = Folder.getFolderTypeFromNumber(event.currentFolder!.type);
       final isSent = type == FolderType.sent || type == FolderType.drafts;
 
       final stream = (int page) => _methods.getMessages(
-            event.currentFolder,
+            event.currentFolder!,
             event.filter == MessagesFilter.starred,
             event.filter == MessagesFilter.unread,
             searchParams,
-            _user,
-            _account,
+            _user!,
+            _account!,
             page,
           );
 
@@ -66,9 +66,9 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
         stream,
         searchParams,
         isSent,
-        event.props.toString() + event.currentFolder.fullNameHash,
+        event.props.toString() + event.currentFolder!.fullNameHash,
         event.filter,
-        event.currentFolder.fullNameRaw,
+        event.currentFolder!.fullNameRaw,
       );
     } catch (e, s) {
       print(e);
@@ -77,9 +77,9 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
         null,
         searchParams,
         false,
-        event.props.toString() + event.currentFolder.fullNameHash,
+        event.props.toString() + event.currentFolder!.fullNameHash,
         event.filter,
-        event.currentFolder.fullNameRaw,
+        event.currentFolder!.fullNameRaw,
       );
     }
   }

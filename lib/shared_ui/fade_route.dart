@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:flutter/material.dart';
 
 class FadeRoute extends PageRouteBuilder {
@@ -8,8 +8,8 @@ class FadeRoute extends PageRouteBuilder {
   final bool fullscreenDialog;
 
   FadeRoute({
-    @required this.builder,
-    this.settings,
+    required this.builder,
+    required this.settings,
     this.duration = 200,
     this.fullscreenDialog = false,
   }) : super(

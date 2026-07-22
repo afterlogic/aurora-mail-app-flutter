@@ -1,14 +1,14 @@
-//@dart=2.9
+
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:flutter/material.dart';
 
 void showErrorSnack({
-  @required BuildContext context,
-  @required ScaffoldState scaffoldState,
-  @required ErrorToShow msg,
-  Map<String, String> arg,
+  required BuildContext context,
+  required ScaffoldState? scaffoldState,
+  required ErrorToShow msg,
+  Map<String, String>? arg,
   Duration duration = const Duration(seconds: 5),
-  SnackBarAction action,
+  SnackBarAction? action,
   bool isError = true,
 }) {
   final error = msg.getString();
@@ -23,11 +23,11 @@ void showErrorSnack({
 }
 
 void showSnack({
-  @required BuildContext context,
-  @required ScaffoldState scaffoldState,
-  @required String message,
+  required BuildContext context,
+  required ScaffoldState? scaffoldState,
+  required String message,
   Duration duration = const Duration(seconds: 5),
-  SnackBarAction action,
+  SnackBarAction? action,
   bool isError = true,
 }) {
   if (Theme.of(context) == null || scaffoldState == null) return;

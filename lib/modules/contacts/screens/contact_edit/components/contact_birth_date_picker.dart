@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -12,17 +12,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class ContactBirthDatePicker extends StatefulWidget {
-  final int birthDay;
-  final int birthMonth;
-  final int birthYear;
+  final int? birthDay;
+  final int? birthMonth;
+  final int? birthYear;
   final void Function(List<int> time) onPicked;
 
   const ContactBirthDatePicker({
-    Key key,
-    @required this.birthDay,
-    @required this.birthMonth,
-    @required this.birthYear,
-    @required this.onPicked,
+    Key? key,
+    required this.birthDay,
+    required this.birthMonth,
+    required this.birthYear,
+    required this.onPicked,
   }) : super(key: key);
 
   @override
@@ -32,7 +32,7 @@ class ContactBirthDatePicker extends StatefulWidget {
 class _ContactBirthDatePickerState extends BState<ContactBirthDatePicker> {
   DateTime _selectedDate = DateTime.now();
 
-  void set selectedDate(DateTime date) {
+  void set selectedDate(DateTime? date) {
     if (date != null && date != _selectedDate) {
       setState(() => _selectedDate = date);
       _setDate();
@@ -48,7 +48,7 @@ class _ContactBirthDatePickerState extends BState<ContactBirthDatePicker> {
     super.didChangeDependencies();
     if (widget.birthDay != 0) {
       _selectedDate =
-          DateTime(widget.birthYear, widget.birthMonth, widget.birthDay);
+          DateTime(widget.birthYear!, widget.birthMonth!, widget.birthDay!);
       _setDate();
     }
   }
@@ -58,7 +58,7 @@ class _ContactBirthDatePickerState extends BState<ContactBirthDatePicker> {
         await BlocProvider.of<SettingsBloc>(context).getLanguage();
 
     final decoded = json.decode(languageString ?? "{}");
-    final language = decoded["tag"] as String;
+    final language = decoded["tag"] as String?;
     _dateText.text = DateFormat(
       S.of(context).format_contacts_birth_date,
       language ?? "en",

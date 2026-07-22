@@ -4,7 +4,6 @@ import android.app.Notification
 import android.content.Intent
 import android.os.Build
 import com.afterlogic.alarm_service.AlarmService
-import io.flutter.app.FlutterPluginRegistry
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugins.GeneratedPluginRegistrant
 

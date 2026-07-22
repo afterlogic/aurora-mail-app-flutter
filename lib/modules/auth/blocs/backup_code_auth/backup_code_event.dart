@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:equatable/equatable.dart';
 
@@ -6,7 +6,7 @@ abstract class BackupCodeEvent extends Equatable {
   const BackupCodeEvent();
 
   @override
-  List<Object> get props => null;
+  List<Object> get props => [];
 }
 
 class Verify extends BackupCodeEvent with AlwaysNonEqualObject {

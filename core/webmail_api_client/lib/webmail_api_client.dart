@@ -71,10 +71,10 @@ class WebMailApi {
 
   String get apiUrl => "$hostname/?Api/";
 
-  Future getAuthHeaders() async {
+  Future<Map<String, String>> getAuthHeaders() async {
     return {
       'Authorization': 'Bearer $token',
-      'X-DeviceId': await DeviceIdStorage.getDeviceId()
+      'X-DeviceId': await DeviceIdStorage.getDeviceId() ?? '',
     };
   }
 
@@ -123,7 +123,7 @@ class WebMailApi {
     } else {
       headers = {'Authorization': 'Bearer $token'};
     }
-    headers['X-DeviceId'] = await DeviceIdStorage.getDeviceId();
+    headers['X-DeviceId'] = await DeviceIdStorage.getDeviceId() ?? '';
 
     addedHeaders?.forEach((key, value) {
       headers[key] = value;

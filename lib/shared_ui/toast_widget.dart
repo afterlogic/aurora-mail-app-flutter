@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -6,7 +6,7 @@ class ToastWidget extends StatefulWidget {
   final Duration duration;
 
   const ToastWidget({
-    Key key,
+    Key? key,
     this.duration = const Duration(milliseconds: 300),
   }) : super(key: key);
 
@@ -16,9 +16,9 @@ class ToastWidget extends StatefulWidget {
 
 class ToastWidgetState extends State<ToastWidget>
     with TickerProviderStateMixin {
-  AnimationController _animation;
-  Subject<String> _queue;
-  Widget _toast;
+  late AnimationController _animation;
+  late Subject<String> _queue;
+  Widget? _toast;
 
   @override
   void initState() {

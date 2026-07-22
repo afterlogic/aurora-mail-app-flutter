@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:io';
 
 import 'package:aurora_mail/database/app_database.dart';
@@ -17,7 +17,7 @@ abstract class ComposeEvent extends Equatable {
   const ComposeEvent();
 
   @override
-  List<Object> get props => null;
+  List<Object?> get props => [];
 }
 
 class SendMessages extends ComposeEvent with AlwaysNonEqualObject {
@@ -28,19 +28,19 @@ class SendMessages extends ComposeEvent with AlwaysNonEqualObject {
 
 class SendNote extends ComposeEvent with AlwaysNonEqualObject {
   final String subject;
-  final String text;
+  final String? text;
   final Folder notesFolder;
-  final String messageUid;
+  final String? messageUid;
 
   const SendNote({
-    @required this.notesFolder,
-    @required this.subject,
-    @required this.text,
+    required this.notesFolder,
+    required this.subject,
+    required this.text,
     this.messageUid
   });
 
   @override
-  List<Object> get props =>
+  List<Object?> get props =>
       [subject, text, notesFolder, messageUid];
 }
 
@@ -51,28 +51,28 @@ class SendMessage extends ComposeEvent with AlwaysNonEqualObject {
   final String subject;
   final bool isHtml;
   final List<ComposeAttachment> composeAttachments;
-  final String messageText;
-  final int draftUid;
-  final Account sender;
-  final AccountIdentity identity;
-  final Aliases alias;
+  final String? messageText;
+  final int? draftUid;
+  final Account? sender;
+  final AccountIdentity? identity;
+  final Aliases? alias;
 
   SendMessage({
-    @required this.isHtml,
-    @required this.to,
-    @required this.cc,
-    @required this.bcc,
-    @required this.subject,
-    @required this.composeAttachments,
-    @required this.messageText,
-    @required this.draftUid,
+    required this.isHtml,
+    required this.to,
+    required this.cc,
+    required this.bcc,
+    required this.subject,
+    required this.composeAttachments,
+    required this.messageText,
+    required this.draftUid,
     this.sender,
     this.identity,
     this.alias,
   });
 
   @override
-  List<Object> get props =>
+  List<Object?> get props =>
       [to, cc, bcc, subject, composeAttachments, messageText, draftUid];
 }
 
@@ -82,28 +82,28 @@ class SaveToDrafts extends ComposeEvent {
   final String bcc;
   final String subject;
   final List<ComposeAttachment> composeAttachments;
-  final String messageText;
-  final int draftUid;
+  final String? messageText;
+  final int? draftUid;
   final bool isHtml;
-  final AccountIdentity identity;
+  final AccountIdentity? identity;
 
-  final Aliases alias;
+  final Aliases? alias;
 
   SaveToDrafts({
-    @required this.to,
-    @required this.cc,
-    @required this.bcc,
-    @required this.subject,
-    @required this.composeAttachments,
-    @required this.messageText,
-    @required this.draftUid,
-    @required this.isHtml,
+    required this.to,
+    required this.cc,
+    required this.bcc,
+    required this.subject,
+    required this.composeAttachments,
+    required this.messageText,
+    required this.draftUid,
+    required this.isHtml,
     this.identity,
     this.alias,
   });
 
   @override
-  List<Object> get props =>
+  List<Object?> get props =>
       [to, cc, bcc, subject, composeAttachments, messageText, draftUid];
 }
 
@@ -156,12 +156,12 @@ class ErrorUpload extends ComposeEvent {
 }
 
 class GetMessageAttachments extends ComposeEvent {
-  final Message message;
+  final Message? message;
 
   GetMessageAttachments(this.message);
 
   @override
-  List<Object> get props => [message];
+  List<Object?> get props => [message];
 }
 
 class GetComposeAttachments extends ComposeEvent {
@@ -183,12 +183,12 @@ class GetContactsAsAttachments extends ComposeEvent {
 }
 
 class EncryptBody extends ComposeEvent with AlwaysNonEqualObject {
-  final bool encrypt;
-  final bool sign;
-  final String pass;
-  final Set<String> contacts;
+  final bool? encrypt;
+  final bool? sign;
+  final String? pass;
+  final Set<String?> contacts;
   final String body;
-  final String senderEmail;
+  final String? senderEmail;
 
   EncryptBody(this.contacts, this.body, this.encrypt, this.sign, this.pass,
       this.senderEmail);

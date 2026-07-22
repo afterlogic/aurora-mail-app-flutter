@@ -1,13 +1,13 @@
-//@dart=2.9
+
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/compose_bloc.dart';
 import 'package:flutter/material.dart';
 
 class AutomaticallyEncryptLabel extends StatefulWidget {
-  final List<String> emails;
-  final bool value;
-  final Function(bool) onChanged;
-  final ComposeBloc bloc;
+  final List<String?>? emails;
+  final bool? value;
+  final Function(bool?)? onChanged;
+  final ComposeBloc? bloc;
 
   const AutomaticallyEncryptLabel({
     this.value,
@@ -22,8 +22,8 @@ class AutomaticallyEncryptLabel extends StatefulWidget {
 }
 
 class _AutomaticallyEncryptLabelState extends State<AutomaticallyEncryptLabel> {
-  Future<bool> future;
-  bool previousResult = false;
+  Future<bool>? future;
+  bool? previousResult = false;
   @override
   void didUpdateWidget(covariant AutomaticallyEncryptLabel oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -39,27 +39,27 @@ class _AutomaticallyEncryptLabelState extends State<AutomaticallyEncryptLabel> {
   }
 
   Future<bool> hasAutomaticallyEncrypt() async {
-    final emails = widget.emails;
+    final emails = widget.emails!;
     if (emails.isEmpty) {
       return false;
     }
     for (var emailWithName in emails) {
-      String email;
-      final match = RegExp("<(.*)?>").firstMatch(emailWithName);
+      String? email;
+      final match = RegExp("<(.*)?>").firstMatch(emailWithName!);
       if (match != null && match.groupCount > 0) {
         email = match.group(1);
       } else {
         email = emailWithName;
       }
-      final contacts = await widget.bloc.getContacts(email);
+      final contacts = await widget.bloc!.getContacts(email!);
 
       if (contacts.isNotEmpty) {
         final contact = contacts.firstWhere(
-          (element) => element.storage == "personal",
+          (element) => element!.storage == "personal",
           orElse: () => contacts.first,
         );
         if (contact?.pgpPublicKey != null) {
-          if (contact.autoEncrypt || contact.autoSign) {
+          if (contact!.autoEncrypt! || contact.autoSign!) {
             return true;
           }
         }
@@ -76,7 +76,7 @@ class _AutomaticallyEncryptLabelState extends State<AutomaticallyEncryptLabel> {
         if (result.hasData) {
           previousResult = result.data;
         }
-        if (previousResult) {
+        if (previousResult!) {
           return _buildLabel();
         } else {
           return SizedBox.shrink();

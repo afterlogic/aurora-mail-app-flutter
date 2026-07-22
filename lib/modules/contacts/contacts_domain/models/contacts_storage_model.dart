@@ -1,45 +1,45 @@
-//@dart=2.9
+
 import 'package:flutter/widgets.dart';
 
 class ContactsStorage {
-  final int sqliteId;
-  final String id;
+  final int? sqliteId;
+  final String? id;
   final int userLocalId;
-  final String name;
+  final String? name;
   final String uniqueName;
-  final int cTag;
+  final int? cTag;
   final bool display;
-  final String displayName;
-  final String ownerMail;
-  final bool isShared;
+  final String? displayName;
+  final String? ownerMail;
+  final bool? isShared;
   // access codes - 1 == write, 2 == read
-  final int accessCode;
-  List<ContactInfoItem> contactsInfo;
+  final int? accessCode;
+  List<ContactInfoItem>? contactsInfo;
 
   ContactsStorage({
-    @required this.sqliteId,
-    @required this.id,
-    @required this.userLocalId,
-    @required this.name,
-    @required this.uniqueName,
-    @required this.cTag,
-    @required this.display,
-    @required this.displayName,
+    required this.sqliteId,
+    required this.id,
+    required this.userLocalId,
+    required this.name,
+    required this.uniqueName,
+    required this.cTag,
+    required this.display,
+    required this.displayName,
     this.ownerMail,
     this.isShared,
     this.accessCode,
-    @required this.contactsInfo,
+    required this.contactsInfo,
   }) : assert(userLocalId != null);
 
   ContactsStorage copyWith({
-    int sqliteId,
-    String id,
-    String name,
-    String uniqueName,
-    int cTag,
-    bool display,
-    String displayName,
-    List<ContactInfoItem> contactsInfo,
+    int? sqliteId,
+    String? id,
+    String? name,
+    String? uniqueName,
+    int? cTag,
+    bool? display,
+    String? displayName,
+    List<ContactInfoItem>? contactsInfo,
   }) {
     return new ContactsStorage(
       sqliteId: sqliteId ?? this.sqliteId,
@@ -59,18 +59,18 @@ class ContactsStorage {
 }
 
 class ContactInfoItem {
-  final String uuid;
+  final String? uuid;
   final String storage;
 
-  String get uuidPlusStorage => uuid + storage;
-  String eTag;
-  bool hasBody;
-  bool needsUpdate;
+  String get uuidPlusStorage => uuid! + storage;
+  String? eTag;
+  bool? hasBody;
+  bool? needsUpdate;
 
   ContactInfoItem({
-    @required this.uuid,
-    @required this.storage,
-    @required this.eTag,
+    required this.uuid,
+    required this.storage,
+    required this.eTag,
     this.hasBody = false,
     this.needsUpdate = false,
   }) : assert(storage != null);
@@ -87,20 +87,20 @@ class ContactInfoItem {
 
   factory ContactInfoItem.fromMap(Map<String, dynamic> map) {
     return new ContactInfoItem(
-      uuid: map['uuid'] as String,
+      uuid: map['uuid'] as String?,
       storage: map['storage'] as String,
-      eTag: map['eTag'] as String,
-      hasBody: map['hasBody'] as bool,
-      needsUpdate: map['needsUpdate'] as bool,
+      eTag: map['eTag'] as String?,
+      hasBody: map['hasBody'] as bool?,
+      needsUpdate: map['needsUpdate'] as bool?,
     );
   }
 
   ContactInfoItem copyWith({
-    String uuid,
-    String storage,
-    String eTag,
-    bool hasBody,
-    bool needsUpdate,
+    String? uuid,
+    String? storage,
+    String? eTag,
+    bool? hasBody,
+    bool? needsUpdate,
   }) {
     return new ContactInfoItem(
       uuid: uuid ?? this.uuid,

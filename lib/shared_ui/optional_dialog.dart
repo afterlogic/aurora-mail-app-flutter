@@ -1,28 +1,28 @@
-//@dart=2.9
+
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:flutter/material.dart';
 
 class OptionalDialogResult {
-  final bool generalResult;
-  final Map<String, bool> options;
+  final bool? generalResult;
+  final Map<String, bool>? options;
 
   OptionalDialogResult({this.generalResult, this.options});
 }
 
 class OptionalDialog extends StatefulWidget {
-  final String title;
-  final String description;
+  final String? title;
+  final String? description;
   final Map<String, bool> options;
   final String actionText;
-  final List<Widget> actions;
+  final List<Widget>? actions;
 
   const OptionalDialog({
-    Key key,
+    Key? key,
     this.title,
     this.description,
-    @required this.options,
-    @required this.actionText,
+    required this.options,
+    required this.actionText,
     this.actions,
   }) : super(key: key);
 
@@ -32,7 +32,7 @@ class OptionalDialog extends StatefulWidget {
     String description,
     Map<String, bool> options,
     String actionText, {
-    List<Widget> actions,
+    List<Widget>? actions,
   }) {
     return dialog(
         context: context,
@@ -42,7 +42,8 @@ class OptionalDialog extends StatefulWidget {
               options: options,
               actionText: actionText,
               actions: actions,
-            )).then((value) => (value as OptionalDialogResult) ?? null);
+            )).then((value) =>
+            (value as OptionalDialogResult?) ?? OptionalDialogResult());
   }
 
   static Future<bool> show(
@@ -51,7 +52,7 @@ class OptionalDialog extends StatefulWidget {
     String description,
     Map<String, bool> options,
     String actionText, {
-    List<Widget> actions,
+    List<Widget>? actions,
   }) {
     return dialog(
         context: context,
@@ -61,7 +62,7 @@ class OptionalDialog extends StatefulWidget {
               options: options,
               actionText: actionText,
               actions: actions,
-            )).then((value) => (value as bool) ?? false);
+            )).then((value) => (value as bool?) ?? false);
   }
 
   @override
@@ -69,11 +70,11 @@ class OptionalDialog extends StatefulWidget {
 }
 
 class _OptionalDialogState extends State<OptionalDialog> {
-  String title;
-  String description;
-  Map<String, bool> options;
-  String actionText;
-  List<Widget> actions;
+  String? title;
+  String? description;
+  Map<String, bool>? options;
+  late String actionText;
+  List<Widget>? actions;
 
   @override
   void initState() {
@@ -91,16 +92,16 @@ class _OptionalDialogState extends State<OptionalDialog> {
       if (description != null)
         Padding(
           padding: const EdgeInsets.only(bottom: 16),
-          child: Text(description),
+          child: Text(description!),
         )
     ];
-    for (final key in options.keys) {
+    for (final key in options!.keys) {
       final row = GestureDetector(
         onTap: () => _onTapOption(key),
         child: Row(
           children: [
             Checkbox(
-              value: options[key],
+              value: options![key],
               onChanged: (_) => _onTapOption(key),
             ),
             Expanded(
@@ -116,7 +117,7 @@ class _OptionalDialogState extends State<OptionalDialog> {
       children.add(row);
     }
     return AlertDialog(
-      title: title == null ? null : Text(title),
+      title: title == null ? null : Text(title!),
       content: SizedBox(
         width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
         child: Column(
@@ -132,7 +133,7 @@ class _OptionalDialogState extends State<OptionalDialog> {
             OptionalDialogResult(generalResult: false, options: options),
           ),
         ),
-        if (actions != null) ...actions,
+        if (actions != null) ...actions!,
         TextButton(
           child: Text(actionText),
           onPressed: () => Navigator.pop(
@@ -146,7 +147,7 @@ class _OptionalDialogState extends State<OptionalDialog> {
 
   void _onTapOption(String key) {
     setState(() {
-      options[key] = !options[key];
+      options![key] = !options![key]!;
     });
   }
 }

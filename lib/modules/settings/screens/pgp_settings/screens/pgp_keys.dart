@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:io';
 
 import 'package:aurora_mail/build_property.dart';
@@ -23,8 +23,8 @@ class PgpKeysScreen extends StatefulWidget {
 }
 
 class _PgpKeysScreenState extends State<PgpKeysScreen> {
-  PgpSettingsBloc bloc;
-  bool isAndroid9orLow;
+  late PgpSettingsBloc bloc;
+  late bool isAndroid9orLow;
 
   @override
   void initState() {
@@ -68,6 +68,7 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
             ),
           Expanded(
             child: BlocBuilder<PgpSettingsBloc, PgpSettingsState>(
+              bloc: bloc,
               builder: (context, state) {
                 return ListView(
                   padding: const EdgeInsets.all(8.0),
@@ -80,7 +81,7 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
                           child: Center(
                             child: Text(
                               S.of(context).label_pgp_all_public_key,
-                              style: theme.textTheme.headline6,
+                              style: theme.textTheme.titleLarge,
                             ),
                           ),
                         ),

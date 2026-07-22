@@ -1,11 +1,11 @@
-//@dart=2.9
+
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:flutter/material.dart';
 
 class SizedDialogContent extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
 
-  const SizedDialogContent({Key key, this.child}) : super(key: key);
+  const SizedDialogContent({Key? key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

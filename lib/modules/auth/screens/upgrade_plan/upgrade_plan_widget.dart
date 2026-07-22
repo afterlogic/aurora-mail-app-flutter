@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:theme/app_theme.dart';
 
 class UpgradePlanWidget extends StatelessWidget {
-  final String message;
+  final String? message;
 
   const UpgradePlanWidget(this.message);
 
@@ -25,7 +25,7 @@ class UpgradePlanWidget extends StatelessWidget {
   Widget themeWrap(Widget widget) {
     if (AppTheme.login != null) {
       return Theme(
-        data: AppTheme.login,
+        data: AppTheme.login!,
         child: widget,
       );
     }
@@ -63,7 +63,7 @@ class UpgradePlanWidget extends StatelessWidget {
                                 S.of(context).hint_login_upgrade_your_plan,
                             style: Theme.of(context)
                                 .textTheme
-                                .subtitle1
+                                .titleMedium!
                                 .copyWith(
                                     fontSize: 18,
                                     color: AppTheme.loginTextColor),

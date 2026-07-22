@@ -1,9 +1,9 @@
-//@dart=2.9
+
 import 'package:flutter/material.dart';
 
 class ContactTile extends StatelessWidget {
   final String title;
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
 
   const ContactTile(this.title, [this.textStyle]);
 
@@ -15,7 +15,7 @@ class ContactTile extends StatelessWidget {
       child: ListTile(
         title: Text(
           title,
-          style: textStyle ?? theme.textTheme.headline6,
+          style: textStyle ?? theme.textTheme.titleLarge,
         ),
       ),
     );

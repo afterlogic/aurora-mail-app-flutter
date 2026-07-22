@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:convert';
 
 import 'package:aurora_logger/aurora_logger.dart';
@@ -23,28 +23,28 @@ import 'package:html/parser.dart';
 class MailUtils {
   MailUtils._();
 
-  static Map<String, dynamic> getExtendFromMessageByObjectTypeName(
+  static Map<String, dynamic>? getExtendFromMessageByObjectTypeName(
       List<String> types, Message m) {
     if (m.extendInJson == null) return null;
     try {
-      final decodedList = jsonDecode(m.extendInJson) as List;
+      final decodedList = jsonDecode(m.extendInJson!) as List;
       final extended =
           decodedList.firstWhereOrNull((e) => types.contains(e["@Object"]));
-      return extended as Map<String, dynamic>;
+      return extended as Map<String, dynamic>?;
     } catch (e) {
       return null;
     }
   }
 
-  static String getFriendlyName(Contact contact) {
-    if (contact.fullName != null && contact.fullName.isNotEmpty) {
+  static String? getFriendlyName(Contact contact) {
+    if (contact.fullName != null && contact.fullName!.isNotEmpty) {
       return '"${contact.fullName}" <${contact.viewEmail}>';
     } else {
       return contact.viewEmail;
     }
   }
 
-  static String displayNameFromFriendly(String friendlyName) {
+  static String? displayNameFromFriendly(String friendlyName) {
     final regExp = new RegExp(r'"(.+)" <(.*)>');
     if (regExp.hasMatch(friendlyName)) {
       final matches = regExp.allMatches(friendlyName);
@@ -55,7 +55,7 @@ class MailUtils {
     }
   }
 
-  static String emailFromFriendly(String friendlyName) {
+  static String? emailFromFriendly(String friendlyName) {
     final regExp = new RegExp(r'"(.+)" <(.*)>');
     if (regExp.hasMatch(friendlyName)) {
       final matches = regExp.allMatches(friendlyName);
@@ -66,14 +66,14 @@ class MailUtils {
     }
   }
 
-  static AliasOrIdentity findIdentity(
+  static AliasOrIdentity? findIdentity(
     String infoInJson,
     List<AliasOrIdentity> aliasOrIdentity,
   ) {
     final users = json.decode(infoInJson)["@Collection"] as List;
     for (var user in users) {
-      final name = user["DisplayName"] as String;
-      final mail = user["Email"] as String;
+      final name = user["DisplayName"] as String?;
+      final mail = user["Email"] as String?;
       final identities = aliasOrIdentity
           .where((item) {
             return item.mail == mail;
@@ -81,11 +81,10 @@ class MailUtils {
           .toList()
           .reversed;
       if (identities.isNotEmpty) {
-        final identity = identities.firstWhere(
+        final identity = identities.firstWhereOrNull(
           (item) {
             return item.name == name;
           },
-          orElse: () => null,
         );
         return identity ?? identities.first;
       }
@@ -93,25 +92,25 @@ class MailUtils {
     return null;
   }
 
-  static List<String> getEmails(
-    String emailsInJson, {
-    List<String> exceptEmails,
+  static List<String?> getEmails(
+    String? emailsInJson, {
+    List<String?>? exceptEmails,
   }) {
     if (emailsInJson == null) return [];
 
     final emails = json.decode(emailsInJson);
     if (emails == null) return [];
 
-    final result = <String>{};
+    final result = <String?>{};
     emails["@Collection"].forEach((item) {
-      final display = item["DisplayName"] as String;
-      final email = item["Email"] as String;
+      final display = item["DisplayName"] as String?;
+      final email = item["Email"] as String?;
 
       if (exceptEmails != null && exceptEmails.contains(email)) return;
 
       if (display != null &&
           display.isNotEmpty &&
-          display.trim().toLowerCase() != email.trim().toLowerCase()) {
+          display.trim().toLowerCase() != email!.trim().toLowerCase()) {
         result.add('"$display" <$email>');
       } else {
         result.add(email);
@@ -121,10 +120,10 @@ class MailUtils {
     return result.toList();
   }
 
-  static String getDisplayName(String senderInJson) {
+  static String getDisplayName(String? senderInJson) {
     if (senderInJson == null) return "";
 
-    final sender = json.decode(senderInJson) as Map<String, dynamic>;
+    final sender = json.decode(senderInJson) as Map<String, dynamic>?;
     if (sender == null || sender.isEmpty) return "";
 
     final names =
@@ -139,24 +138,24 @@ class MailUtils {
     }
   }
 
-  static String htmlToPlain(String html) {
+  static String htmlToPlain(String? html) {
     if (html == null) return "";
     html = html
         .replaceAll("<br>", "\n")
         .replaceAll("<br/>", "\n")
         .replaceAll("<br />", "\r\n");
     final document = parse(html);
-    return parse(document.body.text).documentElement.text;
+    return parse(document.body!.text).documentElement!.text;
   }
 
-  static String extractFirstContent(String htmlString) {
+  static String extractFirstContent(String? htmlString) {
     if (htmlString == null || htmlString.isEmpty) return '';
     try {
       Document document = parse(htmlString);
-      String findFirstText(Node node) {
+      String? findFirstText(Node? node) {
         if (node == null) return null;
-        if (node.nodeType == Node.TEXT_NODE && node.text.trim().isNotEmpty) {
-          return node.text.trim();
+        if (node.nodeType == Node.TEXT_NODE && node.text!.trim().isNotEmpty) {
+          return node.text!.trim();
         }
 
         for (final child in node.nodes) {
@@ -180,7 +179,7 @@ class MailUtils {
   static String getReplySubject(Message message) {
     final rePrefix = "Re";
     final fwdPrefix = "Fwd";
-    final subject = rePrefix + ": " + message.subject;
+    final subject = rePrefix + ": " + message.subject!;
     final rePrefixes = [rePrefix.toUpperCase()];
     final fwdPrefixes = [fwdPrefix.toUpperCase()];
     final prefixes = rePrefixes.toSet().union(fwdPrefixes.toSet()).join("|");
@@ -208,9 +207,9 @@ class MailUtils {
               matches.isNotEmpty &&
               matches[0].groupCount == 2) {
             final match = matches[0];
-            re = rePrefixes.contains(match.group(1).toUpperCase());
-            fwd = fwdPrefixes.contains(match.group(1).toUpperCase());
-            count = int.parse(match.group(2));
+            re = rePrefixes.contains(match.group(1)!.toUpperCase());
+            fwd = fwdPrefixes.contains(match.group(1)!.toUpperCase());
+            count = int.parse(match.group(2)!);
           }
         }
 
@@ -249,7 +248,7 @@ class MailUtils {
   static String getReplyBody(BuildContext context, Message message) {
     final baseMessage = message.htmlBody;
     final time = DateFormatting.formatDateFromSeconds(
-        message.timeStampInUTC, Localizations.localeOf(context).languageCode,
+        message.timeStampInUTC!, Localizations.localeOf(context).languageCode,
         format: S.of(context).format_compose_reply_date);
 
     final from = getDisplayName(message.fromInJson);
@@ -282,12 +281,12 @@ class MailUtils {
       forwardMessage += S.of(context).compose_forward_bcc(bcc) + "<br>";
 
     final date = DateFormatting.formatDateFromSeconds(
-        message.timeStampInUTC, Localizations.localeOf(context).languageCode,
+        message.timeStampInUTC!, Localizations.localeOf(context).languageCode,
         format: S.of(context).format_compose_forward_date);
     forwardMessage += S.of(context).compose_forward_sent(date) + "<br>";
 
     forwardMessage +=
-        S.of(context).compose_forward_subject(message.subject) + "<br><br>";
+        S.of(context).compose_forward_subject(message.subject!) + "<br><br>";
     return forwardMessage + baseMessage;
   }
 
@@ -423,7 +422,7 @@ class MailUtils {
           theme.scaffoldBackgroundColor,
           theme.brightness == Brightness.dark ? Colors.white : Colors.black,
           0.1,
-        ).toHex()};
+        )!.toHex()};
                 display: block;
               }
               .details-description {
@@ -466,23 +465,23 @@ class MailUtils {
 
   static String wrapInHtml(
     BuildContext context, {
-    @required Message message,
-    @required String to,
-    @required String date,
-    @required String body,
-    @required List<MailAttachment> attachments,
-    @required bool showLightEmail,
-    ViewCalendar initCalendar,
-    Map<String, dynamic> extendedEvent,
-    bool isStarred,
+    required Message message,
+    required String to,
+    required String date,
+    required String? body,
+    required List<MailAttachment> attachments,
+    required bool showLightEmail,
+    ViewCalendar? initCalendar,
+    Map<String, dynamic>? extendedEvent,
+    required bool isStarred,
   }) {
     final theme = Theme.of(context);
 
-    final subject = message.subject.isNotEmpty
+    final subject = message.subject!.isNotEmpty
         ? message.subject
         : S.of(context).messages_no_subject;
     final shortDate = DateFormatting.getShortMessageDate(
-      timestamp: message.timeStampInUTC,
+      timestamp: message.timeStampInUTC!,
       locale: Localizations.localeOf(context).languageCode,
       yesterdayWord: S.of(context).label_message_yesterday,
       is24: true,
@@ -608,7 +607,7 @@ class MailUtils {
           theme.scaffoldBackgroundColor,
           theme.brightness == Brightness.dark ? Colors.white : Colors.black,
           0.1,
-        ).toHex()};
+        )!.toHex()};
                 display: block;
               }
               .details-description {
@@ -756,7 +755,7 @@ class MailUtils {
                   </div>
                   ${extendedEvent == null ? "" : """
                 <div class="appointment">
-                  ${_showButtons(extendedEvent["Type"] as String) ? """
+                  ${_showButtons(extendedEvent["Type"] as String?) ? """
                     <div class="row">
                     <button onclick="acceptEvent()">Accept</button> 
                     <button onclick="declineEvent()">Decline</button> 
@@ -773,7 +772,7 @@ class MailUtils {
                     <span class="label">Organizer</span><span class="value">${extendedEvent["Organizer"]["Email"]}</span>  
                   </div>
                   <div class="row fluid"> 
-                    <span class="label">Attendees</span><span class="value">${_getAttendees(extendedEvent["AttendeeList"] as List)}</span>  
+                    <span class="label">Attendees</span><span class="value">${_getAttendees(extendedEvent["AttendeeList"] as List?)}</span>  
                   </div>
                   <div class="row fluid"> 
                     <span class="label">Title</span><span class="value">${extendedEvent["Summary"]}</span>  
@@ -813,7 +812,7 @@ class MailUtils {
               ''' : '')}
               ${attachments.isNotEmpty ? '<div style="height: 1px; background-color: black; opacity: 0.05; margin: 0;"></div>' : ""}
               <div class="attachments">
-                ${attachments.where((element) => !element.isInline).map((a) => _getAttachment(context, a)).toList().join()}
+                ${attachments.where((element) => !element.isInline!).map((a) => _getAttachment(context, a)).toList().join()}
               </div>
             </div>
           </body>
@@ -821,7 +820,7 @@ class MailUtils {
         """;
   }
 
-  static bool _hasValidContent(String content) {
+  static bool _hasValidContent(String? content) {
     if (content == null || content.trim().isEmpty) return false;
 
     // Remove the HTML tags and check if there is real content.
@@ -838,7 +837,7 @@ class MailUtils {
 
     final isDark = theme.brightness == Brightness.dark;
     final backgroundColor = _getWebColor(theme.scaffoldBackgroundColor);
-    final textColor = _getWebColor(theme.textTheme.titleSmall.color);
+    final textColor = _getWebColor(theme.textTheme.titleSmall!.color);
 
     if (isDark == true && showLightEmail == false) {
       return """
@@ -851,7 +850,7 @@ class MailUtils {
     }
   }
 
-  static String _getWebColor(Color colorObj) {
+  static String _getWebColor(Color? colorObj) {
     final base = colorObj.toString();
     final color = base.substring(base.length - 7, base.length - 1);
     final opacity = base.substring(base.length - 9, base.length - 7);
@@ -869,13 +868,13 @@ class MailUtils {
     final iconColor = _getWebColor(theme.iconTheme.color);
     final authBloc = BlocProvider.of<AuthBloc>(context);
     String leading;
-    if (attachment.thumbnailUrl == null || attachment.thumbnailUrl.isEmpty) {
+    if (attachment.thumbnailUrl == null || attachment.thumbnailUrl!.isEmpty) {
       leading = "<div class='leading'>${_getAttachmentsIcon(iconColor)}</div>";
     } else {
-      final thumbUrl = attachment.thumbnailUrl
+      final thumbUrl = attachment.thumbnailUrl!
           .replaceFirst("mail-attachment/", "mail-attachments-cookieless/");
       leading =
-          "<div class='leading'><img src='${"${authBloc.currentUser.hostname}$thumbUrl&AuthToken=${authBloc.currentUser.token}"}' alt=''></div>";
+          "<div class='leading'><img src='${"${authBloc.currentUser!.hostname}$thumbUrl&AuthToken=${authBloc.currentUser!.token}"}' alt=''></div>";
     }
     return """
     <div class="attachment">
@@ -890,7 +889,7 @@ class MailUtils {
     """;
   }
 
-  static bool _showButtons(String type) {
+  static bool _showButtons(String? type) {
     final targetString = "REQUEST";
     if (type == null || type.isEmpty) return false;
     if (type == targetString) return true;
@@ -899,12 +898,12 @@ class MailUtils {
     return false;
   }
 
-  static String _getAttendees(List attendees) {
+  static String _getAttendees(List? attendees) {
     if (attendees == null || attendees.isEmpty) return '';
     String result = "";
     for (final e in attendees) {
-      result += " ${(e["DisplayName"] as String)}" +
-          " &lt;${e["Email"] as String}&gt;" +
+      result += " ${(e["DisplayName"] as String?)}" +
+          " &lt;${e["Email"] as String?}&gt;" +
           ",";
     }
     result = result.substring(1, result.length - 1);
@@ -922,7 +921,7 @@ class MailUtils {
   //   return selectedCalendar.name;
   // }
 
-  static String _getCalendarsSelectButton(ViewCalendar calendar) {
+  static String _getCalendarsSelectButton(ViewCalendar? calendar) {
     if (calendar == null) return "";
     return """ 
     <span class="label">Calendar</span>
@@ -980,12 +979,12 @@ class MailUtils {
     nodes.forEach((e) {
       e.nodes.forEach((node) {
         if (node.attributes.containsKey("data-x-style-url")) {
-          var backgroundImageUrl = node.attributes["data-x-style-url"];
+          var backgroundImageUrl = node.attributes["data-x-style-url"]!;
           backgroundImageUrl =
               backgroundImageUrl.replaceAll("http://", "https://");
           node.attributes.remove("data-x-style-url");
 
-          String style = node.attributes["style"];
+          String style = node.attributes["style"]!;
           style = style.endsWith(";") ? style : style + "; ";
           style += backgroundImageUrl;
           node.attributes["style"] = style;
@@ -1002,7 +1001,7 @@ class MailUtils {
       e.nodes.forEach((node) {
         if (node.attributes.containsKey("style")) {
           debugPrint('!!! node.attributes: ${node.attributes}');
-          final style = node.attributes["style"];
+          final style = node.attributes["style"]!;
           final styleList = style.split(";");
           for (int i = 0; i < styleList.length; i++) {
             final e = styleList[i].split(':');

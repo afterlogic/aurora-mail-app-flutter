@@ -141,7 +141,7 @@ class Folders extends Table {
           isSubscribed: rawFolder["IsSubscribed"] as bool,
           isSelectable: rawFolder["IsSelectable"] as bool,
           folderExists: rawFolder["Exists"] as bool,
-          extended: rawFolder["Extended"] as bool,
+          extended: rawFolder["Extended"] as bool?,
           alwaysRefresh: rawFolder["AlwaysRefresh"] as bool,
         ));
 

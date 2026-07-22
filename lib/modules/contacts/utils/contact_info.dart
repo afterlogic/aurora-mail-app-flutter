@@ -12,11 +12,11 @@ class ContactInfo {
   String get viewEmail {
     switch (c.primaryEmail) {
       case 0:
-        return c.personalEmail;
+        return c.personalEmail ?? '';
       case 1:
-        return c.businessEmail;
+        return c.businessEmail ?? '';
       case 2:
-        return c.otherEmail;
+        return c.otherEmail ?? '';
       default:
         throw UnsupportedError("Unknown primaryEmail ${c.primaryEmail}");
     }
@@ -25,11 +25,11 @@ class ContactInfo {
   String get viewPhone {
     switch (c.primaryPhone) {
       case 0:
-        return c.personalMobile;
+        return c.personalMobile ?? '';
       case 1:
-        return c.personalPhone;
+        return c.personalPhone ?? '';
       case 2:
-        return c.businessPhone;
+        return c.businessPhone ?? '';
       default:
         throw UnsupportedError("Unknown primaryPhone ${c.primaryPhone}");
     }
@@ -38,9 +38,9 @@ class ContactInfo {
   String get viewAddress {
     switch (c.primaryAddress) {
       case 0:
-        return c.personalAddress;
+        return c.personalAddress ?? '';
       case 1:
-        return c.businessAddress;
+        return c.businessAddress ?? '';
       default:
         throw UnsupportedError("Unknown primaryAddress ${c.primaryAddress}");
     }

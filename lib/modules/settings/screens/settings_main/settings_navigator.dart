@@ -1,13 +1,13 @@
-//@dart=2.9
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 abstract class SettingsNavigator {
-  Future pushNamed(String name, {dynamic arguments});
+  Future? pushNamed(String name, {dynamic arguments});
 
-  Future setRoot(String name, {dynamic arguments});
+  Future? setRoot(String name, {dynamic arguments});
 
   pop();
 }
@@ -34,12 +34,12 @@ class SettingsNavigatorMock implements SettingsNavigator {
 }
 
 class SettingsNavigatorWidget extends StatefulWidget {
-  final String initialRoute;
-  final Route<dynamic> Function(RouteSettings settings) routeFactory;
-  final Function onUpdate;
+  final String? initialRoute;
+  final Route<dynamic> Function(RouteSettings settings)? routeFactory;
+  final Function? onUpdate;
 
   const SettingsNavigatorWidget({
-    Key key,
+    Key? key,
     this.initialRoute,
     this.routeFactory,
     this.onUpdate,
@@ -60,7 +60,7 @@ class SettingsNavigatorWidget extends StatefulWidget {
 class _NavigatorRoute {
   final Widget widget;
   final Completer completer;
-  final String name;
+  final String? name;
 
   _NavigatorRoute(this.widget, this.name) : completer = Completer();
 }
@@ -78,9 +78,9 @@ class SettingsNavigatorState extends State<SettingsNavigatorWidget>
     _add(widget.initialRoute);
   }
 
-  Completer _add(String name, [dynamic arg]) {
+  Completer? _add(String? name, [dynamic arg]) {
     final route =
-        widget.routeFactory(RouteSettings(name: name, arguments: arg));
+        widget.routeFactory!(RouteSettings(name: name, arguments: arg));
     if (route is ModalRoute) {
       final child = route.buildPage(
         context,
@@ -101,10 +101,10 @@ class SettingsNavigatorState extends State<SettingsNavigatorWidget>
     return null;
   }
 
-  Future pushNamed(String name, {dynamic arguments}) {
+  Future? pushNamed(String name, {dynamic arguments}) {
     final future = _add(name, arguments)?.future;
     setState(() {});
-    widget.onUpdate();
+    widget.onUpdate!();
     return future;
   }
 
@@ -114,7 +114,7 @@ class SettingsNavigatorState extends State<SettingsNavigatorWidget>
     } else {
       final last = _stack.removeLast();
       setState(() {});
-      widget.onUpdate();
+      widget.onUpdate!();
       last.completer.complete();
       return false;
     }
@@ -136,7 +136,7 @@ class SettingsNavigatorState extends State<SettingsNavigatorWidget>
   }
 
   @override
-  Future setRoot(String name, {arguments}) {
+  Future? setRoot(String name, {arguments}) {
     _stack.clear();
     return pushNamed(name, arguments: arguments);
   }

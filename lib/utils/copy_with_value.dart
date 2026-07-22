@@ -2,7 +2,7 @@
 class CWVal<T> {
   final T val;
 
-  static T get<T>(CWVal<T> item, T fallbackItem) {
+  static T get<T>(CWVal<T>? item, T fallbackItem) {
     return item != null ? item.val : fallbackItem;
   }
 

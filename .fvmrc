@@ -1,8 +1,8 @@
 {
-  "flutter": "3.7.12",
+  "flutter": "3.44.7",
   "flavors": {
-    "development": "3.7.12",
-    "production": "3.7.12"
+    "development": "3.44.7",
+    "production": "3.44.7"
   },
   "runPubGetOnSdkChanges": true,
   "updateVscodeSettings": true,

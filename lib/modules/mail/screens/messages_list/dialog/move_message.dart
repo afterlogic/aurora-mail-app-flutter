@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 import 'dart:math';
 
@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MoveMessageDialog extends StatefulWidget {
-  final List<Message> messages;
+  final List<Message?> messages;
   final MessagesListBloc bloc;
   final MailBloc mailBloc;
 
@@ -31,7 +31,7 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
     with NotSavedChangesMixin {
   List<Folder> stack = [];
 
-  Folder get current {
+  Folder? get current {
     if (stack.isEmpty) {
       return null;
     } else {
@@ -82,7 +82,7 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
 
   Widget _buildFolders(FoldersLoaded state) {
     final subscribedFolders =
-        state.folders.where((e) => e.isSubscribed).toList();
+        state.folders!.where((e) => e.isSubscribed).toList();
     subscribedFolders.sort((a, b) => a.order - b.order);
     final currentFolders = _sortFolders(subscribedFolders);
     final items =
@@ -108,7 +108,7 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
     return result;
   }
 
-  List<Folder> _sortFolders(List<Folder> folders, [String parentGuid]) {
+  List<Folder> _sortFolders(List<Folder> folders, [String? parentGuid]) {
     List<Folder> result = [];
     final currentLevel = folders.where((item) => item.parentGuid == parentGuid);
     for (final element in currentLevel) {
@@ -121,7 +121,7 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
   Widget _folder(Folder folder) {
     final theme = Theme.of(context);
     var paddingCount = folder.delimiter.allMatches(folder.fullName).length;
-    if (folder.nameSpace?.isNotEmpty == true &&
+    if (folder.nameSpace.isNotEmpty == true &&
         folder.fullName.startsWith(folder.nameSpace)) {
       paddingCount -= 1;
     }

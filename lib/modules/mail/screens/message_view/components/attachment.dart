@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:io';
 
 import 'package:aurora_mail/generated/l10n.dart';
@@ -13,14 +13,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 class Attachment extends StatefulWidget {
   final MailAttachment attachment;
 
-  const Attachment(this.attachment, {Key key}) : super(key: key);
+  const Attachment(this.attachment, {Key? key}) : super(key: key);
 
   @override
   _AttachmentState createState() => _AttachmentState();
 }
 
 class _AttachmentState extends BState<Attachment> {
-  DownloadTaskProgress _taskProgress;
+  DownloadTaskProgress? _taskProgress;
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +33,10 @@ class _AttachmentState extends BState<Attachment> {
             width: 0),
       ));
       Fluttertoast.showToast(
-        msg: S.of(context).messages_attachment_downloading(widget.attachment.fileName),
+        msg: S.of(context).messages_attachment_downloading(widget.attachment.fileName!),
         timeInSecForIosWeb: 2,
         backgroundColor:
-            Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
+            Platform.isIOS ? theme!.disabledColor.withOpacity(0.5) : null,
       );
     }
 
@@ -63,20 +63,20 @@ class _AttachmentState extends BState<Attachment> {
 //            Icon(Icons.attach_file),
 //          ],
 //        ),
-        title: Text(widget.attachment.fileName),
+        title: Text(widget.attachment.fileName!),
         subtitle: _taskProgress == null
             ? Text(filesize(widget.attachment.size))
             : StreamBuilder(
-                stream: _taskProgress.progressStream,
-                builder: (_, AsyncSnapshot<int> snapshot) {
+                stream: _taskProgress!.progressStream,
+                builder: (_, AsyncSnapshot<int?> snapshot) {
                   return SizedBox(
                     height: 3.0,
                     child: LinearProgressIndicator(
-                      backgroundColor: theme.disabledColor.withOpacity(0.1),
+                      backgroundColor: theme!.disabledColor.withOpacity(0.1),
                       value:
                           snapshot.connectionState == ConnectionState.active &&
                                   snapshot.hasData
-                              ? snapshot.data / 100
+                              ? snapshot.data! / 100
                               : null,
                     ),
                   );
@@ -96,7 +96,7 @@ class _AttachmentState extends BState<Attachment> {
                 icon: Icon(Icons.cancel),
                 tooltip: S.of(context).messages_attachment_download_cancel,
                 onPressed: () => setState(() {
-                  widget.attachment.endDownloading(_taskProgress.taskId);
+                  widget.attachment.endDownloading(_taskProgress!.taskId);
                   _taskProgress = null;
                 }),
               ),

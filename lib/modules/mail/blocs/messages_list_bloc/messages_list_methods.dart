@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/mail/mail_dao.dart';
@@ -11,14 +11,14 @@ import 'package:flutter/foundation.dart';
 class MessagesListMethods {
   final _mailDao = MailDao(DBInstances.appDB);
   final _folderDao = FoldersDao(DBInstances.appDB);
-  final Account account;
-  MailApi _mailApi;
+  final Account? account;
+  late MailApi _mailApi;
 
-  MessagesListMethods({@required User user, @required this.account}) {
+  MessagesListMethods({required User user, required this.account}) {
     _mailApi = new MailApi(
       user: user,
       account: account,
-      interceptor: DefaultApiInterceptor.get(),
+      interceptor: DefaultApiInterceptor.get()!,
     );
   }
 
@@ -33,7 +33,7 @@ class MessagesListMethods {
   ) {
     return _mailDao.getMessages(
       folder.fullNameRaw,
-      user.localId,
+      user.localId!,
       params,
       account.entityId,
       isStarred,
@@ -43,13 +43,13 @@ class MessagesListMethods {
     );
   }
 
-  Future<void> deleteMessages(List<Message> messages) async {
+  Future<void> deleteMessages(List<Message?> messages) async {
     final foldersForPermanentlyDelete = await _folderDao.getByType(
       [
         Folder.getNumberFromFolderType(FolderType.trash),
         Folder.getNumberFromFolderType(FolderType.spam)
       ],
-      account.localId,
+      account!.localId,
     );
     final trashFolderName = foldersForPermanentlyDelete
         .firstWhere(
@@ -64,12 +64,12 @@ class MessagesListMethods {
     final splitToFolder = <String, List<int>>{};
 
     for (var message in messages) {
-      final uids = splitToFolder[message.folder] ?? [];
+      final uids = splitToFolder[message!.folder] ?? [];
       uids.add(message.uid);
       splitToFolder[message.folder] = uids;
     }
     for (var folder in splitToFolder.keys) {
-      final uids = splitToFolder[folder];
+      final uids = splitToFolder[folder]!;
       await _mailDao.deleteMessages(uids, folder);
       if (foldersForPermanentlyDeleteName.contains(folder)) {
         await _mailApi.deleteMessages(
@@ -86,23 +86,23 @@ class MessagesListMethods {
     }
   }
 
-  Future moveMessages(List<Message> messages, FolderType toFolder) async {
+  Future moveMessages(List<Message?> messages, FolderType toFolder) async {
     final splitToFolder = <String, List<int>>{};
     final toFolderName = (await _folderDao.getByType(
       [Folder.getNumberFromFolderType(toFolder)],
-      account.localId,
+      account!.localId,
     ))
         .first
         .fullNameRaw;
 
     for (var message in messages) {
-      final uids = splitToFolder[message.folder] ?? [];
+      final uids = splitToFolder[message!.folder] ?? [];
       uids.add(message.uid);
       splitToFolder[message.folder] = uids;
     }
 
     for (var folder in splitToFolder.keys) {
-      final uids = splitToFolder[folder];
+      final uids = splitToFolder[folder]!;
       final futures = [
         _mailDao.deleteMessages(uids, folder),
       ];
@@ -124,10 +124,10 @@ class MessagesListMethods {
     await _mailDao.clearFolder(folder);
   }
 
-  Future moveToFolder(List<Message> messages, Folder folder) async {
+  Future moveToFolder(List<Message?> messages, Folder? folder) async {
     final splitToFolder = <String, List<int>>{};
     for (var message in messages) {
-      final uids = splitToFolder[message.folder] ?? [];
+      final uids = splitToFolder[message!.folder] ?? [];
       uids.add(message.uid);
       splitToFolder[message.folder] = uids;
     }
@@ -135,7 +135,7 @@ class MessagesListMethods {
       await _mailApi.moveMessage(
         uids: value.value,
         fromFolder: value.key,
-        toFolder: folder.fullNameRaw,
+        toFolder: folder!.fullNameRaw,
       );
     }
   }

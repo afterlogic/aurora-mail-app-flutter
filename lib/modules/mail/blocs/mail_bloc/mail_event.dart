@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 
 import 'package:aurora_mail/database/app_database.dart';
@@ -11,7 +11,7 @@ abstract class MailEvent extends Equatable {
   const MailEvent();
 
   @override
-  List<Object> get props => null;
+  List<Object?> get props => [];
 }
 
 // try from DB, if empty - fetch from server
@@ -30,7 +30,7 @@ class RefreshFolders extends MailEvent with AlwaysNonEqualObject {
 // gets messagesInfo for current folder
 // and relevant folders info for all the folders, including current
 class RefreshMessages extends MailEvent with AlwaysNonEqualObject {
-  final Completer completer;
+  final Completer? completer;
 
   RefreshMessages(this.completer);
 }
@@ -38,26 +38,26 @@ class RefreshMessages extends MailEvent with AlwaysNonEqualObject {
 class CheckFoldersMessagesChanges extends MailEvent {}
 
 class SelectFolder extends MailEvent {
-  final Folder folder;
+  final Folder? folder;
   final MessagesFilter filter;
 
   const SelectFolder(this.folder, {this.filter = MessagesFilter.none});
 
   @override
-  List<Object> get props => [folder.fullNameRaw, filter];
+  List<Object> get props => [folder!.fullNameRaw, filter];
 }
 
 class SelectFolderByName extends MailEvent {
-  final String name;
+  final String? name;
 
   const SelectFolderByName(this.name);
 
   @override
-  List<Object> get props => [name];
+  List<Object?> get props => [name];
 }
 
 class SetSeen extends MailEvent {
-  final List<Message> messages;
+  final List<Message?> messages;
   final bool isSeen;
 
   const SetSeen(this.messages, this.isSeen);

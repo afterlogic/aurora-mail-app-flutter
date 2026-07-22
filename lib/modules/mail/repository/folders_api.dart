@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
@@ -6,17 +6,17 @@ import 'package:flutter/foundation.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class FoldersApi {
-  final Account account;
+  final Account? account;
   final User user;
 
-  int get _accountId => account.entityId;
+  int get _accountId => account!.entityId;
 
-  WebMailApi _mailModule;
+  late WebMailApi _mailModule;
 
   FoldersApi({
-    @required this.account,
-    @required this.user,
-    ApiInterceptor interceptor,
+    required this.account,
+    required this.user,
+    required ApiInterceptor interceptor,
   }) {
     _mailModule = WebMailApi(
       moduleName: WebMailModules.mail,
@@ -41,7 +41,7 @@ class FoldersApi {
     }
   }
 
-  Future<Map> getRelevantFoldersInformation(List<String> fullNamesRaw) async {
+  Future<Map?> getRelevantFoldersInformation(List<String> fullNamesRaw) async {
     final parameters =
         json.encode({"AccountID": _accountId, "Folders": fullNamesRaw});
 
@@ -51,7 +51,7 @@ class FoldersApi {
     final res = await _mailModule.post(body);
 
     if (res["Counts"] is Map) {
-      return res["Counts"] as Map;
+      return res["Counts"] as Map?;
     } else {
       throw WebMailApiError(res);
     }

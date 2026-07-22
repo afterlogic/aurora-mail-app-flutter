@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
@@ -6,14 +6,15 @@ import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/components/key_item.dart';
 import 'package:aurora_mail/utils/base_state.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ImportKeyDialog extends StatefulWidget {
-  final Map<PgpKey, bool> userKeys;
-  final Map<PgpKeyWithContact, bool> contactKeys;
-  final PgpSettingsBloc bloc;
+  final Map<PgpKey, bool?> userKeys;
+  final Map<PgpKeyWithContact, bool?> contactKeys;
+  final PgpSettingsBloc? bloc;
 
   const ImportKeyDialog(
     this.userKeys,
@@ -27,7 +28,7 @@ class ImportKeyDialog extends StatefulWidget {
 
 class PgpKeyForDisplay {
   final PgpKey key;
-  final Contact contact;
+  final Contact? contact;
   bool selected;
 
   PgpKeyForDisplay(this.key, {this.contact, this.selected = false});
@@ -75,7 +76,7 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog>
   @override
   Widget build(BuildContext context) {
     final areSelectedKeys =
-        newKeys.firstWhere((e) => e.selected == true, orElse: () => null) !=
+        newKeys.firstWhereOrNull((e) => e.selected == true) !=
             null;
     return AlertDialog(
       title: Text(S.of(context).label_pgp_import_key),
@@ -83,7 +84,7 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog>
         width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
         child: BlocListener(
           bloc: widget.bloc,
-          listener: (BuildContext context, state) {
+          listener: (BuildContext context, dynamic state) {
             if (state is ImportComplete) {
               Navigator.pop(context);
             }
@@ -150,7 +151,7 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog>
         ),
         BlocBuilder(
           bloc: widget.bloc,
-          builder: (context, state) => TextButton(
+          builder: (context, dynamic state) => TextButton(
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -174,14 +175,14 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog>
     final selected = newKeys.where((e) => e.selected);
     selected.forEach((displayKey) {
       if (displayKey.external) {
-        final key = PgpKeyWithContact(displayKey.key, displayKey.contact);
+        final key = PgpKeyWithContact(displayKey.key, displayKey.contact!);
         contactKeys[key] = true;
       } else {
         final key = displayKey.key;
         userKeys[key] = true;
       }
     });
-    widget.bloc.add(
+    widget.bloc!.add(
       ImportKey(
         userKeys,
         contactKeys,

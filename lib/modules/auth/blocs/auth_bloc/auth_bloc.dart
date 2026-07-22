@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 
 import 'package:alarm_service/alarm_service.dart';
@@ -6,6 +6,7 @@ import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:drift/drift.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/alias_or_account.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
@@ -20,18 +21,19 @@ import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:aurora_mail/utils/user_app_data_singleton.dart';
 import 'package:bloc/bloc.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final _methods = new AuthMethods();
 
-  Account currentAccount;
-  List<User> users = [];
+  Account? currentAccount;
+  List<User?> users = [];
 
 //  static String hostName;
   List<Account> accounts = [];
-  AccountIdentity currentIdentity;
-  User currentUser;
+  AccountIdentity? currentIdentity;
+  User? currentUser;
 
   AuthBloc() : super(InitialAuthState());
 
@@ -64,29 +66,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         currentUser = result.user;
         currentAccount = result.account;
         final notRelatedUsers =
-            users.where((e) => e.localId != currentUser.localId).toList();
+            users.where((e) => e!.localId != currentUser!.localId).toList();
         if (!BuildProperty.multiUserEnable && notRelatedUsers.isNotEmpty) {
           logger.log(
               'because multiUserEnable flag is false and not related users detected, deleting these users');
           await _methods.deleteUnusedUsersWithData(notRelatedUsers);
           users = [currentUser];
         }
-        await _updateAppData(currentUser);
+        await _updateAppData(currentUser!);
 
         final identities =
-            await _methods.getAccountIdentities(currentUser, currentAccount);
+            await _methods.getAccountIdentities(currentUser!, currentAccount);
         _methods.setFbToken(users);
-        currentIdentity = identities.firstWhere((item) => item.isDefault,
-                orElse: () => null) ??
+        currentIdentity = identities.firstWhereOrNull((item) => item.isDefault) ??
             AccountIdentity(
-              email: currentAccount.email,
-              useSignature: currentAccount.useSignature,
-              idUser: currentAccount.idUser,
+              email: currentAccount!.email,
+              useSignature: currentAccount!.useSignature,
+              idUser: currentAccount!.idUser,
               isDefault: true,
-              idAccount: currentAccount.accountId,
-              friendlyName: currentAccount.friendlyName,
-              signature: currentAccount.signature,
-              entityId: currentAccount.serverId,
+              idAccount: currentAccount!.accountId,
+              friendlyName: currentAccount!.friendlyName,
+              signature: currentAccount!.signature,
+              entityId: currentAccount!.serverId,
             );
 
         yield InitializedUserAndAccounts(
@@ -126,7 +127,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _selectUserByEmail(SelectUserByEmail event) async* {
-    if (currentUser.emailFromLogin == event.email) {
+    if (currentUser!.emailFromLogin == event.email) {
       event.completer?.complete();
       return;
     }
@@ -136,15 +137,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _selectUser(SelectUser event) async* {
-    if (currentUser.localId == event.userLocalId &&
+    if (currentUser!.localId == event.userLocalId &&
         (event.accountLocalId == null ||
-            currentAccount.localId == event.accountLocalId)) {
+            currentAccount!.localId == event.accountLocalId)) {
       event.completer?.complete();
       return;
     }
-    await _methods.selectUser(event.userLocalId);
+    await _methods.selectUser(event.userLocalId!);
     if (event.accountLocalId != null) {
-      await _methods.selectAccount(event.accountLocalId);
+      await _methods.selectAccount(event.accountLocalId!);
     }
     yield UserSelected();
     add(InitUserAndAccounts(event.completer));
@@ -153,10 +154,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> _login(LogIn event) async* {
     yield LoggingIn();
     users = await _methods.users;
-    final userFromDb = users.firstWhere((u) => u.emailFromLogin == event.email,
-        orElse: () => null);
+    final userFromDb =
+        users.firstWhereOrNull((u) => u!.emailFromLogin == event.email);
 
-    if (!event.firstLogin && userFromDb != null) {
+    if (!event.firstLogin! && userFromDb != null) {
       yield AlreadyLoggedError();
       return;
     } else {
@@ -167,7 +168,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           manuallyEnteredHost: event.hostname,
         );
         if (userFromDb != null) {
-          user = user.copyWith(localId: userFromDb.localId);
+          user = user!.copyWith(localId: Value(userFromDb.localId));
         }
 
         if (user == null) {
@@ -216,12 +217,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> _userLogInFinish(UserLogInFinish event) async* {
     logger.log('user log in process is finishing');
     try {
-      final user = await _methods.setUser(event.user);
+      final user = (await _methods.setUser(event.user))!;
       await _updateAppData(user);
       users = await _methods.users;
       currentUser = user;
       final notRelatedUsers =
-          users.where((e) => e.localId != currentUser.localId).toList();
+          users.where((e) => e!.localId != currentUser!.localId).toList();
       if (!BuildProperty.multiUserEnable && notRelatedUsers.isNotEmpty) {
         logger.log(
             'because multiUserEnable flag is false and not related users detected, deleting these users');
@@ -234,9 +235,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         assert(accounts[0] != null);
         this.accounts = accounts;
         currentAccount = accounts[0];
-        await _methods.updateAliases(currentUser, currentAccount);
+        await _methods.updateAliases(currentUser!, currentAccount);
         final identities = await _methods.updateIdentity(
-          currentUser,
+          currentUser!,
           currentAccount,
           accounts,
         );
@@ -265,26 +266,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (currentUser == null) {
       return;
     }
-    await _methods.getAccounts(currentUser).then((accounts) async {
+    await _methods.getAccounts(currentUser!).then((accounts) async {
       assert(accounts.isNotEmpty);
       if (currentAccount == null ||
-          accounts.firstWhere(
-                  (element) => element.serverId == currentAccount.serverId,
-                  orElse: () => null) ==
+          accounts.firstWhereOrNull(
+                  (element) => element.serverId == currentAccount!.serverId) ==
               null) {
         currentAccount = accounts[0];
       }
       this.accounts = accounts;
-      await _methods.updateAliases(currentUser, currentAccount);
+      await _methods.updateAliases(currentUser!, currentAccount);
       final identities = await _methods.updateIdentity(
-        currentUser,
+        currentUser!,
         currentAccount,
         accounts,
       );
       if (currentIdentity == null ||
-          identities.firstWhere(
-                  (element) => element.entityId == currentIdentity.entityId,
-                  orElse: () => null) ==
+          identities.firstWhereOrNull(
+                  (element) => element.entityId == currentIdentity!.entityId) ==
               null) {
         currentIdentity =
             _methods.getDefaultIdentity(currentAccount, identities);
@@ -299,18 +298,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (users.length == 1) {
         _methods.setFbToken(users, true);
       }
-      await _methods.logout(currentUser.localId, event.user);
+      await _methods.logout(currentUser!.localId, event.user!);
       users = await _methods.users;
       if (!BuildProperty.multiUserEnable) {
         await _methods.deleteUnusedUsersWithData(
-            users.where((e) => e.localId != currentUser.localId).toList());
+            users.where((e) => e!.localId != currentUser!.localId).toList());
         users = [];
       }
       if (users.isNotEmpty) {
-        if (currentUser.localId != event.user.localId) {
+        if (currentUser!.localId != event.user!.localId) {
           add(InitUserAndAccounts());
         } else {
-          add(SelectUser(users[0].localId));
+          add(SelectUser(users[0]!.localId));
         }
         _methods.setFbToken(users);
       } else {
@@ -326,9 +325,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     logger.log('user token invalidating');
 
     if (currentUser != null) {
-      currentUser = await _methods.invalidateToken(currentUser.localId);
+      currentUser = await _methods.invalidateToken(currentUser!.localId!);
       final notRelatedUsers =
-          users.where((e) => e.localId != currentUser.localId).toList();
+          users.where((e) => e!.localId != currentUser!.localId).toList();
       if (!BuildProperty.multiUserEnable && notRelatedUsers.isNotEmpty) {
         logger.log(
             'because multiUserEnable flag is false and not related users detected, deleting these users');
@@ -342,20 +341,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _changeAccount(ChangeAccount event) async* {
-    await _methods.selectAccount(event.account.localId);
+    await _methods.selectAccount(event.account.localId!);
     add(InitUserAndAccounts());
   }
 
-  Future<List<AccountIdentity>> getIdentities([bool forAllAccount]) {
+  Future<List<AccountIdentity>> getIdentities([bool? forAllAccount]) {
     return _methods.getAccountIdentities(
-      currentUser,
+      currentUser!,
       forAllAccount == true ? null : currentAccount,
     );
   }
 
-  Future<List<Aliases>> getAliases([bool forAllAccount]) {
+  Future<List<Aliases>> getAliases([bool? forAllAccount]) {
     return _methods.getAccountAliases(
-      currentUser,
+      currentUser!,
       forAllAccount == true ? null : currentAccount,
     );
   }
@@ -375,7 +374,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<List<AliasOrIdentity>> getAliasesAndIdentities(
-      [bool forAllAccount]) async {
+      [bool? forAllAccount]) async {
     final identities = await getIdentities(forAllAccount);
     final aliases = await getAliases(forAllAccount);
     final items = <AliasOrIdentity>[];
@@ -395,7 +394,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         moduleName: WebMailModules.core,
         hostname: user.hostname,
         token: user.token,
-        interceptor: DefaultApiInterceptor.get());
+        interceptor: DefaultApiInterceptor.get()!);
 
     final settingsNetwork = SettingsNetwork(settingsModule: apiModule);
     AppData settings;

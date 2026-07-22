@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -54,7 +54,7 @@ class _ImportFromTextDialogState extends BState<ImportFromTextDialog>
   }
 
   _checkText(BuildContext context) {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       Navigator.pop(context, _textController.text);
     }
   }

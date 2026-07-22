@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:io';
 
 import 'package:aurora_mail/generated/l10n.dart';
@@ -10,13 +10,13 @@ import 'package:flutter/material.dart';
 class ComposeSubject extends StatefulWidget {
   final TextEditingController textCtrl;
   final Function(FileType type) onAttach;
-  final FocusNode focusNode;
-  final VoidCallback onNext;
+  final FocusNode? focusNode;
+  final VoidCallback? onNext;
 
   const ComposeSubject({
-    Key key,
-    @required this.textCtrl,
-    @required this.onAttach,
+    Key? key,
+    required this.textCtrl,
+    required this.onAttach,
     this.focusNode,
     this.onNext,
   }) : super(key: key);
@@ -35,7 +35,7 @@ class _ComposeSubjectState extends BState<ComposeSubject> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return GestureDetector(
-      onTap: widget.focusNode.requestFocus,
+      onTap: widget.focusNode!.requestFocus,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 4.0),
         child: Row(

@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
@@ -14,7 +14,7 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/st
 class ContactsDbServiceImpl implements ContactsDbService {
   static final ContactsDbServiceImpl _singleton =
       ContactsDbServiceImpl._internal();
-  static AppDatabase _db;
+  static late AppDatabase _db;
 
   ContactsDbServiceImpl._internal();
 
@@ -41,9 +41,9 @@ class ContactsDbServiceImpl implements ContactsDbService {
 
   @override
   Future<void> addStorages(
-      List<ContactsStorage> newStorages, int userId) async {
+      List<ContactsStorage>? newStorages, int userId) async {
     if (newStorages?.isEmpty == true) return;
-    final formatted = ContactsStorageMapper.toDB(newStorages, userId);
+    final formatted = ContactsStorageMapper.toDB(newStorages!, userId);
     try {
       await _storagesDao.addStorages(formatted);
     } catch (err) {
@@ -71,7 +71,7 @@ class ContactsDbServiceImpl implements ContactsDbService {
 
   @override
   Future<List<Contact>> getContacts(int userLocalId,
-      {List<String> storages, String groupUuid, String pattern}) async {
+      {List<String>? storages, String? groupUuid, String? pattern}) async {
     final result = await _contactsDao.getContacts(
       userLocalId,
       storages: storages,
@@ -143,7 +143,7 @@ class ContactsDbServiceImpl implements ContactsDbService {
   Future<Contact> getContactWithPgpKey(String email) {
     return _contactsDao
         .getContactWithPgpKey(email)
-        .then((item) => ContactMapper.fromDB(item));
+        .then((item) => ContactMapper.fromDB(item)!);
   }
 
   @override
@@ -166,13 +166,13 @@ class ContactsDbServiceImpl implements ContactsDbService {
   Future<Contact> getContactByEmail(String mail) {
     return _contactsDao
         .getContactByEmail(mail)
-        .then((item) => ContactMapper.fromDB(item));
+        .then((item) => ContactMapper.fromDB(item)!);
   }
 
   Future<Contact> getContactById(int entityId) {
     return _contactsDao
         .getContactById(entityId)
-        .then((item) => ContactMapper.fromDB(item));
+        .then((item) => ContactMapper.fromDB(item)!);
   }
 
   @override

@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
@@ -48,7 +48,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
           Expanded(
             child: BlocBuilder(
                 bloc: bloc,
-                builder: (context, state) {
+                builder: (context, dynamic state) {
                   final isProgress = state is ProgressState;
                   final tokenStatus = state is InitState ? state.state : null;
                   Widget button = AMButton(
@@ -80,7 +80,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                             children: <Widget>[
                               Text(
                                 'FB token',
-                                style: theme.textTheme.subtitle1,
+                                style: theme!.textTheme.titleMedium,
                               ),
                               Expanded(
                                 child: Text(
@@ -119,7 +119,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                             children: <Widget>[
                               Text(
                                 S.of(context).label_device_identifier,
-                                style: theme.textTheme.subtitle1,
+                                style: theme!.textTheme.titleMedium,
                               ),
                               Expanded(
                                 child: Text(
@@ -153,7 +153,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                         ),
                         ListTile(
                           title: Text(S.of(context).label_token_storing_status,
-                              style: theme.textTheme.subtitle1),
+                              style: theme!.textTheme.titleMedium),
                           trailing: Text(tokenStatus != null
                               ? tokenStatus
                                   ? S.of(context).label_token_successful

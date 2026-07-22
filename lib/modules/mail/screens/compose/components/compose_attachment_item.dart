@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:io';
 
 import 'package:aurora_mail/generated/l10n.dart';
@@ -14,7 +14,7 @@ class ComposeAttachmentItem extends StatelessWidget {
   final bool isLarge;
 
   const ComposeAttachmentItem(this.attachment, this.onCancel,
-      {Key key, this.isLarge = false})
+      {Key? key, this.isLarge = false})
       : super(key: key);
 
   @override
@@ -32,7 +32,7 @@ class ComposeAttachmentItem extends StatelessWidget {
                   if (attachment.file != null) ...[
                     Expanded(
                         child: ThumbnailWidget(
-                            null, attachment.file as File, 300)),
+                            null, attachment.file as File?, 300)),
                   ],
                   ListTile(
                     contentPadding: EdgeInsets.zero,
@@ -55,8 +55,8 @@ class ComposeAttachmentItem extends StatelessWidget {
                             value: snapshot.connectionState ==
                                         ConnectionState.active &&
                                     snapshot.hasData
-                                ? (snapshot.data.progress >= 0
-                                        ? snapshot.data.progress
+                                ? (snapshot.data!.progress >= 0
+                                        ? snapshot.data!.progress
                                         : null)
                                 : null,
                           ),
@@ -98,8 +98,8 @@ class ComposeAttachmentItem extends StatelessWidget {
                 backgroundColor: theme.disabledColor.withOpacity(0.1),
                 value: snapshot.connectionState == ConnectionState.active &&
                         snapshot.hasData
-                    ? (snapshot.data.progress >= 0
-                            ? snapshot.data.progress
+                    ? (snapshot.data!.progress >= 0
+                            ? snapshot.data!.progress
                             : null)
                     : null,
               ),
@@ -110,7 +110,7 @@ class ComposeAttachmentItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             if (attachment.file != null)
-              ThumbnailWidget(null, attachment.file as File, 40),
+              ThumbnailWidget(null, attachment.file as File?, 40),
             if (attachment.file != null)
               SizedBox(
                 width: 10,
@@ -137,7 +137,7 @@ class ComposeAttachmentItem extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ThumbnailWidget(attachment as ComposeAttachment,
-                        attachment.file as File, 300),
+                        attachment.file as File?, 300),
                   ),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
@@ -174,7 +174,7 @@ class ComposeAttachmentItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ThumbnailWidget(
-                attachment as ComposeAttachment, attachment.file as File, 40),
+                attachment as ComposeAttachment, attachment.file as File?, 40),
             SizedBox(
               width: 10,
             ),
@@ -187,7 +187,7 @@ class ComposeAttachmentItem extends StatelessWidget {
         ),
       );
     } else {
-      return null;
+      return SizedBox.shrink();
     }
   }
 }

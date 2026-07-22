@@ -1,9 +1,9 @@
-//@dart=2.9
+
 
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 
-String getStorageName(String storage, BuildContext context) {
+String? getStorageName(String storage, BuildContext context) {
   switch (storage) {
     case "STORAGE_ALL":
       return S.of(context).contacts_drawer_storage_all;

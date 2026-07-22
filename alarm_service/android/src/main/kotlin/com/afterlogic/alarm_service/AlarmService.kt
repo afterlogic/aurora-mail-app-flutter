@@ -7,11 +7,11 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import io.flutter.FlutterInjector
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterJNI
 import io.flutter.embedding.engine.dart.DartExecutor.DartCallback
 import io.flutter.view.FlutterCallbackInformation
-import io.flutter.view.FlutterMain
 import java.lang.ref.SoftReference
 import kotlin.system.exitProcess
 
@@ -61,9 +61,10 @@ abstract class AlarmService : IntentService("Check update mail") {
             AlarmPlugin.onComplete = onComplete
             Handler(Looper.getMainLooper()).post {
                 try {
-                    FlutterMain.startInitialization(applicationContext)
-                    FlutterMain.ensureInitializationComplete(applicationContext, null)
-                    val mAppBundlePath = FlutterMain.findAppBundlePath()
+                    val flutterLoader = FlutterInjector.instance().flutterLoader()
+                    flutterLoader.startInitialization(applicationContext)
+                    flutterLoader.ensureInitializationComplete(applicationContext, null)
+                    val mAppBundlePath = flutterLoader.findAppBundlePath()
 
                     flutter = SoftReference(FlutterEngine(applicationContext))
                     if (flutter != null) {

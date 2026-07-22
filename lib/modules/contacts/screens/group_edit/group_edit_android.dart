@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
@@ -17,7 +17,7 @@ import 'package:theme/app_color.dart';
 import 'components/group_edit_app_bar.dart';
 
 class GroupEditAndroid extends StatefulWidget {
-  final ContactsGroup group;
+  final ContactsGroup? group;
 
   const GroupEditAndroid({this.group});
 
@@ -27,7 +27,7 @@ class GroupEditAndroid extends StatefulWidget {
 
 class _GroupEditAndroidState extends BState<GroupEditAndroid>
     with NotSavedChangesMixin {
-  bool _isOrg = false;
+  bool? _isOrg = false;
   final _nameCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
   final _companyCtrl = TextEditingController();
@@ -43,12 +43,12 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
   @override
   void initState() {
     super.initState();
-    if (widget.group != null) _initGroup(widget.group);
+    if (widget.group != null) _initGroup(widget.group!);
   }
 
   void _initGroup(ContactsGroup g) {
     _isOrg = g.isOrganization;
-    _nameCtrl.text = g.name;
+    _nameCtrl.text = g.name!;
     _emailCtrl.text = g.email;
     _companyCtrl.text = g.company;
     _countryCtrl.text = g.country;
@@ -89,8 +89,8 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
 
     return ContactsGroup(
       uuid: widget.group?.uuid ?? '',
-      userLocalId: widget.group?.userLocalId ?? user.localId,
-      idUser: widget.group?.idUser ?? user.serverId,
+      userLocalId: widget.group?.userLocalId ?? user!.localId,
+      idUser: widget.group?.idUser ?? user!.serverId,
       name: _nameCtrl.text,
       email: _emailCtrl.text,
       company: _companyCtrl.text,
@@ -131,11 +131,11 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
                     SwitchListTile.adaptive(
                       title: Text(
                           S.of(context).contacts_group_edit_is_organization),
-                      value: _isOrg,
-                      activeColor: theme.primaryColor,
+                      value: _isOrg!,
+                      activeColor: theme!.primaryColor,
                       onChanged: (v) => setState(() => _isOrg = v),
                     ),
-                    if (_isOrg)
+                    if (_isOrg!)
                       Column(
                         children: <Widget>[
                           _buildInput(S.of(context).contacts_view_email,
@@ -174,7 +174,7 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
   Widget _buildInput(
     String label,
     TextEditingController ctrl, [
-    TextInputType type,
+    TextInputType? type,
   ]) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),

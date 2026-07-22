@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
@@ -16,19 +16,19 @@ class ComposeEmails extends StatefulWidget {
   final String label;
   final bool enable;
   final TextEditingController textCtrl;
-  final Set<String> emails;
-  final Function onCCSelected;
-  final FocusNode focusNode;
-  final EdgeInsets padding;
-  final VoidCallback onNext;
-  final Function onChange;
-  final ComposeBloc bloc;
+  final Set<String?> emails;
+  final Function? onCCSelected;
+  final FocusNode? focusNode;
+  final EdgeInsets? padding;
+  final VoidCallback? onNext;
+  final Function? onChange;
+  final ComposeBloc? bloc;
 
   const ComposeEmails({
-    Key key,
-    @required this.label,
-    @required this.emails,
-    @required this.textCtrl,
+    Key? key,
+    required this.label,
+    required this.emails,
+    required this.textCtrl,
     this.onCCSelected,
     this.focusNode,
     this.enable = true,
@@ -45,18 +45,18 @@ class ComposeEmails extends StatefulWidget {
 class ComposeEmailsState extends BState<ComposeEmails> {
   final textFieldKey = GlobalKey();
   final composeTypeAheadFieldKey = GlobalKey<ComposeTypeAheadFieldState>();
-  String _emailToShowDelete;
+  String? _emailToShowDelete;
 
-  String _search;
+  String? _search;
 
   @override
   void initState() {
     super.initState();
-    widget.focusNode.addListener(() {
-      if (!widget.focusNode.hasFocus) {
+    widget.focusNode!.addListener(() {
+      if (!widget.focusNode!.hasFocus) {
         _addEmail(widget.textCtrl.text);
       }
-      if (widget.onCCSelected != null) widget.onCCSelected();
+      if (widget.onCCSelected != null) widget.onCCSelected!();
       setState(() => _emailToShowDelete = null);
     });
   }
@@ -71,14 +71,14 @@ class ComposeEmailsState extends BState<ComposeEmails> {
     if (error == null) {
       setState(() => widget.emails.add(email));
     }
-    composeTypeAheadFieldKey.currentState.reopen();
-    widget.onChange();
+    composeTypeAheadFieldKey.currentState!.reopen();
+    widget.onChange!();
   }
 
-  void _deleteEmail(String email) {
+  void _deleteEmail(String? email) {
     setState(() => widget.emails.remove(email));
-    composeTypeAheadFieldKey.currentState.reopen();
-    widget.onChange();
+    composeTypeAheadFieldKey.currentState!.reopen();
+    widget.onChange!();
   }
 
   validate() {
@@ -104,7 +104,7 @@ class ComposeEmailsState extends BState<ComposeEmails> {
       final contacts = await bloc.getTypeAheadContacts(pattern);
       
       //filtering out contacts without email
-      contacts.removeWhere((i) => i.viewEmail.isEmpty);
+      contacts.removeWhere((i) => i.viewEmail!.isEmpty);
       //TODO: figure out what this filter does
       contacts.removeWhere(
           (i) => widget.emails.contains(MailUtils.getFriendlyName(i)));
@@ -116,8 +116,8 @@ class ComposeEmailsState extends BState<ComposeEmails> {
   }
 
   _focus() {
-    widget.focusNode.requestFocus();
-    if (widget.onCCSelected != null) widget.onCCSelected();
+    widget.focusNode!.requestFocus();
+    if (widget.onCCSelected != null) widget.onCCSelected!();
   }
 
   _paste() async {
@@ -125,29 +125,29 @@ class ComposeEmailsState extends BState<ComposeEmails> {
     await Future.delayed(Duration(milliseconds: 100));
     final gesture = textFieldKey.currentState
         as TextSelectionGestureDetectorBuilderDelegate;
-    gesture.editableTextKey.currentState.toggleToolbar();
+    gesture.editableTextKey.currentState!.toggleToolbar();
   }
 
-  Future<Map<String, Contact>> getContacts() async {
+  Future<Map<String?, Contact>> getContacts() async {
     final emails = widget.emails;
     if (emails.isEmpty) {
       return {};
     }
-    final contacts = <String, Contact>{};
+    final contacts = <String?, Contact>{};
     for (var emailWithName in emails) {
-      String email;
-      final match = RegExp("<(.*)?>").firstMatch(emailWithName);
+      String? email;
+      final match = RegExp("<(.*)?>").firstMatch(emailWithName!);
       if (match != null && match.groupCount > 0) {
         email = match.group(1);
       } else {
         email = emailWithName;
       }
-      final emailContacts = await widget.bloc.getContacts(email);
+      final emailContacts = await widget.bloc!.getContacts(email!);
       if (emailContacts.isNotEmpty) {
         final contact = emailContacts.firstWhere(
-          (element) => element.storage == "personal",
+          (element) => element!.storage == "personal",
           orElse: () => emailContacts.first,
-        );
+        )!;
         final displayName = MailUtils.getFriendlyName(contact);
         contacts[displayName] = contact;
       }
@@ -160,15 +160,15 @@ class ComposeEmailsState extends BState<ComposeEmails> {
     final screenWidth = MediaQuery.of(context).size.width;
     final dropDownWidth = screenWidth / 1.25;
 
-    TextSpan _searchMatch(String match) {
-      final color = theme.textTheme.bodyText2.color;
+    TextSpan _searchMatch(String? match) {
+      final color = theme!.textTheme.bodyMedium!.color;
       final posRes = TextStyle(fontWeight: FontWeight.w700, color: color);
       final negRes = TextStyle(fontWeight: FontWeight.w400, color: color);
 
       if (_search == null || _search == "")
         return TextSpan(text: match, style: negRes);
-      var refinedMatch = match.toLowerCase();
-      var refinedSearch = _search.toLowerCase();
+      var refinedMatch = match!.toLowerCase();
+      var refinedSearch = _search!.toLowerCase();
       if (refinedMatch.contains(refinedSearch)) {
         if (refinedMatch.substring(0, refinedSearch.length) == refinedSearch) {
           return TextSpan(
@@ -220,12 +220,12 @@ class ComposeEmailsState extends BState<ComposeEmails> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (contact.fullName.isNotEmpty)
+                if (contact.fullName!.isNotEmpty)
                   RichText(
                     text: _searchMatch(contact.fullName),
                     maxLines: 1,
                   ),
-                if (contact.viewEmail.isNotEmpty)
+                if (contact.viewEmail!.isNotEmpty)
                   RichText(
                     text: _searchMatch(contact.viewEmail),
                     maxLines: 1,
@@ -243,7 +243,7 @@ class ComposeEmailsState extends BState<ComposeEmails> {
     return Container(
       padding: widget.padding,
       decoration: BoxDecoration(
-        color: widget.enable ? null : theme.disabledColor.withAlpha(20),
+        color: widget.enable ? null : theme!.disabledColor.withAlpha(20),
       ),
       child: GestureDetector(
         onLongPress: widget.enable ? _paste : null,
@@ -257,7 +257,7 @@ class ComposeEmailsState extends BState<ComposeEmails> {
           ),
           animationDuration: Duration.zero,
           suggestionsBoxDecoration: SuggestionsBoxDecoration(
-            color: theme.cardColor,
+            color: theme!.cardColor,
             constraints: BoxConstraints(
               minWidth: dropDownWidth,
               maxWidth: dropDownWidth,
@@ -279,25 +279,25 @@ class ComposeEmailsState extends BState<ComposeEmails> {
             );
           },
           onSuggestionSelected: (c) {
-            widget.focusNode.requestFocus();
-            return _addEmail(MailUtils.getFriendlyName(c));
+            widget.focusNode!.requestFocus();
+            _addEmail(MailUtils.getFriendlyName(c)!);
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 0.0),
             child: Column(
               children: [
-                FutureBuilder<Map<String, Contact>>(
+                FutureBuilder<Map<String?, Contact>>(
                   future: getContacts(),
                   builder: (context, result) {
                     return Wrap(spacing: 8.0, children: [
                       ...widget.emails.map((e) {
                         final displayName =
-                            MailUtils.displayNameFromFriendly(e);
-                        Contact contact;
+                            MailUtils.displayNameFromFriendly(e!)!;
+                        Contact? contact;
                         if (BuildProperty.cryptoEnable &&
                             !BuildProperty.legacyPgpKey) {
                           contact = result.data != null
-                              ? result.data[e]
+                              ? result.data![e]
                               : null;
                         }
 
@@ -317,7 +317,7 @@ class ComposeEmailsState extends BState<ComposeEmails> {
                                 : null,
                             child: Chip(
                               avatar: CircleAvatar(
-                                backgroundColor: theme.primaryColor,
+                                backgroundColor: theme!.primaryColor,
                                 child: Text(
                                   displayName[0],
                                   style:
@@ -383,13 +383,13 @@ class ComposeEmailsState extends BState<ComposeEmails> {
     if (lastSuggestions.isEmpty) {
       if (isEmailValid(widget.textCtrl.text.replaceAll(" ", ""))) {
         _addEmail(widget.textCtrl.text.replaceAll(" ", ""));
-        composeTypeAheadFieldKey.currentState.clear();
+        composeTypeAheadFieldKey.currentState!.clear();
       } else {
-        widget.onNext();
+        widget.onNext!();
       }
     } else {
-      _addEmail(MailUtils.getFriendlyName(lastSuggestions.first));
-      composeTypeAheadFieldKey.currentState.clear();
+      _addEmail(MailUtils.getFriendlyName(lastSuggestions.first)!);
+      composeTypeAheadFieldKey.currentState!.clear();
     }
   }
 }

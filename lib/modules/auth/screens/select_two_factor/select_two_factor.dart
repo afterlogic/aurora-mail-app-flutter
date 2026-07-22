@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/screens/backup_code_auth/backup_code_auth_route.dart';
@@ -16,9 +16,9 @@ import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
 class SelectTwoFactorWidget extends StatefulWidget {
-  final SelectTwoFactorRouteArgs args;
+  final SelectTwoFactorRouteArgs? args;
 
-  const SelectTwoFactorWidget({Key key, this.args}) : super(key: key);
+  const SelectTwoFactorWidget({Key? key, this.args}) : super(key: key);
 
   @override
   _SelectTwoFactorWidgetState createState() => _SelectTwoFactorWidgetState();
@@ -27,11 +27,11 @@ class SelectTwoFactorWidget extends StatefulWidget {
 class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
   @override
   Widget build(BuildContext context) {
-    final twoFactorModel = widget.args.state.twoFactorModel;
+    final twoFactorModel = widget.args!.state.twoFactorModel;
 
     return TwoFactorScene(
       logoHint: "",
-      isDialog: widget.args.isDialog,
+      isDialog: widget.args!.isDialog,
       button: [
         Text(
           S.of(context).tfa_label_hint_security_options,
@@ -55,8 +55,8 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
                   context,
                   FidoAuthRoute.name,
                   ModalRoute.withName(LoginRoute.name),
-                  arguments: FidoAuthRouteArgs(widget.args.isDialog,
-                      widget.args.authBloc, widget.args.state),
+                  arguments: FidoAuthRouteArgs(widget.args!.isDialog,
+                      widget.args!.authBloc, widget.args!.state),
                 );
               },
             ),
@@ -77,8 +77,8 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
                   context,
                   TwoFactorAuthRoute.name,
                   ModalRoute.withName(LoginRoute.name),
-                  arguments: TwoFactorAuthRouteArgs(widget.args.isDialog,
-                      widget.args.authBloc, widget.args.state),
+                  arguments: TwoFactorAuthRouteArgs(widget.args!.isDialog,
+                      widget.args!.authBloc, widget.args!.state),
                 );
               },
             ),
@@ -99,8 +99,8 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
                   context,
                   BackupCodeAuthRoute.name,
                   ModalRoute.withName(LoginRoute.name),
-                  arguments: BackupCodeAuthRouteArgs(widget.args.isDialog,
-                      widget.args.authBloc, widget.args.state),
+                  arguments: BackupCodeAuthRouteArgs(widget.args!.isDialog,
+                      widget.args!.authBloc, widget.args!.state),
                 );
               },
             ),

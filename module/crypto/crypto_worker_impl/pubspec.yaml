@@ -5,7 +5,7 @@ author:
 homepage:
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -19,7 +19,7 @@ dependencies:
   crypto_stream:
     git:
       url: https://github.com/afterlogic/flutter_crypto_stream
-      ref: flutter_3.3
+      ref: flutter_3.44
   path_provider: ^2.0.14
 dev_dependencies:
   flutter_test:

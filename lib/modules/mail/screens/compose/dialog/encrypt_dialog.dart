@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +9,8 @@ class EncryptDialog extends StatefulWidget {
 }
 
 class _EncryptDialogState extends BState<EncryptDialog> {
-  var _sign = false;
-  var _encrypt = true;
+  bool? _sign = false;
+  bool? _encrypt = true;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class _EncryptDialogState extends BState<EncryptDialog> {
                   Text(S.of(context).btn_pgp_encrypt),
                   Checkbox(
                     value: _encrypt,
-                    onChanged: (bool value) {
+                    onChanged: (bool? value) {
                       _encrypt = value;
                       setState(() {});
                     },
@@ -42,7 +42,7 @@ class _EncryptDialogState extends BState<EncryptDialog> {
                   Text(S.of(context).label_pgp_sign),
                   Checkbox(
                     value: _sign,
-                    onChanged: (bool value) {
+                    onChanged: (bool? value) {
                       _sign = value;
                       setState(() {});
                     },
@@ -75,8 +75,8 @@ class _EncryptDialogState extends BState<EncryptDialog> {
 }
 
 class EncryptDialogResult {
-  final bool sign;
-  final bool encrypt;
+  final bool? sign;
+  final bool? encrypt;
 
   EncryptDialogResult(
     this.sign,

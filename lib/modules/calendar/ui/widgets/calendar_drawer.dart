@@ -289,7 +289,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
           ),
           titleBuilder: (ctx) => S.of(ctx).calendar_import_ics_file,
           onTap: (ctx, ViewCalendar calendar) async {
-            final user = BlocProvider.of<AuthBloc>(ctx).currentUser;
+            final user = BlocProvider.of<AuthBloc>(ctx).currentUser!;
             await downloadFromUrl(
                 url: calendar.getDownloadUrl(user),
                 user: user,

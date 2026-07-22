@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 
 import 'package:aurora_mail/build_property.dart';
@@ -23,7 +23,7 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
@@ -37,10 +37,10 @@ class ContactsListAndroid extends StatefulWidget {
 
 class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
-  ContactsBloc contactsBloc;
-  PgpSettingsBloc pgpSettingsBloc;
-  Contact selectedContact;
-  Widget selectedWidget;
+  ContactsBloc? contactsBloc;
+  PgpSettingsBloc? pgpSettingsBloc;
+  Contact? selectedContact;
+  Widget? selectedWidget;
   final selectionController = SelectionController<String, Contact>();
 
   @override
@@ -103,12 +103,12 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
 
   Future<void> _onRefresh() {
     final completer = Completer();
-    contactsBloc.add(GetContacts(completer: completer));
+    contactsBloc!.add(GetContacts(completer: completer));
     return completer.future;
   }
 
-  void _importKey(Map<PgpKey, bool> userKeys,
-      Map<PgpKeyWithContact, bool> contactKeys) async {
+  void _importKey(Map<PgpKey, bool?> userKeys,
+      Map<PgpKeyWithContact, bool?> contactKeys) async {
     await showDialog(
       context: context,
       builder: (_) => ImportKeyDialog(userKeys, contactKeys, pgpSettingsBloc),
@@ -205,7 +205,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
                                     ContactEditRoute.name,
                                     arguments: ContactEditScreenArgs(
                                         pgpSettingsBloc,
-                                        bloc: contactsBloc),
+                                        bloc: contactsBloc!),
                                   ),
                                 )
                               : SizedBox.shrink();
@@ -267,7 +267,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
                     context,
                     ContactEditRoute.name,
                     arguments: ContactEditScreenArgs(pgpSettingsBloc,
-                        bloc: contactsBloc),
+                        bloc: contactsBloc!),
                   ),
                 )
               : SizedBox.shrink();
@@ -279,7 +279,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   Widget _buildContactsBody() {
     return BlocListener(
       bloc: pgpSettingsBloc,
-      listener: (BuildContext context, state) {
+      listener: (BuildContext context, dynamic state) {
         if (state is SelectKeyForImport) {
           _importKey(state.userKeys, state.contactKeys);
           return;
@@ -288,14 +288,14 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
       child: BlocListener<ContactsBloc, ContactsState>(
         listener: (context, state) {
           if (state.key != null) {
-            pgpSettingsBloc.add(ParseKey(state.key));
+            pgpSettingsBloc!.add(ParseKey(state.key));
             return;
           }
           if (state.error != null) {
             showErrorSnack(
               context: context,
               scaffoldState: Scaffold.of(context),
-              msg: state.error,
+              msg: state.error!,
             );
           }
         },
@@ -332,16 +332,16 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
     }
 
     final storage =
-        state.storages.firstWhere((e) => e.name == state.selectedStorage);
+        state.storages!.firstWhere((e) => e.name == state.selectedStorage);
 
-    final authBlocState = BlocProvider.of<AuthBloc>(context).currentUser;
+    final authBlocState = BlocProvider.of<AuthBloc>(context).currentUser!;
     return authBlocState.emailFromLogin == storage.ownerMail
         ? true
         : storage.isShared == true && storage.accessCode == 1;
   }
 
   void _deleteContact(Contact contact) {
-    contactsBloc.add(DeleteContacts([contact]));
+    contactsBloc!.add(DeleteContacts([contact]));
   }
 
   Widget _buildContactsEmpty(ContactsState state) {
@@ -353,16 +353,16 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
       children: <Widget>[
         Flexible(
           child: ListView.builder(
-            key: ObjectKey(state.contacts[0]),
+            key: ObjectKey(state.contacts![0]),
             padding: EdgeInsets.only(
                 bottom: 82.0 + MediaQuery.of(context).padding.bottom),
             itemBuilder: (_, i) => ContactsListTile(
-              contact: state.contacts[i],
+              contact: state.contacts![i],
               onPressed: (c) => _onContactSelected(context, c),
               onDeleteContact: _deleteContact,
               selectionController: selectionController,
             ),
-            itemCount: state.contacts.length,
+            itemCount: state.contacts!.length,
           ),
         ),
       ],

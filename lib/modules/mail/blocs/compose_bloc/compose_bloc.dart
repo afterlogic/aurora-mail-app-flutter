@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 import 'dart:io';
 
@@ -19,12 +19,12 @@ import 'package:flutter/foundation.dart';
 import './bloc.dart';
 
 class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
-  ComposeMethods _methods;
+  late ComposeMethods _methods;
   final User user;
-  final Account account;
+  final Account? account;
   final _mailLocal = new MailLocalStorage();
 
-  ComposeBloc({@required this.user, @required this.account})
+  ComposeBloc({required this.user, required this.account})
       : super(InitialComposeState()) {
     _methods = new ComposeMethods(
       user: user,
@@ -50,8 +50,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     if (event is GetMessageAttachments) yield* _getForwardAttachment(event);
     if (event is GetContactsAsAttachments)
       yield* _getContactsAsAttachment(event);
-    if (event is ErrorUpload)
-      yield ComposeError(formatError(event.error, null));
+    if (event is ErrorUpload) yield ComposeError(event.error);
     if (event is EncryptBody) yield* _encryptBody(event);
     if (event is DecryptEvent) yield DecryptedState();
   }
@@ -188,7 +187,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     yield ConvertingAttachments();
     try {
       final composeAttachments =
-          await _methods.getMessageAttachment(event.message);
+          await _methods.getMessageAttachment(event.message!);
 
       yield ReceivedComposeAttachments(composeAttachments);
     } catch (err, s) {
@@ -211,7 +210,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
 
   Stream<ComposeState> _encryptBody(EncryptBody event) async* {
     try {
-      if (event.encrypt && event.contacts.isEmpty) {
+      if (event.encrypt! && event.contacts.isEmpty) {
         yield ComposeError(
           ErrorToShow.message(S.current.error_pgp_need_contact_for_encrypt),
         );
@@ -219,7 +218,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
       }
       final encrypted = await encryptBody(event);
 
-      final type = event.encrypt ? EncryptType.Encrypt : EncryptType.Sign;
+      final type = event.encrypt! ? EncryptType.Encrypt : EncryptType.Sign;
       yield EncryptComplete(encrypted, type);
     } catch (e) {
       if (e is PgpKeyNotFound) {
@@ -237,7 +236,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
 
   Future<String> encryptBody(EncryptBody event) {
     final emails = event.contacts.map((item) {
-      final match = RegExp("<(.*)?>").firstMatch(item);
+      final match = RegExp("<(.*)?>").firstMatch(item!);
       if (match != null && match.groupCount > 0) {
         return match.group(1);
       } else {
@@ -245,8 +244,8 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
       }
     }).toList();
     return _methods.encrypt(
-      event.sign,
-      event.encrypt,
+      event.sign!,
+      event.encrypt!,
       event.pass,
       emails,
       event.body,
@@ -268,7 +267,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     });
   }
 
-  Future<List<Contact>> getContacts(String email) {
+  Future<List<Contact?>> getContacts(String email) {
     return _methods.getContacts(email);
   }
 }

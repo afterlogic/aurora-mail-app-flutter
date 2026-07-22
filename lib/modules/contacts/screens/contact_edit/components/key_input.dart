@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/dialog/select_key_dialog.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
@@ -11,9 +11,9 @@ import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/material.dart';
 
 class KeyInput extends StatefulWidget {
-  final PgpSettingsBloc pgpSettingsBloc;
-  final PgpKey pgpKey;
-  final Function(PgpKey) onEdit;
+  final PgpSettingsBloc? pgpSettingsBloc;
+  final PgpKey? pgpKey;
+  final Function(PgpKey?) onEdit;
   final Function(String) onError;
 
   const KeyInput(
@@ -28,7 +28,7 @@ class KeyInput extends StatefulWidget {
 }
 
 class KeyInputState extends State<KeyInput> {
-  PgpKey pgpKey;
+  PgpKey? pgpKey;
 
   @override
   void initState() {
@@ -41,8 +41,8 @@ class KeyInputState extends State<KeyInput> {
     if (pgpKey != null)
       return ListTile(
         leading: Icon(Icons.vpn_key),
-        title: Text(pgpKey.formatName() +
-            "\n${pgpKey.key?.length != null ? "(${pgpKey.length}-bit," : "("} ${pgpKey.isPrivate ? "private" : "public"})"),
+        title: Text(pgpKey!.formatName() +
+            "\n${pgpKey!.key.length != null ? "(${pgpKey!.length}-bit," : "("} ${pgpKey!.isPrivate ? "private" : "public"})"),
         trailing: Icon(
           Icons.arrow_forward_ios,
           size: 20,
@@ -68,7 +68,7 @@ class KeyInputState extends State<KeyInput> {
         TextButton(
           child: Text(S.of(context).btn_pgp_import_from_file),
           onPressed: () async {
-            final result = await widget.pgpSettingsBloc.getKeyFromFile();
+            final result = await widget.pgpSettingsBloc!.getKeyFromFile();
             if (result is String) {
               _onKey(result);
             }
@@ -83,18 +83,18 @@ class KeyInputState extends State<KeyInput> {
       context,
       PgpKeyRoute.name,
       arguments: PgpKeyRouteArg(
-        widget.pgpKey,
+        widget.pgpKey!,
         () {
           _setKey(null);
         },
         true,
-        widget.pgpSettingsBloc,
+        widget.pgpSettingsBloc!,
       ),
     );
   }
 
   _onKey(String key) async {
-    final keys = (await widget.pgpSettingsBloc.parseKey(key))
+    final keys = (await widget.pgpSettingsBloc!.parseKey(key))
         .where((item) => !item.isPrivate)
         .toList();
     if (keys.isEmpty) {
@@ -115,7 +115,7 @@ class KeyInputState extends State<KeyInput> {
     }
   }
 
-  _setKey(PgpKey key) {
+  _setKey(PgpKey? key) {
     widget.onEdit(key);
     pgpKey = key;
     setState(() {});

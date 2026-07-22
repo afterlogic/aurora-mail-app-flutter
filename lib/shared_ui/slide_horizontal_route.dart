@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:flutter/material.dart';
 
 class SlideHorizontalRoute extends PageRouteBuilder {
@@ -7,7 +7,7 @@ class SlideHorizontalRoute extends PageRouteBuilder {
   final RouteSettings settings;
 
   SlideHorizontalRoute(
-      {this.settings, this.duration = 150, @required this.builder})
+      {required this.settings, this.duration = 150, required this.builder})
       : super(
             settings: settings,
             transitionDuration: Duration(milliseconds: duration),

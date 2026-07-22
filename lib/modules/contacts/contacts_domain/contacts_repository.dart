@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
@@ -8,8 +8,8 @@ import 'package:flutter/widgets.dart';
 
 abstract class ContactsRepository {
   factory ContactsRepository({
-    @required User user,
-    @required AppDatabase appDB,
+    required User user,
+    required AppDatabase appDB,
   }) =>
       ContactsRepositoryImpl(
         appDB: appDB,
@@ -20,27 +20,27 @@ abstract class ContactsRepository {
 
   Stream<List<ContactsGroup>> get contactsGroups;
 
-  Stream<List<int>> get syncingStorages;
+  Stream<List<int?>> get syncingStorages;
 
   Future<List<Contact>> getAllContacts();
 
   Future<List<Contact>> getContacts({
-    List<String> storages,
-    String groupUuid,
-    String pattern,
+    List<String?>? storages,
+    String? groupUuid,
+    String? pattern,
   });
 
-  Stream<List<Contact>> watchAllContacts(String search);
+  Stream<List<Contact>> watchAllContacts(String? search);
 
-  Stream<List<Contact>> watchContactsFromStorage(String storage, String search);
+  Stream<List<Contact>> watchContactsFromStorage(String? storage, String? search);
 
-  Stream<List<Contact>> watchContactsFromGroup(String group, String search);
+  Stream<List<Contact>> watchContactsFromGroup(String? group, String? search);
 
   // Stream<List<ContactsStorage>> watchContactsStorages();
 
   Future<void> refreshStorages();
 
-  Future<void> updateContactPublicKeyFlags({@required Contact contact, bool pgpEncryptMessages, bool pgpSignMessages});
+  Future<void> updateContactPublicKeyFlags({required Contact contact, bool? pgpEncryptMessages, bool? pgpSignMessages});
 
   // Stream<List<ContactsGroup>> watchContactsGroups({String selectedGroupUuid});
 
@@ -52,13 +52,13 @@ abstract class ContactsRepository {
 
   Future<void> addKeyToContacts(List<Contact> contacts);
 
-  Future<void> deleteContacts(List<Contact> contact);
+  Future<void> deleteContacts(List<Contact?> contact);
 
-  Future<void> shareContacts(List<Contact> contact);
+  Future<void> shareContacts(List<Contact?> contact);
 
-  Future<void> unshareContacts(List<Contact> contact);
+  Future<void> unshareContacts(List<Contact?> contact);
 
-  Future<void> addContactsToGroup(List<ContactsGroup> groups, List<Contact> contacts);
+  Future<void> addContactsToGroup(List<ContactsGroup> groups, List<Contact?> contacts);
 
   Future<void> removeContactsFromGroup(
       ContactsGroup group, List<Contact> contacts);
@@ -79,9 +79,9 @@ abstract class ContactsRepository {
 
   Future<List<Contact>> getContactsByEmail(String mail);
 
-  Future<Contact> getContactById(int entityId);
+  Future<Contact> getContactById(int? entityId);
 
-  Future deleteContactKey(String mail);
+  Future deleteContactKey(String? mail);
 
-  Future importVcf(String content);
+  Future importVcf(String? content);
 }

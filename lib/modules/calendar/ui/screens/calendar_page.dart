@@ -28,7 +28,7 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
@@ -642,7 +642,7 @@ class _BlocHandlerState extends State<_BlocHandler> {
               showErrorSnack(
                 context: context,
                 scaffoldState: Scaffold.of(context),
-                msg: state.error,
+                msg: state.error!,
               );
             }),
         BlocListener<CalendarNotificationBloc, CalendarNotificationState>(
@@ -655,7 +655,7 @@ class _BlocHandlerState extends State<_BlocHandler> {
                 showErrorSnack(
                   context: context,
                   scaffoldState: Scaffold.of(context),
-                  msg: state.error,
+                  msg: state.error!,
                 );
               }
 
@@ -673,7 +673,7 @@ class _BlocHandlerState extends State<_BlocHandler> {
               showErrorSnack(
                 context: context,
                 scaffoldState: Scaffold.of(context),
-                msg: state.error,
+                msg: state.error!,
               );
             }),
         BlocListener<CalendarsBloc, CalendarsState>(
@@ -685,7 +685,7 @@ class _BlocHandlerState extends State<_BlocHandler> {
               showErrorSnack(
                 context: context,
                 scaffoldState: Scaffold.of(context),
-                msg: state.error,
+                msg: state.error!,
               );
             }),
       ],

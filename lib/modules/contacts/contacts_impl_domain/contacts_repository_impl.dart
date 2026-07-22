@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 
 import 'package:aurora_mail/config.dart';
@@ -12,6 +12,7 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/diff_calculato
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts_db_service.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/network/contacts_network_service.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/widgets.dart';
 import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
@@ -22,33 +23,33 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
   int get _userServerId => user.serverId;
 
-  int get _userLocalId => user.localId;
+  int? get _userLocalId => user.localId;
 
-  final _syncQueue = <int>[];
+  final _syncQueue = <int?>[];
 
-  ContactsNetworkService _network;
-  ContactsDbService _db;
+  late ContactsNetworkService _network;
+  late ContactsDbService _db;
 
   final _storagesCtrl = StreamController<List<ContactsStorage>>();
   final _groupCtrl = StreamController<List<ContactsGroup>>();
 
-  StreamController<List<int>> _syncingStoragesCtrl;
+  late StreamController<List<int?>> _syncingStoragesCtrl;
 
   ContactsRepositoryImpl({
-    @required this.user,
-    @required AppDatabase appDB,
+    required this.user,
+    required AppDatabase appDB,
   }) {
     final module = new WebMailApi(
       moduleName: WebMailModules.contacts,
       hostname: user.hostname,
       token: user.token,
-      interceptor: DefaultApiInterceptor.get(),
+      interceptor: DefaultApiInterceptor.get()!,
     );
 
     _network = new ContactsNetworkService(module, user.serverId);
     _db = new ContactsDbService(appDB);
 
-    _syncingStoragesCtrl = StreamController<List<int>>(onListen: () {
+    _syncingStoragesCtrl = StreamController<List<int?>>(onListen: () {
       _syncingStoragesCtrl.add(_syncQueue.isEmpty ? [] : _syncQueue);
     });
   }
@@ -60,7 +61,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
   Stream<List<ContactsGroup>> get contactsGroups => _groupCtrl.stream;
 
   @override
-  Stream<List<int>> get syncingStorages => _syncingStoragesCtrl.stream;
+  Stream<List<int?>> get syncingStorages => _syncingStoragesCtrl.stream;
 
   @override
   Future<List<Contact>> getAllContacts() {
@@ -69,13 +70,13 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
   @override
   Future<List<Contact>> getContacts({
-    List<String> storages,
-    String groupUuid,
-    String pattern,
+    List<String?>? storages,
+    String? groupUuid,
+    String? pattern,
   }) {
     return _db.getContacts(
-      _userLocalId,
-      storages: storages,
+      _userLocalId!,
+      storages: storages?.whereType<String>().toList(),
       groupUuid: groupUuid,
       pattern: pattern,
     );
@@ -83,18 +84,18 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
   @override
   Stream<List<Contact>> watchContactsFromStorage(
-      String storage, String search) {
-    return _db.watchContactsFromStorage(_userLocalId, storage, search);
+      String? storage, String? search) {
+    return _db.watchContactsFromStorage(_userLocalId!, storage!, search ?? "");
   }
 
   @override
-  Stream<List<Contact>> watchContactsFromGroup(String group, String search) {
-    return _db.watchContactsFromGroup(_userLocalId, group, search);
+  Stream<List<Contact>> watchContactsFromGroup(String? group, String? search) {
+    return _db.watchContactsFromGroup(_userLocalId!, group!, search ?? "");
   }
 
   @override
-  Stream<List<Contact>> watchAllContacts(String search) {
-    return _db.watchAllContacts(_userLocalId, search);
+  Stream<List<Contact>> watchAllContacts(String? search) {
+    return _db.watchAllContacts(_userLocalId!, search ?? "");
   }
 
   // @override
@@ -112,9 +113,9 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
   @override
   Future<void> refreshGroups() async {
-    final groupsFromDb = await _db.getGroups(_userLocalId);
+    final groupsFromDb = await _db.getGroups(_userLocalId!);
     _groupCtrl.add(groupsFromDb);
-    final groupsFromServer = await _network.getGroups(_userLocalId);
+    final groupsFromServer = await _network.getGroups(_userLocalId!);
     _groupCtrl.add(groupsFromServer);
     await _updateGroups(groupsFromDb, groupsFromServer);
   }
@@ -125,9 +126,8 @@ class ContactsRepositoryImpl implements ContactsRepository {
   ) async {
     final groupsForDelete = <String>[];
     oldGroups.forEach((group) {
-      final exist = newGroups.firstWhere((item) => group.uuid == item.uuid,
-          orElse: () => null);
-      if (exist == null) groupsForDelete.add(group.uuid);
+      final exist = newGroups.firstWhereOrNull((item) => group.uuid == item.uuid);
+      if (exist == null) groupsForDelete.add(group.uuid!);
     });
     final contactUuidsFromNewGroups = {for (ContactsGroup g in newGroups) g.name : g.contacts};
     await _db.deleteGroups(groupsForDelete);
@@ -140,7 +140,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
     for(final entry in contactUuidsFromNewGroups.entries) {
       final contacts = await _network.getContactsByUids(
         uuids: entry.value.map((e) => e.toString()).toList(),
-        userLocalId: _userLocalId
+        userLocalId: _userLocalId!
       );
       await _db.updateContacts(contacts);
     }
@@ -189,7 +189,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
   @override
   Future<void> refreshStorages() async {
-    var storagesFromDb = await _db.getStorages(_userLocalId);
+    var storagesFromDb = await _db.getStorages(_userLocalId!);
     _storagesCtrl.add(storagesFromDb);
 
     final storagesToUpdate = await _getStoragesToUpdate(storagesFromDb);
@@ -199,29 +199,30 @@ class ContactsRepositoryImpl implements ContactsRepository {
     }
     await updateContactsInfo(storagesToUpdate);
 
-    storagesFromDb = await _db.getStorages(_userLocalId);
+    storagesFromDb = await _db.getStorages(_userLocalId!);
     final idsToSync = storagesToUpdate
         .map((s) => storagesFromDb.firstWhere((e) => e.id == s.id).sqliteId)
         .toList();
     await getContactsBodies(idsToSync);
 
-    storagesFromDb = await _db.getStorages(_userLocalId);
+    storagesFromDb = await _db.getStorages(_userLocalId!);
     _storagesCtrl.add(storagesFromDb);
   }
 
   @override
   Future<List<Contact>> getSuggestionContacts(String pattern) async {
-    final storagesFromDb = await _db.getStorages(_userLocalId);
-    final storages = storagesFromDb.map((s) => s.id).toList();
+    final storagesFromDb = await _db.getStorages(_userLocalId!);
+    final storages =
+        storagesFromDb.map((s) => s.id).whereType<String>().toList();
 
     final contacts = await _db.getContacts(
-      _userLocalId,  
+      _userLocalId!,
       storages: storages,
       pattern: pattern,
     );
 
     //ageScore may be calculated incorrectly. In this case the friequency of the contact is returned
-    contacts.sort((c1, c2) => c2.ageScore.compareTo(c1.ageScore));
+    contacts.sort((c1, c2) => c2.ageScore!.compareTo(c1.ageScore!));
     return contacts.take(COMPOSE_TYPE_AHEAD_ITEMS_NUMBER).toList();
   }
 
@@ -230,15 +231,15 @@ class ContactsRepositoryImpl implements ContactsRepository {
     final newContact = await _network.addContact(contact);
     final newContactInfo = new ContactInfoItem(
       uuid: newContact.uuid,
-      storage: newContact.storage,
+      storage: newContact.storage!,
       eTag: newContact.eTag,
       hasBody: true,
       needsUpdate: true,
     );
-    final storages = await _db.getStorages(_userLocalId);
+    final storages = await _db.getStorages(_userLocalId!);
     final storage = storages.firstWhere((s) => s.id == newContact.storage);
     final storageToUpdate = storage.copyWith(
-      contactsInfo: [...storage.contactsInfo, newContactInfo],
+      contactsInfo: [...storage.contactsInfo!, newContactInfo],
     );
     await Future.wait([
       _db.updateStorages([storageToUpdate], _userServerId),
@@ -264,42 +265,43 @@ class ContactsRepositoryImpl implements ContactsRepository {
     final uuids = await _network.addKeyToContacts(contacts);
     final newContacts = await _network.getContactsByUids(
       uuids: uuids,
-      userLocalId: _userLocalId,
+      userLocalId: _userLocalId!,
     );
     await _db.updateContacts(newContacts);
   }
 
   @override
   Future<void> updateContactPublicKeyFlags(
-      {@required Contact contact,
-      bool pgpEncryptMessages,
-      bool pgpSignMessages}) async {
+      {required Contact contact,
+      bool? pgpEncryptMessages,
+      bool? pgpSignMessages}) async {
     final isUpdateSuccess = await _network.updateContactPublicKeyFlags(
-        uuid: contact.uuid,
+        uuid: contact.uuid!,
         pgpEncryptMessages: pgpEncryptMessages,
         pgpSignMessages: pgpSignMessages);
     if (!isUpdateSuccess) throw Exception('Error while changing key flags');
     final newContacts = await _network.getContactsByUids(
-      uuids: [contact.uuid],
-      userLocalId: _userLocalId,
+      uuids: [contact.uuid!],
+      userLocalId: _userLocalId!,
     );
     await _db.updateContacts(newContacts);
   }
 
   @override
-  Future<void> deleteContacts(List<Contact> contacts) async {
-    final uuids = contacts.map((c) => c.uuid).toList();
-    final storage = contacts[0].storage;
+  Future<void> deleteContacts(List<Contact?> contacts) async {
+    final uuids =
+        contacts.map((c) => c!.uuid).whereType<String>().toList();
+    final storage = contacts[0]!.storage!;
     final futures = [
       _db.deleteContacts(uuids),
       _network.deleteContacts(storage, uuids),
     ];
 
-    final storages = await _db.getStorages(_userLocalId);
+    final storages = await _db.getStorages(_userLocalId!);
     contacts.forEach((c) {
-      final storage = storages.firstWhere((s) => s.id == c.storage);
+      final storage = storages.firstWhere((s) => s.id == c!.storage);
       final updatedInfo = storage.contactsInfo
-        ..removeWhere((i) => i.uuid == c.uuid);
+        ?..removeWhere((i) => i.uuid == c!.uuid);
       final storageToUpdate = storage.copyWith(contactsInfo: updatedInfo);
       futures.add(_db.updateStorages([storageToUpdate], _userServerId));
     });
@@ -308,22 +310,22 @@ class ContactsRepositoryImpl implements ContactsRepository {
   }
 
   @override
-  Future<void> shareContacts(List<Contact> contact) async {
+  Future<void> shareContacts(List<Contact?> contact) async {
     final uuids = contact.map((c) {
-      assert(c.storage == StorageNames.personal);
-      return c.uuid;
-    }).toList();
+      assert(c!.storage == StorageNames.personal);
+      return c!.uuid;
+    }).whereType<String>().toList();
 
     _db.deleteContacts(uuids);
     await _network.updateSharedContacts(uuids);
   }
 
   @override
-  Future<void> unshareContacts(List<Contact> contact) async {
+  Future<void> unshareContacts(List<Contact?> contact) async {
     final uuids = contact.map((c) {
-      assert(c.storage == StorageNames.shared);
-      return c.uuid;
-    }).toList();
+      assert(c!.storage == StorageNames.shared);
+      return c!.uuid;
+    }).whereType<String>().toList();
 
     _db.deleteContacts(uuids);
     await _network.updateSharedContacts(uuids);
@@ -331,15 +333,15 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
   Future<void> addContactsToGroup(
     List<ContactsGroup> groups,
-    List<Contact> contacts,
+    List<Contact?> contacts,
   ) async {
-    final uuids = contacts.map((c) => c.uuid).toList();
+    final uuids = contacts.map((c) => c!.uuid).whereType<String>().toList();
 
     for(final g in groups) {
-      await _network.addContactsToGroup(g.uuid, uuids);
+      await _network.addContactsToGroup(g.uuid!, uuids);
     }
     final updatedContacts = contacts.map((c) {
-      return c.copyWith(groupUUIDs: [...c.groupUUIDs, ...groups.map((e) => e.uuid)]);
+      return c!.copyWith(groupUUIDs: [...c.groupUUIDs!, ...groups.map((e) => e.uuid)]);
     }).toList();
 
     await _db.updateContacts(updatedContacts);
@@ -349,12 +351,12 @@ class ContactsRepositoryImpl implements ContactsRepository {
     ContactsGroup group,
     List<Contact> contacts,
   ) async {
-    final uuids = contacts.map((c) => c.uuid).toList();
-    await _network.removeContactsFromGroup(group.uuid, uuids);
+    final uuids = contacts.map((c) => c.uuid).whereType<String>().toList();
+    await _network.removeContactsFromGroup(group.uuid!, uuids);
 
     final updatedContacts = contacts.map((c) {
       return c.copyWith(
-        groupUUIDs: c.groupUUIDs.where((id) => id != group.uuid).toList(),
+        groupUUIDs: c.groupUUIDs!.where((id) => id != group.uuid).toList(),
       );
     }).toList();
 
@@ -386,25 +388,27 @@ class ContactsRepositoryImpl implements ContactsRepository {
     if (!success) {
       return false;
     }
-    await _db.deleteGroups([group.uuid]);
+    await _db.deleteGroups([group.uuid!]);
     await _updateGroup();
     return true;
   }
 
-  void _updateGroup() async {
-    final updatedGroups = await _db.getGroups(_userLocalId);
+  Future<void> _updateGroup() async {
+    final updatedGroups = await _db.getGroups(_userLocalId!);
     _groupCtrl.add(updatedGroups);
   }
 
   Future<List<ContactsStorage>> _getStoragesToUpdate(
       List<ContactsStorage> storagesFromDb) async {
-    final storagesFromNetwork = await _network.getContactStorages(_userLocalId);
+    final storagesFromNetwork = await _network.getContactStorages(_userLocalId!);
 
     final calcResult = await ContactsDiffCalculator.calculateStoragesDiffAsync(
         storagesFromDb, storagesFromNetwork);
 
-    final storageIdsToDelete =
-        calcResult.deletedStorages.map((s) => s.sqliteId).toList();
+    final storageIdsToDelete = calcResult.deletedStorages
+        .map((s) => s.sqliteId)
+        .whereType<int>()
+        .toList();
 
     await Future.wait([
       _db.addStorages(calcResult.addedStorages, _userServerId),
@@ -446,7 +450,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
         infoFromNetwork,
       );
 
-      final infosToUpdate = new List<ContactInfoItem>.from(s.contactsInfo);
+      final infosToUpdate = new List<ContactInfoItem>.from(s.contactsInfo!);
 
       infosToUpdate
         ..removeWhere((i) => calcResult.deletedContacts.contains(i.uuid))
@@ -457,7 +461,8 @@ class ContactsRepositoryImpl implements ContactsRepository {
       infosToUpdate.addAll(calcResult.addedContacts);
       infosToUpdate.addAll(calcResult.updatedContacts);
 
-      await _db.deleteContacts(calcResult.deletedContacts);
+      await _db
+          .deleteContacts(calcResult.deletedContacts.whereType<String>().toList());
 
       return new ContactsStorage(
         id: s.id,
@@ -476,11 +481,11 @@ class ContactsRepositoryImpl implements ContactsRepository {
     }
   }
 
-  Future<void> getContactsBodies(List<int> storagesSqliteIds) async {
+  Future<void> getContactsBodies(List<int?> storagesSqliteIds) async {
     _syncQueue.clear();
     _syncQueue.insertAll(0, storagesSqliteIds);
 
-    final storages = await _db.getStorages(_userLocalId);
+    final storages = await _db.getStorages(_userLocalId!);
 
     while (_syncQueue.isNotEmpty) {
       // return currently syncing storage for updating UI
@@ -488,8 +493,8 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
       final id = _syncQueue[0];
       final storageToSync = storages.firstWhere((i) => i.sqliteId == id);
-      final uuidsToFetch = forAdd(storageToSync.contactsInfo);
-      final uuidsToUpdate = forUpdate(storageToSync.contactsInfo);
+      final uuidsToFetch = forAdd(storageToSync.contactsInfo!);
+      final uuidsToUpdate = forUpdate(storageToSync.contactsInfo!);
 
       if (uuidsToFetch.isNotEmpty || uuidsToUpdate.isNotEmpty) {
         final futures = <Future>[];
@@ -497,10 +502,10 @@ class ContactsRepositoryImpl implements ContactsRepository {
           while (uuidsToFetch.isNotEmpty) {
             final chunk = getChunk(uuidsToFetch);
             final newContacts = await _network.getContactsByUids(
-              uuids: chunk,
-              userLocalId: _userLocalId,
+              uuids: chunk.whereType<String>().toList(),
+              userLocalId: _userLocalId!,
             );
-            storageToSync.contactsInfo.forEach((i) {
+            storageToSync.contactsInfo!.forEach((i) {
               if (newContacts.where((c) => c.uuid == i.uuid).isNotEmpty) {
                 i.hasBody = true;
               }
@@ -513,10 +518,10 @@ class ContactsRepositoryImpl implements ContactsRepository {
           while (uuidsToUpdate.isNotEmpty) {
             final chunk = getChunk(uuidsToUpdate);
             final updatedContacts = await _network.getContactsByUids(
-              uuids: chunk,
-              userLocalId: _userLocalId,
+              uuids: chunk.whereType<String>().toList(),
+              userLocalId: _userLocalId!,
             );
-            storageToSync.contactsInfo.forEach((i) {
+            storageToSync.contactsInfo!.forEach((i) {
               if (updatedContacts.where((c) => c.uuid == i.uuid).isNotEmpty) {
                 i.needsUpdate = false;
               }
@@ -533,7 +538,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
     _syncingStoragesCtrl.add([]);
   }
 
-  List<String> getChunk(List<String> list) {
+  List<String?> getChunk(List<String?> list) {
     if (list.length <= CONTACTS_PER_CHUNK) {
       final out = list.toList();
       list.clear();
@@ -546,8 +551,8 @@ class ContactsRepositoryImpl implements ContactsRepository {
   }
 
   // returns list of uuids to load
-  List<String> forAdd(List<ContactInfoItem> infos) {
-    final uids = <String>[];
+  List<String?> forAdd(List<ContactInfoItem> infos) {
+    final uids = <String?>[];
 
     infos.forEach((i) {
       if (i.hasBody == false) {
@@ -559,8 +564,8 @@ class ContactsRepositoryImpl implements ContactsRepository {
   }
 
   // returns list of uuids to load
-  List<String> forUpdate(List<ContactInfoItem> infos) {
-    final uids = <String>[];
+  List<String?> forUpdate(List<ContactInfoItem> infos) {
+    final uids = <String?>[];
 
     infos.forEach((i) {
       if (i.needsUpdate == true) {
@@ -587,19 +592,19 @@ class ContactsRepositoryImpl implements ContactsRepository {
   }
 
   @override
-  Future<Contact> getContactById(int entityId) {
-    return _db.getContactById(entityId);
+  Future<Contact> getContactById(int? entityId) {
+    return _db.getContactById(entityId!);
   }
 
   @override
-  Future deleteContactKey(String mail) async {
-    await _network.deleteContactKey(mail);
+  Future deleteContactKey(String? mail) async {
+    await _network.deleteContactKey(mail!);
     await _db.deleteContactKey(mail);
   }
 
   @override
-  Future importVcf(String content) async {
-    await _network.importFromVcf(content);
+  Future importVcf(String? content) async {
+    await _network.importFromVcf(content!);
     // watchContactsStorages();
     refreshStorages();
   }

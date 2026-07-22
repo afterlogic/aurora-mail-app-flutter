@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
@@ -20,9 +20,9 @@ import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
 class TwoFactorAuthWidget extends StatefulWidget {
-  final TwoFactorAuthRouteArgs args;
+  final TwoFactorAuthRouteArgs? args;
 
-  const TwoFactorAuthWidget({Key key, this.args}) : super(key: key);
+  const TwoFactorAuthWidget({Key? key, this.args}) : super(key: key);
 
   @override
   _TwoFactorAuthWidgetState createState() => _TwoFactorAuthWidgetState();
@@ -43,7 +43,7 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
   Widget build(BuildContext context) {
     return TwoFactorScene(
       logoHint: "",
-      isDialog: widget.args.isDialog,
+      isDialog: widget.args!.isDialog,
       button: [
         BlocListener<TwoFactorBloc, TwoFactorState>(
           bloc: bloc,
@@ -55,11 +55,11 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
                 state.errorMsg,
               );
             } else if (state is CompleteState) {
-              widget.args.authBloc.add(UserLogIn(
+              widget.args!.authBloc.add(UserLogIn(
                 state.user,
                 null,
-                widget.args.state.email,
-                widget.args.state.password,
+                widget.args!.state.email,
+                widget.args!.state.password,
               ));
             }
           },
@@ -117,9 +117,9 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
                               SelectTwoFactorRoute.name,
                               ModalRoute.withName(LoginRoute.name),
                               arguments: SelectTwoFactorRouteArgs(
-                                  widget.args.isDialog,
-                                  widget.args.authBloc,
-                                  widget.args.state),
+                                  widget.args!.isDialog,
+                                  widget.args!.authBloc,
+                                  widget.args!.state),
                             );
                           },
                         ),
@@ -142,8 +142,8 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
   }
 
   _login() {
-    if (formKey.currentState.validate()) {
-      final args = widget.args;
+    if (formKey.currentState!.validate()) {
+      final args = widget.args!;
       bloc.add(
         Verify(
           pinCtrl.text,

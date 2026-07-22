@@ -88,13 +88,13 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
         final date = item as DateSearchParams;
         if (date.since != null) {
           params.add(
-            Variable.withInt(date.since.millisecondsSinceEpoch ~/ 1000),
+            Variable.withInt(date.since!.millisecondsSinceEpoch ~/ 1000),
           );
           query += "AND (${mail.timeStampInUTC.escapedName} > ?) ";
         }
         if (date.till != null) {
-          final till = DateTime(
-              date.till.year, date.till.month, date.till.day, 23, 59, 59);
+          final till = DateTime(date.till!.year, date.till!.month,
+              date.till!.day, 23, 59, 59);
 
           params.add(
             Variable.withInt(till.millisecondsSinceEpoch ~/ 1000),
@@ -143,7 +143,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
         .watch()
         .map((list) {
       return list.map((item) {
-        return Message.fromData(item.data);
+        return mail.map(item.data);
       }).toList();
     });
   }
@@ -169,7 +169,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   Future<Message> fillMessage(Message newMessage) async {
     final localId =
         await into(mail).insert(newMessage, mode: InsertMode.replace);
-    return newMessage.copyWith(localId: localId);
+    return newMessage.copyWith(localId: Value(localId));
   }
 
   Future<void> fillMessages(List<Message> newMessages) async {
@@ -232,7 +232,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
       final result = await (select(mail)
             ..where((tbl) => tbl.accountEntityId.equals(account.entityId))
             ..where((tbl) => tbl.folder.equals(folder))
-            ..where((tbl) => tbl.userLocalId.equals(user.localId))
+            ..where((tbl) => tbl.userLocalId.equalsNullable(user.localId))
             ..where((tbl) => tbl.uid.equals(uid)))
           .getSingle();
 
@@ -249,7 +249,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   ) {
     return (select(mail)
           ..where((tbl) => tbl.accountEntityId.equals(account.entityId))
-          ..where((tbl) => tbl.userLocalId.equals(user.localId))
+          ..where((tbl) => tbl.userLocalId.equalsNullable(user.localId))
           ..where((tbl) => tbl.uid.isIn(uids))
           ..where((tbl) => tbl.hasBody.equals(false)))
         .get();
@@ -309,6 +309,6 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
       rawBody: "",
     );
     final localId = await into(mail).insert(messages);
-    return messages.copyWith(localId: localId);
+    return messages.copyWith(localId: Value(localId));
   }
 }

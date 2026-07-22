@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:math';
 
 import 'package:aurora_mail/generated/l10n.dart';
@@ -17,7 +17,7 @@ import 'model/life_time.dart';
 
 class EncryptSetting extends StatefulWidget {
   final SelfDestructingBloc bloc;
-  final String contact;
+  final String? contact;
 
   EncryptSetting(this.bloc, this.contact);
 
@@ -31,14 +31,14 @@ class _EncryptSettingState extends BState<EncryptSetting>
   final scroll = ScrollController();
   final formKey = GlobalKey<FormState>();
   final toastKey = GlobalKey<ToastWidgetState>();
-  LifeTime lifeTime = LifeTime.values.first;
+  LifeTime? lifeTime = LifeTime.values.first;
   bool useSign = false;
-  bool isKeyBased = false;
+  bool? isKeyBased = false;
   bool obscure = false;
 
   @override
   void initState() {
-    widget.bloc.add(LoadKey(widget.contact));
+    widget.bloc.add(LoadKey(widget.contact!));
     super.initState();
   }
 
@@ -70,7 +70,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                             S
                                 .of(context)
                                 .hint_self_destructing_supports_plain_text_only,
-                            style: theme.textTheme.caption,
+                            style: theme!.textTheme.bodySmall,
                           ),
                           SizedBox(height: 20),
                           ContactWithKeyWidget(contact),
@@ -83,7 +83,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                                 : S
                                     .of(context)
                                     .hint_self_destructing_encrypt_with_not_key,
-                            style: theme.textTheme.caption,
+                            style: theme!.textTheme.bodySmall,
                           ),
                           SizedBox(height: 10),
                           DropdownButtonFormField<LifeTime>(
@@ -94,16 +94,16 @@ class _EncryptSettingState extends BState<EncryptSetting>
                             items: LifeTime.values.map((value) {
                               return DropdownMenuItem<LifeTime>(
                                 value: value,
-                                child: Text(value.toText(context)),
+                                child: Text(value.toText(context)!),
                               );
                             }).toList(),
                             selectedItemBuilder: (context) {
                               return LifeTime.values.map((value) {
-                                return Text(value.toText(context));
+                                return Text(value.toText(context)!);
                               }).toList();
                             },
                             isExpanded: true,
-                            onChanged: (LifeTime v) {
+                            onChanged: (LifeTime? v) {
                               lifeTime = v;
                               setState(() {});
                             },
@@ -113,7 +113,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                                 .of(context)
                                 .input_self_destructing_password_based_encryption),
                             value: false,
-                            onChanged: (bool value) {
+                            onChanged: (bool? value) {
                               isKeyBased = value;
                               useSign = false;
                               setState(() {});
@@ -128,22 +128,22 @@ class _EncryptSettingState extends BState<EncryptSetting>
                             groupValue: isKeyBased,
                             onChanged: !recipientHaveKey
                                 ? null
-                                : (bool value) {
+                                : (bool? value) {
                                     isKeyBased = value;
-                                    useSign = value && hasKey;
+                                    useSign = value! && hasKey;
                                     setState(() {});
                                   },
                           ),
                           SizedBox(height: 10),
                           Text(
-                            isKeyBased
+                            isKeyBased!
                                 ? S
                                     .of(context)
                                     .label_self_destructing_key_based_encryption_used
                                 : S
                                     .of(context)
                                     .label_self_destructing_password_based_encryption_used,
-                            style: theme.textTheme.caption,
+                            style: theme!.textTheme.bodySmall,
                           ),
                           SizedBox(height: 10),
                           SwitchListTile(
@@ -152,7 +152,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                                 .of(context)
                                 .input_self_destructing_add_digital_signature),
                             value: useSign,
-                            onChanged: hasKey && isKeyBased
+                            onChanged: hasKey && isKeyBased!
                                 ? (v) {
                                     useSign = !useSign;
                                     setState(() {});
@@ -191,7 +191,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                                 : S
                                     .of(context)
                                     .label_self_destructing_not_sign_data,
-                            style: theme.textTheme.caption,
+                            style: theme!.textTheme.bodySmall,
                           ),
                         ],
                       ),
@@ -239,7 +239,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
           }),
       listener: (BuildContext context, SelfDestructingState state) {
         if (state is ErrorState) {
-          toastKey.currentState.show(state.message.getString());
+          toastKey.currentState!.show(state.message.getString());
         } else if (state is Encrypted) {
           Navigator.pop(context, state);
         }
@@ -248,20 +248,20 @@ class _EncryptSettingState extends BState<EncryptSetting>
   }
 
   void create(ContactWithKey contact, ContactWithKey sender) {
-    if (!useSign || formKey.currentState.validate()) {
+    if (!useSign || formKey.currentState!.validate()) {
       final contactName = sender.contact.fullName?.isNotEmpty == true
-          ? sender.contact.fullName
-          : sender.contact.viewEmail;
+          ? sender.contact.fullName!
+          : sender.contact.viewEmail!;
       var dateTime = Instant.now();
 
       final now =
           dateTime.inZone(DateTimeZone.local).toString('MMM dd, yyyy HH:mm z') +
               DateTimeZone.local.getUtcOffset(dateTime).toString();
 
-      final passwordText = !isKeyBased && contact.key != null
+      final passwordText = !isKeyBased! && contact.key != null
           ? S.of(context).template_self_destructing_message_password('')
           : "";
-      final lifeTimeText = lifeTime.toText(context);
+      final lifeTimeText = lifeTime.toText(context)!;
 
       final viewBody = S.of(context).template_self_destructing_message(
           contactName, '', passwordText, lifeTimeText, now);
@@ -269,8 +269,8 @@ class _EncryptSettingState extends BState<EncryptSetting>
       final bloc = BlocProvider.of<SelfDestructingBloc>(context);
       bloc.add(
         EncryptEvent(
-          lifeTime,
-          isKeyBased,
+          lifeTime!,
+          isKeyBased!,
           useSign,
           passwordCtrl.text,
           contact,

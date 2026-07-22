@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
@@ -23,9 +23,9 @@ import 'package:theme/app_theme.dart';
 import 'backup_code_auth_route.dart';
 
 class BackupCodeAuthWidget extends StatefulWidget {
-  final BackupCodeAuthRouteArgs args;
+  final BackupCodeAuthRouteArgs? args;
 
-  const BackupCodeAuthWidget({Key key, this.args}) : super(key: key);
+  const BackupCodeAuthWidget({Key? key, this.args}) : super(key: key);
 
   @override
   _BackupCodeAuthWidgetState createState() => _BackupCodeAuthWidgetState();
@@ -46,7 +46,7 @@ class _BackupCodeAuthWidgetState extends BState<BackupCodeAuthWidget> {
   Widget build(BuildContext context) {
     return TwoFactorScene(
       logoHint: "",
-      isDialog: widget.args.isDialog,
+      isDialog: widget.args!.isDialog,
       button: [
         BlocListener<BackupCodeBloc, BackupCodeState>(
           bloc: bloc,
@@ -58,11 +58,11 @@ class _BackupCodeAuthWidgetState extends BState<BackupCodeAuthWidget> {
                 state.errorMsg,
               );
             } else if (state is CompleteState) {
-              widget.args.authBloc.add(UserLogIn(
+              widget.args!.authBloc.add(UserLogIn(
                 state.user,
                 null,
-                widget.args.state.email,
-                widget.args.state.password,
+                widget.args!.state.email,
+                widget.args!.state.password,
               ));
             }
           },
@@ -120,9 +120,9 @@ class _BackupCodeAuthWidgetState extends BState<BackupCodeAuthWidget> {
                               SelectTwoFactorRoute.name,
                               ModalRoute.withName(LoginRoute.name),
                               arguments: SelectTwoFactorRouteArgs(
-                                  widget.args.isDialog,
-                                  widget.args.authBloc,
-                                  widget.args.state),
+                                  widget.args!.isDialog,
+                                  widget.args!.authBloc,
+                                  widget.args!.state),
                             );
                           },
                         ),
@@ -145,8 +145,8 @@ class _BackupCodeAuthWidgetState extends BState<BackupCodeAuthWidget> {
   }
 
   _login() {
-    if (formKey.currentState.validate()) {
-      final args = widget.args;
+    if (formKey.currentState!.validate()) {
+      final args = widget.args!;
       bloc.add(
         Verify(
           pinCtrl.text,

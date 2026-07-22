@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 
 import 'package:aurora_mail/database/app_database.dart';
@@ -49,7 +49,7 @@ class SelfDestructingBloc
 
   Future<ContactWithKey> _loadContacts(IdentityView identityView) async {
     final email = identityView.email;
-    final name = identityView.name.replaceAll("\"", "");
+    final name = identityView.name!.replaceAll("\"", "");
     final contact = Contact(
       viewEmail: email,
       fullName: name,
@@ -70,7 +70,7 @@ class SelfDestructingBloc
       pgpPublicKey: null,
     );
 
-    final key = await _cryptoStorage.getPgpKey(email, false);
+    final key = (await _cryptoStorage.getPgpKey(email, false))!;
 
     return ContactWithKey(contact, key);
   }
@@ -78,7 +78,7 @@ class SelfDestructingBloc
   Stream<SelfDestructingState> _loadKey(LoadKey event) async* {
     final identityView = IdentityView.fromString(event.contact);
     final contacts = await _loadContacts(identityView);
-    final key = await _cryptoStorage.getPgpKey(aliasOrIdentity.mail, true);
+    final key = (await _cryptoStorage.getPgpKey(aliasOrIdentity.mail!, true))!;
     final sender = Contact(
       viewEmail: aliasOrIdentity.mail,
       fullName: aliasOrIdentity.name,
@@ -123,7 +123,7 @@ class SelfDestructingBloc
       try {
         encryptBody = await _pgpEncrypt(
           body,
-          [event.contact.contact.viewEmail],
+          [event.contact.contact.viewEmail!],
           event.useSign ? event.password : null,
         );
       } catch (e) {
@@ -136,9 +136,9 @@ class SelfDestructingBloc
       link = await pgpApi.createSelfDestructLink(
         encryptSubject,
         encryptBody,
-        event.contact.contact.viewEmail,
+        event.contact.contact.viewEmail!,
         event.isKeyBased,
-        event.lifeTime.toHours(),
+        event.lifeTime.toHours()!,
       );
     } catch (e) {
       if (e is WebMailApiError) {
@@ -155,7 +155,7 @@ class SelfDestructingBloc
         message = message.replaceFirst("{password}", password);
         message = await _pgpEncrypt(
           message,
-          [event.contact.contact.viewEmail],
+          [event.contact.contact.viewEmail!],
           event.useSign ? event.password : null,
         );
       } catch (e) {
@@ -176,9 +176,9 @@ class SelfDestructingBloc
   }
 
   Future<String> _pgpEncrypt(
-      String text, List<String> recipients, String password) {
+      String text, List<String> recipients, String? password) {
     return _pgpWorker
-        .encryptDecrypt(aliasOrIdentity.mail, recipients)
+        .encryptDecrypt(aliasOrIdentity.mail!, recipients)
         .encrypt(text, password);
   }
 }

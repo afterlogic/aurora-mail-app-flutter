@@ -21,7 +21,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
   Stream<NotificationsState> _initToken() async* {
     final state = await PushNotificationsManager.instance.getTokenStatus();
-    yield InitState(state);
+    yield InitState(state ?? false);
   }
 
   Stream<NotificationsState> _sendToken() async* {

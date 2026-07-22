@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,19 +6,19 @@ import 'package:flutter/services.dart';
 class AuthInput extends StatefulWidget {
   final TextEditingController controller;
   final String label;
-  final TextInputType keyboardType;
+  final TextInputType? keyboardType;
   final bool isEnabled;
   final bool isPassword;
-  final Color visibilityToggleColor;
-  final String Function(String) validator;
+  final Color? visibilityToggleColor;
+  final String? Function(String?)? validator;
   final bool autocorrect;
   final bool enableSuggestions;
-  final List<TextInputFormatter> inputFormatters;
+  final List<TextInputFormatter>? inputFormatters;
 
   const AuthInput({
-    Key key,
-    @required this.controller,
-    @required this.label,
+    Key? key,
+    required this.controller,
+    required this.label,
     this.isEnabled = true,
     this.isPassword = false,
     this.keyboardType,

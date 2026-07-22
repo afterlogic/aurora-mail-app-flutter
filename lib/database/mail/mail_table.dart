@@ -275,10 +275,10 @@ class Mail extends Table {
         fromInJson: _encode(raw["From"]),
         ccInJson: _encode(raw["Cc"]),
         bccInJson: _encode(raw["Bcc"]),
-        toForSearch: _getEmailsForSearch(raw["To"] as Map),
-        fromForSearch: _getEmailsForSearch(raw["From"] as Map),
-        ccForSearch: _getEmailsForSearch(raw["Cc"] as Map),
-        bccForSearch: _getEmailsForSearch(raw["Bcc"] as Map),
+        toForSearch: _getEmailsForSearch(raw["To"] as Map?),
+        fromForSearch: _getEmailsForSearch(raw["From"] as Map?),
+        ccForSearch: _getEmailsForSearch(raw["Cc"] as Map?),
+        bccForSearch: _getEmailsForSearch(raw["Bcc"] as Map?),
         senderInJson: _encode(raw["Sender"]),
         replyToInJson: _encode(raw["ReplyTo"]),
         hasAttachments: raw["HasAttachments"] as bool,
@@ -317,7 +317,7 @@ class Mail extends Table {
             _encode(raw["FoundedContentLocationUrls"]),
         attachmentsInJson: _encode(raw["Attachments"]),
         attachmentsForSearch:
-            _getAttachmentsForSearch(raw["Attachments"] as Map),
+            _getAttachmentsForSearch(raw["Attachments"] as Map?),
         customInJson: _encode(raw["Custom"]),
         isHtml: (raw["Html"] as String?)?.isNotEmpty == true,
         hasBody: true,
@@ -365,9 +365,7 @@ class Mail extends Table {
       } else {
         result.add(email);
       }
-    }) as Iterable;
-
-    result.toSet();
+    });
 
     return result.join(SEARCH_SEPARATOR);
   }

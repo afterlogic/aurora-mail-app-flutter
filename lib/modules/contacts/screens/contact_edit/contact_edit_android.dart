@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/generated/l10n.dart';
@@ -27,8 +27,8 @@ import 'components/key_input.dart';
 import 'dialog/confirm_edit_dialog.dart';
 
 class ContactEditAndroid extends StatefulWidget {
-  final Contact contact;
-  final PgpSettingsBloc pgpSettingsBloc;
+  final Contact? contact;
+  final PgpSettingsBloc? pgpSettingsBloc;
 
   ContactEditAndroid(
     this.pgpSettingsBloc, {
@@ -41,12 +41,12 @@ class ContactEditAndroid extends StatefulWidget {
 
 class _ContactEditAndroidState extends BState<ContactEditAndroid>
     with NotSavedChangesMixin {
-  ContactsBloc _bloc;
+  late ContactsBloc _bloc;
   bool _showAllFields = false;
-  int _primaryEmail = 0;
-  int _primaryPhone = 0;
-  int _primaryAddress = 0;
-  PgpKey pgpKey;
+  int? _primaryEmail = 0;
+  int? _primaryPhone = 0;
+  int? _primaryAddress = 0;
+  PgpKey? pgpKey;
   final _fullName = TextEditingController();
   final _firstName = TextEditingController();
   final _lastName = TextEditingController();
@@ -80,12 +80,12 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
   final _notes = TextEditingController();
   bool autoSign = false;
   bool autoEncrypt = false;
-  int _birthDay = 0;
-  int _birthMonth = 0;
-  int _birthYear = 0;
-  List<String> _selectedGroupsUuids;
-  PgpSettingsBloc pgpSettingsBloc;
-  String currentSelectedStorage;
+  int? _birthDay = 0;
+  int? _birthMonth = 0;
+  int? _birthYear = 0;
+  List<String?>? _selectedGroupsUuids;
+  PgpSettingsBloc? pgpSettingsBloc;
+  String? currentSelectedStorage;
 
   @override
   void initState() {
@@ -94,8 +94,8 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
     _bloc = BlocProvider.of<ContactsBloc>(context);
     if (BuildProperty.cryptoEnable) {
       if (widget.contact?.pgpPublicKey != null) {
-        widget.pgpSettingsBloc
-            .parseKey(widget.contact.pgpPublicKey)
+        widget.pgpSettingsBloc!
+            .parseKey(widget.contact!.pgpPublicKey!)
             .then((value) {
           if (value.isNotEmpty) {
             pgpKey = value.first;
@@ -112,10 +112,10 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
     _selectedGroupsUuids = [];
 
     if (widget.contact != null) {
-      _initContact(widget.contact);
-      _selectedGroupsUuids = widget.contact.groupUUIDs.toList();
+      _initContact(widget.contact!);
+      _selectedGroupsUuids = widget.contact!.groupUUIDs!.toList();
     } else {
-      if (selectedGroup != null) _selectedGroupsUuids.add(selectedGroup);
+      if (selectedGroup != null) _selectedGroupsUuids!.add(selectedGroup);
     }
     _initTextUpdatingCrutch();
   }
@@ -124,37 +124,37 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
     _primaryEmail = c.primaryEmail;
     _primaryPhone = c.primaryPhone;
     _primaryAddress = c.primaryAddress;
-    _fullName.text = c.fullName;
-    _firstName.text = c.firstName;
-    _lastName.text = c.lastName;
-    _nickName.text = c.nickName;
-    _skype.text = c.skype;
-    _facebook.text = c.facebook;
-    _personalEmail.text = c.personalEmail;
-    _personalAddress.text = c.personalAddress;
-    _personalCity.text = c.personalCity;
-    _personalState.text = c.personalState;
-    _personalZip.text = c.personalZip;
-    _personalCountry.text = c.personalCountry;
-    _personalWeb.text = c.personalWeb;
-    _personalFax.text = c.personalFax;
-    _personalPhone.text = c.personalPhone;
-    _personalMobile.text = c.personalMobile;
-    _businessEmail.text = c.businessEmail;
-    _businessCompany.text = c.businessCompany;
-    _businessAddress.text = c.businessAddress;
-    _businessCity.text = c.businessCity;
-    _businessState.text = c.businessState;
-    _businessZip.text = c.businessZip;
-    _businessCountry.text = c.businessCountry;
-    _businessJobTitle.text = c.businessJobTitle;
-    _businessDepartment.text = c.businessDepartment;
-    _businessOffice.text = c.businessOffice;
-    _businessPhone.text = c.businessPhone;
-    _businessFax.text = c.businessFax;
-    _businessWeb.text = c.businessWeb;
-    _otherEmail.text = c.otherEmail;
-    _notes.text = c.notes;
+    _fullName.text = c.fullName!;
+    _firstName.text = c.firstName!;
+    _lastName.text = c.lastName!;
+    _nickName.text = c.nickName!;
+    _skype.text = c.skype!;
+    _facebook.text = c.facebook!;
+    _personalEmail.text = c.personalEmail!;
+    _personalAddress.text = c.personalAddress!;
+    _personalCity.text = c.personalCity!;
+    _personalState.text = c.personalState!;
+    _personalZip.text = c.personalZip!;
+    _personalCountry.text = c.personalCountry!;
+    _personalWeb.text = c.personalWeb!;
+    _personalFax.text = c.personalFax!;
+    _personalPhone.text = c.personalPhone!;
+    _personalMobile.text = c.personalMobile!;
+    _businessEmail.text = c.businessEmail!;
+    _businessCompany.text = c.businessCompany!;
+    _businessAddress.text = c.businessAddress!;
+    _businessCity.text = c.businessCity!;
+    _businessState.text = c.businessState!;
+    _businessZip.text = c.businessZip!;
+    _businessCountry.text = c.businessCountry!;
+    _businessJobTitle.text = c.businessJobTitle!;
+    _businessDepartment.text = c.businessDepartment!;
+    _businessOffice.text = c.businessOffice!;
+    _businessPhone.text = c.businessPhone!;
+    _businessFax.text = c.businessFax!;
+    _businessWeb.text = c.businessWeb!;
+    _otherEmail.text = c.otherEmail!;
+    _notes.text = c.notes!;
     _birthDay = c.birthDay;
     _birthMonth = c.birthMonth;
     _birthYear = c.birthYear;
@@ -188,12 +188,12 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
         }
 
         FocusScope.of(context).unfocus();
-        FreeKeyAction freeKey;
+        FreeKeyAction? freeKey;
 
         final contact = _getDataFromInputs();
         if (widget.contact?.pgpPublicKey == null &&
             pgpKey != null &&
-            pgpKey.mail != contact.viewEmail) {
+            pgpKey!.mail != contact.viewEmail) {
           return showSnack(
             context: context,
             scaffoldState: Scaffold.of(context),
@@ -201,7 +201,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
           );
         } else if (widget.contact != null &&
             contact.pgpPublicKey != null &&
-            pgpKey.mail != contact.viewEmail) {
+            pgpKey!.mail != contact.viewEmail) {
           final confirm = await _confirm();
 
           if (confirm == null) {
@@ -239,7 +239,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
     return key1 != key2;
   }
 
-  Future<FreeKeyAction> _confirm() {
+  Future<FreeKeyAction?> _confirm() {
     return dialog(
       context: context,
       builder: (_) {
@@ -262,10 +262,10 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
     return Contact(
       entityId: widget.contact?.entityId ?? null,
       uuid: widget.contact?.uuid ?? null,
-      userLocalId: widget.contact?.userLocalId ?? user.localId,
+      userLocalId: widget.contact?.userLocalId ?? user!.localId,
       uuidPlusStorage: widget.contact?.uuidPlusStorage ?? null,
       parentUuid: widget.contact?.parentUuid ?? null,
-      idUser: widget.contact?.idUser ?? user.serverId,
+      idUser: widget.contact?.idUser ?? user!.serverId,
       idTenant: widget.contact?.idTenant ?? null,
       storage: widget.contact?.storage ?? currentSelectedStorage,
       fullName: _fullName.text,
@@ -339,7 +339,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
           Expanded(
             child: BlocListener<ContactsBloc, ContactsState>(
               listener: (context, state) {
-                pgpSettingsBloc.add(LoadKeys());
+                pgpSettingsBloc!.add(LoadKeys());
               },
               child: Center(
                 child: ConstrainedBox(
@@ -482,7 +482,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                                   pgpKey,
                                   (key) {
                                     _bloc.add(UpdateContactPgpKey(
-                                        contact: widget.contact.copyWith(
+                                        contact: widget.contact!.copyWith(
                                             pgpPublicKey: () => key?.key)));
                                     setState(() {
                                       pgpKey = key;
@@ -497,32 +497,34 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                                           S
                                               .of(context)
                                               .hint_auto_encrypt_messages,
-                                          theme.textTheme.subtitle1),
+                                          theme!.textTheme.titleMedium),
                                       ContactCheckBox(
                                         S.of(context).label_pgp_sign,
                                         autoSign,
-                                        (v) => setState(() => autoSign = v),
+                                        (v) =>
+                                            setState(() => autoSign = v ?? false),
                                       ),
                                       ContactCheckBox(
                                         S.of(context).label_pgp_encrypt,
                                         autoEncrypt,
-                                        (v) => setState(() => autoEncrypt = v),
+                                        (v) => setState(
+                                            () => autoEncrypt = v ?? false),
                                       ),
                                     ],
                                   ),
                               ],
                               ContactTile(
                                   S.of(context).contacts_view_section_groups),
-                              ..._bloc.state.groups.map((g) {
+                              ..._bloc.state.groups!.map((g) {
                                 return CheckboxListTile(
-                                  title: Text("# " + g.name),
-                                  value: _selectedGroupsUuids.contains(g.uuid),
+                                  title: Text("# " + g.name!),
+                                  value: _selectedGroupsUuids!.contains(g.uuid),
                                   onChanged: (v) {
                                     setState(() {
-                                      if (v)
-                                        _selectedGroupsUuids.add(g.uuid);
+                                      if (v!)
+                                        _selectedGroupsUuids!.add(g.uuid);
                                       else
-                                        _selectedGroupsUuids
+                                        _selectedGroupsUuids!
                                             .removeWhere((id) => id == g.uuid);
                                     });
                                   },

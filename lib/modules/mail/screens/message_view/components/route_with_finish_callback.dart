@@ -1,14 +1,14 @@
-//@dart=2.9
+
 import 'package:flutter/cupertino.dart';
 
 class RouteWithFinishCallback extends CupertinoPageRoute {
   RouteAnimationListener routeAnimationListener;
 
   RouteWithFinishCallback({
-    @required WidgetBuilder builder,
-    @required this.routeAnimationListener,
-    String title,
-    RouteSettings settings,
+    required WidgetBuilder builder,
+    required this.routeAnimationListener,
+    String? title,
+    RouteSettings? settings,
     bool maintainState = true,
     bool fullscreenDialog = false,
   }) : super(
@@ -46,5 +46,5 @@ class RouteWithFinishCallback extends CupertinoPageRoute {
 
 class RouteAnimationListener {
   bool isCompleted = false;
-  Function onComplete;
+  Function? onComplete;
 }

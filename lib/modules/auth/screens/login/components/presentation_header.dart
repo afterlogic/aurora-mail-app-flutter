@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:flutter/material.dart';
@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'mail_logo.dart';
 
 class PresentationHeader extends StatelessWidget {
-  final String message;
-  final String subTitle;
+  final String? message;
+  final String? subTitle;
 
-  const PresentationHeader({Key key, this.message, this.subTitle})
+  const PresentationHeader({Key? key, this.message, this.subTitle})
       : super(key: key);
 
   @override
@@ -23,13 +23,13 @@ class PresentationHeader extends StatelessWidget {
           SizedBox(height: 26.0),
           Text(
             BuildProperty.appName,
-            style: theme.textTheme.headline4,
+            style: theme.textTheme.headlineMedium,
           ),
           if (subTitle != null) ...[
             SizedBox(height: 12.0),
             Text(
-              subTitle,
-              style: theme.textTheme.subtitle1,
+              subTitle!,
+              style: theme.textTheme.titleMedium,
             ),
           ],
           SizedBox(height: 12.0),

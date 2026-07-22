@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
@@ -39,7 +39,7 @@ class DownloadFinished extends MessageViewState {
 
 class MessagesViewError extends MessageViewState with AlwaysNonEqualObject {
   final ErrorToShow errorMsg;
-  final Map<String, String> arg;
+  final Map<String, String>? arg;
 
   MessagesViewError(this.errorMsg, [this.arg]);
 
@@ -68,12 +68,12 @@ class DecryptComplete extends MessageViewState {
 }
 
 class FolderTypeState extends MessageViewState {
-  final FolderType type;
+  final FolderType? type;
 
   FolderTypeState(this.type);
 
   @override
-  List<Object> get props => [type];
+  List<Object?> get props => [type];
 }
 
 class CheckedSafety extends MessageViewState {

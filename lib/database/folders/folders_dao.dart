@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/models/folder.dart';
 import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
@@ -12,27 +12,27 @@ part 'folders_dao.g.dart';
 class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
   FoldersDao(AppDatabase db) : super(db);
 
-  Future<List<LocalFolder>> getAllFolders(int accountLocalId) {
+  Future<List<LocalFolder>> getAllFolders(int? accountLocalId) {
     return (select(folders)
-          ..where((folder) => folder.accountLocalId.equals(accountLocalId)))
+          ..where((folder) => folder.accountLocalId.equalsNullable(accountLocalId)))
         .get();
   }
 
-  Future<List<LocalFolder>> getByType(List<int> type, int accountLocalId) {
+  Future<List<LocalFolder>> getByType(List<int?> type, int? accountLocalId) {
     return (select(folders)
-          ..where((folder) => folder.accountLocalId.equals(accountLocalId))
-          ..where((folder) => folder.type.isIn(type)))
+          ..where((folder) => folder.accountLocalId.equalsNullable(accountLocalId))
+          ..where((folder) => folder.type.isIn(type.whereType<int>())))
         .get();
   }
 
-  Future<Folder> getFolderByGuId(String guid) async {
+  Future<Folder?> getFolderByGuId(String guid) async {
     final foundFolders = await (select(folders)
           ..where((folder) => folder.guid.equals(guid)))
         .get();
 
     return foundFolders.isEmpty
         ? null
-        : Folder.getFoldersObjectsFromDb(foundFolders)[0];
+        : Folder.getFoldersObjectsFromDb(foundFolders)![0];
   }
 
 //  Stream<List<LocalFolder>> watchAllFolders(int accountLocalId) {
@@ -52,7 +52,7 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
         .write(foldersCompanion);
   }
 
-  Future<int> deleteFolders([List<LocalFolder> foldersToDelete]) async {
+  Future<int> deleteFolders([List<LocalFolder>? foldersToDelete]) async {
     if (foldersToDelete == null) {
       return delete(folders).go();
     } else {
@@ -62,15 +62,15 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
     }
   }
 
-  Future<int> deleteFoldersOfUser(int userLocalId) async {
-    return (delete(folders)..where((f) => f.userLocalId.equals(userLocalId)))
+  Future<int> deleteFoldersOfUser(int? userLocalId) async {
+    return (delete(folders)..where((f) => f.userLocalId.equalsNullable(userLocalId)))
         .go();
   }
 
-  Future<LocalFolder> getByName(String name, int accountLocalId) async {
+  Future<LocalFolder> getByName(String? name, int? accountLocalId) async {
     return (select(folders)
-          ..where((f) => f.accountLocalId.equals(accountLocalId))
-          ..where((folder) => folder.fullNameRaw.equals(name)))
+          ..where((f) => f.accountLocalId.equalsNullable(accountLocalId))
+          ..where((folder) => folder.fullNameRaw.equalsNullable(name)))
         .getSingle();
   }
 

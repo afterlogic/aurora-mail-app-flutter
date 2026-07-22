@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -37,7 +37,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'message_headers.dart';
 
 class MessageViewAndroid extends StatefulWidget {
-  final Message message;
+  final Message? message;
   final RouteAnimationListener routeAnimationListener;
 
   const MessageViewAndroid(this.message, this.routeAnimationListener);
@@ -49,12 +49,12 @@ class MessageViewAndroid extends StatefulWidget {
 class _MessageViewAndroidState extends BState<MessageViewAndroid>
     with TickerProviderStateMixin {
   final webViewKey = GlobalKey<MessageWebViewState>();
-  PgpSettingsBloc pgpBloc;
-  ContactsBloc contactsBloc;
-  MessageViewBloc _messageViewBloc;
-  String decryptedText;
+  PgpSettingsBloc? pgpBloc;
+  ContactsBloc? contactsBloc;
+  MessageViewBloc? _messageViewBloc;
+  String? decryptedText;
   bool animationFinished = false;
-  Timer _setSeenTimer;
+  Timer? _setSeenTimer;
 
   @override
   void initState() {
@@ -80,20 +80,20 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     final authBloc = BlocProvider.of<AuthBloc>(context);
 
     _messageViewBloc = MessageViewBloc(
-      user: authBloc.currentUser,
+      user: authBloc.currentUser!,
       account: BlocProvider.of<AuthBloc>(context).currentAccount,
     );
     if (BuildProperty.cryptoEnable) {
-      _messageViewBloc.add(CheckEncrypt(widget.message.rawBody));
+      _messageViewBloc!.add(CheckEncrypt(widget.message!.rawBody!));
     }
     _startSetSeenTimer(context);
-    _messageViewBloc.add(GetFolderType(widget.message.folder));
+    _messageViewBloc!.add(GetFolderType(widget.message!.folder));
   }
 
   @override
   void dispose() {
     super.dispose();
-    _messageViewBloc.close();
+    _messageViewBloc!.close();
     _setSeenTimer?.cancel();
   }
 
@@ -101,7 +101,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     _setSeenTimer?.cancel();
     _setSeenTimer = null;
 
-    final flagsString = widget.message.flagsInJson;
+    final flagsString = widget.message!.flagsInJson;
     final flags = json.decode(flagsString) as List;
     if (!flags.contains("\\seen")) {
       _setSeenTimer = new Timer(
@@ -114,7 +114,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
 
   void _onAppBarActionSelected(MailViewAppBarAction action) async {
     // ignore: close_sinks
-    final showImage = webViewKey.currentState.showImages ?? false;
+    final showImage = webViewKey.currentState!.showImages ?? false;
     final mailBloc = BlocProvider.of<MailBloc>(context);
     final contactsBloc = BlocProvider.of<ContactsBloc>(context);
     final msg = widget.message;
@@ -123,7 +123,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
         final args = new ComposeScreenArgs(
           mailBloc: mailBloc,
           contactsBloc: contactsBloc,
-          composeAction: Reply(msg, showImage),
+          composeAction: Reply(msg!, showImage),
         );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
@@ -131,7 +131,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
         final args = new ComposeScreenArgs(
           mailBloc: mailBloc,
           contactsBloc: contactsBloc,
-          composeAction: ReplyToAll(msg, showImage),
+          composeAction: ReplyToAll(msg!, showImage),
         );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
@@ -139,7 +139,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
         final args = new ComposeScreenArgs(
           mailBloc: mailBloc,
           contactsBloc: contactsBloc,
-          composeAction: Forward(msg, showImage),
+          composeAction: Forward(msg!, showImage),
         );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
@@ -148,7 +148,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
         final args = new ComposeScreenArgs(
           mailBloc: mailBloc,
           contactsBloc: contactsBloc,
-          composeAction: Resend(msg, showImage),
+          composeAction: Resend(msg!, showImage),
         );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
@@ -181,7 +181,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
           context,
           MessageHeadersRoute.name,
           arguments: MessageHeadersRouteArg(
-            widget.message.headers,
+            widget.message!.headers!,
           ),
         );
         break;
@@ -189,7 +189,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
         final args = new ComposeScreenArgs(
           mailBloc: mailBloc,
           contactsBloc: contactsBloc,
-          composeAction: ForwardAsAttachment(msg),
+          composeAction: ForwardAsAttachment(msg!),
         );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
@@ -197,7 +197,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
   }
 
   Future<void> _decrypt(EncryptType type) async {
-    String pass;
+    late String pass;
     final message = widget.message;
     if (type == EncryptType.Encrypt) {
       final result = await showDialog(
@@ -209,11 +209,11 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
       }
     }
 
-    _messageViewBloc.add(DecryptBody(
+    _messageViewBloc!.add(DecryptBody(
       type,
       pass,
-      jsonDecode(message.fromInJson)["@Collection"][0]["Email"].toString(),
-      message.rawBody,
+      jsonDecode(message!.fromInJson!)["@Collection"][0]["Email"].toString(),
+      message.rawBody!,
     ));
   }
 
@@ -235,7 +235,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
   }
 
   void _showError(ErrorToShow error, BuildContext context,
-      {bool isError = false, Map<String, String> arg}) {
+      {bool isError = false, Map<String, String>? arg}) {
     showErrorSnack(
       context: context,
       scaffoldState: Scaffold.of(context),
@@ -256,13 +256,13 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
 
   @override
   Widget build(BuildContext context) {
-    final message = widget.message;
+    final message = widget.message!;
     final attachments = MailAttachment.fromJsonString(
       message.attachmentsInJson,
     );
 
     return BlocProvider<MessageViewBloc>.value(
-      value: _messageViewBloc,
+      value: _messageViewBloc!,
       child: Scaffold(
         appBar: MailViewAppBar(
           _onAppBarActionSelected,
@@ -276,7 +276,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
                   Expanded(
                     child: BlocListener(
                       bloc: _messageViewBloc,
-                      listener: (context, state) {
+                      listener: (context, dynamic state) {
                         if (state is DecryptComplete) {
                           setState(() {
                             decryptedText = MailUtils.plainToHtml(state.text);

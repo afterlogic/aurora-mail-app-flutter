@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:intl/intl.dart';
 
 const searchUtil = const _SearchUtil();
@@ -7,7 +7,7 @@ final dateFormat = DateFormat('yyyy.MM.dd');
 class _SearchUtil {
   const _SearchUtil();
 
-  List<SearchParams> searchParams(String text) {
+  List<SearchParams> searchParams(String? text) {
     if (text == null) {
       return [];
     }
@@ -67,7 +67,7 @@ class _SearchUtil {
     }
   }
 
-  String wrapDate(DateTime since, DateTime till) {
+  String wrapDate(DateTime? since, DateTime? till) {
     return _patternToText(SearchPattern.Date) +
         ":${since == null ? "" : dateFormat.format(since)}/${till == null ? "" : dateFormat.format(till)}";
   }
@@ -77,7 +77,7 @@ class _SearchUtil {
         ":${flag.map((item) => _flagToText(item)).join(",")}";
   }
 
-  SearchPattern _selectPattern(String textPattern) {
+  SearchPattern _selectPattern(String? textPattern) {
     switch (textPattern) {
       case _email:
         return SearchPattern.Email;
@@ -124,7 +124,7 @@ class _SearchUtil {
     return "invalid";
   }
 
-  SearchFlag _selectFlag(String textPattern) {
+  SearchFlag? _selectFlag(String textPattern) {
     switch (textPattern) {
       case _attachment:
         return SearchFlag.Attachment;
@@ -141,7 +141,7 @@ class _SearchUtil {
     return "invalid";
   }
 
-  DateTime tryParseDate(String date) {
+  DateTime? tryParseDate(String date) {
     try {
       return dateFormat.parse(date);
     } catch (e) {
@@ -167,15 +167,15 @@ class SearchParams {
 }
 
 class HasSearchParams extends SearchParams {
-  final Set<SearchFlag> flags;
+  final Set<SearchFlag?> flags;
 
   HasSearchParams(String value, SearchPattern pattern, this.flags)
       : super(value, pattern);
 }
 
 class DateSearchParams extends SearchParams {
-  final DateTime since;
-  final DateTime till;
+  final DateTime? since;
+  final DateTime? till;
 
   DateSearchParams(String value, SearchPattern pattern, this.since, this.till)
       : super(value, pattern);

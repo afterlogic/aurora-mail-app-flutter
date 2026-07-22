@@ -16,7 +16,7 @@ class OpenFromDrafts implements ComposeAction {
 }
 
 class OpenFromNotes implements ComposeAction {
-  final Message message;
+  final Message? message;
   final Folder notesFolder;
 
   const OpenFromNotes(this.message, this.notesFolder);

@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
@@ -19,9 +19,9 @@ class DebugSetting extends StatefulWidget {
 
 class _DebugSettingState extends BState<DebugSetting> {
   final _storage = DebugLocalStorage();
-  bool _messageCounter;
-  bool _backgroundRecord;
-  bool _showResponseBody;
+  bool? _messageCounter;
+  bool? _backgroundRecord;
+  bool? _showResponseBody;
 
   @override
   void initState() {
@@ -69,9 +69,9 @@ class _DebugSettingState extends BState<DebugSetting> {
                         value: _backgroundRecord,
                         title:
                             Text(S.of(context).label_record_log_in_background),
-                        onChanged: (bool value) {
+                        onChanged: (bool? value) {
                           _backgroundRecord = value;
-                          _storage.setBackgroundRecord(value);
+                          _storage.setBackgroundRecord(value!);
                           setState(() {});
                         },
                       ),
@@ -80,19 +80,19 @@ class _DebugSettingState extends BState<DebugSetting> {
                         title: Text(S
                             .of(context)
                             .label_enable_uploaded_message_counter),
-                        onChanged: (bool value) {
+                        onChanged: (bool? value) {
                           _messageCounter = value;
-                          _storage.setEnableCounter(value);
+                          _storage.setEnableCounter(value!);
                           setState(() {});
                         },
                       ),
                       CheckboxListTile(
                         value: _showResponseBody,
                         title: Text('Show response body'),
-                        onChanged: (bool value) {
+                        onChanged: (bool? value) {
                           setState(() {
                             _showResponseBody = value;
-                            _storage.setShowResponseBody(value);
+                            _storage.setShowResponseBody(value!);
                           });
                         },
                       ),
@@ -106,7 +106,7 @@ class _DebugSettingState extends BState<DebugSetting> {
                         child: LoggerSettingWidget(
                           LoggerSettingArg(
                               BlocProvider.of<AuthBloc>(context)
-                                  .currentUser
+                                  .currentUser!
                                   .hostname,
                               S.of(context).label_show_debug_view,
                               S.of(context).btn_log_delete_all,

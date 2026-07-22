@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/models/app_data.dart';
@@ -25,23 +25,23 @@ class SettingsMethods {
     this.cryptoStorage,
   );
 
-  Future<int> get currentUserId {
+  Future<int?> get currentUserId {
     return _authLocal.getSelectedUserLocalId();
   }
 
-  Future<User> setFrequency(Freq freq) async {
-    final localId = await currentUserId;
+  Future<User?> setFrequency(Freq freq) async {
+    final localId = (await currentUserId)!;
     await _usersDao.updateUser(
         localId,
         new UsersCompanion(
-          syncFreqInSeconds: Value(SyncFreq.freqToDuration(freq).inSeconds),
+          syncFreqInSeconds: Value(SyncFreq.freqToDuration(freq)!.inSeconds),
         ));
 
     return _usersDao.getUserByLocalId(localId);
   }
 
-  Future<User> setPeriod(Period period) async {
-    final localId = await currentUserId;
+  Future<User?> setPeriod(Period period) async {
+    final localId = (await currentUserId)!;
     await _usersDao.updateUser(
         localId,
         new UsersCompanion(
@@ -51,7 +51,7 @@ class SettingsMethods {
     return _usersDao.getUserByLocalId(localId);
   }
 
-  Future<void> setDarkTheme(bool darkThemeEnabled) {
+  Future<void> setDarkTheme(bool? darkThemeEnabled) {
     return _local.setIsDarkTheme(darkThemeEnabled);
   }
 
@@ -59,7 +59,7 @@ class SettingsMethods {
     return _local.setAppData(data);
   }
 
-  Future<AppData> getAppData() {
+  Future<AppData?> getAppData() {
     return _local.getAppData();
   }
 
@@ -71,11 +71,11 @@ class SettingsMethods {
     return _local.getSettingsSharedPrefs();
   }
 
-  Future setLanguage(Language language) async {
+  Future setLanguage(Language? language) async {
     await _local.setLanguage(language?.toNullableJson());
   }
 
-  Future<String> getLanguage() async {
+  Future<String?> getLanguage() async {
     return _local.getLanguage();
   }
 

@@ -1,17 +1,17 @@
-//@dart=2.9
+
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 
 class ThemeSelectionDialog extends StatelessWidget {
-  final bool isTheme;
-  final Function(bool) onItemSelected;
+  final bool? isTheme;
+  final Function(bool?) onItemSelected;
 
   const ThemeSelectionDialog(this.onItemSelected, this.isTheme);
 
   static void show(
-      BuildContext context, bool selected, Function(bool) onItemSelected) {
+      BuildContext context, bool? selected, Function(bool?) onItemSelected) {
     dialog(
         context: context,
         builder: (_) => ThemeSelectionDialog(onItemSelected, selected));
@@ -29,7 +29,7 @@ class ThemeSelectionDialog extends StatelessWidget {
         width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
         child: AMDialogList(
           children: [
-            RadioListTile<bool>(
+            RadioListTile<bool?>(
               activeColor: theme.primaryColor,
               title: Text(S.of(context).settings_dark_theme_system),
               value: null,

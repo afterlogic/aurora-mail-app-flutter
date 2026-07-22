@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
@@ -11,9 +11,10 @@ import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
+import 'package:collection/collection.dart' show IterableNullableExtension;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:theme/app_color.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -38,7 +39,7 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
         final delete = await ConfirmationDialog.show(
           context,
           S.of(context).contacts_group_delete_title,
-          S.of(context).contacts_group_delete_desc_with_name(widget.group.name),
+          S.of(context).contacts_group_delete_desc_with_name(widget.group.name!),
           S.of(context).btn_delete,
           destructibleAction: true,
         );
@@ -83,7 +84,7 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
         icon: MdiIcons.accountGroup,
         iconName: 'group',
         label: S.of(context).contacts_view_section_group_name,
-        v: g.name,
+        v: g.name!,
       ),
       _buildInfoItem(
         icon: Icons.alternate_email,
@@ -169,7 +170,7 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
                   maxWidth: LayoutConfig.formWidth,
                 ),
                 child: ListView(
-                  children: _mainInfo,
+                  children: _mainInfo as List<Widget>,
                 ),
               ),
             ),
@@ -179,17 +180,17 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
     );
   }
 
-  List<Widget> _buildInfos(List<Widget> nullableWidgets) {
-    return nullableWidgets.where((w) => w != null).toList();
+  List<Widget?> _buildInfos(List<Widget?> nullableWidgets) {
+    return nullableWidgets.whereNotNull().toList();
   }
 
-  Widget _buildInfoItem({
-    @required IconData icon,
-    @required String label,
-    @required String v,
-    String iconName,
+  Widget? _buildInfoItem({
+    required IconData icon,
+    required String label,
+    required String v,
+    String? iconName,
     InfoAction action = InfoAction.none,
-    void Function() cb,
+    void Function()? cb,
   }) {
     if (v.isNotEmpty) {
       return ContactsInfoItem(

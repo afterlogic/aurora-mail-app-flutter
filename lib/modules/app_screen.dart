@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 import 'dart:io';
 
@@ -31,6 +31,7 @@ import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/user_app_data_singleton.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
@@ -53,36 +54,36 @@ class App extends StatefulWidget {
 class _AppState extends BState<App> with WidgetsBindingObserver {
   final _authBloc = new AuthBloc();
   final _settingsBloc = new SettingsBloc();
-  StreamSubscription sub;
+  StreamSubscription? sub;
   final _navKey = GlobalKey<NavigatorState>();
   final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
-  NotificationData _notification;
+  NotificationData? _notification;
 
   @override
   void initState() {
     super.initState();
     _notification = PushNotificationsManager.instance.initNotification;
     if (_notification != null) {
-      switch (_notification.type) {
+      switch (_notification!.type) {
         case NotificationType.event:
           CalendarPage.activityType = ActivityType.event;
-          CalendarPage.selectedCalendarId = _notification.calendarId;
-          CalendarPage.selectedActivityId = _notification.activityId;
+          CalendarPage.selectedCalendarId = _notification!.calendarId;
+          CalendarPage.selectedActivityId = _notification!.activityId;
           break;
         case NotificationType.task:
           CalendarPage.activityType = ActivityType.task;
-          CalendarPage.selectedCalendarId = _notification.calendarId;
-          CalendarPage.selectedActivityId = _notification.activityId;
+          CalendarPage.selectedCalendarId = _notification!.calendarId;
+          CalendarPage.selectedActivityId = _notification!.activityId;
           break;
         case NotificationType.email:
         default:
-          MessagesListAndroid.openMessageFolder = _notification.folder;
-          MessagesListAndroid.openMessageId = _notification.messageId;
+          MessagesListAndroid.openMessageFolder = _notification!.folder;
+          MessagesListAndroid.openMessageId = _notification!.messageId;
           break;
       }
     }
     WidgetsBinding.instance.addObserver(this);
-    BackgroundHelper.current = WidgetsBinding.instance.lifecycleState;
+    BackgroundHelper.current = WidgetsBinding.instance.lifecycleState!;
     sub = WebMailApi.authErrorStream.listen((_) {
       if (_authBloc.currentUser != null) {
         _authBloc.add(InvalidateCurrentUserToken());
@@ -102,15 +103,15 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
       }
       if (texts.isNotEmpty || files.isNotEmpty) {
         MessagesListAndroid.shareHolder = [files, texts];
-        _navKey.currentState.pushNamedAndRemoveUntil(
+        _navKey.currentState!.pushNamedAndRemoveUntil(
           MessagesListRoute.name,
           (value) => false,
         );
       }
-    }, onError: (e, st) {
-      Logger.errorLog(e, st as StackTrace);
-    }).catchError((e, st) {
-      Logger.errorLog(e, st as StackTrace);
+    }, onError: (Object e, StackTrace st) {
+      Logger.errorLog(e, st);
+    }).catchError((Object e, StackTrace st) {
+      Logger.errorLog(e, st);
     });
 
     try {
@@ -126,13 +127,13 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
         }
         if (texts.isNotEmpty || files.isNotEmpty) {
           if (MessagesListAndroid.onShare != null) {
-            _navKey.currentState.popUntil(
+            _navKey.currentState!.popUntil(
               (value) => value.settings.name == MessagesListRoute.name,
             );
-            MessagesListAndroid.onShare(files, texts);
+            MessagesListAndroid.onShare!(files, texts);
           } else {
             MessagesListAndroid.shareHolder = [files, texts];
-            _navKey.currentState.pushNamedAndRemoveUntil(
+            _navKey.currentState!.pushNamedAndRemoveUntil(
               MessagesListRoute.name,
               (value) => false,
             );
@@ -163,25 +164,27 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
     final connectivity = new Connectivity();
 
     connectivity.checkConnectivity().then((res) {
-      _settingsBloc.add(UpdateConnectivity(res));
+      _settingsBloc.add(UpdateConnectivity(
+          res.isNotEmpty ? res.first : ConnectivityResult.none));
     });
 
     connectivity.onConnectivityChanged.listen((result) {
-      _settingsBloc.add(UpdateConnectivity(result));
+      _settingsBloc.add(UpdateConnectivity(
+          result.isNotEmpty ? result.first : ConnectivityResult.none));
     });
   }
 
   void _navigateToLogin() {
     try {
-      _navKey.currentState.popUntil((r) => r.isFirst);
-      _navKey.currentState.pushReplacementNamed(LoginRoute.name);
+      _navKey.currentState!.popUntil((r) => r.isFirst);
+      _navKey.currentState!.pushReplacementNamed(LoginRoute.name);
       RestartWidget.restartApp(context);
     } catch (e, st) {
       print(e);
     }
   }
 
-  ThemeData _getTheme(bool isDarkTheme) {
+  ThemeData? _getTheme(bool? isDarkTheme) {
     if (isDarkTheme == false)
       return AppTheme.light;
     else if (isDarkTheme == true)
@@ -194,7 +197,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
   void dispose() {
     super.dispose();
     sub?.cancel();
-    BackgroundHelper.current = WidgetsBinding.instance.lifecycleState;
+    BackgroundHelper.current = WidgetsBinding.instance.lifecycleState!;
     WidgetsBinding.instance.removeObserver(this);
   }
 
@@ -268,10 +271,10 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                               (UserAppDataSingleton()
                                       .getAppData
                                       ?.availableBackendModules
-                                      ?.contains(ServerModules.calendar) ??
+                                      .contains(ServerModules.calendar) ??
                                   false)
                           ? CalendarRepository(
-                              user: _authBloc.currentUser,
+                              user: _authBloc.currentUser!,
                               appDB: DBInstances.appDB)
                           : null;
                       final calendarUseCase = calendarRepository != null
@@ -291,7 +294,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                                   useCase: calendarUseCase,
                                   firstDayInWeek: convert(UserAppDataSingleton()
                                       .getAppData
-                                      ?.calendarSettings["WeekStartsOn"]))
+                                      ?.calendarSettings!["WeekStartsOn"]))
                                 ..add(const StartSync()),
                             ),
                           if (calendarUseCase != null)
@@ -313,7 +316,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                             ),
                           BlocProvider(
                             create: (_) => MailBloc(
-                              user: _authBloc.currentUser,
+                              user: _authBloc.currentUser!,
                               account: _authBloc.currentAccount,
                             ),
                           ),
@@ -325,7 +328,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                           ),
                           BlocProvider(
                             create: (_) => ContactsBloc(
-                              user: _authBloc.currentUser,
+                              user: _authBloc.currentUser!,
                               appDatabase: DBInstances.appDB,
                             )..add(GetContacts()),
                           ),
@@ -356,10 +359,10 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                               .map((item) => Locale(item))
                               .toList(),
                           localeResolutionCallback: (locale, locales) {
-                            final supportedLocale = locales.firstWhere((l) {
+                            final supportedLocale = locales.firstWhereOrNull((l) {
                               return locale != null &&
                                   l.languageCode == locale.languageCode;
-                            }, orElse: () => null);
+                            });
 
                             return supportedLocale ??
                                 locales.first ??
@@ -369,9 +372,9 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                           initialRoute: authState.needsLogin
                               ? LoginRoute.name
                               : _notification != null &&
-                                      (_notification.type ==
+                                      (_notification!.type ==
                                               NotificationType.event ||
-                                          _notification.type ==
+                                          _notification!.type ==
                                               NotificationType.task)
                                   ? CalendarRoute.name
                                   : MessagesListRoute.name,

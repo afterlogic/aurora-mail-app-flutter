@@ -1,14 +1,14 @@
-//@dart=2.9
+
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 
 enum ContactsFabOption { addContact, addGroup }
 
 class ContactsSpeedDial extends StatelessWidget {
   final void Function(ContactsFabOption) onFabOptionSelected;
 
-  const ContactsSpeedDial({@required this.onFabOptionSelected});
+  const ContactsSpeedDial({required this.onFabOptionSelected});
 
   @override
   Widget build(BuildContext context) {

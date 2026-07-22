@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
@@ -18,8 +18,8 @@ class AboutAndroid extends StatefulWidget {
 
 class _AboutAndroidState extends BState<AboutAndroid> {
   bool loading = false;
-  String _version;
-  String _appName;
+  late String _version;
+  late String _appName;
 
   @override
   void initState() {
@@ -92,11 +92,11 @@ class _AboutAndroidState extends BState<AboutAndroid> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text(_appName, style: theme.textTheme.headline6),
+                      Text(_appName, style: theme.textTheme.titleLarge),
                       SizedBox(height: 12.0),
                       Text(
                         S.of(context).settings_about_app_version(_version),
-                        style: theme.textTheme.caption.copyWith(fontSize: 14.0),
+                        style: theme.textTheme.bodySmall!.copyWith(fontSize: 14.0),
                       ),
                       SizedBox(height: 22.0),
                       Center(

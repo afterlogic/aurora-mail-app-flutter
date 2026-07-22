@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/alias_or_account.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
@@ -21,8 +21,8 @@ class GenerateKeyDialog extends StatefulWidget {
 class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
     with NotSavedChangesMixin {
   static const lengths = [2048, 4096];
-  var length = lengths[0];
-  AliasOrAccount current;
+  int? length = lengths[0];
+  AliasOrAccount? current;
   bool _obscure = true;
 
   final _passwordController = TextEditingController();
@@ -66,7 +66,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
                       );
                     }).toList();
                   },
-                  onChanged: (AliasOrAccount v) {
+                  onChanged: (AliasOrAccount? v) {
                     current = v;
                     setState(() {});
                   },
@@ -110,7 +110,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
                       return Text(value.toString());
                     }).toList();
                   },
-                  onChanged: (int v) {
+                  onChanged: (int? v) {
                     length = v;
                     setState(() {});
                   },
@@ -140,15 +140,15 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (value.name != null && value.name.isNotEmpty) Text(value.name),
-        if (value.mail != null && value.mail.isNotEmpty) Text(value.mail),
+        if (value.name != null && value.name!.isNotEmpty) Text(value.name!),
+        if (value.mail != null && value.mail!.isNotEmpty) Text(value.mail!),
         SizedBox(height: padding),
       ],
     );
   }
 
   _generate() {
-    if (_formKey.currentState.validate() && current != null) {
+    if (_formKey.currentState!.validate() && current != null) {
       final pass = _passwordController.text;
 
       Navigator.pop(context, GenerateKeyDialogResult(length, current, pass));
@@ -157,8 +157,8 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
 }
 
 class GenerateKeyDialogResult {
-  final int length;
-  final AliasOrAccount alias;
+  final int? length;
+  final AliasOrAccount? alias;
   final String password;
 
   GenerateKeyDialogResult(this.length, this.alias, this.password);

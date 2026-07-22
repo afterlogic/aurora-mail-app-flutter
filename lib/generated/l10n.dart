@@ -18,8 +18,10 @@ class S {
   static S? _current;
 
   static S get current {
-    assert(_current != null,
-        'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
+    assert(
+      _current != null,
+      'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.',
+    );
     return _current!;
   }
 
@@ -41,8 +43,10 @@ class S {
 
   static S of(BuildContext context) {
     final instance = S.maybeOf(context);
-    assert(instance != null,
-        'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?');
+    assert(
+      instance != null,
+      'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?',
+    );
     return instance!;
   }
 
@@ -52,52 +56,27 @@ class S {
 
   /// `Mail Client`
   String get app_title {
-    return Intl.message(
-      'Mail Client',
-      name: 'app_title',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mail Client', name: 'app_title', desc: '', args: []);
   }
 
   /// `Add`
   String get add {
-    return Intl.message(
-      'Add',
-      name: 'add',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Add', name: 'add', desc: '', args: []);
   }
 
   /// `Remove`
   String get remove {
-    return Intl.message(
-      'Remove',
-      name: 'remove',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Remove', name: 'remove', desc: '', args: []);
   }
 
   /// `Host`
   String get login_input_host {
-    return Intl.message(
-      'Host',
-      name: 'login_input_host',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Host', name: 'login_input_host', desc: '', args: []);
   }
 
   /// `Email`
   String get login_input_email {
-    return Intl.message(
-      'Email',
-      name: 'login_input_email',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Email', name: 'login_input_email', desc: '', args: []);
   }
 
   /// `Password`
@@ -132,72 +111,37 @@ class S {
 
   /// `Inbox`
   String get folders_inbox {
-    return Intl.message(
-      'Inbox',
-      name: 'folders_inbox',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Inbox', name: 'folders_inbox', desc: '', args: []);
   }
 
   /// `Starred`
   String get folders_starred {
-    return Intl.message(
-      'Starred',
-      name: 'folders_starred',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Starred', name: 'folders_starred', desc: '', args: []);
   }
 
   /// `Sent`
   String get folders_sent {
-    return Intl.message(
-      'Sent',
-      name: 'folders_sent',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Sent', name: 'folders_sent', desc: '', args: []);
   }
 
   /// `Drafts`
   String get folders_drafts {
-    return Intl.message(
-      'Drafts',
-      name: 'folders_drafts',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Drafts', name: 'folders_drafts', desc: '', args: []);
   }
 
   /// `Spam`
   String get folders_spam {
-    return Intl.message(
-      'Spam',
-      name: 'folders_spam',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Spam', name: 'folders_spam', desc: '', args: []);
   }
 
   /// `Trash`
   String get folders_trash {
-    return Intl.message(
-      'Trash',
-      name: 'folders_trash',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Trash', name: 'folders_trash', desc: '', args: []);
   }
 
   /// `Notes`
   String get folders_notes {
-    return Intl.message(
-      'Notes',
-      name: 'folders_notes',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Notes', name: 'folders_notes', desc: '', args: []);
   }
 
   /// `My calendars`
@@ -242,22 +186,12 @@ class S {
 
   /// `Week`
   String get calendar_tab_week {
-    return Intl.message(
-      'Week',
-      name: 'calendar_tab_week',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Week', name: 'calendar_tab_week', desc: '', args: []);
   }
 
   /// `Day`
   String get calendar_tab_day {
-    return Intl.message(
-      'Day',
-      name: 'calendar_tab_day',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Day', name: 'calendar_tab_day', desc: '', args: []);
   }
 
   /// `Tasks`
@@ -292,12 +226,7 @@ class S {
 
   /// `Save`
   String get save {
-    return Intl.message(
-      'Save',
-      name: 'save',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Save', name: 'save', desc: '', args: []);
   }
 
   /// `Create event`
@@ -432,12 +361,7 @@ class S {
 
   /// `Reply`
   String get messages_reply {
-    return Intl.message(
-      'Reply',
-      name: 'messages_reply',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Reply', name: 'messages_reply', desc: '', args: []);
   }
 
   /// `Reply to all`
@@ -652,42 +576,22 @@ class S {
 
   /// `To`
   String get messages_to {
-    return Intl.message(
-      'To',
-      name: 'messages_to',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('To', name: 'messages_to', desc: '', args: []);
   }
 
   /// `From`
   String get messages_from {
-    return Intl.message(
-      'From',
-      name: 'messages_from',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('From', name: 'messages_from', desc: '', args: []);
   }
 
   /// `CC`
   String get messages_cc {
-    return Intl.message(
-      'CC',
-      name: 'messages_cc',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('CC', name: 'messages_cc', desc: '', args: []);
   }
 
   /// `BCC`
   String get messages_bcc {
-    return Intl.message(
-      'BCC',
-      name: 'messages_bcc',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('BCC', name: 'messages_bcc', desc: '', args: []);
   }
 
   /// `Subject`
@@ -712,12 +616,7 @@ class S {
 
   /// `To me`
   String get messages_to_me {
-    return Intl.message(
-      'To me',
-      name: 'messages_to_me',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('To me', name: 'messages_to_me', desc: '', args: []);
   }
 
   /// `No recipients`
@@ -892,12 +791,7 @@ class S {
 
   /// `Calendar`
   String get calendar {
-    return Intl.message(
-      'Calendar',
-      name: 'calendar',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Calendar', name: 'calendar', desc: '', args: []);
   }
 
   /// `Message`
@@ -1012,12 +906,7 @@ class S {
 
   /// `Contacts`
   String get contacts {
-    return Intl.message(
-      'Contacts',
-      name: 'contacts',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Contacts', name: 'contacts', desc: '', args: []);
   }
 
   /// `View group`
@@ -1432,12 +1321,7 @@ class S {
 
   /// `Fax`
   String get contacts_view_fax {
-    return Intl.message(
-      'Fax',
-      name: 'contacts_view_fax',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Fax', name: 'contacts_view_fax', desc: '', args: []);
   }
 
   /// `Address`
@@ -1492,12 +1376,7 @@ class S {
 
   /// `Name`
   String get contacts_view_name {
-    return Intl.message(
-      'Name',
-      name: 'contacts_view_name',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Name', name: 'contacts_view_name', desc: '', args: []);
   }
 
   /// `First name`
@@ -1542,12 +1421,7 @@ class S {
 
   /// `City`
   String get contacts_view_city {
-    return Intl.message(
-      'City',
-      name: 'contacts_view_city',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('City', name: 'contacts_view_city', desc: '', args: []);
   }
 
   /// `State/Province`
@@ -1832,22 +1706,12 @@ class S {
 
   /// `Settings`
   String get settings {
-    return Intl.message(
-      'Settings',
-      name: 'settings',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Settings', name: 'settings', desc: '', args: []);
   }
 
   /// `Common`
   String get settings_common {
-    return Intl.message(
-      'Common',
-      name: 'settings_common',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Common', name: 'settings_common', desc: '', args: []);
   }
 
   /// `24 hour format`
@@ -1922,12 +1786,7 @@ class S {
 
   /// `Sync`
   String get settings_sync {
-    return Intl.message(
-      'Sync',
-      name: 'settings_sync',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Sync', name: 'settings_sync', desc: '', args: []);
   }
 
   /// `Sync frequency`
@@ -2142,12 +2001,7 @@ class S {
 
   /// `About`
   String get settings_about {
-    return Intl.message(
-      'About',
-      name: 'settings_about',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('About', name: 'settings_about', desc: '', args: []);
   }
 
   /// `Version {version}`
@@ -2182,32 +2036,17 @@ class S {
 
   /// `Login`
   String get btn_login {
-    return Intl.message(
-      'Login',
-      name: 'btn_login',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Login', name: 'btn_login', desc: '', args: []);
   }
 
   /// `Sign in`
   String get login_sign_in {
-    return Intl.message(
-      'Sign in',
-      name: 'login_sign_in',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Sign in', name: 'login_sign_in', desc: '', args: []);
   }
 
   /// `Continue`
   String get login_continue {
-    return Intl.message(
-      'Continue',
-      name: 'login_continue',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Continue', name: 'login_continue', desc: '', args: []);
   }
 
   /// `Not account yet? `
@@ -2232,12 +2071,7 @@ class S {
 
   /// `Delete`
   String get btn_delete {
-    return Intl.message(
-      'Delete',
-      name: 'btn_delete',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Delete', name: 'btn_delete', desc: '', args: []);
   }
 
   /// `Show email in light theme`
@@ -2252,52 +2086,27 @@ class S {
 
   /// `Cancel`
   String get btn_cancel {
-    return Intl.message(
-      'Cancel',
-      name: 'btn_cancel',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Cancel', name: 'btn_cancel', desc: '', args: []);
   }
 
   /// `Close`
   String get btn_close {
-    return Intl.message(
-      'Close',
-      name: 'btn_close',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Close', name: 'btn_close', desc: '', args: []);
   }
 
   /// `To spam`
   String get btn_to_spam {
-    return Intl.message(
-      'To spam',
-      name: 'btn_to_spam',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('To spam', name: 'btn_to_spam', desc: '', args: []);
   }
 
   /// `Save`
   String get btn_save {
-    return Intl.message(
-      'Save',
-      name: 'btn_save',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Save', name: 'btn_save', desc: '', args: []);
   }
 
   /// `Discard`
   String get btn_discard {
-    return Intl.message(
-      'Discard',
-      name: 'btn_discard',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Discard', name: 'btn_discard', desc: '', args: []);
   }
 
   /// `Add account`
@@ -2312,12 +2121,7 @@ class S {
 
   /// `Show all`
   String get btn_show_all {
-    return Intl.message(
-      'Show all',
-      name: 'btn_show_all',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Show all', name: 'btn_show_all', desc: '', args: []);
   }
 
   /// `Please enter hostname`
@@ -2702,7 +2506,7 @@ class S {
 
   /// `Contact data has been modified by another application`
   String
-      get error_server_contact_data_has_been_modified_by_another_application {
+  get error_server_contact_data_has_been_modified_by_another_application {
     return Intl.message(
       'Contact data has been modified by another application',
       name:
@@ -3054,12 +2858,7 @@ class S {
 
   /// `Verify`
   String get btn_verify_pin {
-    return Intl.message(
-      'Verify',
-      name: 'btn_verify_pin',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Verify', name: 'btn_verify_pin', desc: '', args: []);
   }
 
   /// `Invalid code`
@@ -3074,12 +2873,7 @@ class S {
 
   /// `Done`
   String get btn_done {
-    return Intl.message(
-      'Done',
-      name: 'btn_done',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Done', name: 'btn_done', desc: '', args: []);
   }
 
   /// `Are you sure want to exit?`
@@ -3094,12 +2888,7 @@ class S {
 
   /// `Exit`
   String get btn_exit {
-    return Intl.message(
-      'Exit',
-      name: 'btn_exit',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Exit', name: 'btn_exit', desc: '', args: []);
   }
 
   /// `OpenPGP`
@@ -3204,32 +2993,17 @@ class S {
 
   /// `Length`
   String get label_length {
-    return Intl.message(
-      'Length',
-      name: 'label_length',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Length', name: 'label_length', desc: '', args: []);
   }
 
   /// `Download`
   String get btn_download {
-    return Intl.message(
-      'Download',
-      name: 'btn_download',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Download', name: 'btn_download', desc: '', args: []);
   }
 
   /// `Share`
   String get btn_share {
-    return Intl.message(
-      'Share',
-      name: 'btn_share',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Share', name: 'btn_share', desc: '', args: []);
   }
 
   /// `Public key`
@@ -3374,32 +3148,17 @@ class S {
 
   /// `Sign`
   String get label_pgp_sign {
-    return Intl.message(
-      'Sign',
-      name: 'label_pgp_sign',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Sign', name: 'label_pgp_sign', desc: '', args: []);
   }
 
   /// `Encrypt`
   String get btn_pgp_encrypt {
-    return Intl.message(
-      'Encrypt',
-      name: 'btn_pgp_encrypt',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Encrypt', name: 'btn_pgp_encrypt', desc: '', args: []);
   }
 
   /// `Decrypt`
   String get btn_pgp_decrypt {
-    return Intl.message(
-      'Decrypt',
-      name: 'btn_pgp_decrypt',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Decrypt', name: 'btn_pgp_decrypt', desc: '', args: []);
   }
 
   /// `invalid password`
@@ -3733,8 +3492,13 @@ class S {
   }
 
   /// `Hello,\n{sender} user sent you a self-destructing secure email.\nYou can read it using the following link:\n{link}\n{message_password}The message will be accessible for {lifeTime} starting from {now}`
-  String template_self_destructing_message(Object sender, Object link,
-      Object message_password, Object lifeTime, Object now) {
+  String template_self_destructing_message(
+    Object sender,
+    Object link,
+    Object message_password,
+    Object lifeTime,
+    Object now,
+  ) {
     return Intl.message(
       'Hello,\n$sender user sent you a self-destructing secure email.\nYou can read it using the following link:\n$link\n${message_password}The message will be accessible for $lifeTime starting from $now',
       name: 'template_self_destructing_message',
@@ -3765,12 +3529,7 @@ class S {
 
   /// `Ok`
   String get btn_ok {
-    return Intl.message(
-      'Ok',
-      name: 'btn_ok',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ok', name: 'btn_ok', desc: '', args: []);
   }
 
   /// `The self-descructing secure emails support plain text only. All the formatting will be removed. Also, attachments cannot be encrypted and will be removed from the message.`
@@ -3945,12 +3704,7 @@ class S {
 
   /// `Move`
   String get btn_message_move {
-    return Intl.message(
-      'Move',
-      name: 'btn_message_move',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Move', name: 'btn_message_move', desc: '', args: []);
   }
 
   /// `Move to folder`
@@ -4035,12 +3789,7 @@ class S {
 
   /// `Import`
   String get btn_vcf_import {
-    return Intl.message(
-      'Import',
-      name: 'btn_vcf_import',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Import', name: 'btn_vcf_import', desc: '', args: []);
   }
 
   /// `Import contact from vcf?`
@@ -4095,22 +3844,12 @@ class S {
 
   /// `Unread`
   String get btn_unread {
-    return Intl.message(
-      'Unread',
-      name: 'btn_unread',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Unread', name: 'btn_unread', desc: '', args: []);
   }
 
   /// `Read`
   String get btn_read {
-    return Intl.message(
-      'Read',
-      name: 'btn_read',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Read', name: 'btn_read', desc: '', args: []);
   }
 
   /// `Show details`
@@ -4325,12 +4064,7 @@ class S {
 
   /// `Not spam`
   String get btn_not_spam {
-    return Intl.message(
-      'Not spam',
-      name: 'btn_not_spam',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Not spam', name: 'btn_not_spam', desc: '', args: []);
   }
 
   /// `password is empty`
@@ -4615,12 +4349,7 @@ class S {
 
   /// `Back`
   String get btn_back {
-    return Intl.message(
-      'Back',
-      name: 'btn_back',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Back', name: 'btn_back', desc: '', args: []);
   }
 
   /// `Message not found`
@@ -4805,12 +4534,7 @@ class S {
 
   /// `All`
   String get calendar_filter_all {
-    return Intl.message(
-      'All',
-      name: 'calendar_filter_all',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('All', name: 'calendar_filter_all', desc: '', args: []);
   }
 
   /// `Completed`
@@ -4835,32 +4559,17 @@ class S {
 
   /// `Always`
   String get calendar_always {
-    return Intl.message(
-      'Always',
-      name: 'calendar_always',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Always', name: 'calendar_always', desc: '', args: []);
   }
 
   /// `until`
   String get calendar_until {
-    return Intl.message(
-      'until',
-      name: 'calendar_until',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('until', name: 'calendar_until', desc: '', args: []);
   }
 
   /// `before`
   String get calendar_before {
-    return Intl.message(
-      'before',
-      name: 'calendar_before',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('before', name: 'calendar_before', desc: '', args: []);
   }
 
   /// `read`

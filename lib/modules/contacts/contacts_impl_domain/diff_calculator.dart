@@ -1,13 +1,14 @@
-//@dart=2.9
+
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 class ContactsDiffCalculator {
   static Future<ContactInfoDiffCalcResult> calculateContactsInfoDiffAsync(
-      List<ContactInfoItem> oldInfo, List<ContactInfoItem> newInfo) {
-    final Map<String, List<ContactInfoItem>> args = {
+      List<ContactInfoItem>? oldInfo, List<ContactInfoItem> newInfo) {
+    final Map<String, List<ContactInfoItem>?> args = {
       "oldItems": oldInfo,
       "newItems": newInfo,
     };
@@ -15,24 +16,22 @@ class ContactsDiffCalculator {
   }
 
   static ContactInfoDiffCalcResult _calculateContactsInfoDiff(
-      Map<String, List<ContactInfoItem>> args) {
-    final oldContacts = args["oldItems"];
-    final newContacts = args["newItems"];
+      Map<String, List<ContactInfoItem>?> args) {
+    final oldContacts = args["oldItems"]!;
+    final newContacts = args["newItems"]!;
 
     final addedContacts = newContacts
         .where((i) =>
-            oldContacts.firstWhere(
-                (j) => j.uuidPlusStorage == i.uuidPlusStorage,
-                orElse: () => null
+            oldContacts.firstWhereOrNull(
+                (j) => j.uuidPlusStorage == i.uuidPlusStorage
             ) == null
         )
         .toList();
 
     final deletedContacts = oldContacts
         .where((i) =>
-            newContacts.firstWhere(
-                (j) => j.uuidPlusStorage == i.uuidPlusStorage,
-                orElse: () => null
+            newContacts.firstWhereOrNull(
+                (j) => j.uuidPlusStorage == i.uuidPlusStorage
             ) == null
         )
         .map((c) => c.uuid)
@@ -40,11 +39,10 @@ class ContactsDiffCalculator {
 
     final updatedContacts = <ContactInfoItem>[];
     newContacts.forEach((newContact) {
-      final changedContact = oldContacts.firstWhere(
+      final changedContact = oldContacts.firstWhereOrNull(
           (oldContact) =>
               oldContact.uuidPlusStorage == newContact.uuidPlusStorage &&
-              oldContact.eTag != newContact.eTag,
-          orElse: () => null
+              oldContact.eTag != newContact.eTag
       );
       if (changedContact != null) {
         final updatedContact = newContact.copyWith(
@@ -80,29 +78,28 @@ Contacts diff calculation finished:
 
   static StoragesDiffCalcResult _calculateStoragesDiff(
       Map<String, List<ContactsStorage>> args) {
-    final oldStorages = args["oldItems"];
-    final newStorages = args["newItems"];
+    final oldStorages = args["oldItems"]!;
+    final newStorages = args["newItems"]!;
 
     final addedStorages = newStorages
         .where((i) =>
-            oldStorages.firstWhere((j) => j.id == i.id, orElse: () => null) ==
+            oldStorages.firstWhereOrNull((j) => j.id == i.id) ==
             null)
         .toList();
 
     final deletedStorages = oldStorages
         .where((i) =>
-            newStorages.firstWhere((j) => j.id == i.id, orElse: () => null) ==
+            newStorages.firstWhereOrNull((j) => j.id == i.id) ==
             null)
         .toList();
 
     final updatedStorages = <ContactsStorage>[];
     // adding storages that have changed cTag
     newStorages.forEach((newStorage) {
-      final changedStorage = oldStorages.firstWhere(
+      final changedStorage = oldStorages.firstWhereOrNull(
           (oldStorage) =>
               oldStorage.id == newStorage.id &&
-              oldStorage.cTag != newStorage.cTag,
-          orElse: () => null);
+              oldStorage.cTag != newStorage.cTag);
       if (changedStorage != null) {
         final updatedStorage = newStorage.copyWith(
           sqliteId: changedStorage.sqliteId,
@@ -137,12 +134,11 @@ Storages diff calculation finished:
   }
 
   static bool _hasUnloadedContacts(ContactsStorage storage) {
-    if (storage.contactsInfo == null || storage.contactsInfo.isEmpty) {
+    if (storage.contactsInfo == null || storage.contactsInfo!.isEmpty) {
       return true;
     }
-    final infoToUpdate = storage.contactsInfo.firstWhere(
+    final infoToUpdate = storage.contactsInfo!.firstWhereOrNull(
       (info) => info.hasBody == false || info.needsUpdate == true,
-      orElse: () => null,
     );
     return infoToUpdate != null;
   }
@@ -151,9 +147,8 @@ Storages diff calculation finished:
     List<ContactsStorage> updatedStorages,
     ContactsStorage storage,
   ) {
-    final foundStorage = updatedStorages.firstWhere(
+    final foundStorage = updatedStorages.firstWhereOrNull(
       (updatedStorage) => updatedStorage.id == storage.id,
-      orElse: () => null,
     );
     if (foundStorage == null) {
       updatedStorages.add(storage);
@@ -163,13 +158,13 @@ Storages diff calculation finished:
 
 class ContactInfoDiffCalcResult {
   final List<ContactInfoItem> addedContacts;
-  final List<String> deletedContacts;
+  final List<String?> deletedContacts;
   final List<ContactInfoItem> updatedContacts;
 
   ContactInfoDiffCalcResult({
-    @required this.addedContacts,
-    @required this.deletedContacts,
-    @required this.updatedContacts,
+    required this.addedContacts,
+    required this.deletedContacts,
+    required this.updatedContacts,
   });
 }
 
@@ -179,8 +174,8 @@ class StoragesDiffCalcResult {
   final List<ContactsStorage> updatedStorages;
 
   StoragesDiffCalcResult({
-    @required this.addedStorages,
-    @required this.deletedStorages,
-    @required this.updatedStorages,
+    required this.addedStorages,
+    required this.deletedStorages,
+    required this.updatedStorages,
   });
 }

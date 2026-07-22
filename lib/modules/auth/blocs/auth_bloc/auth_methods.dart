@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/account_identity/accounts_identity_dao.dart';
 import 'package:aurora_mail/database/accounts/accounts_dao.dart';
@@ -16,6 +16,7 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/co
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/groups/contacts_groups_dao.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contacts_storages_dao.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
 import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
@@ -29,7 +30,7 @@ class AuthMethods {
   final _accountsDao = new AccountsDao(DBInstances.appDB);
   final _cryptoStorage = AppInjector.instance.cryptoStorage();
 
-  Future<InitializerResponse> getUserAndAccountsFromDB() async {
+  Future<InitializerResponse?> getUserAndAccountsFromDB() async {
     final selectedUserId = await _authLocal.getSelectedUserLocalId();
     final selectedAccountId = await _authLocal.getSelectedAccountId();
     if (selectedUserId == null) return null;
@@ -42,7 +43,7 @@ class AuthMethods {
     // TODO getSelectedAccountId and select it
 
     final result = await Future.wait(futures);
-    final user = result[0] as User;
+    final user = result[0] as User?;
     final accounts = List<Account>.from(result[1] as Iterable);
     if (user == null || user.token.isEmpty) return null;
     if (accounts.isEmpty) return null;
@@ -56,14 +57,14 @@ class AuthMethods {
   }
 
   Future<void> selectUser(int userLocalId) async {
-    return _authLocal.setSelectedUserLocalId(userLocalId);
+    await _authLocal.setSelectedUserLocalId(userLocalId);
   }
 
   // returns null the host field needs to be revealed because auto discover was unsuccessful
-  Future<User> login({
-    @required String email,
-    @required String password,
-    @required String manuallyEnteredHost,
+  Future<User?> login({
+    required String email,
+    required String password,
+    required String manuallyEnteredHost,
   }) async {
     // auto discover domain
     String hostname = manuallyEnteredHost;
@@ -90,29 +91,29 @@ class AuthMethods {
     var newUser = await _authApi.login(email, password, hostname);
 
     newUser = newUser.copyWith(
-      syncPeriod: BuildProperty.syncPeriod,
+      syncPeriod: Value(BuildProperty.syncPeriod),
     );
     return newUser;
   }
 
-  Future<User> setUser(User user) async {
-    User userToReturn = await _usersDao.getUserByEmail(user.emailFromLogin);
+  Future<User?> setUser(User user) async {
+    User? userToReturn = await _usersDao.getUserByEmail(user.emailFromLogin);
     if (userToReturn != null) {
       await _usersDao.updateUser(
-          userToReturn.localId, UsersCompanion(token: Value(user.token)));
+          userToReturn.localId!, UsersCompanion(token: Value(user.token)));
     } else {
       await _usersDao.addUser(user);
     }
     userToReturn = await _usersDao.getUserByEmail(user.emailFromLogin);
-    selectUser(userToReturn.localId);
+    selectUser(userToReturn!.localId!);
     _authLocal.setLastEmail(user.emailFromLogin);
     _authLocal.setLastHost(user.hostname);
     return userToReturn;
   }
 
-  Future<String> get lastEmail => _authLocal.getLastEmail();
+  Future<String?> get lastEmail => _authLocal.getLastEmail();
 
-  Future<String> get lastHost => _authLocal.getLastHost();
+  Future<String?> get lastHost => _authLocal.getLastHost();
 
   Future<List<User>> get users => _usersDao.getUsers();
 
@@ -120,26 +121,25 @@ class AuthMethods {
     final accounts = (await _authApi.getAccounts(user)).toSet();
     // ignore unique constraint errors from the db
     try {
-      final localAccounts = await _accountsDao.getAccounts(user.localId);
+      final localAccounts = await _accountsDao.getAccounts(user.localId!);
       for (var local in localAccounts) {
-        final server = accounts.firstWhere(
-            (element) => element.serverId == local.serverId,
-            orElse: () => null);
+        final server = accounts.firstWhereOrNull(
+            (element) => element.serverId == local.serverId);
         if (server == null) {
-          await _accountsDao.deleteAccountById(local.localId);
+          await _accountsDao.deleteAccountById(local.localId!);
         } else {
-          await _accountsDao.updateAccount(server, local.localId);
+          await _accountsDao.updateAccount(server, local.localId!);
         }
         accounts.remove(server);
       }
       await _accountsDao.addAccounts(accounts.toList());
-      final accountsWithLocalIds = await _accountsDao.getAccounts(user.localId);
-      await _authLocal.setSelectedAccountId(accountsWithLocalIds[0].localId);
+      final accountsWithLocalIds = await _accountsDao.getAccounts(user.localId!);
+      await _authLocal.setSelectedAccountId(accountsWithLocalIds[0].localId!);
     } catch (err) {}
-    return _accountsDao.getAccounts(user.localId);
+    return _accountsDao.getAccounts(user.localId!);
   }
 
-  Future<void> logout(int currentUserId, User user) async {
+  Future<void> logout(int? currentUserId, User user) async {
     try {
       await _authApi.logout(user);
     } catch (e) {}
@@ -149,18 +149,18 @@ class AuthMethods {
         _cryptoStorage.deleteAll(),
       if (user.localId == currentUserId) _authLocal.deleteSelectedUserLocalId(),
       if (user.localId == currentUserId) _authLocal.deleteSelectedAccountId(),
-      _usersDao.deleteUser(user.localId),
-      _accountsDao.deleteAccountsOfUser(user.localId),
+      _usersDao.deleteUser(user.localId!),
+      _accountsDao.deleteAccountsOfUser(user.localId!),
     ];
 
     await Future.wait(futures);
   }
 
-  Future<void> deleteUnusedUsersWithData(List<User> users) async {
+  Future<void> deleteUnusedUsersWithData(List<User?> users) async {
     for(final user in users){
       try{
-        await _usersDao.deleteUser(user.localId);
-        await _accountsDao.deleteAccountsOfUser(user.localId);
+        await _usersDao.deleteUser(user!.localId!);
+        await _accountsDao.deleteAccountsOfUser(user.localId!);
         await deleteUserRelatedData(user);
       }catch(e){
         print(e);
@@ -179,12 +179,12 @@ class AuthMethods {
     try {
       final calendarDao = new CalendarDao(DBInstances.appDB);
       final eventDao = new ActivityDao(DBInstances.appDB);
-      await _accountsDao.deleteAccountsOfUser(user.localId);
+      await _accountsDao.deleteAccountsOfUser(user.localId!);
       await foldersDao.deleteFoldersOfUser(user.localId);
-      await mailDao.deleteMessagesOfUser(user.localId);
-      await contactsDao.deleteContactsOfUser(user.localId);
-      await contactsStoragesDao.deleteStoragesOfUser(user.localId);
-      await contactsGroupsDao.deleteGroupsOfUser(user.localId);
+      await mailDao.deleteMessagesOfUser(user.localId!);
+      await contactsDao.deleteContactsOfUser(user.localId!);
+      await contactsStoragesDao.deleteStoragesOfUser(user.localId!);
+      await contactsGroupsDao.deleteGroupsOfUser(user.localId!);
       await calendarDao.deleteAllCalendars(user.localId);
       await eventDao.deleteAllEvents(user.localId);
     } catch (e, st) {
@@ -205,7 +205,7 @@ class AuthMethods {
     // await Future.wait(futures);
   }
 
-  Future<User> invalidateToken(int userLocalId) async {
+  Future<User?> invalidateToken(int userLocalId) async {
     try {
       await _usersDao.updateUser(userLocalId, UsersCompanion(token: Value("")));
     } catch (e) {
@@ -218,7 +218,7 @@ class AuthMethods {
     return _authLocal.setSelectedAccountId(accountLocalId);
   }
 
-  Future<void> updateAliases(User user, Account account) async {
+  Future<void> updateAliases(User user, Account? account) async {
     try {
       final identities = await _authApi.getAliases(user);
       await _aliasesDao.deleteByUser(user.serverId);
@@ -229,7 +229,7 @@ class AuthMethods {
   }
 
   Future<List<AccountIdentity>> updateIdentity(
-      User user, Account account, List<Account> accounts) async {
+      User user, Account? account, List<Account> accounts) async {
     try {
       final identities = await _authApi.getIdentity(user);
 
@@ -260,11 +260,11 @@ class AuthMethods {
   }
 
   AccountIdentity getDefaultIdentity(
-      Account account, List<AccountIdentity> identities) {
+      Account? account, List<AccountIdentity> identities) {
     return identities.firstWhere(
-      (item) => item.isDefault && item.entityId == account.entityId,
+      (item) => item.isDefault && item.entityId == account!.entityId,
       orElse: () => AccountIdentity(
-        email: account.email,
+        email: account!.email,
         useSignature: account.useSignature,
         idUser: account.idUser,
         isDefault: true,
@@ -278,7 +278,7 @@ class AuthMethods {
 
   Future<List<AccountIdentity>> getAccountIdentities(
     User currentUser,
-    Account currentAccount,
+    Account? currentAccount,
   ) {
     return _accountIdentityDao.getByUserAndAccount(
       currentUser.serverId,
@@ -288,7 +288,7 @@ class AuthMethods {
 
   Future<List<Aliases>> getAccountAliases(
     User currentUser,
-    Account currentAccount,
+    Account? currentAccount,
   ) {
     return _aliasesDao.getByUserAndAccount(
       currentUser.serverId,
@@ -296,7 +296,7 @@ class AuthMethods {
     );
   }
 
-  Future setFbToken(List<User> users, [bool setNullToken = false]) async {
+  Future setFbToken(List<User?> users, [bool setNullToken = false]) async {
     if (!BuildProperty.enablePushNotification) return;
     try {
       final uid = await PushNotificationsManager.instance.deviceId;
@@ -304,16 +304,16 @@ class AuthMethods {
           ? null
           : await PushNotificationsManager.instance.getToken();
       print('setFbToken, fbToken = $fbToken');
-      final userWithAccount = <User, List<String>>{};
+      final userWithAccount = <User?, List<String>>{};
       for (var user in users) {
-        final accounts = await _accountsDao.getAccounts(user.localId);
+        final accounts = await _accountsDao.getAccounts(user!.localId!);
         final emails = <String>{};
 
         for (var account in accounts) {
           final identities = await _accountIdentityDao.getByUserAndAccount(
-              user.localId, account.localId);
+              user.localId!, account.localId);
           final aliases = await _aliasesDao.getByUserAndAccount(
-              user.localId, account.localId);
+              user.localId!, account.localId);
           emails.add(account.email);
           emails.addAll(identities.map((item) => item.email));
           emails.addAll(aliases.map((item) => item.email));
@@ -334,32 +334,32 @@ class AuthMethods {
     }
   }
 
-  Future selectUserByEmail(String email) async {
+  Future selectUserByEmail(String? email) async {
     final users = await _usersDao.getUsers();
     for (var user in users) {
       if (user.emailFromLogin == email) {
-        await _authLocal.setSelectedUserLocalId(user.localId);
-        await _selectAccountByEmail(user.localId, email);
+        await _authLocal.setSelectedUserLocalId(user.localId!);
+        await _selectAccountByEmail(user.localId!, email);
         return;
       }
     }
     for (var user in users) {
-      final accounts = await _accountsDao.getAccounts(user.localId);
+      final accounts = await _accountsDao.getAccounts(user.localId!);
       for (var account in accounts) {
         if (account.email == email) {
-          await _authLocal.setSelectedUserLocalId(user.localId);
-          await _authLocal.setSelectedAccountId(account.localId);
+          await _authLocal.setSelectedUserLocalId(user.localId!);
+          await _authLocal.setSelectedAccountId(account.localId!);
           return;
         }
       }
     }
   }
 
-  Future _selectAccountByEmail(int userId, String email) async {
+  Future _selectAccountByEmail(int userId, String? email) async {
     final accounts = await _accountsDao.getAccounts(userId);
     for (var account in accounts) {
       if (account.email == email) {
-        await _authLocal.setSelectedAccountId(account.localId);
+        await _authLocal.setSelectedAccountId(account.localId!);
         return;
       }
     }

@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
@@ -11,7 +11,7 @@ class UserTile extends StatefulWidget {
   final User user;
   final bool compact;
 
-  UserTile({@required this.user, this.compact = false})
+  UserTile({required this.user, this.compact = false})
       : super(key: Key(user.localId.toString()));
 
   @override
@@ -40,7 +40,7 @@ class _UserTileState extends BState<UserTile> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = BlocProvider.of<AuthBloc>(context).currentUser;
+    final currentUser = BlocProvider.of<AuthBloc>(context).currentUser!;
 
     return ListTile(
       key: widget.key,
@@ -51,7 +51,7 @@ class _UserTileState extends BState<UserTile> {
           ? null
           : IconButton(
               icon: Icon(Icons.delete_outline),
-              color: theme.iconTheme.color,
+              color: theme!.iconTheme.color,
               tooltip: S.of(context).settings_accounts_delete,
               onPressed: _showDeleteDialog,
             ),
@@ -61,10 +61,10 @@ class _UserTileState extends BState<UserTile> {
     );
   }
 
-  Widget _buildLeading() {
+  Widget? _buildLeading() {
     if (!widget.compact) {
       if (widget.user.token == null) {
-        return Icon(Icons.error, color: theme.disabledColor);
+        return Icon(Icons.error, color: theme!.disabledColor);
       } else {
         return Icon(Icons.account_circle);
       }

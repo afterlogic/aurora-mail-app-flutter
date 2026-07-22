@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
@@ -10,7 +10,7 @@ abstract class ComposeState extends Equatable {
   const ComposeState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class InitialComposeState extends ComposeState {}
@@ -34,38 +34,38 @@ class AttachmentUploaded extends ComposeState {
 }
 
 class MessageSending extends ComposeState with AlwaysNonEqualObject {
-  final String messageToShow;
+  final String? messageToShow;
   const MessageSending({this.messageToShow});
 
   @override
-  List<Object> get props => [messageToShow];
+  List<Object?> get props => [messageToShow];
 }
 
 class MessageSent extends ComposeState with AlwaysNonEqualObject {
-  final String messageToShow;
+  final String? messageToShow;
   MessageSent({this.messageToShow});
 
   @override
-  List<Object> get props => [messageToShow];
+  List<Object?> get props => [messageToShow];
 }
 
 class MessageSavedInDrafts extends ComposeState {
-  final int draftUid;
+  final int? draftUid;
 
   MessageSavedInDrafts(this.draftUid);
 
   @override
-  List<Object> get props => [draftUid];
+  List<Object?> get props => [draftUid];
 }
 
 class ComposeError extends ComposeState with AlwaysNonEqualObject {
   final ErrorToShow errorMsg;
-  final Map<String, String> arg;
+  final Map<String, String>? arg;
 
   ComposeError(this.errorMsg, [this.arg]);
 
   @override
-  List<Object> get props => [errorMsg, arg];
+  List<Object?> get props => [errorMsg, arg];
 }
 
 class ConvertingAttachments extends ComposeState {}

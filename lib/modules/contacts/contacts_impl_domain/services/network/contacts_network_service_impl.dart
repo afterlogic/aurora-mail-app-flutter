@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:convert';
 
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
@@ -31,8 +31,8 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
 
   @override
   Future<List<Contact>> getContactsByUids({
-    List<String> uuids,
-    int userLocalId,
+    List<String>? uuids,
+    int? userLocalId,
   }) async {
     if (uuids == null || uuids.isEmpty) {
       return [];
@@ -64,7 +64,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
 
     final result = await contactsModule.post(body);
     return ContactInfoMapper.allFromNetwork(
-        Map<String, dynamic>.from(result as Map), storage.id);
+        Map<String, dynamic>.from(result as Map), storage.id!);
   }
 
   @override
@@ -80,9 +80,9 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
 
     final result = await contactsModule.post(body);
     return contact.copyWith(
-      uuid: result["UUID"] as String,
-      uuidPlusStorage: result["UUID"] + contact.storage as String,
-      eTag: result["ETag"] as String,
+      uuid: result["UUID"] as String?,
+      uuidPlusStorage: result["UUID"] + contact.storage as String?,
+      eTag: result["ETag"] as String?,
     );
   }
 
@@ -179,7 +179,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     final result = await contactsModule.post(body);
     ///check for both types String and Map is for old API versions
     if (result is! String && result is! Map) throw "addGroup must be a string or map";
-    final String uuid = result is String ? result : result["UUID"] as String;
+    final String? uuid = result is String ? result : result["UUID"] as String?;
     return group.copyWith(uuid: uuid);
   }
 
@@ -242,7 +242,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return result as bool;
+    return result as bool?;
   }
 
   @override
@@ -264,7 +264,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
   }
 
   @override
-  Future<bool> updateContactPublicKeyFlags({String uuid, bool pgpEncryptMessages, bool pgpSignMessages}) async {
+  Future<bool> updateContactPublicKeyFlags({String? uuid, bool? pgpEncryptMessages, bool? pgpSignMessages}) async {
     final Map<String, dynamic> parameters = {
       "UUID" : uuid,
       "PgpEncryptMessages" : pgpEncryptMessages,

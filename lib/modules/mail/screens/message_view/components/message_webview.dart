@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -40,14 +40,14 @@ import 'attachments_dialog.dart';
 // ignore: unused_element
 class _Attendee {
   const _Attendee({this.email, this.displayName});
-  final String email;
-  final String displayName;
+  final String? email;
+  final String? displayName;
 
   // ignore: unused_element
   factory _Attendee.fromJson(Map<String, dynamic> json) {
     return _Attendee(
-        email: json["Email"] as String,
-        displayName: json["DisplayName"] as String);
+        email: json["Email"] as String?,
+        displayName: json["DisplayName"] as String?);
   }
 }
 
@@ -74,10 +74,10 @@ class MessageWebViewActions {
 class MessageWebView extends StatefulWidget {
   final Message message;
   final List<MailAttachment> attachments;
-  final String decrypted;
-  final PgpSettingsBloc bloc;
-  final ContactsBloc contactsBloc;
-  final MessageViewBloc messageViewBloc;
+  final String? decrypted;
+  final PgpSettingsBloc? bloc;
+  final ContactsBloc? contactsBloc;
+  final MessageViewBloc? messageViewBloc;
 
   const MessageWebView(
     this.message,
@@ -86,7 +86,7 @@ class MessageWebView extends StatefulWidget {
     this.bloc,
     this.contactsBloc,
     this.messageViewBloc, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -95,33 +95,32 @@ class MessageWebView extends StatefulWidget {
 
 class MessageWebViewState extends BState<MessageWebView> {
   WebViewController _controller = WebViewController();
-  String _htmlData;
+  String? _htmlData;
   bool _pageLoaded = false;
-  bool showImages;
-  bool _isStarred;
-  ThemeData theme;
-  MailBloc _mailBloc;
-  CalendarsBloc _calendarsBloc;
-  List<ViewCalendar> _calendars;
-  ViewCalendar _selectedCalendar;
-  String _currentUserMail;
-  Map<String, dynamic> _eventFromExpandedMail;
+  bool? showImages;
+  late bool _isStarred;
+  late MailBloc _mailBloc;
+  CalendarsBloc? _calendarsBloc;
+  List<ViewCalendar>? _calendars;
+  ViewCalendar? _selectedCalendar;
+  late String _currentUserMail;
+  Map<String, dynamic>? _eventFromExpandedMail;
 
   @override
   void initState() {
     super.initState();
+    _currentUserMail =
+        BlocProvider.of<AuthBloc>(context).currentUser?.emailFromLogin ?? '';
     _calendarsBloc = BlocProviderExtensions.tryOf<CalendarsBloc>(context);
     _calendars = _calendarsBloc != null
-        ? _calendarsBloc.state.availableCalendars(_currentUserMail)
+        ? _calendarsBloc!.state.availableCalendars(_currentUserMail)
         : null;
-    _selectedCalendar = (_calendars?.isEmpty ?? true) ? null : _calendars[0];
+    _selectedCalendar = (_calendars?.isEmpty ?? true) ? null : _calendars![0];
     _onLoad();
     // On Android, hybrid composition (SurfaceAndroidWebView) is now the default (webview_flutter 3.0.0)
     // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     _eventFromExpandedMail = MailUtils.getExtendFromMessageByObjectTypeName(
         ['Object/Aurora\\Modules\\Calendar\\Classes\\Ics'], widget.message);
-    _currentUserMail =
-        BlocProvider.of<AuthBloc>(context).currentUser?.emailFromLogin ?? '';
     _isStarred = widget.message.flagsInJson.contains("\\flagged");
     _controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -144,20 +143,20 @@ class MessageWebViewState extends BState<MessageWebView> {
         print(message.message);
         BlocProvider.of<MessageViewBloc>(context).add(ChangeEventInviteStatus(
             status: 'ACCEPT',
-            calendarId: _selectedCalendar.id,
-            fileName: _eventFromExpandedMail['File'] as String));
+            calendarId: _selectedCalendar!.id,
+            fileName: _eventFromExpandedMail!['File'] as String));
       } else if (message.message
           .startsWith(ExpandedEventWebViewActions.DECLINE)) {
         BlocProvider.of<MessageViewBloc>(context).add(ChangeEventInviteStatus(
             status: 'DECLINE',
-            calendarId: _selectedCalendar.id,
-            fileName: _eventFromExpandedMail['File'] as String));
+            calendarId: _selectedCalendar!.id,
+            fileName: _eventFromExpandedMail!['File'] as String));
       } else if (message.message
           .startsWith(ExpandedEventWebViewActions.TENTATIVE)) {
         BlocProvider.of<MessageViewBloc>(context).add(ChangeEventInviteStatus(
             status: 'TENTATIVE',
-            calendarId: _selectedCalendar.id,
-            fileName: _eventFromExpandedMail['File'] as String));
+            calendarId: _selectedCalendar!.id,
+            fileName: _eventFromExpandedMail!['File'] as String));
       } else if (message.message
           .startsWith(ExpandedEventWebViewActions.DROPDOWN_CLICKED)) {
         _invokeSelectCalendarDialog();
@@ -182,7 +181,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     }
     theme = Theme.of(context);
     _mailBloc = BlocProvider.of(context);
-    _controller.setBackgroundColor(theme.scaffoldBackgroundColor);
+    _controller.setBackgroundColor(theme!.scaffoldBackgroundColor);
     _getHtmlWithImages();
   }
 
@@ -191,7 +190,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.decrypted != widget.decrypted ||
         oldWidget.message != widget.message) {
-      _controller.setBackgroundColor(theme.scaffoldBackgroundColor);
+      _controller.setBackgroundColor(theme!.scaffoldBackgroundColor);
       _getHtmlWithImages();
       setState(() {});
     }
@@ -199,7 +198,7 @@ class MessageWebViewState extends BState<MessageWebView> {
 
   void _invokeSelectCalendarDialog() {
     CalendarSelectDialog.show(context,
-            initialValue: _selectedCalendar, options: _calendars)
+            initialValue: _selectedCalendar, options: _calendars!)
         .then((value) {
       if (value != null) {
         _selectedCalendar = value;
@@ -210,7 +209,7 @@ class MessageWebViewState extends BState<MessageWebView> {
   }
 
   void _getHtmlWithImages() async {
-    String htmlData;
+    String? htmlData;
     if (widget.decrypted != null) {
       htmlData = widget.decrypted;
       _htmlData = htmlData;
@@ -223,7 +222,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     htmlData = widget.message.htmlBody;
 
     if (showImages == true) {
-      htmlData = htmlData
+      htmlData = htmlData!
           .replaceAll("data-x-src=", "src=")
           .replaceAll("src=\"http:", "src=\"https:");
       final document = html.parse(htmlData);
@@ -234,9 +233,9 @@ class MessageWebViewState extends BState<MessageWebView> {
     final user = BlocProvider.of<AuthBloc>(context).currentUser;
 
     for (final attachment in widget.attachments) {
-      htmlData = htmlData.replaceFirst(
+      htmlData = htmlData!.replaceFirst(
         "data-x-src-cid=\"${attachment.cid}\"",
-        "src=\"${user.hostname}${attachment.viewUrl.replaceFirst("mail-attachment/", "mail-attachments-cookieless/")}&AuthToken=${user.token}\"",
+        "src=\"${user!.hostname}${attachment.viewUrl!.replaceFirst("mail-attachment/", "mail-attachments-cookieless/")}&AuthToken=${user.token}\"",
       );
     }
 
@@ -250,7 +249,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     final items = Mail.getToForDisplay(
       context,
       message.toInJson,
-      BlocProvider.of<AuthBloc>(context).currentAccount.email,
+      BlocProvider.of<AuthBloc>(context).currentAccount!.email,
     );
 
     if (items.isEmpty) {
@@ -260,18 +259,18 @@ class MessageWebViewState extends BState<MessageWebView> {
     }
   }
 
-  String _getHtmlUri(String html) {
+  String _getHtmlUri(String? html) {
     final state = BlocProvider.of<SettingsBloc>(context).state;
 
     final date = DateFormatting.getDetailedMessageDate(
-      timestamp: widget.message.timeStampInUTC,
+      timestamp: widget.message.timeStampInUTC!,
       locale: Localizations.localeOf(context).languageCode,
       yesterdayWord: S.of(context).label_message_yesterday,
       is24: (state as SettingsLoaded).is24 ?? true,
     );
 
     final message = widget.message.copyWith(
-      folder: _mailBloc.selectedFolder.displayName(context),
+      folder: _mailBloc.selectedFolder!.displayName(context),
     );
 
     final wrappedHtml = MailUtils.wrapInHtml(
@@ -294,29 +293,29 @@ class MessageWebViewState extends BState<MessageWebView> {
 
   void _startDownload(String downloadUrl) async {
     final attachment = widget.attachments
-        .firstWhere((a) => !a.isInline && a.downloadUrl == downloadUrl);
-    if (attachment.fileName.endsWith(".asc")) {
-      final keys = await widget.bloc.sortKey(attachment.location);
+        .firstWhere((a) => !a.isInline! && a.downloadUrl == downloadUrl);
+    if (attachment.fileName!.endsWith(".asc")) {
+      final keys = await widget.bloc!.sortKey(attachment.location!);
       await showDialog(
         context: context,
         builder: (_) =>
             ImportKeyDialog(keys.userKeys, keys.contactKeys, widget.bloc),
       );
-    } else if (attachment.fileName.endsWith(".vcf")) {
+    } else if (attachment.fileName!.endsWith(".vcf")) {
       final msg =
-          S.of(context).messages_attachment_downloading(attachment.fileName);
+          S.of(context).messages_attachment_downloading(attachment.fileName!);
       Fluttertoast.showToast(
         msg: msg,
         timeInSecForIosWeb: 2,
         backgroundColor:
-            Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
+            Platform.isIOS ? theme!.disabledColor.withOpacity(0.5) : null,
       );
 
       BlocProvider.of<MessageViewBloc>(context).downloadAttachment(
         attachment,
         (path) async {
-          String content =
-              Platform.isIOS ? path : await File(path).readAsString();
+          String? content =
+              Platform.isIOS ? path : await File(path!).readAsString();
           final result = await dialog(
             context: context,
             builder: (_) =>
@@ -356,12 +355,12 @@ class MessageWebViewState extends BState<MessageWebView> {
         ),
       );
       final msg =
-          S.of(context).messages_attachment_downloading(attachment.fileName);
+          S.of(context).messages_attachment_downloading(attachment.fileName!);
       Fluttertoast.showToast(
         msg: msg,
         timeInSecForIosWeb: 2,
         backgroundColor:
-            Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
+            Platform.isIOS ? theme!.disabledColor.withOpacity(0.5) : null,
       );
     }
   }
@@ -400,7 +399,7 @@ class MessageWebViewState extends BState<MessageWebView> {
   Future _onLoad() async {
     if (widget.message.hasExternals == true) {
       showImages =
-          await widget.messageViewBloc.checkInWhiteList(widget.message);
+          await widget.messageViewBloc!.checkInWhiteList(widget.message);
       _getHtmlWithImages();
       if (mounted) setState(() {});
     } else {
@@ -442,7 +441,7 @@ class MessageWebViewState extends BState<MessageWebView> {
                 GestureDetector(
                   onTap: () {
                     setState(() => showImages = true);
-                    widget.messageViewBloc.add(AddInWhiteList(widget.message));
+                    widget.messageViewBloc!.add(AddInWhiteList(widget.message));
                     _getHtmlWithImages();
                   },
                   child: Padding(
@@ -473,7 +472,7 @@ class MessageWebViewState extends BState<MessageWebView> {
                   child: AnimatedOpacity(
                     opacity: _pageLoaded && _htmlData != null ? 0.0 : 1.0,
                     duration: Duration(milliseconds: 100),
-                    child: Container(color: theme.scaffoldBackgroundColor),
+                    child: Container(color: theme!.scaffoldBackgroundColor),
                   ),
                 ),
               ),

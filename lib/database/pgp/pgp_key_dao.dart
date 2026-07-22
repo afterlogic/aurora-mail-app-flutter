@@ -55,7 +55,7 @@ class PgpKeyDao extends DatabaseAccessor<AppDatabase> with _$PgpKeyDaoMixin {
 
   T _forOther<T extends SingleTableQueryMixin<$PgpKeyModelTable, LocalPgpKey>>(
       T statement) {
-    return statement..where((pgpKey) => pgpKey.other.equals(_other));
+    return statement..where((pgpKey) => pgpKey.other.equalsNullable(_other));
   }
 
   setOther(String id) {

@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/screens/configure_two_factor/configure_two_factor_route.dart';
@@ -13,9 +13,9 @@ import 'package:theme/app_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ConfigureTwoFactorScreen extends StatelessWidget {
-  final ConfigureTwoFactorRouteArgs args;
+  final ConfigureTwoFactorRouteArgs? args;
 
-  const ConfigureTwoFactorScreen({this.args, Key key}) : super(key: key);
+  const ConfigureTwoFactorScreen({this.args, Key? key}) : super(key: key);
 
   Widget _gradientWrap(Widget child) {
     return themeWrap(
@@ -28,7 +28,7 @@ class ConfigureTwoFactorScreen extends StatelessWidget {
   Widget themeWrap(Widget child) {
     if (AppTheme.login != null) {
       return Theme(
-        data: AppTheme.login,
+        data: AppTheme.login!,
         child: child,
       );
     }
@@ -36,7 +36,7 @@ class ConfigureTwoFactorScreen extends StatelessWidget {
   }
 
   Future<void> _onButtonTap(BuildContext context) async {
-    final webUrl = args.webVersionUrl;
+    final webUrl = args!.webVersionUrl;
     if (webUrl.isNotEmpty) {
       launchUrl(Uri.parse(webUrl));
     } else {
@@ -46,7 +46,7 @@ class ConfigureTwoFactorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final buttonLabel = args.webVersionUrl.isNotEmpty
+    final buttonLabel = args!.webVersionUrl.isNotEmpty
         ? S.of(context).btn_login_open_web_version
         : S.of(context).btn_login_back_to_login;
 
@@ -78,7 +78,7 @@ class ConfigureTwoFactorScreen extends StatelessWidget {
                             S.of(context).hint_login_configure_2FA,
                             style: Theme.of(context)
                                 .textTheme
-                                .subtitle1
+                                .titleMedium!
                                 .copyWith(
                                     fontSize: 18,
                                     color: AppTheme.loginTextColor),

@@ -115,7 +115,9 @@ class _DayViewState extends State<DayView> {
               DateFormat('y MMM d').format(date),
           timeStringBuilder: (date, {secondaryDate}) {
             String sTimeFormat =
-                ((settingsState as SettingsLoaded).is24 ? 'HH:mm' : 'h a');
+                ((settingsState as SettingsLoaded).is24 ?? false
+                    ? 'HH:mm'
+                    : 'h a');
             return DateFormat(sTimeFormat).format(date);
           },
           eventTileBuilder: (DateTime date,

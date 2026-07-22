@@ -41,15 +41,15 @@ class AccountIdentityDao extends DatabaseAccessor<AppDatabase>
     }
     accountIdentityIdsQuery.addColumns([accountIdentityTable.entityId]);
 
-    final Set<int?> accountIdentityEntityIds = (await accountIdentityIdsQuery
+    final Set<int> accountIdentityEntityIds = (await accountIdentityIdsQuery
             .map((a) => a.read(accountIdentityTable.entityId))
             .get())
+        .whereType<int>()
         .toSet();
 
     final Map<int, String?> signatureMap = {};
 
-    for (int? entityId in accountIdentityEntityIds) {
-      if (entityId == null) continue;
+    for (int entityId in accountIdentityEntityIds) {
       final signatureQuery = selectOnly(accountIdentityTable)
         ..where(accountIdentityTable.entityId.equals(entityId))
         ..addColumns([accountIdentityTable.signature]);

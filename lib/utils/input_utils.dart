@@ -56,7 +56,7 @@ class InputUtils {
         child: ListTile(
           title: Text(
             title,
-            style: textStyle ?? Theme.of(context).textTheme.headline6,
+            style: textStyle ?? Theme.of(context).textTheme.titleLarge,
           ),
         ),
       );

@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:flutter/material.dart';
 
@@ -13,13 +13,13 @@ class AdaptiveBottomBarIcon extends StatelessWidget {
   final double size; // Icon Size
 
   const AdaptiveBottomBarIcon({
-    @required this.defaultIcon,
-    @required this.iconName,
-    @required this.isActive,
-    @required this.activeColor,
-    @required this.inactiveColor,
+    required this.defaultIcon,
+    required this.iconName,
+    required this.isActive,
+    required this.activeColor,
+    required this.inactiveColor,
     this.size = 28.0,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

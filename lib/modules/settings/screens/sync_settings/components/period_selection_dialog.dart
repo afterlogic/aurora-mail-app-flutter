@@ -31,7 +31,7 @@ class PeriodSelectionDialog extends StatelessWidget {
           children: Period.values.map((period) {
             return RadioListTile(
               activeColor: theme.primaryColor,
-              title: Text(SyncPeriod.periodToTitle(context, period)),
+              title: Text(SyncPeriod.periodToTitle(context, period)!),
               value: period,
               groupValue: selectedItem,
               onChanged: (val) {

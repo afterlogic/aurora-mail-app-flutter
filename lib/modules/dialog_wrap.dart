@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 
 import 'package:aurora_mail/generated/l10n.dart';
@@ -16,14 +16,14 @@ import 'package:flutter/material.dart';
 import 'auth/blocs/auth_bloc/auth_bloc.dart';
 
 class RouteWrap extends StatefulWidget {
-  final Widget child;
-  final GlobalKey<NavigatorState> navKey;
-  static Map<String, dynamic> notification;
-  static RouteWrapState staticState;
-  final AuthBloc authBloc;
+  final Widget? child;
+  final GlobalKey<NavigatorState>? navKey;
+  static Map<String, dynamic>? notification;
+  static RouteWrapState? staticState;
+  final AuthBloc? authBloc;
 
   const RouteWrap({
-    Key key,
+    Key? key,
     this.child,
     this.navKey,
     this.authBloc,
@@ -41,17 +41,17 @@ class RouteWrapState extends State<RouteWrap> {
     super.initState();
     RouteWrap.staticState = this;
     if (RouteWrap.notification != null) {
-      final type = RouteWrap.notification["Type"] as String;
+      final type = RouteWrap.notification!["Type"] as String?;
       switch (type) {
         case 'event':
         case 'task':
-          onCalendar(RouteWrap.notification);
+          onCalendar(RouteWrap.notification!);
           break;
         case 'email':
-          onMessage(RouteWrap.notification);
+          onMessage(RouteWrap.notification!);
           break;
         default:
-          onMessage(RouteWrap.notification);
+          onMessage(RouteWrap.notification!);
           break;
       }
       RouteWrap.notification = null;
@@ -66,20 +66,20 @@ class RouteWrapState extends State<RouteWrap> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.child;
+    return widget.child!;
   }
 
   Future<void> showMessage(
-    int userId,
-    int messageUid,
-    int accountLocalId,
+    int? userId,
+    int? messageUid,
+    int? accountLocalId,
   ) async {
     if (await discardNotSavedChanges()) {
       final completer = Completer();
-      widget.authBloc.add(SelectUser(userId, completer, accountLocalId));
+      widget.authBloc!.add(SelectUser(userId, completer, accountLocalId));
       await completer.future;
       MessagesListAndroid.openMessageLocalId = messageUid;
-      widget.navKey.currentState.pushNamedAndRemoveUntil(
+      widget.navKey!.currentState!.pushNamedAndRemoveUntil(
         MessagesListRoute.name,
         (_) => false,
         arguments: MessagesListRouteArg(),
@@ -92,25 +92,25 @@ class RouteWrapState extends State<RouteWrap> {
       return selectUser(json);
     } else {
       //notification from background update
-      final userLocalId = json["user"] as int;
-      final messageLocalId = json["message"] as int;
-      final accountLocalId = json["account"] as int;
+      final userLocalId = json["user"] as int?;
+      final messageLocalId = json["message"] as int?;
+      final accountLocalId = json["account"] as int?;
 
       return showMessage(userLocalId, messageLocalId, accountLocalId);
     }
   }
 
   Future<void> onCalendar(Map<String, dynamic> json) async {
-    final email = json["To"] as String;
+    final email = json["To"] as String?;
     final completer = Completer();
     final notificationData = NotificationData.fromJson(json);
 
-    if (widget.authBloc.currentAccount?.email != email) {
-      widget.authBloc.add(SelectUserByEmail(email, completer));
+    if (widget.authBloc!.currentAccount?.email != email) {
+      widget.authBloc!.add(SelectUserByEmail(email, completer));
       await completer.future;
     }
 
-    ActivityType activityType;
+    late ActivityType activityType;
     switch (notificationData.type) {
       case NotificationType.email:
         throw Exception('Unsupported activity type');
@@ -123,7 +123,7 @@ class RouteWrapState extends State<RouteWrap> {
         break;
     }
 
-    widget.navKey.currentState.pushNamedAndRemoveUntil(
+    widget.navKey!.currentState!.pushNamedAndRemoveUntil(
       CalendarRoute.name,
       (_) => false,
       arguments: CalendarPageArg(
@@ -136,7 +136,7 @@ class RouteWrapState extends State<RouteWrap> {
 
   Future<bool> discardNotSavedChanges() async {
     if (hasNotSavedChanges) {
-      final context = widget.navKey.currentState.overlay.context;
+      final context = widget.navKey!.currentState!.overlay!.context;
       final result = await ConfirmationDialog.show(
         context,
         null,
@@ -152,18 +152,18 @@ class RouteWrapState extends State<RouteWrap> {
 
   Future<void> selectUser(Map<String, dynamic> json) async {
     if (await discardNotSavedChanges()) {
-      final email = json["To"] as String;
+      final email = json["To"] as String?;
       final completer = Completer();
 
-      if (widget.authBloc.currentAccount?.email != email) {
-        widget.authBloc.add(SelectUserByEmail(email, completer));
+      if (widget.authBloc!.currentAccount?.email != email) {
+        widget.authBloc!.add(SelectUserByEmail(email, completer));
         await completer.future;
       }
-      if (widget.authBloc.currentAccount?.email != email ||
-          json["Folder"] as String != null) {
-        MessagesListAndroid.openMessageFolder = json["Folder"] as String;
-        MessagesListAndroid.openMessageId = json["MessageId"] as String;
-        widget.navKey.currentState.pushNamedAndRemoveUntil(
+      if (widget.authBloc!.currentAccount?.email != email ||
+          (json["Folder"] as String?) != null) {
+        MessagesListAndroid.openMessageFolder = json["Folder"] as String?;
+        MessagesListAndroid.openMessageId = json["MessageId"] as String?;
+        widget.navKey!.currentState!.pushNamedAndRemoveUntil(
           MessagesListRoute.name,
           (_) => false,
           arguments: MessagesListRouteArg(),

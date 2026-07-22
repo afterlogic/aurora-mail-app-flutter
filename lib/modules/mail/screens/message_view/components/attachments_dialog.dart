@@ -37,7 +37,7 @@ class _AttachmentsDialogState extends BState<AttachmentsDialog> {
         width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
         child: AMDialogList(
           children: widget.attachments.map((attachment) {
-            if (attachment.isInline) {
+            if (attachment.isInline == true) {
               return SizedBox();
             } else {
               return Attachment(attachment);

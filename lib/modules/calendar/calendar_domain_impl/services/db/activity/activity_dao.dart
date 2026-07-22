@@ -108,7 +108,7 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
       ..where(activityTable.synced.equals(false))
       ..addColumns([countExp]);
     final result = await query.map((row) => row.read(countExp)).getSingle();
-    return result;
+    return result ?? 0;
   }
 
   Future<List<ActivityDb>> getEventsWithLimit({

@@ -25,7 +25,7 @@ class SelectAppBar extends StatelessWidget {
       builder: (context, state) {
         final areContactsCanBeDeleted = _checkIfContactsCanBeDeleted(
             state.storages
-                .firstWhereOrNull((e) => e.name == state.selectedStorage),
+                ?.firstWhereOrNull((e) => e.name == state.selectedStorage),
             context);
         return AMAppBar(
           shadow: BoxShadow(color: Colors.transparent),
@@ -62,7 +62,7 @@ class SelectAppBar extends StatelessWidget {
     if (storage == null) {
       return false;
     }
-    final authBlocState = BlocProvider.of<AuthBloc>(context).currentUser;
+    final authBlocState = BlocProvider.of<AuthBloc>(context).currentUser!;
     return authBlocState.emailFromLogin == storage.ownerMail
         ? true
         : storage.isShared == true && storage.accessCode == 1;
@@ -104,7 +104,7 @@ class SelectAppBar extends StatelessWidget {
   void _moveToGroup(BuildContext context) async {
     final result = await GroupsSelectDialog.show(
       context,
-      bloc.state.groups,
+      bloc.state.groups ?? [],
     );
     if (result == null) {
       return;

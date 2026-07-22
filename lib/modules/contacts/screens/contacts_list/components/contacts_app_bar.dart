@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
@@ -13,13 +13,13 @@ import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/utils/storage_util.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide SearchBar;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ContactsAppBar extends StatefulWidget implements PreferredSizeWidget {
   final bool isAppBar;
   final bool enable;
-  final SelectionController<String, Contact> controller;
+  final SelectionController<String, Contact>? controller;
 
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
@@ -34,7 +34,7 @@ class ContactsAppBar extends StatefulWidget implements PreferredSizeWidget {
 class _ContactsAppBarState extends State<ContactsAppBar> {
   ContactAppBarMode _mode = ContactAppBarMode.common;
   final _searchCtrl = TextEditingController();
-  ContactsBloc _contactsBloc;
+  late ContactsBloc _contactsBloc;
 
   @override
   void initState() {
@@ -43,7 +43,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
     widget.controller?.addListener(update);
     if (_contactsBloc.searchPattern != null) {
       _mode = ContactAppBarMode.search;
-      _searchCtrl.text = _contactsBloc.searchPattern;
+      _searchCtrl.text = _contactsBloc.searchPattern!;
     }
   }
 
@@ -62,7 +62,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
     return AnimatedSwitcher(
       duration: Duration(milliseconds: 250),
       child: widget.controller?.enable == true && widget.enable
-          ? SelectAppBar(widget.controller, _contactsBloc)
+          ? SelectAppBar(widget.controller!, _contactsBloc)
           : _mode == ContactAppBarMode.search && widget.enable
               ? SearchBar(
                   _searchCtrl,
@@ -92,9 +92,9 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
     final theme = Theme.of(context);
 
     Widget _buildTitle(BuildContext context, ContactsState state) {
-      if (state.selectedStorage != null && state.storages.isNotEmpty) {
+      if (state.selectedStorage != null && state.storages!.isNotEmpty) {
         final selectedStorage =
-            state.storages.firstWhere((s) => s.id == state.selectedStorage);
+            state.storages!.firstWhere((s) => s.id == state.selectedStorage);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -102,25 +102,25 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
             Text(S.of(context).contacts),
             SizedBox(height: 3.0),
             Text(
-              _getLocalizedStorageName(selectedStorage.displayName),
+              _getLocalizedStorageName(selectedStorage.displayName!),
               style: TextStyle(
-                  fontSize: theme.textTheme.bodySmall.fontSize,
+                  fontSize: theme.textTheme.bodySmall!.fontSize,
                   fontWeight: FontWeight.w400),
             ),
           ],
         );
-      } else if (state.selectedGroup != null && state.groups.isNotEmpty) {
+      } else if (state.selectedGroup != null && state.groups!.isNotEmpty) {
         final selectedGroup =
-            state.groups.firstWhere((g) => g.uuid == state.selectedGroup);
+            state.groups!.firstWhere((g) => g.uuid == state.selectedGroup);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text(S.of(context).contacts),
             SizedBox(height: 3.0),
             Text(
-              "# " + selectedGroup.name,
+              "# " + selectedGroup.name!,
               style: TextStyle(
-                  fontSize: theme.textTheme.bodySmall.fontSize,
+                  fontSize: theme.textTheme.bodySmall!.fontSize,
                   fontWeight: FontWeight.w400),
             ),
           ],
@@ -134,7 +134,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
             Text(
               S.of(context).contacts_list_app_bar_all_contacts,
               style: TextStyle(
-                  fontSize: theme.textTheme.bodySmall.fontSize,
+                  fontSize: theme.textTheme.bodySmall!.fontSize,
                   fontWeight: FontWeight.w400),
             ),
           ],
@@ -152,7 +152,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
               IconButton(
                 icon: AppBarIcons.info(context: context),
                 onPressed: () {
-                  final group = state.groups
+                  final group = state.groups!
                       .firstWhere((g) => g.uuid == state.selectedGroup);
                   Navigator.pushNamed(context, GroupViewRoute.name,
                       arguments: GroupViewScreenArgs(group, _contactsBloc));
@@ -175,7 +175,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
             if (BuildProperty.multiUserEnable)
               BlocBuilder<SettingsBloc, SettingsState>(
                 builder: (_, state) =>
-                    UserSelectionPopup((state as SettingsLoaded).users),
+                    UserSelectionPopup((state as SettingsLoaded).users!),
               ),
           ],
         );
@@ -197,7 +197,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
                   IconButton(
                     icon: AppBarIcons.info(context: context),
                     onPressed: () {
-                      final group = state.groups
+                      final group = state.groups!
                           .firstWhere((g) => g.uuid == state.selectedGroup);
                       Navigator.pushNamed(context, GroupViewRoute.name,
                           arguments: GroupViewScreenArgs(group, _contactsBloc));
@@ -210,7 +210,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
                 if (BuildProperty.multiUserEnable)
                   BlocBuilder<SettingsBloc, SettingsState>(
                     builder: (_, state) =>
-                        UserSelectionPopup((state as SettingsLoaded).users),
+                        UserSelectionPopup((state as SettingsLoaded).users!),
                   ),
               ]
             : null,

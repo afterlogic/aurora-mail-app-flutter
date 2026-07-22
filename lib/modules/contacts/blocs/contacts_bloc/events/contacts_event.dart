@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
@@ -14,34 +14,34 @@ abstract class ContactsEvent extends Equatable {
   const ContactsEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class SearchContacts extends ContactsEvent with AlwaysNonEqualObject {
-  final String search;
+  final String? search;
 
   SearchContacts([this.search]);
 }
 
 class GetContacts extends ContactsEvent with AlwaysNonEqualObject {
-  final Completer completer;
+  final Completer? completer;
 
   GetContacts({this.completer});
 }
 
 // if none is selected returns all contacts
 class SelectStorageGroup extends ContactsEvent {
-  final String storageId;
-  final String groupId;
+  final String? storageId;
+  final String? groupId;
 
-  SelectStorageGroup({ContactsStorage storage, ContactsGroup group})
+  SelectStorageGroup({ContactsStorage? storage, ContactsGroup? group})
       : storageId = storage?.id,
         groupId = group?.uuid;
 
   SelectStorageGroup.raw({this.storageId, this.groupId});
 
   @override
-  List<Object> get props => [storageId, groupId];
+  List<Object?> get props => [storageId, groupId];
 }
 
 class SetAllVisibleContactsSelected extends ContactsEvent
@@ -58,7 +58,7 @@ class ReceivedContacts extends ContactsEvent {
 
 class CreateContact extends ContactsEvent {
   final Contact contact;
-  final Completer completer;
+  final Completer? completer;
 
   const CreateContact(this.contact, {this.completer});
 
@@ -69,7 +69,7 @@ class CreateContact extends ContactsEvent {
 class UpdateContactPgpKey extends ContactsEvent {
   final Contact contact;
 
-  const UpdateContactPgpKey({@required this.contact});
+  const UpdateContactPgpKey({required this.contact});
 
   @override
   List<Object> get props => [contact];
@@ -77,7 +77,7 @@ class UpdateContactPgpKey extends ContactsEvent {
 
 class UpdateContact extends ContactsEvent {
   final Contact contact;
-  final FreeKeyAction freeKey;
+  final FreeKeyAction? freeKey;
 
   const UpdateContact(
     this.contact,
@@ -85,27 +85,27 @@ class UpdateContact extends ContactsEvent {
   );
 
   @override
-  List<Object> get props => [contact, freeKey];
+  List<Object?> get props => [contact, freeKey];
 }
 
 class ReImport extends ContactsEvent {
-  final String key;
+  final String? key;
 
   const ReImport(this.key);
 
   @override
-  List<Object> get props => [key];
+  List<Object?> get props => [key];
 }
 
 class ImportVcf extends ContactsEvent with AlwaysNonEqualObject {
-  final String content;
+  final String? content;
   final Completer completer;
 
   const ImportVcf(this.content, this.completer);
 }
 
 class DeleteContacts extends ContactsEvent {
-  final List<Contact> contacts;
+  final List<Contact?> contacts;
 
   const DeleteContacts(this.contacts);
 
@@ -114,7 +114,7 @@ class DeleteContacts extends ContactsEvent {
 }
 
 class ShareContacts extends ContactsEvent {
-  final List<Contact> contacts;
+  final List<Contact?> contacts;
 
   const ShareContacts(this.contacts);
 
@@ -123,7 +123,7 @@ class ShareContacts extends ContactsEvent {
 }
 
 class UnshareContacts extends ContactsEvent {
-  final List<Contact> contacts;
+  final List<Contact?> contacts;
 
   const UnshareContacts(this.contacts);
 
@@ -133,7 +133,7 @@ class UnshareContacts extends ContactsEvent {
 
 class AddContactsToGroup extends ContactsEvent {
   final List<ContactsGroup> groups;
-  final List<Contact> contacts;
+  final List<Contact?> contacts;
 
   const AddContactsToGroup(this.groups, this.contacts);
 

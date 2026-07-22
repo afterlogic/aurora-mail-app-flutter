@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:io';
 
 import 'package:aurora_mail/build_property.dart';
@@ -19,7 +19,7 @@ class PgpSettingsMethods {
   final CryptoStorage cryptoStorage;
   final PgpWorker cryptoWorker;
   final ContactsRepository contactsRepository;
-  final User user;
+  final User? user;
 
   PgpSettingsMethods(this.cryptoStorage, this.cryptoWorker, this.user,
       this.contactsRepository);
@@ -49,10 +49,10 @@ class PgpSettingsMethods {
   Future<File> downloadKey(PgpKey key) async {
     try {
       final fileName =
-          "${((key.name.startsWith(" ") ? key.name.substring(1) : key.name) + " ") ?? ""}${key.mail} PGP ${key.isPrivate ? "private" : "public"} key.asc"
+          "${((key.name!.startsWith(" ") ? key.name!.substring(1) : key.name)! + " ") ?? ""}${key.mail} PGP ${key.isPrivate ? "private" : "public"} key.asc"
               .replaceAll(Platform.pathSeparator, "");
       final file = File(
-        await _keysFolderPath() + Platform.pathSeparator + fileName,
+        (await _keysFolderPath())! + Platform.pathSeparator + fileName,
       );
 
       if (await file.exists()) await file.delete();
@@ -65,14 +65,14 @@ class PgpSettingsMethods {
     }
   }
 
-  Future<File> downloadKeys(List<PgpKey> keys) async {
+  Future<File> downloadKeys(List<PgpKey?> keys) async {
     try {
       final fileName = "PGP public keys.asc";
       final file = File(
-        await _keysFolderPath() + Platform.pathSeparator + fileName,
+        (await _keysFolderPath())! + Platform.pathSeparator + fileName,
       );
       await file.create(recursive: true);
-      await file.writeAsString(keys.map((key) => key.key).join("\n\n"));
+      await file.writeAsString(keys.map((key) => key!.key).join("\n\n"));
       return file;
     } catch (err) {
       print('ERROR PgpSettingsMethods.downloadKeys(): $err');
@@ -82,7 +82,7 @@ class PgpSettingsMethods {
 
   shareKey(PgpKey key, Rect rect) {
     final title =
-        "${(key.name + " ") ?? ""}${key.mail} PGP ${key.isPrivate ? "private" : "public"} key.asc";
+        "${(key.name! + " ") ?? ""}${key.mail} PGP ${key.isPrivate ? "private" : "public"} key.asc";
     _shareFile(
       title,
       key.key,
@@ -90,16 +90,16 @@ class PgpSettingsMethods {
     );
   }
 
-  shareKeys(List<PgpKey> keys, Rect rect) {
+  shareKeys(List<PgpKey?> keys, Rect rect) {
     final title = "PGP public keys.asc";
     _shareFile(
       title,
-      keys.map((key) => key.key).join("\n\n"),
+      keys.map((key) => key!.key).join("\n\n"),
       rect,
     );
   }
 
-  Future<String> _keysFolderPath() async {
+  Future<String?> _keysFolderPath() async {
     final dirPath = (await getDownloadDirectory());
     print('!!! dirPath = $dirPath}');
     // return dirPath + Platform.pathSeparator + KEY_FOLDER;
@@ -114,8 +114,8 @@ class PgpSettingsMethods {
     return cryptoWorker.parseKey(key);
   }
 
-  Future<Map<PgpKey, bool>> userKeyMarkIfNotExist(List<PgpKey> keys) async {
-    final map = <PgpKey, bool>{};
+  Future<Map<PgpKey, bool?>> userKeyMarkIfNotExist(List<PgpKey> keys) async {
+    final map = <PgpKey, bool?>{};
     for (var key in keys) {
       final existKey =
           await cryptoStorage.getPgpKey(key.mail, key.isPrivate, false);
@@ -124,9 +124,9 @@ class PgpSettingsMethods {
     return map;
   }
 
-  Future<Map<PgpKeyWithContact, bool>> contactKeyMarkIfNotExist(
+  Future<Map<PgpKeyWithContact, bool?>> contactKeyMarkIfNotExist(
       List<PgpKey> keys) async {
-    final map = <PgpKeyWithContact, bool>{};
+    final map = <PgpKeyWithContact, bool?>{};
     for (var key in keys) {
       final contact = await contactsRepository.getContactByEmail(key.mail);
       map[PgpKeyWithContact(key, contact)] =
@@ -150,21 +150,21 @@ class PgpSettingsMethods {
   }
 
   Future updateContactPublicKeyFlags(
-      {@required Contact contact, bool pgpEncryptMessages, bool pgpSignMessages}) {
+      {required Contact contact, bool? pgpEncryptMessages, bool? pgpSignMessages}) {
     return contactsRepository.updateContactPublicKeyFlags(
         contact: contact,
         pgpEncryptMessages: pgpEncryptMessages,
         pgpSignMessages: pgpSignMessages);
   }
 
-  Future<String> pickFileContent() async {
+  Future<String?> pickFileContent() async {
     var content = "";
     final result = Platform.isIOS
-        ? (await FilePicker.platform.pickFiles(
+        ? (await FilePicker.pickFiles(
             type: FileType.any,
             allowMultiple: true,
           ))
-        : (await FilePicker.platform.pickFiles(
+        : (await FilePicker.pickFiles(
             allowMultiple: true,
             type: FileType.custom,
             allowedExtensions: ["asc"],
@@ -172,8 +172,8 @@ class PgpSettingsMethods {
     if (result == null) return null;
     final files = result.files;
     for (var file in files) {
-      if (file.path.endsWith(".asc") || file.path.contains(".asc.")) {
-        content += await File(file.path).readAsString();
+      if (file.path!.endsWith(".asc") || file.path!.contains(".asc.")) {
+        content += await File(file.path!).readAsString();
       }
     }
     return content;
@@ -185,7 +185,7 @@ class PgpSettingsMethods {
 
   static const KEY_FOLDER = "pgp_keys";
 
-  Future<PgpKeyMap> sortKeys(List<PgpKey> keys, Set<String> userEmails) async {
+  Future<PgpKeyMap> sortKeys(List<PgpKey> keys, Set<String?> userEmails) async {
     final userKeys = <PgpKey>[];
     final contactKeys = <PgpKey>[];
 
@@ -235,8 +235,8 @@ class PgpSettingsMethods {
 }
 
 class PgpKeyMap {
-  final Map<PgpKey, bool> userKey;
-  final Map<PgpKeyWithContact, bool> contactKey;
+  final Map<PgpKey, bool?> userKey;
+  final Map<PgpKeyWithContact, bool?> contactKey;
 
   PgpKeyMap(this.userKey, this.contactKey);
 }

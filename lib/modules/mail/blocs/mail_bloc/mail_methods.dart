@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:convert';
 import 'dart:math';
 
@@ -27,36 +27,36 @@ class MailMethods {
   final _foldersDao = new FoldersDao(DBInstances.appDB);
   final _usersDao = new UsersDao(DBInstances.appDB);
   final _mailDao = new MailDao(DBInstances.appDB);
-  final UpdateMessageCounter updateMessageCounter;
+  final UpdateMessageCounter? updateMessageCounter;
   var needUpdateInfo = false;
-  FoldersApi _foldersApi;
-  MailApi _mailApi;
+  late FoldersApi _foldersApi;
+  late MailApi _mailApi;
   bool _closed = false;
   final User user;
-  final Account account;
+  final Account? account;
 
   MailMethods({
-    @required this.account,
-    @required this.user,
+    required this.account,
+    required this.user,
     this.updateMessageCounter,
   }) {
     _foldersApi = new FoldersApi(
       user: user,
       account: account,
-      interceptor: DefaultApiInterceptor.get(),
+      interceptor: DefaultApiInterceptor.get()!,
     );
     _mailApi = new MailApi(
       user: user,
       account: account,
-      interceptor: DefaultApiInterceptor.get(),
+      interceptor: DefaultApiInterceptor.get()!,
     );
   }
 
-  static final syncQueue = new List<String>();
+  static final syncQueue = <String>[];
 
   bool get _isOffline => SettingsBloc.isOffline;
 
-  Future<List<Folder>> getFolders() async {
+  Future<List<Folder>?> getFolders() async {
     logger.log("method getFolders");
     // try to get from DB
 
@@ -71,24 +71,24 @@ class MailMethods {
       // first convert rawFolders to the format, which sql will accept and add to DB
       final newFolders = await Folders.getFolderObjectsFromServerAsync(
         rawFolders: rawFolders,
-        accountId: account.accountId,
-        accountLocalId: account.localId,
-        userLocalId: user.localId,
+        accountId: account!.accountId,
+        accountLocalId: account!.localId!,
+        userLocalId: user.localId!,
       );
       await _foldersDao.addFolders(newFolders);
 
       final newFoldersWithIds =
-          await _foldersDao.getAllFolders(account.localId);
+          await _foldersDao.getAllFolders(account!.localId);
       return Folder.getFoldersObjectsFromDb(newFoldersWithIds);
     }
   }
 
-  Future<List<Folder>> refreshFolders() async {
+  Future<List<Folder>?> refreshFolders() async {
     logger.log("method refreshFolders");
     if (_isOffline) return _getOfflineFolders();
 
     // fetch old folders
-    final oldLocalFoldersFuture = _foldersDao.getAllFolders(account.localId);
+    final oldLocalFoldersFuture = _foldersDao.getAllFolders(account!.localId);
     // fetch new folders
     final rawFoldersFuture = _foldersApi.getFolders();
 
@@ -105,9 +105,9 @@ class MailMethods {
     // convert new folders to db-like format (the format of old folders) for calculating difference
     final newLocalFolders = await Folders.getFolderObjectsFromServerAsync(
       rawFolders: rawFolders,
-      accountId: account.accountId,
-      accountLocalId: account.localId,
-      userLocalId: user.localId,
+      accountId: account!.accountId,
+      accountLocalId: account!.localId!,
+      userLocalId: user.localId!,
     );
 
     // calculate difference
@@ -117,7 +117,7 @@ class MailMethods {
     final removedFolders = calcResult.deletedFolders;
     final addedFolders = calcResult.addedFolders;
     final updatedFolders = calcResult.updatedFolders;
-    final dbFutures = new List<Future>();
+    final dbFutures = <Future>[];
 
     if (removedFolders.isNotEmpty) {
       dbFutures.add(_foldersDao.deleteFolders(removedFolders));
@@ -141,27 +141,27 @@ class MailMethods {
       await Future.wait(dbFutures);
 
       final newFoldersWithIds =
-          await _foldersDao.getAllFolders(account.localId);
+          await _foldersDao.getAllFolders(account!.localId);
       return Folder.getFoldersObjectsFromDb(newFoldersWithIds);
     } else {
       return Folder.getFoldersObjectsFromDb(oldLocalFolders);
     }
   }
 
-  Future<List<Folder>> updateFoldersHash(Folder selectedFolder,
+  Future<List<Folder>?> updateFoldersHash(Folder? selectedFolder,
       {bool forceCurrentFolderUpdate = false}) async {
     logger.log("method updateFoldersHash");
     if (_isOffline) return _getOfflineFolders();
 
     assert(selectedFolder != null);
 
-    final localFolders = await _foldersDao.getAllFolders(account.localId);
+    final localFolders = await _foldersDao.getAllFolders(account!.localId);
 
-    final folders = await _foldersApi.getRelevantFoldersInformation(
+    final folders = (await _foldersApi.getRelevantFoldersInformation(
       localFolders.map((e) => e.fullNameRaw).toList(),
-    );
+    ))!;
 
-    final futures = new List<Future>();
+    final futures = <Future>[];
 
     folders.keys.forEach((fName) {
       final updatedFolder = folders[fName];
@@ -172,7 +172,7 @@ class MailMethods {
       // because non-system folders update only when they are entered
       // thus might not have been synced yet
       final shouldUpdate = forceCurrentFolderUpdate == true &&
-              folder.fullName == selectedFolder.fullName ||
+              folder.fullName == selectedFolder!.fullName ||
           folder.needsInfoUpdate;
 
       final count = updatedFolder[0];
@@ -184,9 +184,9 @@ class MailMethods {
       }
       futures.add(_foldersDao.updateFolder(
         new FoldersCompanion(
-          count: Value(count as int),
-          unread: Value(unread as int),
-          fullNameHash: Value(newHash as String),
+          count: Value(count as int?),
+          unread: Value(unread as int?),
+          fullNameHash: Value((newHash as String?)!),
           needsInfoUpdate: Value(needsInfoUpdate),
         ),
         folder.guid,
@@ -195,11 +195,11 @@ class MailMethods {
 
     await Future.wait(futures);
     final updatedLocalFolders =
-        await _foldersDao.getAllFolders(account.localId);
+        await _foldersDao.getAllFolders(account!.localId);
     return Folder.getFoldersObjectsFromDb(updatedLocalFolders);
   }
 
-  Future updateFolderHash(Folder selectedFolder,
+  Future updateFolderHash(Folder? selectedFolder,
       {bool forceCurrentFolderUpdate = false}) async {
     logger.log("method updateFolderHash");
     if (_isOffline) return;
@@ -207,24 +207,24 @@ class MailMethods {
     assert(selectedFolder != null);
     var foldersForUpdate = await _foldersDao
         .getAllFolders(
-          account.localId,
+          account!.localId,
         )
-        .then((value) => Folder.getFoldersObjectsFromDb(value));
+        .then((value) => Folder.getFoldersObjectsFromDb(value)!);
     final foldersMap = {
       for (var item in foldersForUpdate) item.fullNameRaw: item,
-      selectedFolder.fullNameRaw: selectedFolder,
+      selectedFolder!.fullNameRaw: selectedFolder,
     };
-    final folders = await _foldersApi
-        .getRelevantFoldersInformation(foldersMap.keys.toList());
+    final folders = (await _foldersApi
+        .getRelevantFoldersInformation(foldersMap.keys.toList()))!;
 
-    final futures = new List<Future>();
+    final futures = <Future>[];
     if (folders.isEmpty) {
       return;
     }
     for (var value in folders.entries) {
       final fName = value.key;
       final updatedFolder = value.value;
-      final folder = foldersMap[value.key];
+      final folder = foldersMap[value.key]!;
 
       // only current folder can be force updated
       // the value cannot be set from true to false
@@ -243,9 +243,9 @@ class MailMethods {
       }
       futures.add(_foldersDao.updateFolder(
         new FoldersCompanion(
-          count: Value(count as int),
-          unread: Value(unread as int),
-          fullNameHash: Value(newHash as String),
+          count: Value(count as int?),
+          unread: Value(unread as int?),
+          fullNameHash: Value((newHash as String?)!),
           needsInfoUpdate: Value(needsInfoUpdate),
         ),
         folder.guid,
@@ -253,12 +253,12 @@ class MailMethods {
     }
     await Future.wait(futures);
     final updatedLocalFolders =
-        await _foldersDao.getAllFolders(account.localId);
+        await _foldersDao.getAllFolders(account!.localId);
     return Folder.getFoldersObjectsFromDb(updatedLocalFolders);
   }
 
   Future<void> syncFolders({
-    @required String guid,
+    required String guid,
     bool syncSystemFolders = true,
     bool forceUpdateMessagesInfo = false,
   }) async {
@@ -267,13 +267,13 @@ class MailMethods {
 
     // either localId or syncSystemFolders must be provided
     assert(guid != null || syncSystemFolders != null);
-    var localFolders = new List<LocalFolder>();
+    var localFolders = <LocalFolder>[];
     if (syncSystemFolders == true) {
       localFolders = await _foldersDao.getByType([
         Folder.getNumberFromFolderType(FolderType.inbox),
         Folder.getNumberFromFolderType(FolderType.sent),
         Folder.getNumberFromFolderType(FolderType.drafts)
-      ], account.localId);
+      ], account!.localId);
       localFolders.sort((a, b) => a.folderOrder.compareTo(b.folderOrder));
     }
 
@@ -306,7 +306,7 @@ class MailMethods {
   }
 
   Future<void> _setMessagesInfoToFolder({
-    String guid,
+    String? guid,
     bool forceSync = false,
   }) async {
     logger.log(
@@ -316,9 +316,9 @@ class MailMethods {
       return;
     }
 
-    final folderToUpdate = await _foldersDao.getFolderByGuId(syncQueue[0]);
+    final folderToUpdate = (await _foldersDao.getFolderByGuId(syncQueue[0]))!;
     // get the actual sync period
-    final updatedUser = await _usersDao.getUserByLocalId(user.localId);
+    final updatedUser = await _usersDao.getUserByLocalId(user.localId!);
     final forceUpdate = forceSync ? guid == folderToUpdate.guid : false;
     if (folderToUpdate.needsInfoUpdate == false && !forceUpdate) {
       syncQueue.remove(folderToUpdate.guid);
@@ -331,24 +331,24 @@ class MailMethods {
 
     logger.log("getting folder info for: ${folderToUpdate.fullNameRaw}");
 
-    final syncPeriod = SyncPeriod.dbStringToPeriod(updatedUser.syncPeriod);
+    final syncPeriod = SyncPeriod.dbStringToPeriod(updatedUser!.syncPeriod);
     final periodStr = SyncPeriod.periodToDate(syncPeriod);
     final rawInfo = await _mailApi.getMessagesInfo(
         folderName: folderToUpdate.fullNameRaw, search: "date:$periodStr/");
 
-    List<MessageInfo> newMessagesInfo =
+    List<MessageInfo>? newMessagesInfo =
         MessageInfo.flattenMessagesInfo(rawInfo);
 
     // calculate difference
     final oldMessagesInfo = await FolderMessageInfo.getMessageInfo(
       folderToUpdate.fullNameRaw,
-      account.localId,
+      account!.localId!,
     );
 
     if (oldMessagesInfo != null) {
       final calcResult = await Folders.calculateMessagesInfoDiffAsync(
         oldMessagesInfo,
-        newMessagesInfo,
+        newMessagesInfo!,
       );
 
       newMessagesInfo = calcResult.updatedInfo;
@@ -359,21 +359,21 @@ class MailMethods {
 
       await _mailDao.addEmptyMessages(
         calcResult.addedMessages,
-        account,
+        account!,
         user,
         folderToUpdate.fullNameRaw,
       );
     } else {
       await _mailDao.addEmptyMessages(
-        newMessagesInfo,
-        account,
+        newMessagesInfo!,
+        account!,
         user,
         folderToUpdate.fullNameRaw,
       );
     }
     await FolderMessageInfo.setMessageInfo(
       folderToUpdate.fullNameRaw,
-      account.localId,
+      account!.localId!,
       newMessagesInfo,
     );
 
@@ -406,13 +406,13 @@ class MailMethods {
     Folder currentFolder,
   ) async {
     logger.log("method _syncMessagesChunk");
-    updateMessageCounter.update(
+    updateMessageCounter!.update(
       currentFolder,
       folderMessageCount,
       folderMessageCount - messagesForUpdate.length,
     );
     if (_closed || _isOffline || user == null) {
-      updateMessageCounter.empty();
+      updateMessageCounter!.empty();
       return;
     }
     assert(syncQueue.isNotEmpty);
@@ -420,7 +420,7 @@ class MailMethods {
     // get the actual folder state every time
     final folder = await _foldersDao.getFolderByGuId(syncQueue[0]);
     // get the actual sync period
-    final updatedUser = await _usersDao.getUserByLocalId(user.localId);
+    final updatedUser = (await _usersDao.getUserByLocalId(user.localId!))!;
 //    if (folder?.messagesInfo == null) {
 //      print(
 //          "Attention! messagesInfo is null, perhaps another folder was selected while messages info was being retrieved.");
@@ -430,12 +430,12 @@ class MailMethods {
         SyncPeriod.dbStringToPeriod(syncPeriod)) {
       print(
           "Attention! another sync period was selected, refetching messages info...");
-      updateMessageCounter.empty();
+      updateMessageCounter!.empty();
       return _setMessagesInfoToFolder();
     }
     if (needUpdateInfo == true) {
       needUpdateInfo = false;
-      updateMessageCounter.empty();
+      updateMessageCounter!.empty();
       return _setMessagesInfoToFolder();
     }
     final uids = messagesForUpdate
@@ -448,9 +448,9 @@ class MailMethods {
     logger.log("${messagesForUpdate.length} messages in queue");
     // if all messages are synced
     if (uids.length == 0) {
-      updateMessageCounter.empty();
+      updateMessageCounter!.empty();
       logger
-          .log("All the messages have been synced for: ${folder.fullNameRaw}");
+          .log("All the messages have been synced for: ${folder!.fullNameRaw}");
       await _foldersDao.updateFolder(
         new FoldersCompanion(
           needsInfoUpdate: Value(false),
@@ -466,7 +466,7 @@ class MailMethods {
         return null;
       }
     } else {
-      logger.log("syncing messages for: ${folder.fullNameRaw}");
+      logger.log("syncing messages for: ${folder!.fullNameRaw}");
       final rawBodies = await _mailApi.getMessageBodies(
         folderName: folder.fullNameRaw,
         uids: uids.map((item) => item.uid).toList(),
@@ -475,8 +475,8 @@ class MailMethods {
       final messages = await Mail.getMessageObjFromServerAndUpdateInfoHasBody(
         rawBodies,
         uids,
-        updatedUser.localId,
-        account,
+        updatedUser.localId!,
+        account!,
       );
       await _mailDao.fillMessages(messages);
       // check if there are other messages to sync
@@ -509,23 +509,23 @@ class MailMethods {
           .toList();
 
       messages
-          .addAll(await _mailDao.getMessageWithNotBody(uids, account, user));
+          .addAll(await _mailDao.getMessageWithNotBody(uids, account!, user));
     }
 
     return messages;
   }
 
   Future<void> setMessagesSeen({
-    @required Folder folder,
-    @required List<Message> messages,
-    @required bool isSeen,
+    required Folder? folder,
+    required List<Message?> messages,
+    required bool isSeen,
   }) async {
     logger.log("method setMessagesSeen");
     if (_isOffline) return null;
 
     Future updateMessages(bool isStarred) async {
       final infos = messages.map((m) {
-        final flags = json.decode(m.flagsInJson) as List;
+        final flags = json.decode(m!.flagsInJson) as List;
 
         if (isStarred && !flags.contains("\\seen")) {
           flags.add("\\seen");
@@ -537,7 +537,7 @@ class MailMethods {
           uid: m.uid,
           parentUid: m.parentUid,
           flags: new List<String>.from(flags),
-          hasThread: m.hasThread,
+          hasThread: m.hasThread!,
         );
       }).toList();
       await _mailDao.updateMessagesFlags(infos);
@@ -546,8 +546,8 @@ class MailMethods {
     try {
       await updateMessages(isSeen);
       await _mailApi.setMessagesSeen(
-        folder: folder,
-        uids: messages.map((m) => m.uid).toList(),
+        folder: folder!,
+        uids: messages.map((m) => m!.uid).toList(),
         isSeen: isSeen,
       );
     } catch (err, s) {
@@ -557,9 +557,9 @@ class MailMethods {
   }
 
   Future<void> setMessagesStarred({
-    @required Folder folder,
-    @required List<Message> messages,
-    @required bool isStarred,
+    required Folder? folder,
+    required List<Message> messages,
+    required bool isStarred,
   }) async {
     logger.log("method setMessagesStarred");
     if (_isOffline) return null;
@@ -578,7 +578,7 @@ class MailMethods {
           uid: m.uid,
           parentUid: m.parentUid,
           flags: new List<String>.from(flags),
-          hasThread: m.hasThread,
+          hasThread: m.hasThread!,
         );
       }).toList();
       _mailDao.updateMessagesFlags(infos);
@@ -587,7 +587,7 @@ class MailMethods {
     try {
       updateMessages(isStarred);
       await _mailApi.setMessagesFlagged(
-        folder: folder,
+        folder: folder!,
         uids: messages.map((m) => m.uid).toList(),
         isStarred: isStarred,
       );
@@ -597,9 +597,9 @@ class MailMethods {
     }
   }
 
-  Future<List<Folder>> _getOfflineFolders() async {
+  Future<List<Folder>?> _getOfflineFolders() async {
     final List<LocalFolder> localFolders =
-        await _foldersDao.getAllFolders(account.localId);
+        await _foldersDao.getAllFolders(account!.localId);
     return Folder.getFoldersObjectsFromDb(localFolders);
   }
 
@@ -611,15 +611,17 @@ class MailMethods {
     return _mailDao.getMessage(localId);
   }
 
-  Future<Folder> getFolder(String guid) {
+  Future<Folder?> getFolder(String guid) {
     return _foldersDao.getFolderByGuId(guid);
   }
 
-  static String currentFolderUpdate = null;
+  static String? currentFolderUpdate = null;
 
   Future<LocalFolder> getFolderByType(FolderType folderType) {
-    return _foldersDao.getByType([Folder.getNumberFromFolderType(folderType)],
-        account.localId).then((value) => value.isEmpty ? null : value.first);
+    return _foldersDao
+        .getByType(
+            [Folder.getNumberFromFolderType(folderType)], account!.localId)
+        .then((value) => value.first);
   }
 
   void close() {
@@ -627,19 +629,19 @@ class MailMethods {
     _closed = true;
   }
 
-  Future<Message> getMessageById(String messageId, String folder) async {
+  Future<Message?> getMessageById(String messageId, String folder) async {
     try {
-      Message message = await _mailDao.getMessageById(messageId, folder);
+      Message? message = await _mailDao.getMessageById(messageId, folder);
       if (message != null) {
         return message;
       }
 
-      List<MessageInfo> messageInfos = await FolderMessageInfo.getMessageInfo(
+      List<MessageInfo>? messageInfos = await FolderMessageInfo.getMessageInfo(
         folder,
-        account.localId,
+        account!.localId!,
       );
       final lastUid =
-          messageInfos?.isNotEmpty == true ? messageInfos.first.uid : null;
+          messageInfos?.isNotEmpty == true ? messageInfos!.first.uid : null;
       if (lastUid == null) {
         throw ErrorToShow.message(S.current.error_message_not_found);
       }
@@ -659,7 +661,7 @@ class MailMethods {
       message = await _mailDao.getMessageByUid(
         messageInfo.uid,
         folder,
-        account,
+        account!,
         user,
       );
       if (message?.hasBody == true) {
@@ -668,26 +670,26 @@ class MailMethods {
 
       messageInfos = await FolderMessageInfo.getMessageInfo(
         folder,
-        account.localId,
+        account!.localId!,
       );
       try {
         message = await _mailDao.addEmptyMessage(
           messageInfo,
-          account,
+          account!,
           user,
           folder,
         );
-        messageInfos.insert(0, messageInfo);
+        messageInfos!.insert(0, messageInfo);
         await FolderMessageInfo.setMessageInfo(
           folder,
-          account.localId,
+          account!.localId!,
           messageInfos,
         );
       } catch (e, st) {
         message = await _mailDao.getMessageByUid(
           messageInfo.uid,
           folder,
-          account,
+          account!,
           user,
         );
         if (message?.hasBody == true) {
@@ -698,9 +700,9 @@ class MailMethods {
       final newMessages =
           await Mail.getMessageObjFromServerAndUpdateInfoHasBody(
         [response],
-        [message],
-        user.localId,
-        account,
+        [message!],
+        user.localId!,
+        account!,
       );
       message = await _mailDao.fillMessage(newMessages.first);
 
@@ -711,9 +713,9 @@ class MailMethods {
     }
   }
 
-  Future<Folder> getFolderByName(String name) {
+  Future<Folder> getFolderByName(String? name) {
     return _foldersDao
-        .getByName(name, account.localId)
+        .getByName(name, account!.localId)
         .then(Folder.getFolderObjectsFromDb);
   }
 }

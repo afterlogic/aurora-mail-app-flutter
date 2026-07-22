@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/trust_device/trust_device_bloc.dart';
@@ -17,38 +17,38 @@ import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
 class TrustDeviceWidget extends StatefulWidget {
-  final TrustDeviceRouteArgs args;
+  final TrustDeviceRouteArgs? args;
 
-  const TrustDeviceWidget({Key key, this.args}) : super(key: key);
+  const TrustDeviceWidget({Key? key, this.args}) : super(key: key);
 
   @override
   _TrustDeviceWidgetState createState() => _TrustDeviceWidgetState();
 }
 
 class _TrustDeviceWidgetState extends BState<TrustDeviceWidget> {
-  TrustDeviceBloc bloc;
-  bool check = false;
+  TrustDeviceBloc? bloc;
+  bool? check = false;
 
   @override
   void initState() {
     super.initState();
     bloc = TrustDeviceBloc(
-      widget.args.user,
-      widget.args.authBloc,
+      widget.args!.user,
+      widget.args!.authBloc,
     );
   }
 
   @override
   void dispose() {
     super.dispose();
-    bloc.close();
+    bloc!.close();
   }
 
   @override
   Widget build(BuildContext context) {
     return TwoFactorScene(
       logoHint: "",
-      isDialog: widget.args.isDialog,
+      isDialog: widget.args!.isDialog,
       allowBack: false,
       button: [
         BlocListener<TrustDeviceBloc, TrustDeviceState>(
@@ -82,7 +82,7 @@ class _TrustDeviceWidgetState extends BState<TrustDeviceWidget> {
                         },
                         title: Text(
                           S.of(context).tfa_check_box_trust_device(
-                              widget.args.daysCount.toString()),
+                              widget.args!.daysCount.toString()),
                           style: TextStyle(color: AppTheme.loginTextColor),
                         ),
                       ),
@@ -101,7 +101,7 @@ class _TrustDeviceWidgetState extends BState<TrustDeviceWidget> {
                         ),
                         isLoading: loading,
                         onPressed: () {
-                          bloc.add(TrustThisDevice(check));
+                          bloc!.add(TrustThisDevice(check));
                         },
                       ),
                     ),

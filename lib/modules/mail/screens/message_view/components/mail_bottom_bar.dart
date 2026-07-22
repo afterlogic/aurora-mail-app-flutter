@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:io';
 
 import 'package:aurora_mail/generated/l10n.dart';
@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MailBottomBar extends StatefulWidget {
-  final void Function(EncryptType) onDecrypt;
+  final void Function(EncryptType)? onDecrypt;
 
   MailBottomBar({this.onDecrypt});
 
@@ -52,7 +52,7 @@ class _MailBottomBarState extends BState<MailBottomBar> {
                   opacity: decrypted ? 0.5 : 1,
                   child: InkWell(
                     onTap:
-                        decrypted ? null : () => widget.onDecrypt(encryptType),
+                        decrypted ? null : () => widget.onDecrypt!(encryptType),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       mainAxisSize: MainAxisSize.min,

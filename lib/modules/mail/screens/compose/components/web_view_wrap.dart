@@ -1,14 +1,14 @@
-//@dart=2.9
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class WebViewWrap extends StatefulWidget {
   final bool simplified;
-  final Widget webView;
-  final Widget Function(VoidCallback) closeWebView;
-  final Widget topWidget;
+  final Widget? webView;
+  final Widget Function(VoidCallback)? closeWebView;
+  final Widget? topWidget;
   const WebViewWrap({
-    Key key,
+    Key? key,
     this.webView,
     this.simplified = false,
     this.closeWebView,
@@ -73,14 +73,14 @@ class _WebViewWrapState extends State<WebViewWrap> {
     return LayoutBuilder(
       builder: (context, size) {
         final bottom = MediaQuery.of(context).padding.bottom;
-        final closeWebView = widget.closeWebView(() => setFocus(false));
+        final closeWebView = widget.closeWebView!(() => setFocus(false));
 
         return SingleChildScrollView(
           controller: scroll,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (!widget.simplified) widget.topWidget,
+              if (!widget.simplified) widget.topWidget!,
               Stack(
                 children: [
                   Container(

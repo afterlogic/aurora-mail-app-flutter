@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/material.dart';
@@ -6,11 +6,11 @@ import 'package:theme/app_color.dart';
 
 class ComposeBody extends StatefulWidget {
   final TextEditingController textCtrl;
-  final FocusNode focusNode;
-  final bool enable;
+  final FocusNode? focusNode;
+  final bool? enable;
 
   const ComposeBody(
-      {Key key, @required this.textCtrl, this.focusNode, this.enable})
+      {Key? key, required this.textCtrl, this.focusNode, this.enable})
       : super(key: key);
 
   @override

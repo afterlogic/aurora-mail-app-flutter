@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/modules/auth/screens/backup_code_auth/backup_code_auth_route.dart';
 import 'package:aurora_mail/modules/auth/screens/backup_code_auth/backup_code_auth_widget.dart';
 import 'package:aurora_mail/modules/auth/screens/configure_two_factor/configure_two_factor_route.dart';
@@ -76,7 +76,7 @@ class RouteGenerator {
       // ================= AUTH =================
 
       case LoginRoute.name:
-        final args = settings.arguments as LoginRouteScreenArgs;
+        final args = settings.arguments as LoginRouteScreenArgs?;
 
         if (args != null && args.isDialog == true) {
           return CupertinoPageRoute(
@@ -97,7 +97,7 @@ class RouteGenerator {
         }
         break;
       case TrustDeviceRoute.name:
-        final args = settings.arguments as TrustDeviceRouteArgs;
+        final args = settings.arguments as TrustDeviceRouteArgs?;
         return FadeRoute(
           settings: RouteSettings(
             name: settings.name,
@@ -107,7 +107,7 @@ class RouteGenerator {
 
         break;
       case FidoAuthRoute.name:
-        final args = settings.arguments as FidoAuthRouteArgs;
+        final args = settings.arguments as FidoAuthRouteArgs?;
         return FadeRoute(
           settings: RouteSettings(
             name: settings.name,
@@ -117,7 +117,7 @@ class RouteGenerator {
 
         break;
       case SelectTwoFactorRoute.name:
-        final args = settings.arguments as SelectTwoFactorRouteArgs;
+        final args = settings.arguments as SelectTwoFactorRouteArgs?;
         return FadeRoute(
           settings: RouteSettings(
             name: settings.name,
@@ -127,7 +127,7 @@ class RouteGenerator {
 
         break;
       case TwoFactorAuthRoute.name:
-        final args = settings.arguments as TwoFactorAuthRouteArgs;
+        final args = settings.arguments as TwoFactorAuthRouteArgs?;
 
         return FadeRoute(
           settings: RouteSettings(
@@ -140,7 +140,7 @@ class RouteGenerator {
 
         break;
       case ConfigureTwoFactorRoute.name:
-        final args = settings.arguments as ConfigureTwoFactorRouteArgs;
+        final args = settings.arguments as ConfigureTwoFactorRouteArgs?;
 
         return FadeRoute(
           settings: RouteSettings(
@@ -153,7 +153,7 @@ class RouteGenerator {
 
         break;
       case BackupCodeAuthRoute.name:
-        final args = settings.arguments as BackupCodeAuthRouteArgs;
+        final args = settings.arguments as BackupCodeAuthRouteArgs?;
 
         return FadeRoute(
           settings: RouteSettings(
@@ -166,7 +166,7 @@ class RouteGenerator {
 
         break;
       case UpgradePlanRoute.name:
-        final args = settings.arguments as UpgradePlanArg;
+        final args = settings.arguments as UpgradePlanArg?;
         return FadeRoute(
           settings: RouteSettings(
             name: settings.name,
@@ -179,7 +179,7 @@ class RouteGenerator {
       // ================= CALENDAR =================
 
       case CalendarRoute.name:
-        final args = settings.arguments as CalendarPageArg;
+        final args = settings.arguments as CalendarPageArg?;
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => CalendarPage(
@@ -211,11 +211,11 @@ class RouteGenerator {
         break;
 
       case AttendeesPage.name:
-        final args = settings.arguments as AttendeesRouteArg;
+        final args = settings.arguments as AttendeesRouteArg?;
         return FadeRoute(
           settings: RouteSettings(name: settings.name),
           builder: (_) => AttendeesPage(
-            initAttendees: args.initAttendees,
+            initAttendees: args!.initAttendees,
             onChange: args.onChange,
           ),
         );
@@ -224,7 +224,7 @@ class RouteGenerator {
       // ================= MAIL =================
 
       case MessagesListRoute.name:
-        final args = settings.arguments as MessagesListRouteArg;
+        final args = settings.arguments as MessagesListRouteArg?;
         return FadeRoute(
           settings: RouteSettings(name: settings.name),
           builder: (_) => MessagesListAndroid(
@@ -233,23 +233,23 @@ class RouteGenerator {
         );
         break;
       case MessageHeadersRoute.name:
-        final args = settings.arguments as MessageHeadersRouteArg;
+        final args = settings.arguments as MessageHeadersRouteArg?;
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
-            builder: (_) => MessageHeaders(args.text));
+            builder: (_) => MessageHeaders(args!.text));
         break;
       case MessageViewRoute.name:
-        final args = settings.arguments as MessageViewScreenArgs;
+        final args = settings.arguments as MessageViewScreenArgs?;
         final routeAnimationListener = RouteAnimationListener();
         return RouteWithFinishCallback(
           routeAnimationListener: routeAnimationListener,
           settings: RouteSettings(name: settings.name),
           builder: (_) => MultiBlocProvider(
             providers: [
-              BlocProvider<MailBloc>.value(value: args.mailBloc),
+              BlocProvider<MailBloc>.value(value: args!.mailBloc!),
               BlocProvider<MessagesListBloc>.value(
-                  value: args.messagesListBloc),
-              BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
+                  value: args.messagesListBloc!),
+              BlocProvider<ContactsBloc>.value(value: args.contactsBloc!),
             ],
             child: MessageViewAndroid(
               args.message,
@@ -259,7 +259,7 @@ class RouteGenerator {
         );
         break;
       case MessageProgressRoute.name:
-        final args = settings.arguments as MessageProgressRouteArg;
+        final args = settings.arguments as MessageProgressRouteArg?;
         final routeAnimationListener = RouteAnimationListener()
           ..isCompleted = true;
         return MaterialPageRoute<ErrorToShow>(
@@ -267,10 +267,10 @@ class RouteGenerator {
           fullscreenDialog: true,
           builder: (_) => MultiBlocProvider(
             providers: [
-              BlocProvider<MailBloc>.value(value: args.mailBloc),
+              BlocProvider<MailBloc>.value(value: args!.mailBloc!),
               BlocProvider<MessagesListBloc>.value(
-                  value: args.messagesListBloc),
-              BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
+                  value: args.messagesListBloc!),
+              BlocProvider<ContactsBloc>.value(value: args.contactsBloc!),
             ],
             child: MessageViewProgress(
               args.futureMessage,
@@ -281,19 +281,19 @@ class RouteGenerator {
         break;
 
       case ComposeRoute.name:
-        final args = settings.arguments as ComposeScreenArgs;
+        final args = settings.arguments as ComposeScreenArgs?;
         return MaterialPageRoute(
             settings: RouteSettings(name: settings.name),
             fullscreenDialog: true,
             builder: (_) {
               return MultiBlocProvider(
                 providers: [
-                  BlocProvider<MailBloc>.value(value: args.mailBloc),
-                  BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
+                  BlocProvider<MailBloc>.value(value: args!.mailBloc!),
+                  BlocProvider<ContactsBloc>.value(value: args.contactsBloc!),
                 ],
                 child: ComposeAndroid(
-                  args.mailBloc.user,
-                  args.mailBloc.account,
+                  args.mailBloc!.user,
+                  args.mailBloc!.account,
                   composeAction: args.composeAction,
                 ),
               );
@@ -303,12 +303,12 @@ class RouteGenerator {
       // ================= CONTACTS =================
 
       case ContactsListRoute.name:
-        final args = settings.arguments as ContactsListScreenArgs;
+        final args = settings.arguments as ContactsListScreenArgs?;
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => MultiBlocProvider(
                   providers: [
-                    BlocProvider<MailBloc>.value(value: args.mailBloc),
+                    BlocProvider<MailBloc>.value(value: args!.mailBloc),
                     BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
                   ],
                   child: ContactsListAndroid(),
@@ -316,13 +316,13 @@ class RouteGenerator {
         break;
 
       case ContactViewRoute.name:
-        final args = settings.arguments as ContactViewScreenArgs;
+        final args = settings.arguments as ContactViewScreenArgs?;
         return CupertinoPageRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => MultiBlocProvider(
                   providers: [
-                    BlocProvider<MailBloc>.value(value: args.mailBloc),
-                    BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
+                    BlocProvider<MailBloc>.value(value: args!.mailBloc),
+                    BlocProvider<ContactsBloc>.value(value: args.contactsBloc!),
                   ],
                   child: ContactViewAndroid(
                       args.contact, args.scaffoldState, args.pgpSettingBloc),
@@ -330,12 +330,12 @@ class RouteGenerator {
         break;
 
       case ContactEditRoute.name:
-        final args = settings.arguments as ContactEditScreenArgs;
+        final args = settings.arguments as ContactEditScreenArgs?;
         return MaterialPageRoute(
             settings: RouteSettings(name: settings.name),
             fullscreenDialog: true,
             builder: (_) => BlocProvider<ContactsBloc>.value(
-                value: args.bloc,
+                value: args!.bloc,
                 child: ContactEditAndroid(
                   args.pgpSettingsBloc,
                   contact: args?.contact,
@@ -343,19 +343,19 @@ class RouteGenerator {
         break;
 
       case GroupViewRoute.name:
-        final args = settings.arguments as GroupViewScreenArgs;
+        final args = settings.arguments as GroupViewScreenArgs?;
         return CupertinoPageRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => BlocProvider<ContactsBloc>.value(
-                value: args.bloc, child: GroupViewAndroid(args.group)));
+                value: args!.bloc, child: GroupViewAndroid(args.group)));
         break;
 
       case GroupEditRoute.name:
-        final args = settings.arguments as GroupEditScreenArgs;
+        final args = settings.arguments as GroupEditScreenArgs?;
         return CupertinoPageRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => BlocProvider<ContactsBloc>.value(
-                value: args.bloc, child: GroupEditAndroid(group: args.group)));
+                value: args!.bloc!, child: GroupEditAndroid(group: args.group)));
         break;
 
       // ================= SETTINGS =================
@@ -377,36 +377,36 @@ class RouteGenerator {
             builder: (_) => NotificationsSettings());
         break;
       case PgpSettingsRoute.name:
-        final arg = settings.arguments as PgpSettingsRouteArg;
+        final arg = settings.arguments as PgpSettingsRouteArg?;
         return CupertinoPageRoute(
             settings: RouteSettings(
               name: settings.name,
             ),
             builder: (_) => PgpSettings(
-                  arg.pgpSettingsBloc,
+                  arg!.pgpSettingsBloc,
                 ));
         break;
       case PgpKeyRoute.name:
-        final arg = settings.arguments as PgpKeyRouteArg;
+        final arg = settings.arguments as PgpKeyRouteArg?;
         return CupertinoPageRoute(
             settings: RouteSettings(
               name: settings.name,
             ),
             builder: (_) => PgpKeyScreen(
-                  arg.pgpKey,
+                  arg!.pgpKey,
                   arg.onDelete,
                   arg.withAppBar,
                   arg.bloc,
                 ));
         break;
       case PgpKeysRoute.name:
-        final arg = settings.arguments as PgpKeysRouteArg;
+        final arg = settings.arguments as PgpKeysRouteArg?;
         return CupertinoPageRoute(
             settings: RouteSettings(
               name: settings.name,
             ),
             builder: (_) => PgpKeysScreen(
-                  arg.pgpKeys,
+                  arg!.pgpKeys,
                   arg.bloc,
                 ));
         break;

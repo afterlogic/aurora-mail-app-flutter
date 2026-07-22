@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/material.dart';
 
@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 class RestartWidget extends StatefulWidget {
   RestartWidget({this.child});
 
-  final Widget child;
+  final Widget? child;
 
   static void restartApp(BuildContext context) {
-    context.findAncestorStateOfType<_RestartWidgetState>().restartApp();
+    context.findAncestorStateOfType<_RestartWidgetState>()!.restartApp();
   }
 
   @override
@@ -34,7 +34,7 @@ class _RestartWidgetState extends BState<RestartWidget> {
   Widget build(BuildContext context) {
     return KeyedSubtree(
       key: key,
-      child: widget.child,
+      child: widget.child!,
     );
   }
 }

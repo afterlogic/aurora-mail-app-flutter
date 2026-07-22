@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:flutter/foundation.dart';
 
 class LoginRoute {
@@ -7,10 +7,10 @@ class LoginRoute {
 
 class LoginRouteScreenArgs {
   final bool isDialog;
-  final String email;
+  final String? email;
 
   const LoginRouteScreenArgs({
-    @required this.isDialog,
+    required this.isDialog,
     this.email,
   });
 }

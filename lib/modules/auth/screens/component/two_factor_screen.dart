@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
@@ -12,14 +12,14 @@ import 'package:flutter/material.dart';
 import 'package:theme/app_theme.dart';
 
 class TwoFactorScene extends StatefulWidget {
-  final bool isDialog;
-  final String logoHint;
-  final Widget title;
-  final List<Widget> button;
+  final bool? isDialog;
+  final String? logoHint;
+  final Widget? title;
+  final List<Widget>? button;
   final bool allowBack;
 
   const TwoFactorScene({
-    Key key,
+    Key? key,
     this.isDialog,
     this.logoHint,
     this.title,
@@ -33,7 +33,7 @@ class TwoFactorScene extends StatefulWidget {
 
 class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
   Widget _gradientWrap(Widget child) {
-    if (widget.isDialog) {
+    if (widget.isDialog!) {
       return child;
     } else {
       return themeWrap(
@@ -47,7 +47,7 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
   Widget themeWrap(Widget widget) {
     if (AppTheme.login != null) {
       return Theme(
-        data: AppTheme.login,
+        data: AppTheme.login!,
         child: widget,
       );
     }
@@ -57,7 +57,7 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.isDialog
+      appBar: widget.isDialog!
           ? AMAppBar(
               title: Text(S.of(context).settings_accounts_add),
               backgroundColor: Color(0xFFF4F1FD),
@@ -75,7 +75,7 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
       top: false,
       child: Stack(
         children: <Widget>[
-          if (!widget.isDialog && !BuildProperty.useMainLogo)
+          if (!widget.isDialog! && !BuildProperty.useMainLogo)
             Positioned(
               top: -70.0,
               left: -70.0,
@@ -89,18 +89,18 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 22.0),
                 child: Column(
-                  mainAxisAlignment: widget.isDialog
+                  mainAxisAlignment: widget.isDialog!
                       ? MainAxisAlignment.start
                       : MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Spacer(),
-                    if (!widget.isDialog) ...[
+                    if (!widget.isDialog!) ...[
                       PresentationHeader(
                         message: widget.logoHint,
                       ),
                     ],
-                    if (widget.isDialog) SizedBox(height: 40.0),
+                    if (widget.isDialog!) SizedBox(height: 40.0),
                     Flexible(
                       flex: 4,
                       child: ListView(
@@ -114,7 +114,7 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
                                     S.of(context).tfa_label,
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline6
+                                        .titleLarge!
                                         .copyWith(
                                             color: AppTheme.loginTextColor),
                                     textAlign: TextAlign.center,
@@ -129,7 +129,7 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
                                 ],
                               ),
                           SizedBox(height: 20),
-                          ...widget.button
+                          ...widget.button!
                         ],
                       ),
                     ),

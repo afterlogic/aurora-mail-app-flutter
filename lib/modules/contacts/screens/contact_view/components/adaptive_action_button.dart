@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/shared_ui/asset_svg_icon.dart';
 import 'package:flutter/material.dart';
@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 class AdaptiveActionButton extends StatelessWidget {
   final IconData fallbackIcon;
   final String iconName;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const AdaptiveActionButton({
-    @required this.fallbackIcon,
-    @required this.iconName,
+    required this.fallbackIcon,
+    required this.iconName,
     this.onTap,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

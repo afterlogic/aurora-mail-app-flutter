@@ -1,18 +1,19 @@
-//@dart=2.9
+
 import 'dart:convert';
 
 import 'package:aurora_mail/build_property.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/cupertino.dart';
 
 class Language {
-  final String name;
-  final String tag;
+  final String? name;
+  final String? tag;
 
   const Language(this.name, this.tag);
 
   // for language selection modal
-  static List<Language> get availableLanguages {
-    final languages = new List<Language>();
+  static List<Language?> get availableLanguages {
+    final languages = <Language?>[];
     // null sets system default language
     languages.add(null);
     languages.addAll(BuildProperty.supportLanguage
@@ -45,17 +46,15 @@ class Language {
     }
   }
 
-  Locale toLocale() {
+  Locale? toLocale() {
+    if (tag == null) return null;
     return BuildProperty.supportLanguage
         .split(",")
         .map((item) => Locale(item))
-        .toList()
-        .firstWhere((l) => l.toLanguageTag() == tag, orElse: () {
-      throw "Language $tag is not supported";
-    });
+        .firstWhereOrNull((l) => l.toLanguageTag() == tag);
   }
 
-  String toNullableJson() {
+  String? toNullableJson() {
     if (tag == null) {
       return null;
     } else {
@@ -67,12 +66,8 @@ class Language {
   }
 
   static Language fromJson(String lang) {
-    if (lang == null) {
-      return null;
-    } else {
-      final decoded = json.decode(lang) as Map;
-      return new Language(decoded["name"] as String, decoded["tag"] as String);
-    }
+    final decoded = json.decode(lang) as Map;
+    return new Language(decoded["name"] as String?, decoded["tag"] as String?);
   }
 
   @override

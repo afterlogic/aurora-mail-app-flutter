@@ -156,7 +156,7 @@ class _AttendeesPageState extends State<AttendeesPage> {
                             },
                             onSuggestionSelected: (c) {
                               _attendeesFocusNode.requestFocus();
-                              _addEmail(MailUtils.getFriendlyName(c));
+                              _addEmail(MailUtils.getFriendlyName(c) ?? '');
                             },
                             child: Padding(
                               padding:
@@ -173,7 +173,9 @@ class _AttendeesPageState extends State<AttendeesPage> {
                                         return Wrap(spacing: 8.0, children: [
                                           ...emails.map((e) {
                                             final displayName = MailUtils
-                                                .displayNameFromFriendly(e);
+                                                    .displayNameFromFriendly(
+                                                        e) ??
+                                                '';
                                             Contact? contact;
                                             if (BuildProperty.cryptoEnable &&
                                                 !BuildProperty.legacyPgpKey) {
@@ -330,8 +332,8 @@ class _AttendeesPageState extends State<AttendeesPage> {
     }
     final attendees = emails.map((e) => Attendee(
         access: 0,
-        email: MailUtils.emailFromFriendly(e),
-        name: MailUtils.displayNameFromFriendly(e),
+        email: MailUtils.emailFromFriendly(e) ?? '',
+        name: MailUtils.displayNameFromFriendly(e) ?? '',
         status: InviteStatus.pending));
     _attendees.addAll(attendees);
     emails.clear();
@@ -352,7 +354,7 @@ class _AttendeesPageState extends State<AttendeesPage> {
         _composeTypeAheadFieldKey.currentState?.clear();
       }
     } else {
-      _addEmail(MailUtils.getFriendlyName(lastSuggestions.first));
+      _addEmail(MailUtils.getFriendlyName(lastSuggestions.first) ?? '');
       _composeTypeAheadFieldKey.currentState?.clear();
     }
     _attendeesFocusNode.unfocus();
@@ -391,7 +393,7 @@ class _AttendeesPageState extends State<AttendeesPage> {
           (element) => element.storage == "personal",
           orElse: () => emailContacts.first,
         );
-        final displayName = MailUtils.getFriendlyName(contact);
+        final displayName = MailUtils.getFriendlyName(contact) ?? '';
         contacts[displayName] = contact;
       }
     }
@@ -407,7 +409,7 @@ class _AttendeesPageState extends State<AttendeesPage> {
       _search = pattern;
       final contacts = await _contactsBloc.getTypeAheadContacts(pattern);
 
-      contacts.removeWhere((i) => i.viewEmail.isEmpty);
+      contacts.removeWhere((i) => (i.viewEmail ?? '').isEmpty);
       contacts
           .removeWhere((i) => emails.contains(MailUtils.getFriendlyName(i)));
       return contacts;
@@ -434,18 +436,18 @@ class _SearchContact extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (contact.fullName.isNotEmpty)
+              if ((contact.fullName ?? '').isNotEmpty)
                 RichText(
                   text: _searchMatch(
-                      match: contact.fullName,
+                      match: contact.fullName ?? '',
                       search: search,
                       context: context),
                   maxLines: 1,
                 ),
-              if (contact.viewEmail.isNotEmpty)
+              if ((contact.viewEmail ?? '').isNotEmpty)
                 RichText(
                   text: _searchMatch(
-                      match: contact.viewEmail,
+                      match: contact.viewEmail ?? '',
                       search: search,
                       context: context),
                   maxLines: 1,
@@ -465,7 +467,7 @@ TextSpan _searchMatch(
     {required String match,
     required String search,
     required BuildContext context}) {
-  final color = Theme.of(context).textTheme.bodyText2?.color;
+  final color = Theme.of(context).textTheme.bodyMedium?.color;
   final posRes = TextStyle(fontWeight: FontWeight.w700, color: color);
   final negRes = TextStyle(fontWeight: FontWeight.w400, color: color);
 

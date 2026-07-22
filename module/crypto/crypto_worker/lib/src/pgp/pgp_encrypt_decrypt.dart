@@ -5,7 +5,7 @@ abstract class PgpEncryptDecrypt {
 
   Future<Decrypted> verifySign(String message);
 
-  Future<String> encrypt(String message, [String password]);
+  Future<String> encrypt(String message, [String? password]);
 
   Future<String> sign(String message, String password);
 

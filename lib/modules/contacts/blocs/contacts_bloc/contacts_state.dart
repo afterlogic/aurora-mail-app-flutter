@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
@@ -7,15 +7,15 @@ import 'package:aurora_mail/utils/copy_with_value.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 
 class ContactsState with AlwaysNonEqualObject {
-  final List<ContactsStorage> storages;
-  final String selectedStorage;
-  final String selectedGroup;
-  final bool showAllVisibleContacts;
-  final List<Contact> contacts;
-  final List<ContactsGroup> groups;
-  final List<int> currentlySyncingStorages;
-  final ErrorToShow error;
-  final String key;
+  final List<ContactsStorage>? storages;
+  final String? selectedStorage;
+  final String? selectedGroup;
+  final bool? showAllVisibleContacts;
+  final List<Contact>? contacts;
+  final List<ContactsGroup>? groups;
+  final List<int>? currentlySyncingStorages;
+  final ErrorToShow? error;
+  final String? key;
   final List<String> currentActivities;
 
   ContactsState({
@@ -34,16 +34,16 @@ class ContactsState with AlwaysNonEqualObject {
   bool get progress => currentActivities.isNotEmpty;
 
   ContactsState copyWith({
-    List<ContactsStorage> storages,
-    CWVal<String> selectedStorage,
-    CWVal<String> selectedGroup,
-    bool showAllVisibleContacts,
-    List<Contact> contacts,
-    List<ContactsGroup> groups,
-    List<int> currentlySyncingStorages,
-    ErrorToShow error,
-    String key,
-    List<String> currentActivities,
+    List<ContactsStorage>? storages,
+    CWVal<String?>? selectedStorage,
+    CWVal<String?>? selectedGroup,
+    bool? showAllVisibleContacts,
+    List<Contact>? contacts,
+    List<ContactsGroup>? groups,
+    List<int>? currentlySyncingStorages,
+    ErrorToShow? error,
+    String? key,
+    List<String>? currentActivities,
   }) {
     return new ContactsState(
       storages: storages ?? this.storages,

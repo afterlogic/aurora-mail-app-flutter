@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
@@ -6,7 +6,7 @@ import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/shared_ui/asset_svg_icon.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 
 enum ContactViewAppBarAction {
   attach,
@@ -20,25 +20,25 @@ enum ContactViewAppBarAction {
 }
 
 class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String name;
+  final String? name;
   final bool allowEdit;
   final bool allowShare;
   final bool allowUnshare;
   final bool allowDelete;
-  final bool hasEmail;
+  final bool? hasEmail;
   final Function(ContactViewAppBarAction) onActionSelected;
   final bool isAppBar;
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
   const ContactViewAppBar({
-    Key key,
-    @required this.name,
-    @required this.onActionSelected,
-    @required this.allowEdit,
-    @required this.allowShare,
-    @required this.allowUnshare,
-    @required this.allowDelete,
+    Key? key,
+    required this.name,
+    required this.onActionSelected,
+    required this.allowEdit,
+    required this.allowShare,
+    required this.allowUnshare,
+    required this.allowDelete,
     this.hasEmail,
     this.isAppBar = true,
   }) : super(key: key);
@@ -46,10 +46,10 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     PopupMenuEntry<ContactViewAppBarAction> _buildMenuItem({
-      @required ContactViewAppBarAction value,
-      @required String text,
-      @required IconData icon,
-      String customIconPath,
+      required ContactViewAppBarAction value,
+      required String text,
+      required IconData icon,
+      String? customIconPath,
     }) {
       final leading = AssetSvgIcon(
         showSvg: BuildProperty.useCustomAppBarIcons && customIconPath != null,
@@ -73,7 +73,7 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: AppBarIcons.menu(context: context),
         onSelected: onActionSelected,
         itemBuilder: (_) => [
-          if (hasEmail)
+          if (hasEmail!)
             _buildMenuItem(
               value: ContactViewAppBarAction.find_in_email,
               text: S.of(context).btn_contact_find_in_email,
@@ -126,7 +126,7 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
     if (isAppBar) {
       return AMAppBar(
         title: Text(
-          name,
+          name!,
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
         shadow: BoxShadow(color: Colors.transparent),
@@ -141,7 +141,7 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
         height: 50,
         child: ListTile(
           title: Text(
-            name,
+            name!,
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
           trailing: Row(

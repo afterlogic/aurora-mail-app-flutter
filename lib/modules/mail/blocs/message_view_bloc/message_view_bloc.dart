@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
@@ -17,9 +17,9 @@ import 'package:flutter/foundation.dart';
 import './bloc.dart';
 
 class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
-  MessageViewMethods _methods;
+  late MessageViewMethods _methods;
 
-  MessageViewBloc({@required User user, @required Account account}) : super(InitialMessageViewState()) {
+  MessageViewBloc({required User user, required Account? account}) : super(InitialMessageViewState()) {
     _methods = new MessageViewMethods(
       user: user,
       account: account,
@@ -60,21 +60,21 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
       },
       onDownloadEnd: Platform.isIOS
           ? null
-          : (String path) {
+          : (String? path) {
 //        add(EndDownload(path));
             },
     );
   }
 
   downloadAttachment(
-      MailAttachment attachment, Function(String) onEnd, Rect rect) async {
+      MailAttachment attachment, Function(String?) onEnd, Rect rect) async {
     _methods.downloadAttachment(
       attachment,
       rect: rect,
       onDownloadStart: () {
 //        add(StartDownload(event.attachment.fileName));
       },
-      onDownloadEnd: (String path) {
+      onDownloadEnd: (String? path) {
         onEnd(path);
 //        add(EndDownload(path));
       },
@@ -121,7 +121,7 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
   }
 
   Stream<MessageViewState> _getFolderType(GetFolderType event) async* {
-    FolderType folderType = await _methods.getFolderType(event.folder);
+    FolderType? folderType = await _methods.getFolderType(event.folder);
     yield FolderTypeState(folderType);
   }
 }

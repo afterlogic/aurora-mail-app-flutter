@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
@@ -14,7 +14,7 @@ enum ComposeAppBarAction {
 
 class ComposeAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Function(ComposeAppBarAction action) onAppBarActionSelected;
-  final ComposeAction action;
+  final ComposeAction? action;
 
   const ComposeAppBar(this.onAppBarActionSelected, this.action);
 
@@ -26,7 +26,7 @@ class ComposeAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _ComposeAppBarState extends BState<ComposeAppBar> {
-  String selectedEmail;
+  String? selectedEmail;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class _ComposeAppBarState extends BState<ComposeAppBar> {
             child: Text(
               S.of(context).btn_save,
               style: TextStyle(
-                  color: Theme.of(context)?.appBarTheme?.iconTheme?.color),
+                  color: Theme.of(context).appBarTheme.iconTheme?.color),
             ),
             onPressed: () =>
                 widget.onAppBarActionSelected(ComposeAppBarAction.send),

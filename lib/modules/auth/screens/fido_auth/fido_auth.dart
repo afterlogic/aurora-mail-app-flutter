@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/bloc.dart';
@@ -20,29 +20,29 @@ import 'fido_auth_route.dart';
 import 'nfc_dialog.dart';
 
 class IosFidoAuthWidget extends StatefulWidget {
-  final FidoAuthRouteArgs args;
+  final FidoAuthRouteArgs? args;
 
-  const IosFidoAuthWidget({Key key, this.args}) : super(key: key);
+  const IosFidoAuthWidget({Key? key, this.args}) : super(key: key);
 
   @override
   _IosFidoAuthWidgetState createState() => _IosFidoAuthWidgetState();
 }
 
 class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
-  FidoAuthBloc bloc;
+  FidoAuthBloc? bloc;
   final touchDialogKey = GlobalKey<IosPressOnKeyDialogState>();
 
   @override
   void initState() {
     super.initState();
     bloc = FidoAuthBloc(
-      widget.args.state.hostname,
-      widget.args.state.email,
-      widget.args.state.password,
-      widget.args.authBloc,
+      widget.args!.state.hostname,
+      widget.args!.state.email,
+      widget.args!.state.password,
+      widget.args!.authBloc,
     );
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      bloc.add(StartAuth(true, S.of(context).fido_label_connect_your_key,
+      bloc!.add(StartAuth(true, S.of(context).fido_label_connect_your_key,
           S.of(context).fido_label_success));
     });
   }
@@ -57,33 +57,33 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
   Widget build(BuildContext context) {
     return TwoFactorScene(
       logoHint: "",
-      isDialog: widget.args.isDialog,
+      isDialog: widget.args!.isDialog,
       button: [
         BlocListener<FidoAuthBloc, FidoAuthState>(
           bloc: bloc,
           listener: (BuildContext context, state) {
             if (state is ErrorState) {
               if (state.errorToShow != null) {
-                _showError(context, state.errorToShow);
+                _showError(context, state.errorToShow!);
               }
             }
             if (state is TouchKeyState) {
               if (touchDialogKey.currentState != null) {
-                touchDialogKey.currentState.close();
+                touchDialogKey.currentState!.close();
               }
-              IosPressOnKeyDialog(touchDialogKey, () => bloc.add(Cancel()))
+              IosPressOnKeyDialog(touchDialogKey, () => bloc!.add(Cancel()))
                   .show(context);
             } else if (state is SendingFinishAuthRequestState) {
               if (touchDialogKey.currentState != null) {
-                touchDialogKey.currentState
+                touchDialogKey.currentState!
                     .success()
-                    .then((value) => state.waitSheet?.complete());
+                    .then((value) => state.waitSheet.complete());
               } else {
-                state.waitSheet?.complete();
+                state.waitSheet.complete();
               }
             } else {
               if (touchDialogKey.currentState != null) {
-                touchDialogKey.currentState.close();
+                touchDialogKey.currentState!.close();
               }
             }
           },
@@ -96,7 +96,7 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                         Text(
                           S.of(context).fido_error_title,
                           textAlign: TextAlign.center,
-                          style: theme.textTheme.headline6
+                          style: theme!.textTheme.titleLarge!
                               .copyWith(color: AppTheme.loginTextColor),
                         ),
                         SizedBox(height: 10),
@@ -119,7 +119,7 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                               style: TextStyle(color: AppTheme.loginTextColor),
                             ),
                             onPressed: () {
-                              bloc.add(StartAuth(
+                              bloc!.add(StartAuth(
                                   true,
                                   S.of(context).fido_label_connect_your_key,
                                   S.of(context).fido_label_success));
@@ -140,9 +140,9 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                                 SelectTwoFactorRoute.name,
                                 ModalRoute.withName(LoginRoute.name),
                                 arguments: SelectTwoFactorRouteArgs(
-                                    widget.args.isDialog,
-                                    widget.args.authBloc,
-                                    widget.args.state),
+                                    widget.args!.isDialog,
+                                    widget.args!.authBloc,
+                                    widget.args!.state),
                               );
                             },
                           ),
@@ -156,7 +156,7 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                               CircularProgressIndicator(),
                               TextButton(
                                 onPressed: () {
-                                  bloc.add(Cancel());
+                                  bloc!.add(Cancel());
                                 },
                                 child: Text(S.of(context).btn_cancel),
                               )

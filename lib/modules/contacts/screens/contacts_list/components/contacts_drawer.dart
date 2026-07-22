@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 
 import 'package:aurora_mail/config.dart';
@@ -13,7 +13,7 @@ import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/storage_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 
 class ContactsDrawer extends StatefulWidget {
   @override
@@ -21,7 +21,7 @@ class ContactsDrawer extends StatefulWidget {
 }
 
 class _ContactsDrawerState extends BState<ContactsDrawer> {
-  ContactsBloc contactsBloc;
+  ContactsBloc? contactsBloc;
 
   @override
   void initState() {
@@ -39,7 +39,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
 
   Future<void> _onRefresh() {
     final completer = Completer();
-    contactsBloc.add(GetContacts(completer: completer));
+    contactsBloc!.add(GetContacts(completer: completer));
     return completer.future;
   }
 
@@ -51,7 +51,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
         backgroundColor: Colors.white,
         color: Colors.black,
         child: ListTileTheme(
-          selectedColor: theme.primaryColor,
+          selectedColor: theme!.primaryColor,
           style: ListTileStyle.drawer,
           child: SafeArea(
             child: BlocBuilder<ContactsBloc, ContactsState>(
@@ -62,7 +62,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
                       S.of(context).contacts_drawer_section_storages,
-                      style: TextStyle(color: theme.primaryColor),
+                      style: TextStyle(color: theme!.primaryColor),
                     ),
                   ),
                   _buildStorages(context, state),
@@ -74,14 +74,14 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
                       children: <Widget>[
                         Text(
                           S.of(context).contacts_drawer_section_groups,
-                          style: TextStyle(color: theme.primaryColor),
+                          style: TextStyle(color: theme!.primaryColor),
                         ),
                         IconButton(
                           icon: AdaptiveDrawerIcon(
                             defaultIcon: Icons.add,
                             iconName: 'add',
                             folder: 'contacts',
-                            color: theme.primaryColor,
+                            color: theme!.primaryColor,
                           ),
                           onPressed: _addGroup,
                         ),
@@ -115,7 +115,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
               title: Text(S.of(context).contacts_drawer_storage_all),
               selected: state.showAllVisibleContacts == true,
               onTap: () {
-                contactsBloc.add(SelectStorageGroup());
+                contactsBloc!.add(SelectStorageGroup());
                 if (Navigator.canPop(context)) {
                   Navigator.pop(context);
                 }
@@ -162,7 +162,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
           }).toList(),
         ],
       );
-    } else if (state.storages != null && state.storages.isEmpty) {
+    } else if (state.storages != null && state.storages!.isEmpty) {
       return Center(child: Text(S.of(context).contacts_empty));
     } else {
       return Padding(
@@ -173,17 +173,17 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
   }
 
   Widget _buildStorageTile({
-    @required ContactsStorage s,
-    @required Widget iconWidget,
-    @required ContactsState state,
+    required ContactsStorage s,
+    required Widget iconWidget,
+    required ContactsState state,
   }) {
-    String displayName;
+    String? displayName;
 
     if (s.displayName != null &&
-        s.displayName.length > 6 &&
-        s.displayName.substring(0, 6) == 'LABEL_') {
+        s.displayName!.length > 6 &&
+        s.displayName!.substring(0, 6) == 'LABEL_') {
       displayName =
-          getStorageName(s.displayName.substring(6), context) ?? s.displayName;
+          getStorageName(s.displayName!.substring(6), context) ?? s.displayName;
     } else {
       // Use localized names for standard storage types
       switch (s.id) {
@@ -204,10 +204,10 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
 
     return ListTile(
       leading: iconWidget,
-      title: Text(displayName),
+      title: Text(displayName!),
       selected: s.id == state.selectedStorage,
       onTap: () {
-        contactsBloc.add(SelectStorageGroup(storage: s));
+        contactsBloc!.add(SelectStorageGroup(storage: s));
         if (Navigator.canPop(context)) {
           Navigator.pop(context);
         }
@@ -218,17 +218,17 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
   Widget _buildGroups(BuildContext context, ContactsState state) {
     if (state.groups != null) {
       return Column(
-        children: state.groups
+        children: state.groups!
             .map((g) => ListTile(
                   leading: AdaptiveDrawerIcon(
                     defaultIcon: MdiIcons.pound,
                     iconName: 'group',
                     folder: 'contacts',
                   ),
-                  title: Text(g.name),
+                  title: Text(g.name!),
                   selected: g.uuid == state.selectedGroup,
                   onTap: () {
-                    contactsBloc.add(SelectStorageGroup(group: g));
+                    contactsBloc!.add(SelectStorageGroup(group: g));
                     if (Navigator.canPop(context)) {
                       Navigator.pop(context);
                     }
@@ -236,7 +236,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
                 ))
             .toList(),
       );
-    } else if (state.groups != null && state.groups.isEmpty) {
+    } else if (state.groups != null && state.groups!.isEmpty) {
       return Center(child: Text(S.of(context).contacts_groups_empty));
     } else {
       return Padding(

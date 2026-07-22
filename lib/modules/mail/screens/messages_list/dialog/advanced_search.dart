@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class AdvancedSearch extends StatefulWidget {
-  final String searchText;
+  final String? searchText;
 
   AdvancedSearch(this.searchText);
 
@@ -16,13 +16,13 @@ class AdvancedSearch extends StatefulWidget {
 }
 
 class AdvancedSearchState extends State<AdvancedSearch> {
-  bool withAttachment = false;
-  TextEditingController fromCtrl;
-  TextEditingController toCtrl;
-  TextEditingController subjectCtrl;
-  TextEditingController textCtrl;
-  DateTime since;
-  DateTime till;
+  bool? withAttachment = false;
+  TextEditingController? fromCtrl;
+  TextEditingController? toCtrl;
+  TextEditingController? subjectCtrl;
+  TextEditingController? textCtrl;
+  DateTime? since;
+  DateTime? till;
 
   final DateFormat dateFormat = DateFormat('dd.MM.yyyy');
 
@@ -52,7 +52,7 @@ class AdvancedSearchState extends State<AdvancedSearch> {
           break;
         case SearchPattern.Date:
           since = (item as DateSearchParams).since;
-          till = (item as DateSearchParams).till;
+          till = item.till;
           break;
         case SearchPattern.Text:
           textCtrl = TextEditingController(text: item.value);
@@ -84,22 +84,22 @@ class AdvancedSearchState extends State<AdvancedSearch> {
             children: <Widget>[
               SizedBox(height: 16.0),
               InputUtils.buildUnlymeTextField(
-                controller: fromCtrl,
+                controller: fromCtrl!,
                 labelText: S.of(context).messages_from,
               ),
               SizedBox(height: BuildProperty.useCustomInputStyles ? 16.0 : 8.0),
               InputUtils.buildUnlymeTextField(
-                controller: toCtrl,
+                controller: toCtrl!,
                 labelText: S.of(context).messages_to,
               ),
               SizedBox(height: BuildProperty.useCustomInputStyles ? 16.0 : 8.0),
               InputUtils.buildUnlymeTextField(
-                controller: subjectCtrl,
+                controller: subjectCtrl!,
                 labelText: S.of(context).messages_subject,
               ),
               SizedBox(height: BuildProperty.useCustomInputStyles ? 16.0 : 8.0),
               InputUtils.buildUnlymeTextField(
-                controller: textCtrl,
+                controller: textCtrl!,
                 labelText: S.of(context).input_message_search_text,
               ),
               SizedBox(height: BuildProperty.useCustomInputStyles ? 16.0 : 8.0),
@@ -127,7 +127,7 @@ class AdvancedSearchState extends State<AdvancedSearch> {
                           : SizedBox(
                               height: 20,
                               child: Center(
-                                child: Text(dateFormat.format(since)),
+                                child: Text(dateFormat.format(since!)),
                               ),
                             ),
                     ),
@@ -154,7 +154,7 @@ class AdvancedSearchState extends State<AdvancedSearch> {
                           : SizedBox(
                               height: 20,
                               child: Center(
-                                child: Text(dateFormat.format(till)),
+                                child: Text(dateFormat.format(till!)),
                               ),
                             ),
                     ),
@@ -166,7 +166,7 @@ class AdvancedSearchState extends State<AdvancedSearch> {
                 children: [
                   Checkbox(
                     value: withAttachment,
-                    onChanged: (bool value) {
+                    onChanged: (bool? value) {
                       withAttachment = value;
                       setState(() {});
                     },
@@ -174,7 +174,7 @@ class AdvancedSearchState extends State<AdvancedSearch> {
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                        withAttachment = !withAttachment;
+                        withAttachment = !withAttachment!;
                         setState(() {});
                       },
                       child: Text(
@@ -208,23 +208,23 @@ class AdvancedSearchState extends State<AdvancedSearch> {
 
   _search() {
     var searchString = "";
-    if (fromCtrl.text.isNotEmpty) {
-      searchString += searchUtil.wrap(SearchPattern.From, fromCtrl.text);
+    if (fromCtrl!.text.isNotEmpty) {
+      searchString += searchUtil.wrap(SearchPattern.From, fromCtrl!.text);
       searchString += " ";
     }
-    if (toCtrl.text.isNotEmpty) {
-      searchString += searchUtil.wrap(SearchPattern.To, toCtrl.text);
+    if (toCtrl!.text.isNotEmpty) {
+      searchString += searchUtil.wrap(SearchPattern.To, toCtrl!.text);
       searchString += " ";
     }
-    if (subjectCtrl.text.isNotEmpty) {
-      searchString += searchUtil.wrap(SearchPattern.Subject, subjectCtrl.text);
+    if (subjectCtrl!.text.isNotEmpty) {
+      searchString += searchUtil.wrap(SearchPattern.Subject, subjectCtrl!.text);
       searchString += " ";
     }
-    if (textCtrl.text.isNotEmpty) {
-      searchString += searchUtil.wrap(SearchPattern.Text, textCtrl.text);
+    if (textCtrl!.text.isNotEmpty) {
+      searchString += searchUtil.wrap(SearchPattern.Text, textCtrl!.text);
       searchString += " ";
     }
-    if (withAttachment) {
+    if (withAttachment!) {
       searchString += searchUtil.wrapFlag([SearchFlag.Attachment]);
       searchString += " ";
     }

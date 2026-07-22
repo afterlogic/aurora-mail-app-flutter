@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 import 'dart:io';
 
@@ -30,7 +30,7 @@ import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
@@ -39,30 +39,30 @@ import 'components/mail_folder.dart';
 import 'components/message_item.dart';
 
 class MessagesListAndroid extends StatefulWidget {
-  final String initSearch;
-  static int openMessageLocalId = null;
-  static String openMessageId = null;
-  static String openMessageFolder = null;
+  final String? initSearch;
+  static int? openMessageLocalId = null;
+  static String? openMessageId = null;
+  static String? openMessageFolder = null;
 
   const MessagesListAndroid({this.initSearch});
 
   @override
   _MessagesListAndroidState createState() => _MessagesListAndroidState();
 
-  static Function(List<File> files, List<String> text) onShare;
-  static List shareHolder;
+  static Function(List<File> files, List<String> text)? onShare;
+  static List? shareHolder;
 }
 
 class _MessagesListAndroidState extends BState<MessagesListAndroid>
     with WidgetsBindingObserver {
-  MessagesListBloc _messagesListBloc;
-  SubscribedToMessages _subscribedToMessagesState;
-  MailBloc _mailBloc;
-  ContactsBloc _contactsBloc;
+  MessagesListBloc? _messagesListBloc;
+  SubscribedToMessages? _subscribedToMessagesState;
+  MailBloc? _mailBloc;
+  ContactsBloc? _contactsBloc;
   bool isSearch = false;
   bool isLoading = false;
-  Completer _refreshCompleter;
-  Folder _selectedFolder;
+  Completer? _refreshCompleter;
+  Folder? _selectedFolder;
   bool _isBackgroundRefresh = false;
   final appBarKey = GlobalKey<MailAppBarState>();
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
@@ -89,9 +89,9 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     };
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (MessagesListAndroid.shareHolder != null) {
-        MessagesListAndroid.onShare(
-            MessagesListAndroid.shareHolder[0] as List<File>,
-            MessagesListAndroid.shareHolder[1] as List<String>);
+        MessagesListAndroid.onShare!(
+            MessagesListAndroid.shareHolder![0] as List<File>,
+            MessagesListAndroid.shareHolder![1] as List<String>);
         MessagesListAndroid.shareHolder = null;
       }
     });
@@ -105,7 +105,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      _mailBloc.add(FetchFolders());
+      _mailBloc!.add(FetchFolders());
     }
     super.didChangeAppLifecycleState(state);
   }
@@ -145,9 +145,9 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   }
 
   Future<void> _openMessageByLocalId(int uid) async {
-    Message message;
+    Message? message;
     try {
-      message = await _mailBloc.getMessageByLocalId(uid);
+      message = await _mailBloc!.getMessageByLocalId(uid);
     } catch (e) {
       _showError(context, ErrorToShow('$e'));
     }
@@ -162,7 +162,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   Future<void> _openMessageById(String messageId, String folder) async {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
-        final futureMessage = _mailBloc.getMessageById(messageId, folder);
+        final futureMessage = _mailBloc!.getMessageById(messageId, folder);
         final result = await _onMessageSelectedWithProgress(futureMessage);
         if (result is ErrorToShow) {
           _showError(context, result);
@@ -176,23 +176,23 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   void _initBlocs() {
     final authBloc = BlocProvider.of<AuthBloc>(context);
     if (_messagesListBloc != null &&
-        _messagesListBloc.account == authBloc.currentAccount) return;
+        _messagesListBloc!.account == authBloc.currentAccount) return;
     _messagesListBloc = BlocProvider.of<MessagesListBloc>(context);
     _mailBloc = BlocProvider.of<MailBloc>(context);
     _contactsBloc = BlocProvider.of<ContactsBloc>(context);
-    _messagesListBloc.setUserAndAccount(
+    _messagesListBloc!.setUserAndAccount(
       user: authBloc.currentUser,
       account: authBloc.currentAccount,
     );
-    _mailBloc.init(
-      authBloc.currentUser,
+    _mailBloc!.init(
+      authBloc.currentUser!,
       authBloc.currentAccount,
     );
     if (MessagesListAndroid.openMessageFolder != null) {
-      _mailBloc.add(SelectFolderByName(MessagesListAndroid.openMessageFolder));
+      _mailBloc!.add(SelectFolderByName(MessagesListAndroid.openMessageFolder));
     }
     if (!BackgroundHelper.isBackground) {
-      _mailBloc.add(FetchFolders());
+      _mailBloc!.add(FetchFolders());
     }
   }
 
@@ -201,8 +201,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
         context: ctx, scaffoldState: scaffoldKey.currentState, msg: err);
   }
 
-  Future<ErrorToShow> _onMessageSelectedWithProgress(
-    Future<Message> futureMessage,
+  Future<ErrorToShow?> _onMessageSelectedWithProgress(
+    Future<Message?> futureMessage,
   ) {
     return Navigator.pushNamed<ErrorToShow>(
       context,
@@ -220,8 +220,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     Message message;
     LocalFolder draftsFolder;
     try {
-      message = await _mailBloc.getFullMessage(_message.localId);
-      draftsFolder = await _mailBloc.getFolderByType(FolderType.drafts);
+      message = await _mailBloc!.getFullMessage(_message.localId!);
+      draftsFolder = await _mailBloc!.getFolderByType(FolderType.drafts);
     } catch (e) {
       _showError(context, ErrorToShow('$e'));
       return;
@@ -230,7 +230,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final isDraftMessage =
           draftsFolder != null && message.folder == draftsFolder.fullNameRaw;
-      final isNotesFolder = _selectedFolder.folderType.isNotes;
+      final isNotesFolder = _selectedFolder!.folderType!.isNotes;
       if (isDraftMessage || isNotesFolder) {
         Navigator.pushNamed(
           context,
@@ -239,7 +239,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
             mailBloc: _mailBloc,
             contactsBloc: _contactsBloc,
             composeAction: isNotesFolder
-                ? OpenFromNotes(message, _selectedFolder)
+                ? OpenFromNotes(message, _selectedFolder!)
                 : OpenFromDrafts(message, message.uid),
           ),
         );
@@ -259,35 +259,37 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   }
 
   void _deleteMessage(Message message) {
-    _messagesListBloc.add(DeleteMessages(messages: [message]));
+    _messagesListBloc!.add(DeleteMessages(messages: [message]));
   }
 
   void _unreadMessage(Message message, bool isUnread) {
-    _mailBloc.add(SetSeen([message], isUnread));
+    _mailBloc!.add(SetSeen([message], isUnread));
   }
 
   void _dispatchPostFoldersLoadedAction(FoldersLoaded state) {
     switch (state.postAction) {
       case PostFolderLoadedAction.subscribeToMessages:
-        _messagesListBloc.add(SubscribeToMessages(
+        _messagesListBloc!.add(SubscribeToMessages(
           state.selectedFolder,
           state.filter,
-          _messagesListBloc.searchParams,
-          _messagesListBloc.searchText,
+          _messagesListBloc!.searchParams,
+          _messagesListBloc!.searchText,
         ));
         break;
       case PostFolderLoadedAction.stopMessagesRefresh:
-        _messagesListBloc.add(StopMessagesRefresh());
+        _messagesListBloc!.add(StopMessagesRefresh());
+        break;
+      case null:
         break;
     }
   }
 
   void _setStarred(Message message, bool isStarred) {
-    _mailBloc.add(SetStarred([message], isStarred));
+    _mailBloc!.add(SetStarred([message], isStarred));
   }
 
   void _showAllMessages(BuildContext context) {
-    _mailBloc.add(SelectFolder(_selectedFolder));
+    _mailBloc!.add(SelectFolder(_selectedFolder));
   }
 
   void _onSearch(bool value) {
@@ -339,8 +341,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                 context,
                 ComposeRoute.name,
                 arguments: ComposeScreenArgs(
-                  composeAction: _selectedFolder.folderType.isNotes
-                      ? OpenFromNotes(null, _selectedFolder)
+                  composeAction: _selectedFolder!.folderType!.isNotes
+                      ? OpenFromNotes(null, _selectedFolder!)
                       : null,
                   mailBloc: _mailBloc,
                   contactsBloc: _contactsBloc,
@@ -400,7 +402,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                                           right: 0,
                                           top: 0,
                                           child: MessageCounterWidget(
-                                            _mailBloc.updateMessageCounter,
+                                            _mailBloc!.updateMessageCounter,
                                             state.selectedFolder,
                                           ),
                                         );
@@ -450,11 +452,11 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                                       if (_isBackgroundRefresh) {
                                         _isBackgroundRefresh = false;
                                       } else {
-                                        _mailBloc.add(
+                                        _mailBloc!.add(
                                             RefreshMessages(_refreshCompleter));
-                                        _mailBloc.add(RefreshFolders());
+                                        _mailBloc!.add(RefreshFolders());
                                       }
-                                      return _refreshCompleter.future;
+                                      return _refreshCompleter!.future;
                                     },
                                     backgroundColor: Colors.white,
                                     color: Colors.black,
@@ -464,11 +466,11 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                                                   null &&
                                               !isLoading
                                           ? _buildMessagesStream(
-                                              _subscribedToMessagesState.stream,
-                                              _subscribedToMessagesState.filter,
-                                              _subscribedToMessagesState.isSent,
-                                              _subscribedToMessagesState.key,
-                                              _subscribedToMessagesState.folder,
+                                              _subscribedToMessagesState!.stream,
+                                              _subscribedToMessagesState!.filter,
+                                              _subscribedToMessagesState!.isSent,
+                                              _subscribedToMessagesState!.key,
+                                              _subscribedToMessagesState!.folder,
                                             )
                                           : _buildMessagesLoading(),
                                     ),
@@ -521,7 +523,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                           right: 0,
                           top: 0,
                           child: MessageCounterWidget(
-                            _mailBloc.updateMessageCounter,
+                            _mailBloc!.updateMessageCounter,
                             state.selectedFolder,
                           ),
                         );
@@ -567,10 +569,10 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                         _isBackgroundRefresh = false;
                       } else {
                         _startRefresh();
-                        _mailBloc.add(RefreshMessages(_refreshCompleter));
-                        _mailBloc.add(RefreshFolders());
+                        _mailBloc!.add(RefreshMessages(_refreshCompleter));
+                        _mailBloc!.add(RefreshFolders());
                       }
-                      return _refreshCompleter.future;
+                      return _refreshCompleter!.future;
                     },
                     backgroundColor: Colors.white,
                     color: Colors.black,
@@ -578,11 +580,11 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                       duration: Duration(milliseconds: 300),
                       child: _subscribedToMessagesState != null && !isLoading
                           ? _buildMessagesStream(
-                              _subscribedToMessagesState.stream,
-                              _subscribedToMessagesState.filter,
-                              _subscribedToMessagesState.isSent,
-                              _subscribedToMessagesState.key,
-                              _subscribedToMessagesState.folder,
+                              _subscribedToMessagesState!.stream,
+                              _subscribedToMessagesState!.filter,
+                              _subscribedToMessagesState!.isSent,
+                              _subscribedToMessagesState!.key,
+                              _subscribedToMessagesState!.folder,
                             )
                           : _buildMessagesLoading(),
                     ),
@@ -612,8 +614,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                 context,
                 ComposeRoute.name,
                 arguments: ComposeScreenArgs(
-                  composeAction: _selectedFolder.folderType.isNotes
-                      ? OpenFromNotes(null, _selectedFolder)
+                  composeAction: _selectedFolder!.folderType!.isNotes
+                      ? OpenFromNotes(null, _selectedFolder!)
                       : null,
                   mailBloc: _mailBloc,
                   contactsBloc: _contactsBloc,
@@ -638,7 +640,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   }
 
   Widget _buildMessagesStream(
-    Stream<List<Message>> Function(int page) stream,
+    Stream<List<Message>> Function(int page)? stream,
     MessagesFilter filter,
     bool isSent,
     String key,
@@ -646,16 +648,16 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   ) {
     return Column(
       children: <Widget>[
-        if (isSearch && !_selectedFolder.folderType.isNotes)
+        if (isSearch && !_selectedFolder!.folderType!.isNotes)
           TextButton(
             onPressed: () async {
               final result = await dialog(
                 context: context,
                 builder: (_) =>
-                    AdvancedSearch(appBarKey.currentState.searchText),
+                    AdvancedSearch(appBarKey.currentState!.searchText),
               );
               if (result is String && result.isNotEmpty) {
-                appBarKey.currentState.search(result);
+                appBarKey.currentState!.search(result);
               }
             },
             child: Text(S.of(context).btn_message_advanced_search),
@@ -677,7 +679,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
             folder: folder,
             selectionController: selectionController,
             header: ([FolderType.spam, FolderType.trash]
-                        .contains(_selectedFolder.folderType) &&
+                        .contains(_selectedFolder!.folderType) &&
                     !isSearch)
                 ? _emptyFolder
                 : null,
@@ -692,7 +694,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                 onStarMessage: _setStarred,
                 onDeleteMessage: _deleteMessage,
                 onUnreadMessage: _unreadMessage,
-                isNote: _selectedFolder.folderType.isNotes,
+                isNote: _selectedFolder!.folderType!.isNotes,
               );
             },
             progressWidget: Padding(
@@ -704,7 +706,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
               return SizedBox.shrink();
             },
             emptyWidget: (context) {
-              if (_selectedFolder != null && _selectedFolder.needsInfoUpdate) {
+              if (_selectedFolder != null && _selectedFolder!.needsInfoUpdate) {
                 return Padding(
                   padding: EdgeInsets.all(20),
                   child: _buildMessagesLoading(),
@@ -722,12 +724,12 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     );
   }
 
-  Widget _emptyFolder(int messageCount) {
+  Widget _emptyFolder(int? messageCount) {
     if (messageCount == null || messageCount == 0) {
       return SizedBox.shrink();
     }
     final emptyFolder =
-        Folder.getFolderTypeFromNumber(_selectedFolder.type) == FolderType.trash
+        Folder.getFolderTypeFromNumber(_selectedFolder!.type) == FolderType.trash
             ? S.of(context).btn_message_empty_trash_folder
             : S.of(context).btn_message_empty_spam_folder;
     return InkWell(
@@ -738,13 +740,13 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                 context,
                 emptyFolder,
                 S.of(context).hint_message_empty_folder(
-                      FolderHelper.getTitle(context, _selectedFolder),
+                      FolderHelper.getTitle(context, _selectedFolder!),
                     ),
                 S.of(context).btn_delete,
                 destructibleAction: true,
               );
               if (delete == true) {
-                _messagesListBloc.add(EmptyFolder(_selectedFolder.fullNameRaw));
+                _messagesListBloc!.add(EmptyFolder(_selectedFolder!.fullNameRaw));
                 selectionController.enable = false;
               }
             },
@@ -770,7 +772,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   void _startRefresh() {
     if (_refreshCompleter?.isCompleted == false) _refreshCompleter?.complete();
     _refreshCompleter = Completer();
-    _refreshKey.currentState.show();
+    _refreshKey.currentState!.show();
   }
 
   void onAlarm() {

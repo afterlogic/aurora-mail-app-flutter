@@ -1,18 +1,18 @@
-//@dart=2.9
+
 import 'package:flutter/widgets.dart';
 
 class ContactsGroup {
   final List<int> contacts;
-  final String uuid;
-  final int userLocalId;
-  final int idUser;
+  final String? uuid;
+  final int? userLocalId;
+  final int? idUser;
   final String city;
   final String company;
   final String country;
   final String email;
   final String fax;
-  final bool isOrganization;
-  final String name;
+  final bool? isOrganization;
+  final String? name;
   final String parentUUID;
   final String phone;
   final String state;
@@ -21,10 +21,10 @@ class ContactsGroup {
   final String zip;
 
   ContactsGroup({
-    @required this.uuid,
-    @required this.userLocalId,
-    @required this.idUser,
-    @required this.name,
+    required this.uuid,
+    required this.userLocalId,
+    required this.idUser,
+    required this.name,
     this.contacts = const [],
     this.city = "",
     this.company = "",
@@ -41,24 +41,24 @@ class ContactsGroup {
   });
 
   ContactsGroup copyWith({
-    String uuid,
-    int userLocalId,
-    int idUser,
-    String city,
-    String company,
-    String country,
-    String davContactsUID,
-    String email,
-    String fax,
-    bool isOrganization,
-    String name,
-    String parentUUID,
-    String phone,
-    String state,
-    String street,
-    String web,
-    String zip,
-    List<int> contacts,
+    String? uuid,
+    int? userLocalId,
+    int? idUser,
+    String? city,
+    String? company,
+    String? country,
+    String? davContactsUID,
+    String? email,
+    String? fax,
+    bool? isOrganization,
+    String? name,
+    String? parentUUID,
+    String? phone,
+    String? state,
+    String? street,
+    String? web,
+    String? zip,
+    List<int>? contacts,
   }) {
     return new ContactsGroup(
       uuid: uuid ?? this.uuid,

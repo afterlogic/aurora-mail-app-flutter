@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/shared_ui/asset_svg_icon.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -11,10 +11,10 @@ class Star extends StatefulWidget {
   final Function(bool) onPressed;
 
   const Star({
-    Key key,
-    @required this.value,
+    Key? key,
+    required this.value,
     this.enabled = true,
-    @required this.onPressed,
+    required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -23,9 +23,9 @@ class Star extends StatefulWidget {
 
 class _StarState extends BState<Star> with TickerProviderStateMixin {
   final _animDuration = new Duration(milliseconds: 130);
-  AnimationController _parentCtrl;
-  Animation<double> _scaleAnimation;
-  bool _isStarred;
+  late AnimationController _parentCtrl;
+  late Animation<double> _scaleAnimation;
+  late bool _isStarred;
 
   @override
   void initState() {
@@ -66,7 +66,7 @@ class _StarState extends BState<Star> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     // Define colors depending on the theme.
     final starActiveColor = AppColor.starActive;
-    final starInactiveColor = theme.brightness == Brightness.light
+    final starInactiveColor = theme!.brightness == Brightness.light
         ? AppColor.starInactiveLight
         : AppColor.starInactiveDark;
 
@@ -93,7 +93,7 @@ class _StarState extends BState<Star> with TickerProviderStateMixin {
             showSvg: BuildProperty.useCustomStarIcons,
             svgPath: '${BuildProperty.image_dir}/mail/star.svg',
             iconData: Icons.star_border,
-            color: widget.enabled ? starInactiveColor : theme.disabledColor,
+            color: widget.enabled ? starInactiveColor : theme!.disabledColor,
           ),
           onPressed: widget.enabled ? () => _setStarred(true) : null,
         ),

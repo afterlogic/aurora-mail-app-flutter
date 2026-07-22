@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
@@ -10,13 +10,13 @@ class ComposeRoute {
 }
 
 class ComposeScreenArgs {
-  final MailBloc mailBloc;
-  final ContactsBloc contactsBloc;
-  final ComposeAction composeAction;
+  final MailBloc? mailBloc;
+  final ContactsBloc? contactsBloc;
+  final ComposeAction? composeAction;
 
   const ComposeScreenArgs({
-    @required this.mailBloc,
-    @required this.contactsBloc,
+    required this.mailBloc,
+    required this.contactsBloc,
     this.composeAction,
   });
 }

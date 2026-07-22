@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
@@ -12,12 +12,12 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class ComposeWebViewController {
-  WebViewController _webViewController;
-  String _text = "";
+  WebViewController? _webViewController;
+  String? _text = "";
   bool _isHtml = true;
   bool showImage = false;
 
-  Future setMessage(String text, Message message, User user) async {
+  Future setMessage(String text, Message message, User? user) async {
     if (showImage) {
       text = text
           .replaceAll("data-x-src=", "src=")
@@ -35,29 +35,29 @@ class ComposeWebViewController {
     for (final attachment in attachments) {
       text = text.replaceFirst(
         "data-x-src-cid=\"${attachment.cid}\"",
-        "src=\"${user.hostname}${attachment.viewUrl.replaceFirst("mail-attachment/", "mail-attachments-cookieless/")}&AuthToken=${user.token}\"",
+        "src=\"${user!.hostname}${attachment.viewUrl!.replaceFirst("mail-attachment/", "mail-attachments-cookieless/")}&AuthToken=${user.token}\"",
       );
     }
 
     setText(text);
   }
 
-  Future setText(String text) async {
+  Future setText(String? text) async {
     _text = text;
     if (_webViewController != null) {
-      await _webViewController
+      await _webViewController!
           .runJavaScript("setBodyContent(${json.encode(_text)})");
     }
   }
 
-  Future<String> getText() async {
+  Future<String?> getText() async {
     if (_webViewController == null) {
       return _text;
     } else {
-      final text = await _webViewController
+      final text = await _webViewController!
           .runJavaScriptReturningResult("getBodyContent()");
       try {
-        final decoded = json.decode(text.toString()) as String;
+        final decoded = json.decode(text.toString()) as String?;
         return decoded;
       } catch (e) {
         return text.toString();
@@ -67,7 +67,7 @@ class ComposeWebViewController {
 
   Future<void> scrollToTop() async {
     if (_webViewController != null) {
-      await _webViewController.runJavaScript("window.scrollTo(0, 0)");
+      await _webViewController!.runJavaScript("window.scrollTo(0, 0)");
     }
   }
 
@@ -75,14 +75,14 @@ class ComposeWebViewController {
     _isHtml = html;
     if (_webViewController != null) {
       if (html) {
-        await _webViewController.runJavaScript("setHtml()");
+        await _webViewController!.runJavaScript("setHtml()");
       } else {
-        await _webViewController.runJavaScript("setPlain()");
+        await _webViewController!.runJavaScript("setPlain()");
       }
     }
   }
 
-  void init(WebViewController webViewController) {
+  void init(WebViewController? webViewController) {
     _webViewController = webViewController;
     setText(_text);
     setIsHtml(_isHtml);
@@ -94,17 +94,17 @@ class ComposeWebViewController {
 }
 
 class ComposeWebView extends StatefulWidget {
-  final ComposeWebViewController textCtrl;
-  final bool enable;
+  final ComposeWebViewController? textCtrl;
+  final bool? enable;
   final bool removeForcedHeight;
-  final Function init;
+  final Function? init;
 
   const ComposeWebView({
     this.textCtrl,
     this.enable,
     this.init,
     this.removeForcedHeight = false,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -112,8 +112,8 @@ class ComposeWebView extends StatefulWidget {
 }
 
 class _ComposeWebViewState extends State<ComposeWebView> {
-  WebViewController _ctrl;
-  String initUrl;
+  WebViewController? _ctrl;
+  String? initUrl;
 
   @override
   initState() {
@@ -160,7 +160,7 @@ class _ComposeWebViewState extends State<ComposeWebView> {
       mimeType: 'text/html',
       encoding: Encoding.getByName('utf-8'),
     ).toString();
-    _ctrl.loadRequest(Uri.parse(initUrl));
+    _ctrl!.loadRequest(Uri.parse(initUrl!));
   }
 
   Future<NavigationDecision> navigationDelegate(
@@ -175,7 +175,7 @@ class _ComposeWebViewState extends State<ComposeWebView> {
   @override
   Widget build(BuildContext context) {
     return WebViewWidget(
-      controller: _ctrl,
+      controller: _ctrl!,
       gestureRecognizers: {
         Factory<VerticalDragGestureRecognizer>(() {
           return VerticalDragGestureRecognizer();
@@ -191,6 +191,6 @@ class _ComposeWebViewState extends State<ComposeWebView> {
   }
 
   init() async {
-    widget.textCtrl.init(_ctrl);
+    widget.textCtrl!.init(_ctrl);
   }
 }

@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
@@ -6,13 +6,13 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 
 class LanguageSelectionDialog extends StatelessWidget {
-  final Language selectedItem;
-  final Function(Language) onItemSelected;
+  final Language? selectedItem;
+  final Function(Language?) onItemSelected;
 
   const LanguageSelectionDialog(this.onItemSelected, this.selectedItem);
 
-  static void show(BuildContext context, Language selected,
-      Function(Language) onItemSelected) {
+  static void show(BuildContext context, Language? selected,
+      Function(Language?) onItemSelected) {
     dialog(
         context: context,
         builder: (_) => LanguageSelectionDialog(onItemSelected, selected));
@@ -35,10 +35,10 @@ class LanguageSelectionDialog extends StatelessWidget {
                   activeColor: theme.primaryColor,
                   title: Text(lang == null
                       ? S.of(context).settings_language_system
-                      : lang.name),
+                      : lang.name!),
                   value: lang?.tag ?? 'system',
                   groupValue: selectedItem?.tag ?? 'system',
-                  onChanged: (val) {
+                  onChanged: (dynamic val) {
                     onItemSelected(lang);
                     Navigator.pop(context);
                   },

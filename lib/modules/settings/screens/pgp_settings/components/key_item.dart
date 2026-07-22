@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:crypto_model/crypto_model.dart';
@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 
 class KeyItem extends StatefulWidget {
   final PgpKey pgpKey;
-  final bool external;
-  final bool selected;
-  final Function(bool) onSelect;
+  final bool? external;
+  final bool? selected;
+  final Function(bool?)? onSelect;
 
   const KeyItem({
-    @required this.pgpKey,
+    required this.pgpKey,
     this.external,
     this.selected,
     this.onSelect,
@@ -24,10 +24,10 @@ class KeyItem extends StatefulWidget {
 class _KeyItemState extends BState<KeyItem> {
   @override
   Widget build(BuildContext context) {
-    var textTheme = theme.textTheme;
+    var textTheme = theme!.textTheme;
 
     final length =
-        widget.pgpKey.key?.length != null ? "${widget.pgpKey.length}" : "";
+        widget.pgpKey.key.length != null ? "${widget.pgpKey.length}" : "";
     final type = widget.pgpKey.isPrivate ? "private" : "public";
     final external = widget.external == true ? " (external)" : "";
     final description = "($length-bit, $type)$external";
@@ -58,11 +58,11 @@ class _KeyItemState extends BState<KeyItem> {
                       widget.pgpKey.formatName(),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
-                      style: textTheme.bodyText2,
+                      style: textTheme.bodyMedium,
                     ),
                     Text(
                       description,
-                      style: textTheme.caption,
+                      style: textTheme.bodySmall,
                     ),
                   ],
                 ),
@@ -72,7 +72,7 @@ class _KeyItemState extends BState<KeyItem> {
               Checkbox(
                 value: widget.selected,
                 onChanged: (isSelected) {
-                  widget.onSelect(isSelected);
+                  widget.onSelect!(isSelected);
                 },
               )
           ],

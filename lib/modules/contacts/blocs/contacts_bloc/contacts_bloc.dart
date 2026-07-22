@@ -1,4 +1,4 @@
-//@dart=2.9
+
 import 'dart:async';
 
 import 'package:aurora_mail/background/background_helper.dart';
@@ -25,16 +25,16 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   final User user;
   final AppDatabase appDatabase;
   final PgpWorker pgpWorker;
-  ContactsRepository _repo;
-  String searchPattern;
-  StreamSubscription<List<Contact>> _contactsSub;
-  StreamSubscription<List<ContactsStorage>> _storagesSub;
-  StreamSubscription<List<ContactsGroup>> _groupsSub;
-  StreamSubscription<List<int>> _syncingStoragesSub;
+  late ContactsRepository _repo;
+  String? searchPattern;
+  StreamSubscription<List<Contact>>? _contactsSub;
+  StreamSubscription<List<ContactsStorage>>? _storagesSub;
+  StreamSubscription<List<ContactsGroup>>? _groupsSub;
+  StreamSubscription<List<int?>>? _syncingStoragesSub;
 
   ContactsBloc({
-    @required this.user,
-    @required this.appDatabase,
+    required this.user,
+    required this.appDatabase,
   })  : pgpWorker = AppInjector.instance.pgpWorker(),
         super(ContactsState()) {
     _repo = ContactsRepository(
@@ -48,15 +48,15 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   _initListeners() {
     _storagesSub = _repo.contactsStorages.listen(
       _handleStoragesStream,
-      onError: (err, _) => add(AddError(formatError(err, null))),
+      onError: (err, StackTrace st) => add(AddError(formatError(err, st))),
     );
     _groupsSub = _repo.contactsGroups.listen(
       _handleGroupsStream,
-      onError: (err) => add(AddError(formatError(err, null))),
+      onError: (err, StackTrace st) => add(AddError(formatError(err, st))),
     );
     _syncingStoragesSub = _repo.syncingStorages.listen(
       _handleSyncingStoragesStream,
-      onError: (err) => add(AddError(formatError(err, null))),
+      onError: (err, StackTrace st) => add(AddError(formatError(err, st))),
     );
   }
 
@@ -95,7 +95,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     add(GetContacts());
   }
 
-  Future<Contact> getContact(int id) async {
+  Future<Contact> getContact(int? id) async {
     return _repo.getContactById(id);
   }
 
@@ -116,9 +116,9 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
       final future1 = _repo.refreshStorages();
       final future2 = _repo.refreshGroups();
       await Future.wait([future1, future2]);
-    } catch (err) {
+    } catch (err, st) {
       if(!isClosed){
-        add(AddError(formatError(err, null)));
+        add(AddError(formatError(err, st)));
       }
     }
     event.completer?.complete();
@@ -142,24 +142,24 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     add(ReceivedGroups(groups));
   }
 
-  void _handleSyncingStoragesStream(List<int> ids) {
-    add(SetCurrentlySyncingStorages(ids));
+  void _handleSyncingStoragesStream(List<int?> ids) {
+    add(SetCurrentlySyncingStorages(ids.whereType<int>().toList()));
   }
 
   Stream<ContactsState> _selectStorageGroup(SelectStorageGroup event) async* {
     add(StartActivity('SelectStorageGroup'));
     _contactsSub?.cancel();
     if (event.storageId != null) {
-      add(SetSelectedStorage(event.storageId));
+      add(SetSelectedStorage(event.storageId!));
       await _watchContactsFromStorage(event.storageId);
     } else if (event.groupId != null) {
-      add(SetSelectedGroup(event.groupId));
+      add(SetSelectedGroup(event.groupId!));
       await _watchContactsFromGroup(event.groupId);
     } else {
       // if visible storage is only one - switch to it
       final visibleStorages = state.storages?.where((s) => s.display);
       if (visibleStorages?.length == 1) {
-        add(SelectStorageGroup(storage: state.storages[0]));
+        add(SelectStorageGroup(storage: state.storages![0]));
         add(StopActivity('SelectStorageGroup'));
         return;
       }
@@ -171,7 +171,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     add(StopActivity('SelectStorageGroup'));
   }
 
-  Future<void> _watchContactsFromStorage(String storageId) async {
+  Future<void> _watchContactsFromStorage(String? storageId) async {
     final currentContacts =
         await _repo.getContacts(storages: [storageId], pattern: searchPattern);
     add(ReceivedContacts(currentContacts));
@@ -179,12 +179,12 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
         .watchContactsFromStorage(storageId, searchPattern)
         .listen((contacts) {
       add(ReceivedContacts(contacts));
-    }, onError: (err) {
-      add(AddError(formatError(err, null)));
+    }, onError: (err, StackTrace st) {
+      add(AddError(formatError(err, st)));
     });
   }
 
-  Future<void> _watchContactsFromGroup(String groupUuid) async {
+  Future<void> _watchContactsFromGroup(String? groupUuid) async {
     final currentContacts =
         await _repo.getContacts(groupUuid: groupUuid, pattern: searchPattern);
     add(ReceivedContacts(currentContacts));
@@ -192,8 +192,8 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
         .watchContactsFromGroup(groupUuid, searchPattern)
         .listen((contacts) {
       add(ReceivedContacts(contacts));
-    }, onError: (err) {
-      add(AddError(formatError(err, null)));
+    }, onError: (err, StackTrace st) {
+      add(AddError(formatError(err, st)));
     });
   }
 
@@ -202,15 +202,15 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     add(ReceivedContacts(currentContacts));
     _contactsSub = _repo.watchAllContacts(searchPattern).listen((contacts) {
       add(ReceivedContacts(contacts));
-    }, onError: (err) {
-      add(AddError(formatError(err, null)));
+    }, onError: (err, StackTrace st) {
+      add(AddError(formatError(err, st)));
     });
   }
 
   Stream<ContactsState> _createContact(CreateContact event) async* {
     add(StartActivity('CreateContact'));
-    _repo.addContact(event.contact).catchError((err) {
-      add(AddError(formatError(err, null)));
+    _repo.addContact(event.contact).catchError((err, StackTrace st) {
+      add(AddError(formatError(err, st)));
       add(StopActivity('CreateContact'));
       return null;
     }).whenComplete(() {
@@ -241,8 +241,8 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
         }
       }
       add(StopActivity('UpdateContact'));
-    }).catchError((err) {
-      add(AddError(formatError(err, null)));
+    }).catchError((err, StackTrace st) {
+      add(AddError(formatError(err, st)));
       add(StopActivity('UpdateContact'));
     });
   }
@@ -251,14 +251,14 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     add(StartActivity('DeleteContacts'));
     _repo
         .deleteContacts(event.contacts)
-        .catchError((err) => add(AddError(formatError(err, null))));
+        .catchError((err, StackTrace st) => add(AddError(formatError(err, st))));
     add(StopActivity('DeleteContacts'));
   }
 
   Stream<ContactsState> _shareContacts(ShareContacts event) async* {
     add(StartActivity('ShareContacts'));
-    _repo.shareContacts(event.contacts).catchError((err) {
-      add(AddError(formatError(err, null)));
+    _repo.shareContacts(event.contacts).catchError((err, StackTrace st) {
+      add(AddError(formatError(err, st)));
       add(StopActivity('ShareContacts'));
     }).whenComplete(() {
       add(GetContacts());
@@ -268,8 +268,8 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
 
   Stream<ContactsState> _unshareContacts(UnshareContacts event) async* {
     add(StartActivity('UnshareContacts'));
-    _repo.unshareContacts(event.contacts).catchError((err) {
-      add(AddError(formatError(err, null)));
+    _repo.unshareContacts(event.contacts).catchError((err, StackTrace st) {
+      add(AddError(formatError(err, st)));
       add(StopActivity('UnshareContacts'));
     }).whenComplete(() {
       add(GetContacts());
@@ -281,7 +281,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     add(StartActivity('AddContactsToGroup'));
     await _repo
         .addContactsToGroup(event.groups, event.contacts)
-        .catchError((err) => add(AddError(formatError(err, null))));
+        .catchError((err, StackTrace st) => add(AddError(formatError(err, st))));
     add(StopActivity('AddContactsToGroup'));
   }
 
@@ -290,16 +290,16 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     add(StartActivity('RemoveContactsFromGroup'));
     _repo
         .removeContactsFromGroup(
-            state.groups.firstWhere((e) => e.uuid == state.selectedGroup),
+            state.groups!.firstWhere((e) => e.uuid == state.selectedGroup),
             event.contacts)
-        .catchError((err) => add(AddError(formatError(err, null))));
+        .catchError((err, StackTrace st) => add(AddError(formatError(err, st))));
     add(StopActivity('RemoveContactsFromGroup'));
   }
 
   Stream<ContactsState> _addGroup(CreateGroup event) async* {
     add(StartActivity('CreateGroup'));
-    final groupWithId = await _repo.addGroup(event.group).catchError((err) {
-      add(AddError(formatError(err, null)));
+    final groupWithId = await _repo.addGroup(event.group).catchError((err, StackTrace st) {
+      add(AddError(formatError(err, st)));
       return null;
     });
     add(SelectStorageGroup(group: groupWithId));
@@ -309,8 +309,8 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   Stream<ContactsState> _deleteGroup(DeleteGroup event) async* {
     add(StartActivity('DeleteGroup'));
     add(SelectStorageGroup());
-    _repo.deleteGroup(event.group).catchError((err) {
-      add(AddError(formatError(err, null)));
+    _repo.deleteGroup(event.group).catchError((err, StackTrace st) {
+      add(AddError(formatError(err, st)));
       return false;
     });
     add(StopActivity('DeleteGroup'));
@@ -318,8 +318,8 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
 
   Stream<ContactsState> _updateGroup(UpdateGroup event) async* {
     add(StartActivity('UpdateGroup'));
-    _repo.editGroup(event.group).catchError((err) {
-      add(AddError(formatError(err, null)));
+    _repo.editGroup(event.group).catchError((err, StackTrace st) {
+      add(AddError(formatError(err, st)));
       return false;
     });
     add(StopActivity('UpdateGroup'));
@@ -329,7 +329,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     return _repo.getSuggestionContacts(pattern);
   }
 
-  Future<PgpKey> getKeyInfo(String key) async {
+  Future<PgpKey?> getKeyInfo(String key) async {
     final keyInfo = await pgpWorker.parseKey(key);
     if (keyInfo.isNotEmpty) {
       return keyInfo.first;

@@ -1,11 +1,11 @@
-//@dart=2.9
+
 import 'package:aurora_mail/utils/input_utils.dart';
 import 'package:flutter/material.dart';
 
 class ContactInput extends StatelessWidget {
   final String label;
   final TextEditingController ctrl;
-  final TextInputType keyboardType;
+  final TextInputType? keyboardType;
 
   const ContactInput(this.label, this.ctrl, {this.keyboardType});
 
