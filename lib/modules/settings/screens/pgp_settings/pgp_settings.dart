@@ -103,10 +103,10 @@ class _PgpSettingsState extends BState<PgpSettings> {
                   return next is ProgressState || next is LoadedState;
                 },
                 builder: (BuildContext context, PgpSettingsState state) {
-                  if (state is ProgressState) {
+                  if (state is! LoadedState) {
                     return _progress();
                   }
-                  final loadedState = state as LoadedState;
+                  final loadedState = state;
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

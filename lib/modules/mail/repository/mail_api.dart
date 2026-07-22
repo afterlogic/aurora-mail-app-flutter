@@ -10,7 +10,6 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_mode
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
-import 'package:aurora_mail/utils/download_directory.dart';
 import 'package:aurora_mail/utils/file_utils.dart';
 import 'package:background_downloader/background_downloader.dart';
 import 'package:flutter/foundation.dart';
@@ -390,27 +389,20 @@ class MailApi {
     required Function() onDownloadStart,
     required Function(String?)? onDownloadEnd,
   }) async {
-    final downloadsDirectory = await getDownloadDirectory();
     final headers = await _mailModule.getAuthHeaders();
-    final destinationPath =
-        await _uniqueFilePath(downloadsDirectory, attachment.fileName);
 
     await attachment.startDownload(
       onDownloadStart: () async {
         onDownloadStart();
       },
-      onDownloadEnd: () => onDownloadEnd!(destinationPath),
+      onDownloadEnd: (path) => onDownloadEnd!(path),
       onError: () => onDownloadEnd!(null),
     );
 
-    print(_mailModule.hostname + '/' + attachment.downloadUrl!);
-    print(downloadsDirectory);
-    print(attachment.fileName);
-    print(headers);
-
     // background_downloader (this version) can only save into one of its own
     // fixed base directories, so download to a private staging location and
-    // let DownloadTaskProgress move it to downloadsDirectory once complete.
+    // let DownloadTaskProgress move it to the public Downloads folder once
+    // complete.
     final task = DownloadTask(
       url: _mailModule.hostname + '/' + attachment.downloadUrl!,
       filename: attachment.fileName,
@@ -421,29 +413,8 @@ class MailApi {
     await FileDownloader().enqueue(task);
     attachment.add(
       task,
-      destinationPath,
       ({required String taskId}) => FileDownloader().cancelTaskWithId(taskId),
     );
-  }
-
-  // If [fileName] already exists in [directory], append " (1)", " (2)", ...
-  // before the extension until a free name is found (matches the
-  // Chrome/Explorer download-collision convention).
-  Future<String> _uniqueFilePath(String? directory, String? fileName) async {
-    final candidate = "$directory/$fileName";
-    if (!await File(candidate).exists()) return candidate;
-
-    final dotIndex = fileName!.lastIndexOf('.');
-    final hasExt = dotIndex > 0;
-    final String? base = hasExt ? fileName.substring(0, dotIndex) : fileName;
-    final ext = hasExt ? fileName.substring(dotIndex) : '';
-
-    var i = 1;
-    while (true) {
-      final next = "$directory/$base ($i)$ext";
-      if (!await File(next).exists()) return next;
-      i++;
-    }
   }
 
   Future<void> shareAttachment(MailAttachment attachment,

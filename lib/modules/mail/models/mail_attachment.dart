@@ -3,9 +3,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:aurora_mail/utils/shared_storage.dart';
 import 'package:background_downloader/background_downloader.dart';
 import 'package:collection/collection.dart' show IterableExtension;
-import 'package:flutter/widgets.dart';
 
 class MailAttachment {
   static final currentlyDownloadingAttachments = <DownloadTaskProgress>[];
@@ -64,14 +64,12 @@ class MailAttachment {
     required this.thumbnailUrl,
   });
 
-  Function()? _onDownloadEnd;
+  Function(String path)? _onDownloadEnd;
   Function()? _onError;
 
-  add(DownloadTask task, String destinationPath,
-      Function({required String taskId}) cancel) {
+  add(DownloadTask task, Function({required String taskId}) cancel) {
     currentlyDownloadingAttachments.add(new DownloadTaskProgress(
       task: task,
-      destinationPath: destinationPath,
       attachmentHash: hash,
       cancel: cancel,
       onEnd: _onDownloadEnd,
@@ -81,7 +79,7 @@ class MailAttachment {
 
   Future<void> startDownload({
     required Function() onDownloadStart,
-    required Function() onDownloadEnd,
+    required Function(String path) onDownloadEnd,
     required Function() onError,
   }) async {
     _onDownloadEnd = onDownloadEnd;
@@ -138,14 +136,9 @@ class MailAttachment {
 
 class DownloadTaskProgress {
   final DownloadTask task;
-  // final absolute path the rest of the app expects the downloaded file at;
-  // background_downloader (this version) can only download into one of its
-  // fixed BaseDirectory locations, so the task saves to a private staging
-  // location and this is where it's moved to once complete.
-  final String? destinationPath;
   final String? attachmentHash;
   final Function({required String taskId}) cancel;
-  final Function()? onEnd;
+  final Function(String path)? onEnd;
   final Function()? onError;
   TaskStatus? _status;
 
@@ -170,19 +163,18 @@ class DownloadTaskProgress {
 
   Future<void> finish(TaskStatus status) async {
     var finalStatus = status;
-    if (status == TaskStatus.complete && destinationPath != null) {
+    String? finalPath;
+    if (status == TaskStatus.complete) {
       try {
         final tempPath = await task.filePath();
-        await File(destinationPath!).parent.create(recursive: true);
-        await File(tempPath).copy(destinationPath!);
-        await File(tempPath).delete();
+        finalPath = await moveToDownloads(File(tempPath));
       } catch (e) {
         finalStatus = TaskStatus.failed;
       }
     }
     updateProgress(finalStatus == TaskStatus.complete ? 1.0 : 0.0, finalStatus);
     if (finalStatus == TaskStatus.complete) {
-      onEnd?.call();
+      onEnd?.call(finalPath!);
     } else {
       onError?.call();
     }
@@ -195,7 +187,6 @@ class DownloadTaskProgress {
 
   DownloadTaskProgress({
     required this.task,
-    this.destinationPath,
     required this.attachmentHash,
     required this.cancel,
     this.onEnd,

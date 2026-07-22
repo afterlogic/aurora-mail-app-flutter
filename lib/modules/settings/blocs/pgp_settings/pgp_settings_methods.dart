@@ -5,14 +5,14 @@ import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/contacts_repository.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
-import 'package:aurora_mail/utils/download_directory.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
-import 'package:aurora_mail/utils/permissions.dart';
+import 'package:aurora_mail/utils/shared_storage.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:crypto_storage/src/pgp_storage.dart';
 import 'package:crypto_worker/src/pgp/pgp_worker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class PgpSettingsMethods {
@@ -46,19 +46,21 @@ class PgpSettingsMethods {
     await cryptoWorker.createKeyPair(name, length, mail, password);
   }
 
+  Future<File> _saveToDownloads(String fileName, String content) async {
+    final tempDir = await getTemporaryDirectory();
+    final tempFile = File(tempDir.path + Platform.pathSeparator + fileName);
+    await tempFile.create(recursive: true);
+    await tempFile.writeAsString(content);
+    final path = await moveToDownloads(tempFile);
+    return File(path);
+  }
+
   Future<File> downloadKey(PgpKey key) async {
     try {
       final fileName =
           "${((key.name!.startsWith(" ") ? key.name!.substring(1) : key.name)! + " ") ?? ""}${key.mail} PGP ${key.isPrivate ? "private" : "public"} key.asc"
               .replaceAll(Platform.pathSeparator, "");
-      final file = File(
-        (await _keysFolderPath())! + Platform.pathSeparator + fileName,
-      );
-
-      if (await file.exists()) await file.delete();
-      await file.create(recursive: true);
-      await file.writeAsString(key.key);
-      return file;
+      return await _saveToDownloads(fileName, key.key);
     } catch (err) {
       print('ERROR PgpSettingsMethods.downloadKey(): $err');
       rethrow;
@@ -68,12 +70,8 @@ class PgpSettingsMethods {
   Future<File> downloadKeys(List<PgpKey?> keys) async {
     try {
       final fileName = "PGP public keys.asc";
-      final file = File(
-        (await _keysFolderPath())! + Platform.pathSeparator + fileName,
-      );
-      await file.create(recursive: true);
-      await file.writeAsString(keys.map((key) => key!.key).join("\n\n"));
-      return file;
+      return await _saveToDownloads(
+          fileName, keys.map((key) => key!.key).join("\n\n"));
     } catch (err) {
       print('ERROR PgpSettingsMethods.downloadKeys(): $err');
       rethrow;
@@ -97,13 +95,6 @@ class PgpSettingsMethods {
       keys.map((key) => key!.key).join("\n\n"),
       rect,
     );
-  }
-
-  Future<String?> _keysFolderPath() async {
-    final dirPath = (await getDownloadDirectory());
-    print('!!! dirPath = $dirPath}');
-    // return dirPath + Platform.pathSeparator + KEY_FOLDER;
-    return dirPath;
   }
 
   Future deleteKey(String name, String mail, bool isPrivate) async {
