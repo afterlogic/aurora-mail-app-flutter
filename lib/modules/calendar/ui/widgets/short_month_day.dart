@@ -49,10 +49,7 @@ class ShortMonthDay extends StatelessWidget {
               children: [
                 Text(
                   dayNumber,
-                  style: TextStyle(color: dayNumberColor, fontSize: 18),
-                ),
-                const SizedBox(
-                  height: 2,
+                  style: TextStyle(color: dayNumberColor, fontSize: 16),
                 ),
                 if (showEventMarker && events.whereNotNull().isNotEmpty)
                   Container(

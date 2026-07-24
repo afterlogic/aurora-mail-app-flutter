@@ -161,9 +161,6 @@ class _WeekViewState extends State<WeekView> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    const SizedBox(
-                      height: 2,
-                    ),
                     Text(date.day.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
                   ],
                 ),
