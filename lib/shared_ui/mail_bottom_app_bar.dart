@@ -147,6 +147,7 @@ class MailBottomAppBar extends StatelessWidget {
       );
     }
     return BottomAppBar(
+      padding: EdgeInsets.zero,
       child: SafeArea(
         child: row,
       ),
