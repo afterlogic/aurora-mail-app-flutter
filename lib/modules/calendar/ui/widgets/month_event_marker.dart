@@ -4,6 +4,7 @@ import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:theme/app_color.dart';
 
 class MonthEventMarker extends StatelessWidget {
   const MonthEventMarker(
@@ -49,7 +50,7 @@ class MonthEventMarker extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border(
                   left: addLeftBorder && event?.isStartedToday(currentDate) == true
-                      ? BorderSide(color: Theme.of(context).dividerColor)
+                      ? BorderSide(color: AppColor.calendarGridDevider)
                       : BorderSide.none
                 )
               ),
@@ -158,7 +159,7 @@ class EmptyMarker extends StatelessWidget {
       decoration: BoxDecoration(
           border: Border(
               left: addLeftBorder
-                  ? BorderSide(color: Theme.of(context).dividerColor)
+                  ? BorderSide(color: AppColor.calendarGridDevider)
                   : BorderSide.none)),
       child: SizedBox(
         height: height,

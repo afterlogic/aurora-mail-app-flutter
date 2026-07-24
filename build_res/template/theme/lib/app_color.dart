@@ -69,4 +69,7 @@ class AppColor {
 
   // Misc
   static const enableShadow = true;
+
+  // Calendar
+  static const calendarGridDevider = Color(0xFFEBEBEB);
 }
