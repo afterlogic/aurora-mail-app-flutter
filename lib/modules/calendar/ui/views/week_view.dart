@@ -129,6 +129,17 @@ class _WeekViewState extends State<WeekView> {
                     : 'h a');
             return DateFormat(sTimeFormat).format(date);
           },
+          timeLineBuilder: (date) => CV.DefaultTimeLineMark(
+            date: date,
+            timeStringBuilder: (date, {secondaryDate}) {
+              String sTimeFormat =
+                  ((settingsState as SettingsLoaded).is24 ?? false
+                      ? 'HH:mm'
+                      : 'h a');
+              return DateFormat(sTimeFormat).format(date);
+            },
+            markingStyle: TextStyle(fontSize: 13),
+          ),
           weekDayBuilder: (date) {
             // week days header
             return Container(
