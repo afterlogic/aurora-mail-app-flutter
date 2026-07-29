@@ -495,17 +495,14 @@ class InputUtils {
             decoration: getUnlymeInputDecoration(
               labelText: labelText,
               suffixIcon: suffixIcon ??
-                  Transform.scale(
-                    scale: 0.4,
-                    child: AssetSvgIcon(
-                      showSvg: true,
-                      svgPath:
-                          '${BuildProperty.image_dir}/contacts/birthday.svg',
-                      iconData: Icons.calendar_today,
-                      width: 20,
-                      height: 20,
-                      color: AppColor.inputPlaceholder,
-                    ),
+                  AssetSvgIcon(
+                    showSvg: true,
+                    svgPath:
+                        '${BuildProperty.image_dir}/contacts/birthday.svg',
+                    iconData: Icons.calendar_today,
+                    width: 24,
+                    height: 24,
+                    color: AppColor.inputPlaceholder,
                   ),
             ),
           ),
