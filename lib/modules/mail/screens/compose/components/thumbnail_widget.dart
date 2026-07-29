@@ -53,7 +53,12 @@ class _ThumbnailWidgetState extends State<ThumbnailWidget> {
         } else {}
       } catch (e) {}
     }
-    if (provider == null && widget.attachment?.thumbnailUrl != null) {
+    final mimeType = widget.attachment?.mimeType;
+    final isImageOrVideo = mimeType != null &&
+        (mimeType.startsWith("image/") || mimeType.startsWith("video/"));
+    if (provider == null &&
+        isImageOrVideo &&
+        widget.attachment?.thumbnailUrl != null) {
       final user = BlocProvider.of<AuthBloc>(context).currentUser!;
       provider = NetworkImage(
         user.hostname + widget.attachment!.thumbnailUrl!,
