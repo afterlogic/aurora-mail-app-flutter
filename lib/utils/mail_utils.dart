@@ -857,10 +857,10 @@ class MailUtils {
   }
 
   static String _getWebColor(Color? colorObj) {
-    final base = colorObj.toString();
-    final color = base.substring(base.length - 7, base.length - 1);
-    final opacity = base.substring(base.length - 9, base.length - 7);
-    return "#$color$opacity";
+    if (colorObj == null) return "#00000000";
+    final argb = colorObj.toARGB32();
+    String hex(int shift) => ((argb >> shift) & 0xFF).toRadixString(16).padLeft(2, '0');
+    return "#${hex(16)}${hex(8)}${hex(0)}${hex(24)}";
   }
 
   static String plainToHtml(String text) {

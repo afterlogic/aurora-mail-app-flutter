@@ -25,9 +25,9 @@ extension HexColor on Color {
   }
 
   /// Prefixes a hash sign if [leadingHashSign] is set to `true` (default is `true`).
-  String toHex({bool leadingHashSign = true}) => '${leadingHashSign ? '#' : ''}'
-      '${red.toRadixString(16)}'
-      '${green.toRadixString(16)}'
-      '${blue.toRadixString(16)}'
-  ;
+  String toHex({bool leadingHashSign = true}) {
+    final argb = toARGB32();
+    String hex(int shift) => ((argb >> shift) & 0xFF).toRadixString(16).padLeft(2, '0');
+    return '${leadingHashSign ? '#' : ''}${hex(16)}${hex(8)}${hex(0)}';
+  }
 }
