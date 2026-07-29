@@ -154,9 +154,11 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
               runSpacing: 10,
               children: children,
             )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: children,
+          : SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: children,
+              ),
             ),
     );
   }

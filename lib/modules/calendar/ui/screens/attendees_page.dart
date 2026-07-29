@@ -74,7 +74,9 @@ class _AttendeesPageState extends State<AttendeesPage> {
           )
         ],
       ),
-      body: SingleChildScrollView(
+      body: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
@@ -321,6 +323,7 @@ class _AttendeesPageState extends State<AttendeesPage> {
               ),
             ],
           ),
+        ),
         ),
       ),
     );

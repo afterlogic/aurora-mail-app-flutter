@@ -220,7 +220,9 @@ class _EventCreationPageState extends State<EventCreationPage> {
               child: Text(S.of(context).btn_save))
         ],
       ),
-      body: SingleChildScrollView(
+      body: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
         child: Form(
           key: _formKey,
           child: Column(
@@ -369,6 +371,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
               ),
             ],
           ),
+        ),
         ),
       ),
     );
