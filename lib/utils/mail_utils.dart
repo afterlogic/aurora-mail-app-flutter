@@ -13,9 +13,11 @@ import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_webview.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/extensions/colors_extensions.dart';
+import 'package:theme/app_color.dart';
 import 'package:collection/collection.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
@@ -499,6 +501,10 @@ class MailUtils {
       toPrimary = S.of(context).messages_no_receivers;
     }
     final accentColor = _getWebColor(theme.primaryColor);
+    final starActiveColor = _getWebColor(AppColor.starActive);
+    final starInactiveColor = _getWebColor(theme.brightness == Brightness.dark
+        ? AppColor.starInactiveDark
+        : AppColor.starInactiveLight);
 
     return "<!doctype html>" +
         """
@@ -690,11 +696,11 @@ class MailUtils {
                   document.getElementById('stared-btn').addEventListener('click', function (event) {
                         let elem = event.currentTarget; // Using currentTarget instead of target
                         if (elem.classList.contains("is-starred")) {
-                            elem.innerHTML = `${_getInactiveStarIcon()}`;
+                            elem.innerHTML = `${_getInactiveStarIcon(starInactiveColor)}`;
                             elem.classList.remove("is-starred");
                             elem.href="${MessageWebViewActions.ACTION + MessageWebViewActions.SET_NOT_STARRED}"
                         } else {
-                            elem.innerHTML = `${_getActiveStarIcon()}`;
+                            elem.innerHTML = `${_getActiveStarIcon(starActiveColor)}`;
                             elem.classList.add("is-starred");
                             elem.href="${MessageWebViewActions.ACTION + MessageWebViewActions.SET_STARRED}"
                         }
@@ -796,7 +802,7 @@ class MailUtils {
                     <span style="margin-right: 10px;" class="selectable wrap-it">${subject}</span>
                     <span style="display: inline-block; font-size: 14px; background: #B6B5B5; ${theme.brightness == Brightness.dark ? 'color: black;' : 'color: white;'} padding: 3px 8px; border-radius: 10px; margin-top: -2px; vertical-align: middle;">${message.folder}</span>
                   </h1>
-                  <a id="stared-btn" class="stared${isStarred ? " is-starred" : ""}" href='${MessageWebViewActions.ACTION + (isStarred ? MessageWebViewActions.SET_NOT_STARRED : MessageWebViewActions.SET_STARRED)}' style='text-decoration: none; font-size: 24px; line-height: 1.2;'>${isStarred ? _getActiveStarIcon() : _getInactiveStarIcon()}</a>
+                  <a id="stared-btn" class="stared${isStarred ? " is-starred" : ""}" href='${MessageWebViewActions.ACTION + (isStarred ? MessageWebViewActions.SET_NOT_STARRED : MessageWebViewActions.SET_STARRED)}' style='text-decoration: none; font-size: 24px; line-height: 1.2;'>${isStarred ? _getActiveStarIcon(starActiveColor) : _getInactiveStarIcon(starInactiveColor)}</a>
                 </div>
               </div>
               ${_hasValidContent(body) ? '''
@@ -963,15 +969,71 @@ class MailUtils {
   </svg>
   """;
 
-  static String _getActiveStarIcon() => '''
+  // Cache of raw SVG contents loaded from the brand theme's asset files
+  // (BuildProperty.image_dir/mail/star.svg, star.active.svg), keyed by
+  // asset path. Populated by [preloadStarIcons]; falls back to
+  // [_defaultActiveStarIcon]/[_defaultInactiveStarIcon] until then or when
+  // the brand doesn't ship custom star icons.
+  static final Map<String, String> _svgAssetCache = {};
+
+  static String get _activeStarSvgAsset =>
+      '${BuildProperty.image_dir}/mail/star.active.svg';
+  static String get _inactiveStarSvgAsset =>
+      '${BuildProperty.image_dir}/mail/star.svg';
+
+  /// Whether both star icon assets are already cached (or the brand doesn't
+  /// use custom star icons, so there's nothing to load).
+  static bool get starIconsCached =>
+      !BuildProperty.useCustomStarIcons ||
+      (_svgAssetCache.containsKey(_activeStarSvgAsset) &&
+          _svgAssetCache.containsKey(_inactiveStarSvgAsset));
+
+  /// Warms up [_svgAssetCache] so the star icons embedded into the message
+  /// WebView are read from the same SVG asset the native `Star` widget uses,
+  /// instead of a hardcoded copy of its path data.
+  static Future<void> preloadStarIcons() async {
+    if (!BuildProperty.useCustomStarIcons) return;
+    await Future.wait([
+      _cacheSvgAsset(_activeStarSvgAsset),
+      _cacheSvgAsset(_inactiveStarSvgAsset),
+    ]);
+  }
+
+  static Future<void> _cacheSvgAsset(String path) async {
+    if (_svgAssetCache.containsKey(path)) return;
+    try {
+      _svgAssetCache[path] = await rootBundle.loadString(path);
+    } catch (_) {
+      // Asset missing for this brand - callers fall back to the default icon.
+    }
+  }
+
+  /// Re-colors a theme SVG's `fill`/`stroke` attributes, leaving `fill="none"`
+  /// (used on the outer `<svg>` tag) untouched.
+  static String _tintSvg(String rawSvg, String color) => rawSvg.replaceAllMapped(
+        RegExp(r'(fill|stroke)="(?!none)[^"]*"'),
+        (m) => '${m[1]}="$color"',
+      );
+
+  static String _getActiveStarIcon(String color) {
+    final asset = _svgAssetCache[_activeStarSvgAsset];
+    return asset != null ? _tintSvg(asset, color) : _defaultActiveStarIcon(color);
+  }
+
+  static String _getInactiveStarIcon(String color) {
+    final asset = _svgAssetCache[_inactiveStarSvgAsset];
+    return asset != null ? _tintSvg(asset, color) : _defaultInactiveStarIcon(color);
+  }
+
+  static String _defaultActiveStarIcon(String color) => '''
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M9.15316 5.40838C10.4198 3.13613 11.0531 2 12 2C12.9469 2 13.5802 3.13612 14.8468 5.40837L15.1745 5.99623C15.5345 6.64193 15.7144 6.96479 15.9951 7.17781C16.2757 7.39083 16.6251 7.4699 17.3241 7.62805L17.9605 7.77203C20.4201 8.32856 21.65 8.60682 21.9426 9.54773C22.2352 10.4886 21.3968 11.4691 19.7199 13.4299L19.2861 13.9372C18.8096 14.4944 18.5713 14.773 18.4641 15.1177C18.357 15.4624 18.393 15.8341 18.465 16.5776L18.5306 17.2544C18.7841 19.8706 18.9109 21.1787 18.1449 21.7602C17.3788 22.3417 16.2273 21.8115 13.9243 20.7512L13.3285 20.4768C12.6741 20.1755 12.3469 20.0248 12 20.0248C11.6531 20.0248 11.3259 20.1755 10.6715 20.4768L10.0757 20.7512C7.77268 21.8115 6.62118 22.3417 5.85515 21.7602C5.08912 21.1787 5.21588 19.8706 5.4694 17.2544L5.53498 16.5776C5.60703 15.8341 5.64305 15.4624 5.53586 15.1177C5.42868 14.773 5.19043 14.4944 4.71392 13.9372L4.2801 13.4299C2.60325 11.4691 1.76482 10.4886 2.05742 9.54773C2.35002 8.60682 3.57986 8.32856 6.03954 7.77203L6.67589 7.62805C7.37485 7.4699 7.72433 7.39083 8.00494 7.17781C8.28555 6.96479 8.46553 6.64194 8.82547 5.99623L9.15316 5.40838Z" fill="#F0B942"/>
+      <path d="M9.15316 5.40838C10.4198 3.13613 11.0531 2 12 2C12.9469 2 13.5802 3.13612 14.8468 5.40837L15.1745 5.99623C15.5345 6.64193 15.7144 6.96479 15.9951 7.17781C16.2757 7.39083 16.6251 7.4699 17.3241 7.62805L17.9605 7.77203C20.4201 8.32856 21.65 8.60682 21.9426 9.54773C22.2352 10.4886 21.3968 11.4691 19.7199 13.4299L19.2861 13.9372C18.8096 14.4944 18.5713 14.773 18.4641 15.1177C18.357 15.4624 18.393 15.8341 18.465 16.5776L18.5306 17.2544C18.7841 19.8706 18.9109 21.1787 18.1449 21.7602C17.3788 22.3417 16.2273 21.8115 13.9243 20.7512L13.3285 20.4768C12.6741 20.1755 12.3469 20.0248 12 20.0248C11.6531 20.0248 11.3259 20.1755 10.6715 20.4768L10.0757 20.7512C7.77268 21.8115 6.62118 22.3417 5.85515 21.7602C5.08912 21.1787 5.21588 19.8706 5.4694 17.2544L5.53498 16.5776C5.60703 15.8341 5.64305 15.4624 5.53586 15.1177C5.42868 14.773 5.19043 14.4944 4.71392 13.9372L4.2801 13.4299C2.60325 11.4691 1.76482 10.4886 2.05742 9.54773C2.35002 8.60682 3.57986 8.32856 6.03954 7.77203L6.67589 7.62805C7.37485 7.4699 7.72433 7.39083 8.00494 7.17781C8.28555 6.96479 8.46553 6.64194 8.82547 5.99623L9.15316 5.40838Z" fill="$color"/>
     </svg>
   ''';
 
-  static String _getInactiveStarIcon() => '''
+  static String _defaultInactiveStarIcon(String color) => '''
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M9.15316 5.40838C10.4198 3.13613 11.0531 2 12 2C12.9469 2 13.5802 3.13612 14.8468 5.40837L15.1745 5.99623C15.5345 6.64193 15.7144 6.96479 15.9951 7.17781C16.2757 7.39083 16.6251 7.4699 17.3241 7.62805L17.9605 7.77203C20.4201 8.32856 21.65 8.60682 21.9426 9.54773C22.2352 10.4886 21.3968 11.4691 19.7199 13.4299L19.2861 13.9372C18.8096 14.4944 18.5713 14.773 18.4641 15.1177C18.357 15.4624 18.393 15.8341 18.465 16.5776L18.5306 17.2544C18.7841 19.8706 18.9109 21.1787 18.1449 21.7602C17.3788 22.3417 16.2273 21.8115 13.9243 20.7512L13.3285 20.4768C12.6741 20.1755 12.3469 20.0248 12 20.0248C11.6531 20.0248 11.3259 20.1755 10.6715 20.4768L10.0757 20.7512C7.77268 21.8115 6.62118 22.3417 5.85515 21.7602C5.08912 21.1787 5.21588 19.8706 5.4694 17.2544L5.53498 16.5776C5.60703 15.8341 5.64305 15.4624 5.53586 15.1177C5.42868 14.773 5.19043 14.4944 4.71392 13.9372L4.2801 13.4299C2.60325 11.4691 1.76482 10.4886 2.05742 9.54773C2.35002 8.60682 3.57986 8.32856 6.03954 7.77203L6.67589 7.62805C7.37485 7.4699 7.72433 7.39083 8.00494 7.17781C8.28555 6.96479 8.46553 6.64194 8.82547 5.99623L9.15316 5.40838Z" stroke="#6F788D" stroke-width="1.5"/>
+      <path d="M9.15316 5.40838C10.4198 3.13613 11.0531 2 12 2C12.9469 2 13.5802 3.13612 14.8468 5.40837L15.1745 5.99623C15.5345 6.64193 15.7144 6.96479 15.9951 7.17781C16.2757 7.39083 16.6251 7.4699 17.3241 7.62805L17.9605 7.77203C20.4201 8.32856 21.65 8.60682 21.9426 9.54773C22.2352 10.4886 21.3968 11.4691 19.7199 13.4299L19.2861 13.9372C18.8096 14.4944 18.5713 14.773 18.4641 15.1177C18.357 15.4624 18.393 15.8341 18.465 16.5776L18.5306 17.2544C18.7841 19.8706 18.9109 21.1787 18.1449 21.7602C17.3788 22.3417 16.2273 21.8115 13.9243 20.7512L13.3285 20.4768C12.6741 20.1755 12.3469 20.0248 12 20.0248C11.6531 20.0248 11.3259 20.1755 10.6715 20.4768L10.0757 20.7512C7.77268 21.8115 6.62118 22.3417 5.85515 21.7602C5.08912 21.1787 5.21588 19.8706 5.4694 17.2544L5.53498 16.5776C5.60703 15.8341 5.64305 15.4624 5.53586 15.1177C5.42868 14.773 5.19043 14.4944 4.71392 13.9372L4.2801 13.4299C2.60325 11.4691 1.76482 10.4886 2.05742 9.54773C2.35002 8.60682 3.57986 8.32856 6.03954 7.77203L6.67589 7.62805C7.37485 7.4699 7.72433 7.39083 8.00494 7.17781C8.28555 6.96479 8.46553 6.64194 8.82547 5.99623L9.15316 5.40838Z" stroke="$color" stroke-width="1.5"/>
     </svg>
   ''';
 

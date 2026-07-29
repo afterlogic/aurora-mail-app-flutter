@@ -116,6 +116,11 @@ class MessageWebViewState extends BState<MessageWebView> {
         ? _calendarsBloc!.state.availableCalendars(_currentUserMail)
         : null;
     _selectedCalendar = (_calendars?.isEmpty ?? true) ? null : _calendars![0];
+    if (!MailUtils.starIconsCached) {
+      MailUtils.preloadStarIcons().then((_) {
+        if (mounted) _getHtmlWithImages();
+      });
+    }
     _onLoad();
     // On Android, hybrid composition (SurfaceAndroidWebView) is now the default (webview_flutter 3.0.0)
     // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
