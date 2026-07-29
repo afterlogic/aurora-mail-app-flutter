@@ -45,10 +45,10 @@ class ContactsDbServiceImpl implements ContactsDbService {
     return ContactInfosCompanion.insert(
       userLocalId: userLocalId,
       storage: item.storage,
-      uuid: item.uuid,
+      uuid: item.uuid!,
       eTag: Value(item.eTag),
-      hasBody: Value(item.hasBody),
-      needsUpdate: Value(item.needsUpdate),
+      hasBody: Value(item.hasBody ?? false),
+      needsUpdate: Value(item.needsUpdate ?? false),
     );
   }
 
@@ -80,12 +80,12 @@ class ContactsDbServiceImpl implements ContactsDbService {
   Future<void> _persistContactInfos(List<ContactsStorage> storages) async {
     for (final storage in storages) {
       if (storage.contactsInfo == null) continue;
-      final companions = storage.contactsInfo
+      final companions = storage.contactsInfo!
           .map((i) => _contactInfoToCompanion(storage.userLocalId, i))
           .toList();
       await _contactInfosDao.replaceForStorage(
         storage.userLocalId,
-        storage.id,
+        storage.id!,
         companions,
       );
     }
@@ -156,7 +156,7 @@ class ContactsDbServiceImpl implements ContactsDbService {
 
     final infosByStorage = await _contactInfosDao.getForStorages(
       userLocalId,
-      storages.map((s) => s.id).toList(),
+      storages.map((s) => s.id!).toList(),
     );
 
     return storages.map((s) {
