@@ -29,6 +29,32 @@ class _WeekViewState extends State<WeekView> {
   late final EventsBloc _eventsBloc;
   late final StreamSubscription _subscription;
 
+  // Each day column in the all-day row gets its own controller, but dragging any one of
+  // them mirrors the offset onto the rest, so the whole row appears to scroll as one.
+  final Map<DateTime, ScrollController> _allDayScrollControllers = {};
+  bool _isSyncingAllDayScroll = false;
+
+  ScrollController _allDayScrollControllerFor(DateTime date) {
+    return _allDayScrollControllers.putIfAbsent(date.withoutTime, () => ScrollController());
+  }
+
+  bool _onAllDayScrollNotification(DateTime date, ScrollNotification notification) {
+    if (_isSyncingAllDayScroll) return false;
+    final pixels = notification.metrics.pixels;
+    _isSyncingAllDayScroll = true;
+    for (final entry in _allDayScrollControllers.entries) {
+      if (entry.key == date.withoutTime) continue;
+      final controller = entry.value;
+      if (!controller.hasClients) continue;
+      final clamped = pixels.clamp(0.0, controller.position.maxScrollExtent);
+      if (controller.position.pixels != clamped) {
+        controller.jumpTo(clamped);
+      }
+    }
+    _isSyncingAllDayScroll = false;
+    return false;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +73,9 @@ class _WeekViewState extends State<WeekView> {
   void dispose() {
     _controller.dispose();
     _subscription.cancel();
+    for (final controller in _allDayScrollControllers.values) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -168,20 +197,30 @@ class _WeekViewState extends State<WeekView> {
             );
           },
           fullDayEventBuilder: (List<CV.CalendarEventData<Object?>> events, DateTime date) {
-            return Column(
-              children: events.reversed
-                  .map((e) => MonthEventMarker(
-                        event: (e as CV.CalendarEventData<WeekViewVisible>).event is ViewEvent
-                            ? e.event as ViewEvent
-                            : null,
-                        currentDate: date,
-                        addLeftBorder: true,
-                        eventGap: 2,
-                        height: 18,
-                        isWeekAllDay: true,
-                        innerPaddingValue: 1,
-                      ))
-                  .toList(),
+            final reversedEvents = events.reversed.toList();
+            return ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 100),
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (notification) => _onAllDayScrollNotification(date, notification),
+                child: ListView.builder(
+                  controller: _allDayScrollControllerFor(date),
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  itemCount: reversedEvents.length,
+                  itemBuilder: (context, index) {
+                    final e = reversedEvents[index] as CV.CalendarEventData<WeekViewVisible>;
+                    return MonthEventMarker(
+                      event: e.event is ViewEvent ? e.event as ViewEvent : null,
+                      currentDate: date,
+                      addLeftBorder: true,
+                      eventGap: 2,
+                      height: 18,
+                      isWeekAllDay: true,
+                      innerPaddingValue: 1,
+                    );
+                  },
+                ),
+              ),
             );
           },
           eventTileBuilder: (DateTime date, List<CV.CalendarEventData<Object?>> events, Rect boundary,
