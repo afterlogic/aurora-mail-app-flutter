@@ -70,7 +70,7 @@ Build flags:
 * selfDestructingEmail - allows for sending mails which are made unavailable after certain amount of time
 * expandMessageThread - allows for opening message thread by clicking number of messages in thread on message list screen
 * logger - debug logging of the application
-* pushNotification - reporting new incoming messages using push-notifications
+* enablePushNotification - reporting new incoming messages using push-notifications
 
 16. Auto-filling login credentials in debug mode.
 
