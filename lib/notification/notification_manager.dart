@@ -1,14 +1,11 @@
 
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     hide Message;
-import 'package:notifications_utils/notifications_utils.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 const NOTIFICATION_MAIL_CHANNEL_ID = "new_mail";
 const NOTIFICATION_MAIL_CHANNEL_NAME = "New mail";
@@ -60,17 +57,6 @@ class NotificationManager {
     int? localId, {
     Map<String, dynamic>? forcePayload,
   }) async {
-    final packageName = (await PackageInfo.fromPlatform()).packageName;
-    bool isFirstNotification = false;
-    if (!Platform.isIOS) {
-      final activeNotifications =
-          (await NotificationsUtils.getActiveNotifications())!;
-      isFirstNotification = activeNotifications.where((n) {
-        return n.packageName == packageName &&
-            n.groupKey.contains(user.emailFromLogin);
-      }).isEmpty;
-    }
-
     String? payload;
     if (forcePayload != null) {
       payload = jsonEncode(forcePayload);

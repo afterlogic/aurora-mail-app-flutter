@@ -19,6 +19,7 @@ import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
+import 'package:aurora_mail/notification/notification_manager.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
@@ -321,6 +322,9 @@ class MailMethods {
     final updatedUser = await _usersDao.getUserByLocalId(user.localId!);
     final forceUpdate = forceSync ? guid == folderToUpdate.guid : false;
     if (folderToUpdate.needsInfoUpdate == false && !forceUpdate) {
+      logger.log("MAIL_SYNC: _setMessagesInfoToFolder EARLY RETURN for "
+          "folder=${folderToUpdate.fullNameRaw} account=${account?.localId} "
+          "-- needsInfoUpdate=false, forceUpdate=false, cache diff/write never runs");
       syncQueue.remove(folderToUpdate.guid);
       if (syncQueue.isNotEmpty) {
         return _setMessagesInfoToFolder();
@@ -329,6 +333,9 @@ class MailMethods {
       }
     }
 
+    logger.log("MAIL_SYNC: _setMessagesInfoToFolder proceeding for "
+        "folder=${folderToUpdate.fullNameRaw} account=${account?.localId} "
+        "needsInfoUpdate=${folderToUpdate.needsInfoUpdate} forceUpdate=$forceUpdate");
     logger.log("getting folder info for: ${folderToUpdate.fullNameRaw}");
 
     final syncPeriod = SyncPeriod.dbStringToPeriod(updatedUser!.syncPeriod);
@@ -363,6 +370,13 @@ class MailMethods {
         user,
         folderToUpdate.fullNameRaw,
       );
+
+      // Background sync shows a "new mail" notification for messages it
+      // detects as added. The foreground refresh above updates the very same
+      // FolderMessageInfo snapshot silently, so if this runs first the
+      // background sync no longer sees those messages as new and never
+      // notifies. Mirror the notification here so it isn't lost.
+      await _notifyNewMessages(calcResult.addedMessages, folderToUpdate);
     } else {
       await _mailDao.addEmptyMessages(
         newMessagesInfo!,
@@ -513,6 +527,40 @@ class MailMethods {
     }
 
     return messages;
+  }
+
+  // Experimental: mirrors BackgroundSync._showNewMessage so unseen messages
+  // added during a foreground folder refresh also get a notification, not
+  // just ones found by the periodic background sync.
+  Future<void> _notifyNewMessages(
+    List<MessageInfo> addedMessages,
+    Folder folderToUpdate,
+  ) async {
+    final unseenAdded =
+        addedMessages.where((m) => !m.flags.contains("\\seen")).toList();
+    if (unseenAdded.isEmpty) return;
+
+    try {
+      final rawBodies = await _mailApi.getMessageBodies(
+        folderName: folderToUpdate.fullNameRaw,
+        uids: unseenAdded.map((m) => m.uid).toList(),
+      );
+      final messageBody = await _getMessageInfoWithNotBody(unseenAdded);
+      final newMessageBodies =
+          await Mail.getMessageObjFromServerAndUpdateInfoHasBody(
+        rawBodies,
+        messageBody,
+        user.localId!,
+        account!,
+      );
+      await _mailDao.fillMessages(newMessageBodies);
+      for (final message in newMessageBodies) {
+        await NotificationManager.instance
+            .showMessageNotification(message, account!, user);
+      }
+    } catch (e, s) {
+      logger.error(e, s);
+    }
   }
 
   Future<void> setMessagesSeen({

@@ -63,14 +63,19 @@ class BackgroundSync {
         if (accounts.isEmpty) {
           continue;
         }
-        final newMessages = await ((notification != null && isBackground)
+        final usePushBranch = notification != null && isBackground;
+        isolatedLogger.log("MAIL_SYNC: using "
+            "${usePushBranch ? '_getNewMessages (push)' : '_updateAccountMessages'} "
+            "branch, showNotification=$showNotification");
+        final newMessages = await (usePushBranch
             ? _getNewMessages(user, accounts, interceptor, isolatedLogger)
             : _updateAccountMessages(
                 isBackground, user, accounts, interceptor, isolatedLogger));
         if (newMessages.isNotEmpty) {
+          isolatedLogger.log("MailSync: ${newMessages.length} new message(s), "
+              "showNotification=$showNotification "
+              "${showNotification == true ? '-> notifying' : '-> SUPPRESSED, not notifying'}");
           if (showNotification == true) {
-            isolatedLogger
-                .log("MailSync: ${newMessages.length} new message(s)");
             for (final entity in newMessages.entries) {
               entity.value
                   .sort((a, b) => a.timeStampInUTC!.compareTo(b.timeStampInUTC!));
@@ -161,6 +166,11 @@ class BackgroundSync {
             folderToUpdate.guid,
           );
         }
+        isolatedLogger.log("MAIL_SYNC: folder=${folderToUpdate.fullNameRaw} "
+            "needsInfoUpdate=${folderToUpdate.needsInfoUpdate} "
+            "cachedMessagesInfoIsNull=${messagesInfo == null} "
+            "cachedMessagesInfoCount=${messagesInfo?.length} "
+            "allowUpdateMessage=$allowUpdateMessage");
         if (!folderToUpdate.needsInfoUpdate ||
             messagesInfo == null ||
             !allowUpdateMessage) {
@@ -188,6 +198,11 @@ class BackgroundSync {
           true,
           true,
         );
+
+        isolatedLogger.log("MAIL_SYNC: folder=${folderToUpdate.fullNameRaw} "
+            "fetchedMessagesCount=${newMessagesInfo.length} "
+            "addedMessages=${result.addedMessages.length} "
+            "removedUids=${result.removedUids.length}");
 
         if (result.addedMessages.isEmpty) break;
 

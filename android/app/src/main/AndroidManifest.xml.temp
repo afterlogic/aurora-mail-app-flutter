@@ -4,7 +4,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+// if : backgroundSync
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+// end : if
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="33" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -76,6 +79,7 @@
 // end : if
         </activity>
 
+// if : backgroundSync
         <service
             android:name=".AppService"
             android:exported="false"
@@ -83,6 +87,7 @@
         <receiver
             android:name="com.afterlogic.alarm_service.AlarmBroadcast"
             android:exported="false" />
+// end : if
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />

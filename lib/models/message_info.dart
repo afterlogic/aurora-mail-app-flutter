@@ -38,7 +38,7 @@ class MessageInfo {
       final item = json.decode(rawItem);
       return new MessageInfo(
         uid: item["uid"] as int,
-        parentUid: item["parentUid"] as int,
+        parentUid: item["parentUid"] as int?,
         flags: new List<String>.from(item["flags"] as Iterable),
         hasThread: item["hasThread"] as bool,
       );

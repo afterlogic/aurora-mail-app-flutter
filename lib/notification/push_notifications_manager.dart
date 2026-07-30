@@ -124,10 +124,12 @@ Future<bool> messageHandler(RemoteMessage message) async {
         final _usersDao = UsersDao(DBInstances.appDB);
         final _accountsDao = AccountsDao(DBInstances.appDB);
         final users = await _usersDao.getUsers();
+        var matchedAccount = false;
         for (var user in users) {
           final accounts = await _accountsDao.getAccounts(user.localId!);
           for (var account in accounts) {
             if (account.email == notification.to) {
+              matchedAccount = true;
               final manager = NotificationManager.instance;
               manager.showNotification(
                 notification.from,
@@ -141,6 +143,14 @@ Future<bool> messageHandler(RemoteMessage message) async {
             }
           }
         }
+        // Scenario 4 (see docs/background-sync-new-mail-notification-investigation.md):
+        // this is the push-triggered path. showNotification is passed as
+        // false to onAlarm below, so this direct call is the *only* place a
+        // notification gets shown for this trigger -- if notification.to
+        // doesn't match any local account, nothing is ever shown and it
+        // fails silently without this log.
+        Logger.notifications("MAIL_SYNC: scenario=4 push received, "
+            "to=${notification.to}, matchedAccount=$matchedAccount");
       }
 
       return await onAlarm(

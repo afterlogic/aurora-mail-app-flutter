@@ -426,13 +426,22 @@ class FolderMessageInfo {
     final id = "$fullName.$accountLocalId";
     final dir = await getApplicationSupportDirectory();
     final file = File(dir.path + Platform.pathSeparator + id);
-    if (await file.exists()) {
+    final exists = await file.exists();
+    if (exists) {
       try {
-        return MessageInfo.fromJsonString(await file.readAsString());
+        final result = MessageInfo.fromJsonString(await file.readAsString());
+        logger.log(
+            "MAIL_SYNC: FolderMessageInfo.getMessageInfo(${file.path}) "
+            "exists=true parsedCount=${result?.length}");
+        return result;
       } catch (e) {
+        logger.log("MAIL_SYNC: FolderMessageInfo.getMessageInfo(${file.path}) "
+            "exists=true PARSE FAILED: $e");
         return null;
       }
     } else {
+      logger.log("MAIL_SYNC: FolderMessageInfo.getMessageInfo(${file.path}) "
+          "exists=false");
       return null;
     }
   }
@@ -449,8 +458,13 @@ class FolderMessageInfo {
       await file.create(recursive: true);
     }
     try {
-      return file.writeAsString(MessageInfo.toJsonString(items)!);
+      final result = await file.writeAsString(MessageInfo.toJsonString(items)!);
+      logger.log("MAIL_SYNC: FolderMessageInfo.setMessageInfo(${file.path}) "
+          "wrote ${items.length} item(s)");
+      return result;
     } catch (e) {
+      logger.log("MAIL_SYNC: FolderMessageInfo.setMessageInfo(${file.path}) "
+          "WRITE FAILED: $e");
       return null;
     }
   }

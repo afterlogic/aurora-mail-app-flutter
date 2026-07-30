@@ -3,6 +3,7 @@ package com.afterlogic.aurora.mail.aurora_mail
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import androidx.core.app.ActivityCompat
@@ -41,6 +42,21 @@ class MainActivity : FlutterActivity() {
         }
 
         super.onCreate(savedInstanceState)
+        requestNotificationPermissionIfNeeded()
+    }
+
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            return
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                REQUEST_CODE_NOTIFICATION,
+            )
+        }
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -68,7 +84,9 @@ class MainActivity : FlutterActivity() {
         if (requestCode == REQUEST_CODE) {
             val notGranted = grantResults.firstOrNull { it != PackageManager.PERMISSION_GRANTED }
             awaitResult?.success(notGranted == null)
-            awaitResult = null;
+            awaitResult = null
+        } else if (requestCode == REQUEST_CODE_NOTIFICATION) {
+            // Notification permission result is ignored here; the foreground service will use the channel settings.
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
@@ -80,6 +98,7 @@ class MainActivity : FlutterActivity() {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
         const val REQUEST_CODE = 528
+        const val REQUEST_CODE_NOTIFICATION = 529
         const val PERMISSION_GRANTED = 1
     }
 }

@@ -21,10 +21,10 @@ class AppService : AlarmService() {
         } else {
             Notification.Builder(this)
         }.apply {
-            //todo VO
             setSmallIcon(R.drawable.app_icon)
             setContentTitle("Mail syncing...")
-            setProgress(0, 0, true);
+            setContentText("Mail syncing...")
+            setProgress(0, 0, true)
         }
         return builder.build()
     }

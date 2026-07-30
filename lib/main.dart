@@ -129,6 +129,14 @@ Future<bool> onAlarm({
   bool recordLog = true,
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
+  // onAlarm can run in a fresh background isolate that never executes main(),
+  // so LoggerSetting.init() (which sets the real packageName used for the
+  // logs directory) may not have run yet. Without this, logs silently get
+  // written under "Logs_packageName" instead of the real app-specific folder.
+  LoggerSetting.init(LoggerSetting(
+    packageName: BuildProperty.packageName,
+    defaultInterceptor: DefaultLoggerInterceptorAdapter(),
+  ));
   final isDebug = await DebugLocalStorage().getBackgroundRecord();
   final interceptor = DefaultApiInterceptor.get();
   Logger isolatedLogger = logger;
@@ -139,6 +147,28 @@ Future<bool> onAlarm({
     isolatedLogger.start();
   }
   final isBackground = isBackgroundForce ?? BackgroundHelper.isBackground;
+  // Classify which of the 4 known onAlarm trigger scenarios this run is, so
+  // the debug log (Settings -> Debug -> Record log in background) can be
+  // used to tell them apart instead of guessing from indirect evidence:
+  //   1 = app was killed, this is a fresh isolate that never ran main()
+  //   2 = app process alive but backgrounded
+  //   3 = app process alive and in the foreground
+  //   4 = triggered by an incoming push message (messageHandler), not the
+  //       periodic AlarmManager alarm at all
+  // See docs/background-sync-new-mail-notification-investigation.md.
+  final isColdStart = !BackgroundHelper.appIsRunning;
+  final scenario = data != null
+      ? 4
+      : isColdStart
+          ? 1
+          : isBackground
+              ? 2
+              : 3;
+  isolatedLogger.log("MAIL_SYNC: scenario=$scenario "
+      "(coldStart=$isColdStart, triggeredByPush=${data != null}, "
+      "isBackground=$isBackground, isBackgroundForce=$isBackgroundForce, "
+      "recordLog=$recordLog, showNotification=$showNotification, "
+      "notificationTo=${data?.to})");
   var hasUpdate = false;
   if (!updateFromNotification.contains(null) &&
       !updateFromNotification.contains(data?.to)) {
@@ -166,6 +196,10 @@ Future<bool> onAlarm({
   if (recordLog && isDebug) {
     isolatedLogger?.save();
   }
+  // TEMP: delay to keep the foreground sync notification visible long enough
+  // to capture on video for the Play Console FOREGROUND_SERVICE_DATA_SYNC demo.
+  // Revert after recording.
+  await Future.delayed(Duration(seconds: 5));
   await AlarmService.endAlarm(hasUpdate);
   return hasUpdate;
 }
