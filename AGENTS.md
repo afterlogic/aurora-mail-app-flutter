@@ -14,6 +14,10 @@ This project uses the `build_variant` tool (`sh/build_variant.sh`, `build_varian
 - During final review before a commit, **do not change branding away from `afterlogic`**.
 - !! **Only commit with `afterlogic` branding.** A `brand` (or other brand) state is local/temporary for testing a specific installation and must never be committed.
 
+## Flutter SDK
+
+Flutter is managed via FVM. Always invoke it as `fvm flutter ...` (not bare `flutter ...`).
+
 ## Handling API request examples from the user
 
 If the user provides an example of a working API request (curl, wget, a browser/proxy capture, etc.), **trust that example** as the source of truth for the exact request shape (field names, headers, body structure) — do not rely on assumptions, old code, or other sources, even if they seem logical. Reconcile the app's implementation with exactly the example the user showed.
