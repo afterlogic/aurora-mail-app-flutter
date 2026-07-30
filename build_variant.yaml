@@ -69,7 +69,7 @@ selfDestructingEmail: false
 expandMessageThread: false
 legacyPgpKey: false
 logger: true
-pushNotification: true
+enablePushNotification: true
 backgroundSync: false
 supportAllowAccess: true
 enableAppCheck: false
