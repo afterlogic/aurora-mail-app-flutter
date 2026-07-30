@@ -146,7 +146,7 @@ class ComposeEmailsState extends BState<ComposeEmails> {
       if (emailContacts.isNotEmpty) {
         final contact = emailContacts.firstWhere(
           (element) => element!.storage == "personal",
-          orElse: () => emailContacts.first,
+          orElse: () => emailContacts.first!,
         )!;
         final displayName = MailUtils.getFriendlyName(contact);
         contacts[displayName] = contact;

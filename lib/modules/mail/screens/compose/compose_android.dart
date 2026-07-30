@@ -406,7 +406,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
           if (contacts.isNotEmpty) {
             final contact = contacts.firstWhere(
               (element) => element!.storage == "personal",
-              orElse: () => contacts.first,
+              orElse: () => contacts.first!,
             );
             if (contact?.pgpPublicKey != null) {
               if (contact!.autoEncrypt! && contact.autoSign!) {
