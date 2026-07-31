@@ -290,10 +290,27 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
           titleBuilder: (ctx) => S.of(ctx).calendar_import_ics_file,
           onTap: (ctx, ViewCalendar calendar) async {
             final user = BlocProvider.of<AuthBloc>(ctx).currentUser!;
+            final messenger = ScaffoldMessenger.of(ctx);
+            final theme = Theme.of(ctx);
+            final downloadingToLabel = S.of(ctx).label_pgp_downloading_to;
+            // Close the drawer first: while it's open it renders above the
+            // Scaffold's SnackBar, so a SnackBar shown before closing it
+            // would be invisible behind it.
+            Navigator.of(ctx).pop();
             await downloadFromUrl(
                 url: calendar.getDownloadUrl(user),
                 user: user,
-                fileName: calendar.name.replaceAll(' ', '_'));
+                fileName: calendar.name.replaceAll(' ', '_'),
+                onDownloaded: (path) {
+                  messenger.removeCurrentSnackBar();
+                  messenger.showSnackBar(SnackBar(
+                    content: Text(
+                      downloadingToLabel(path),
+                      style: TextStyle(color: theme.scaffoldBackgroundColor),
+                    ),
+                    backgroundColor: theme.snackBarTheme.backgroundColor,
+                  ));
+                });
           },
         );
       case _CalendarDrawerMenuItems.unsubscribe:

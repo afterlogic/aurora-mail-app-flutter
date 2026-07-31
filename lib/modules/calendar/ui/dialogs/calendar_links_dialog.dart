@@ -64,7 +64,18 @@ class _CalendarLinksDialogState extends State<CalendarLinksDialog> {
                             url: selectedCalendar.getDownloadUrl(user),
                             user: user,
                             fileName:
-                                selectedCalendar.name.replaceAll(' ', '_'));
+                                selectedCalendar.name.replaceAll(' ', '_'),
+                            onDownloaded: (path) {
+                              if (!context.mounted) return;
+                              showSnack(
+                                isError: false,
+                                context: context,
+                                scaffoldState: Scaffold.of(context),
+                                message: S
+                                    .of(context)
+                                    .label_pgp_downloading_to(path),
+                              );
+                            });
                       },
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
