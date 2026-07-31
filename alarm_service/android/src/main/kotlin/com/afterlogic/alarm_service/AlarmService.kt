@@ -13,7 +13,6 @@ import io.flutter.embedding.engine.FlutterJNI
 import io.flutter.embedding.engine.dart.DartExecutor.DartCallback
 import io.flutter.view.FlutterCallbackInformation
 import java.lang.ref.SoftReference
-import kotlin.system.exitProcess
 
 
 abstract class AlarmService : IntentService("Check update mail") {
@@ -39,9 +38,14 @@ abstract class AlarmService : IntentService("Check update mail") {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             stopForeground(true)
         }
-        if (isBackground) {
-            exitProcess(0)
-        }
+        // Deliberately not calling exitProcess(0) here anymore -- see the
+        // "OEM notification sweep on exitProcess(0)" note in
+        // docs/background-sync-new-mail-notification-investigation.md in the
+        // main app repo. On ColorOS/Realme, killing the process right after
+        // showing a notification makes the OS immediately clear all of this
+        // app's notifications (onUidGone). Letting Android reclaim the
+        // process on its own avoids that, at the cost of the process
+        // possibly lingering a bit longer between alarms than before.
     }
 
 

@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Environment
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.afterlogic.alarm_service.AlarmPlugin
 import com.google.firebase.Firebase
 import com.google.firebase.app
 import io.flutter.plugin.common.MethodChannel
@@ -20,6 +21,15 @@ class MainActivity : FlutterActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // If a killed-app background sync (AlarmService cold branch) is still
+        // mid-teardown when the user opens the app -- e.g. by tapping the
+        // "new mail" notification right after a background sync -- its
+        // onDestroy() would otherwise call exitProcess(0) and kill this
+        // Activity's process out from under it, since it still thinks this
+        // is a background-only, throwaway session. Clearing the flag here,
+        // as early as possible, cancels that pending exit.
+        AlarmPlugin.isBackground = false
+
         // A workaround for installing the "firebase_app_check" debug-token.
         // Until the possibility of installing it from Flutter is implemented:
         // https://github.com/firebase/flutterfire/pull/16942
