@@ -98,7 +98,6 @@ hideCalendarImportICSFile: false # hide import ICS file option
 useContactsRoundIcons: true # use round contact icons
 useContactsDivider: true # use dividers between contacts
 useCustomContactIcons: true # use custom SVG icons for contact details
-useCustomAppBarTextColor: true # use custom color for AppBar title text
 useMailDivider: false
 useCustomStarIcons: false
 

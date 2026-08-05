@@ -29,7 +29,7 @@ deleteAccountLink: ''
 supportLanguage: 'en'
 
 # ===================================================================
-# App Settings
+# App Default Settings
 # ===================================================================
 syncPeriod: 'Period.months6'
 mailMessagesChunkSize: 50
