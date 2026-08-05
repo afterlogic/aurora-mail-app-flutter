@@ -95,7 +95,11 @@ class _DailyRecurrenceSelectDialogState
               SizedBox(width: 8),
               if (!isAlways)
                 Expanded(
-                  child: GestureDetector(
+                  child: InputUtils.buildUnlymeInputDecorator(
+                    context: context,
+                    labelText: untilDate == null
+                        ? 'Select date'
+                        : DateFormat('yyyy/MM/dd').format(untilDate!),
                     onTap: () async {
                       final DateTime? picked = await showDatePicker(
                         context: context,
@@ -103,21 +107,34 @@ class _DailyRecurrenceSelectDialogState
                         firstDate: DateTime.now(),
                         lastDate: DateTime(2101),
                       );
-                      if (picked != null && picked != untilDate) {
+                      if (picked != null) {
                         setState(() {
                           untilDate = picked;
                         });
                       }
                     },
-                    child: InputUtils.buildUnlymeInputDecorator(
-                      context: context,
-                      labelText: untilDate == null
-                          ? 'Select date'
-                          : DateFormat('yyyy/MM/dd').format(untilDate!),
-                      onTap: () {},
-                      child: untilDate == null
-                          ? null
-                          : Text(DateFormat('yyyy/MM/dd').format(untilDate!)),
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            untilDate == null
+                                ? 'Select date'
+                                : DateFormat('yyyy/MM/dd').format(untilDate!),
+                            style: TextStyle(
+                              color: untilDate == null && !isAlways
+                                  ? Colors.red
+                                  : null,
+                            ),
+                          ),
+                          Icon(
+                            Icons.calendar_today_outlined,
+                            size: 16,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
