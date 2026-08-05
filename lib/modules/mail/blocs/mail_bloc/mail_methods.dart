@@ -585,7 +585,7 @@ class MailMethods {
           uid: m.uid,
           parentUid: m.parentUid,
           flags: new List<String>.from(flags),
-          hasThread: m.hasThread!,
+          hasThread: m.hasThread ?? false,
         );
       }).toList();
       await _mailDao.updateMessagesFlags(infos);
@@ -626,7 +626,7 @@ class MailMethods {
           uid: m.uid,
           parentUid: m.parentUid,
           flags: new List<String>.from(flags),
-          hasThread: m.hasThread!,
+          hasThread: m.hasThread ?? false,
         );
       }).toList();
       _mailDao.updateMessagesFlags(infos);
