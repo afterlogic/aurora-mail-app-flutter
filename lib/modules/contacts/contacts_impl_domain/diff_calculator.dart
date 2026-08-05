@@ -3,7 +3,6 @@ import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 
 class ContactsDiffCalculator {
   static Future<ContactInfoDiffCalcResult> calculateContactsInfoDiffAsync(

@@ -17,7 +17,7 @@ class AppCheckRepositoryImpl implements AppCheckRepository {
     try {
       token = await FirebaseAppCheck.instance.getToken() ?? '';
       debugPrint('AppCheckRepository.getToken(): $token');
-    } catch (e, st) {
+    } catch (e) {
       debugPrint('AppCheckRepository.getToken(): $e');
     }
 

@@ -1,5 +1,4 @@
 
-import 'package:flutter/widgets.dart';
 
 class ContactsGroup {
   final List<int> contacts;

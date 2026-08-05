@@ -4,8 +4,6 @@ import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/utils/extensions/colors_extensions.dart';
-import 'package:aurora_mail/utils/mail_utils.dart';
-import 'package:flutter/material.dart';
 
 class CalendarMapper {
   static Calendar fromDB(CalendarDb c) {
@@ -109,7 +107,7 @@ class CalendarMapper {
         final calendar = fromNetwork(rawItem as Map<String, dynamic>,
             userLocalId: userLocalId, serverUrl: serverUrl);
         result.add(calendar);
-      } catch (e, st) {
+      } catch (e) {
         logger.log(e);
       }
     });

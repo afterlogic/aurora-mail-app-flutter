@@ -1,6 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/pgp/pgp_key_dao.dart';
-import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/mappers/contact_mapper.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_dao.dart';
 import "package:crypto_model/crypto_model.dart";
@@ -139,12 +138,6 @@ class CryptoStorageImpl extends CryptoStorage {
   String _id(String? name, String mail, bool isPrivate) {
     assert(_other?.isNotEmpty ?? false, "other required");
     return "$_other$name$mail$isPrivate";
-  }
-
-  Future<String?> _key(String name, String mail, bool isPrivate) async {
-    final id = _id(name, mail, isPrivate);
-
-    return await _secureStorage.read(key: id);
   }
 
   _delete(String name, String email, bool isPrivate) async {

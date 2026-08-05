@@ -17,7 +17,6 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/gr
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contacts_storages_dao.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:collection/collection.dart' show IterableExtension;
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
 import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
 
@@ -187,7 +186,7 @@ class AuthMethods {
       await contactsGroupsDao.deleteGroupsOfUser(user.localId!);
       await calendarDao.deleteAllCalendars(user.localId);
       await eventDao.deleteAllEvents(user.localId);
-    } catch (e, st) {
+    } catch (e) {
       print(e);
     }
 
@@ -223,7 +222,7 @@ class AuthMethods {
       final identities = await _authApi.getAliases(user);
       await _aliasesDao.deleteByUser(user.serverId);
       await _aliasesDao.set(identities);
-    } catch (e, s) {
+    } catch (e) {
       print(e);
     }
   }

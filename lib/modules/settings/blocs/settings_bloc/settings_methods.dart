@@ -8,7 +8,6 @@ import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/modules/settings/repository/settings_local_storage.dart';
 import 'package:crypto_storage/crypto_storage.dart';
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
 
 class SettingsMethods {

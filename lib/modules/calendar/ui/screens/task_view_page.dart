@@ -98,7 +98,6 @@ class TaskViewPage extends StatelessWidget {
                 )
               : BlocBuilder<TasksBloc, TasksState>(
                   builder: (context, tasksState) {
-                    final isComplete = tasksState.selectedTask?.status == true;
                     final areRemindersNotEmpty =
                         (tasksState.selectedTask?.reminders?.isNotEmpty ??
                             false);

@@ -161,7 +161,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
           .get();
 
       return value.isNotEmpty ? value.first : null;
-    } catch (e, st) {
+    } catch (e) {
       return null;
     }
   }
@@ -237,7 +237,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
           .getSingle();
 
       return result;
-    } catch (e, st) {
+    } catch (e) {
       return null;
     }
   }

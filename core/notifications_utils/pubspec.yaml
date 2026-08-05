@@ -1,7 +1,6 @@
 name: notifications_utils
 description: getActiveNotifications implementation.
 version: 0.0.1
-author:
 homepage:
 
 environment:

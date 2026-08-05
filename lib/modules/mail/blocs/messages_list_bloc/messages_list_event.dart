@@ -6,7 +6,6 @@ import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 
 abstract class MessagesListEvent extends Equatable {
   const MessagesListEvent();

@@ -8,8 +8,6 @@ import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
-import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_bloc.dart';
-import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_state.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_event.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/mail_folder.dart';

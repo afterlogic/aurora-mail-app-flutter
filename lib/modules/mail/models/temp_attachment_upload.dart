@@ -1,7 +1,6 @@
 
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
 
 class UploadProgress {

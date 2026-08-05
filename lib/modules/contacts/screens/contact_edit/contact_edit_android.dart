@@ -225,20 +225,6 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
     }
   }
 
-  bool _keysNotEqual(String key1, String key2) {
-    if (key1 == null) {
-      if (key2 == null || key2 == "") {
-        return false;
-      }
-    }
-    if (key2 == null) {
-      if (key1 == null || key1 == "") {
-        return false;
-      }
-    }
-    return key1 != key2;
-  }
-
   Future<FreeKeyAction?> _confirm() {
     return dialog(
       context: context,

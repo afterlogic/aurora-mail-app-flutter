@@ -6,7 +6,6 @@ import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/foundation.dart';
 
 import 'bloc.dart';
 import 'messages_list_methods.dart';

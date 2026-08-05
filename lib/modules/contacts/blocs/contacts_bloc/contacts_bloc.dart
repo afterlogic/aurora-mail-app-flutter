@@ -5,8 +5,6 @@ import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
-import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/events/contacts_groups_event.dart';
-import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/events/contacts_storages_event.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/contacts_repository.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
@@ -16,7 +14,6 @@ import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:crypto_worker/crypto_worker.dart';
-import 'package:flutter/widgets.dart';
 
 import './bloc.dart';
 import 'contacts_state_reducer.dart';

@@ -425,7 +425,7 @@ class _AttendeesPageState extends State<AttendeesPage> {
 
 class _SearchContact extends StatelessWidget {
   const _SearchContact(
-      {super.key, required this.contact, required this.search});
+      {required this.contact, required this.search});
 
   final Contact contact;
   final String search;

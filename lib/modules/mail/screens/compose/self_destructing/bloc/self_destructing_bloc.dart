@@ -6,7 +6,6 @@ import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
-import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_dao.dart';
 import 'package:aurora_mail/modules/mail/repository/pgp_api.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/model/contact_with_key.dart';
 import 'package:aurora_mail/utils/crypto_util.dart';
@@ -25,7 +24,6 @@ class SelfDestructingBloc
   final User user;
   final PgpApi pgpApi;
   final AliasOrIdentity aliasOrIdentity;
-  final _contactsDao = ContactsDao(DBInstances.appDB);
   final CryptoStorage _cryptoStorage = AppInjector.instance.cryptoStorage();
   final PgpWorker _pgpWorker = AppInjector.instance.pgpWorker();
   final String subject;

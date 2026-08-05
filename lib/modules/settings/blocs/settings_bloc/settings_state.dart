@@ -5,7 +5,6 @@ import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:equatable/equatable.dart';
 import 'package:drift/drift.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 abstract class SettingsState extends Equatable {
   const SettingsState();

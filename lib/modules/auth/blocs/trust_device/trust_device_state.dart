@@ -1,4 +1,3 @@
-import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:equatable/equatable.dart';
 

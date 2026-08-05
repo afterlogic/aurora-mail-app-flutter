@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
-import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mime/mime.dart';

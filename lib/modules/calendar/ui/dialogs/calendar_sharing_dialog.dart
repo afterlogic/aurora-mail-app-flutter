@@ -59,7 +59,6 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = 400.0;
-    final dropDownWidth = screenWidth / 1.25;
 
     return BaseCalendarDialog(
       title: S.of(context).calendar_sharing_title,
@@ -405,7 +404,7 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
 
 class _SearchContact extends StatelessWidget {
   const _SearchContact(
-      {super.key, required this.contact, required this.search});
+      {required this.contact, required this.search});
 
   final Contact contact;
   final String search;

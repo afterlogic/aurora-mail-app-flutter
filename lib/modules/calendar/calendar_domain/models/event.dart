@@ -6,7 +6,6 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/att
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/days_of_week.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/recurrence_mode.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/reminders_option.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/every_week_frequency.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/rrule.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
@@ -472,7 +471,7 @@ class Event implements Activity {
           recurrenceUntilDate: this.recurrenceUntilDate,
           recurrenceWeekDays: this.recurrenceWeekDays,
           recurrenceWeeklyFrequency: this.recurrenceWeeklyFrequency);
-    } catch (e, s) {
+    } catch (e) {
       return null;
     }
   }

@@ -9,7 +9,7 @@ extension BlocProviderExtensions on BlocProvider{
       }) {
     try {
       return Provider.of<T>(context, listen: listen);
-    } on ProviderNotFoundException catch (e) {
+    } on ProviderNotFoundException {
       return null;
     }
   }

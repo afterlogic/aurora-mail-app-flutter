@@ -6,10 +6,8 @@ import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:uuid/uuid.dart';
 
 @DataClassName("LocalFolder")
 class Folders extends Table {
@@ -217,81 +215,6 @@ class Folders extends Table {
       "force": force,
     };
     return compute(_hashCalculateMessagesInfoDiff, args);
-  }
-
-  // you cannot just return newInfo
-  // you have to return oldInfo (because it contains hasBody: true) + addedMessages
-  static MessagesInfoDiffCalcResult _calculateMessagesInfoDiff(
-      Map<String, dynamic> args) {
-    final oldInfo = args["oldItems"] as List<MessageInfo>;
-    final newInfo = args["newItems"] as List<MessageInfo>;
-    final showLog = args["showLog"] as bool;
-    final force = args["force"] as bool;
-    final unchangedMessages = oldInfo.where((i) =>
-        newInfo.firstWhereOrNull(
-          (j) =>
-              j.uid == i.uid &&
-              j.parentUid == i.parentUid &&
-              listEquals(j.flags, i.flags),
-        ) !=
-        null);
-
-    // no need to calculate difference if all the messages are unchanged
-    if (!force &&
-        unchangedMessages.length == oldInfo.length &&
-        unchangedMessages.length == newInfo.length) {
-      if (showLog) logger.log("Diff calcultaion finished: no changes");
-      return new MessagesInfoDiffCalcResult(
-        updatedInfo: oldInfo,
-        removedUids: [],
-        infosToUpdateFlags: [],
-        addedMessages: [],
-      );
-    }
-
-    final addedMessages = newInfo
-        .where((i) => oldInfo.firstWhereOrNull((j) => j.uid == i.uid) == null);
-
-    final removedMessages = oldInfo
-        .where((i) => newInfo.firstWhereOrNull((j) => j.uid == i.uid) == null);
-
-    final changedParent = newInfo.where((i) =>
-        oldInfo.firstWhereOrNull(
-          (j) => j.uid == i.uid && j.parentUid != i.parentUid,
-        ) !=
-        null);
-
-    final changedFlags = newInfo.where((i) =>
-        oldInfo.firstWhereOrNull(
-          (j) => j.uid == i.uid && !listEquals(j.flags, i.flags),
-        ) !=
-        null);
-
-    if (showLog) logger.log("""
-    Messages info diff calcultaion finished:
-      unchanged: ${unchangedMessages.length}
-      changedParent: ${changedParent.length}
-      changedFlags: ${changedFlags.length}
-      removed: ${removedMessages.length}
-      added: ${addedMessages.length}
-    """);
-
-    final removedUids = removedMessages.map((m) => m.uid).toList();
-    final changedParentUid = changedParent.map((m) => m.uid).toList();
-
-    final List<MessageInfo> updatedInfo = [
-      ...addedMessages,
-      ...changedParent,
-      ...changedFlags,
-      ...unchangedMessages
-    ];
-
-    return new MessagesInfoDiffCalcResult(
-      updatedInfo: updatedInfo,
-      removedUids: [...removedUids, ...changedParentUid],
-      infosToUpdateFlags: changedFlags.toList(),
-      addedMessages: addedMessages.toList(),
-    );
   }
 
   static MessagesInfoDiffCalcResult _hashCalculateMessagesInfoDiff(

@@ -318,7 +318,7 @@ class _MonthViewState extends State<MonthView>
 }
 
 class _EventsInfoSection extends StatelessWidget {
-  const _EventsInfoSection({super.key});
+  const _EventsInfoSection();
 
   @override
   Widget build(BuildContext context) {

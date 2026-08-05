@@ -1,6 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
-import 'package:drift/drift.dart';
 
 class EventBase {
   final String uid;

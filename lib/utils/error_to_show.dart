@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/utils/error_code.dart';
-import 'package:flutter/widgets.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class ErrorToShow {

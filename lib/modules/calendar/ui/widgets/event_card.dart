@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import 'month_event_marker.dart';
 
 class EventCard extends StatelessWidget {
   const EventCard({super.key, required this.event});

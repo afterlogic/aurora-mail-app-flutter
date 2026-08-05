@@ -733,7 +733,7 @@ class MailMethods {
           account!.localId!,
           messageInfos,
         );
-      } catch (e, st) {
+      } catch (e) {
         message = await _mailDao.getMessageByUid(
           messageInfo.uid,
           folder,
@@ -755,7 +755,7 @@ class MailMethods {
       message = await _mailDao.fillMessage(newMessages.first);
 
       return message;
-    } catch (e, st) {
+    } catch (e) {
       debugPrint('!!! $e');
       rethrow;
     }

@@ -11,7 +11,6 @@ import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:equatable/equatable.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/widgets.dart';
 
 abstract class ComposeEvent extends Equatable {
   const ComposeEvent();

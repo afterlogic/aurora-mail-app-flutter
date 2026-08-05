@@ -1,17 +1,13 @@
-import 'dart:convert';
 import 'dart:ui';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity_base.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/attendee.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/days_of_week.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/every_week_frequency.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/recurrence_mode.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/reminders_option.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/rrule.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
-import 'package:aurora_mail/modules/calendar/ui/models/displayable.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/task.dart';
 
 class TaskCreationData implements ActivityCreationData{

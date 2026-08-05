@@ -403,7 +403,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       settings = await settingsNetwork.getSettings();
       logger.log("appData: $settings");
       userAppData.setAppData = settings;
-    } catch (e, s) {
+    } catch (e) {
       logger.log("getting appData error: $e");
       rethrow;
     }

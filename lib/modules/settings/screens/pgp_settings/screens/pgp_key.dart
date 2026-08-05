@@ -209,10 +209,4 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
             ),
     );
   }
-
-  Widget _space() {
-    return SizedBox(
-      height: 10,
-    );
-  }
 }

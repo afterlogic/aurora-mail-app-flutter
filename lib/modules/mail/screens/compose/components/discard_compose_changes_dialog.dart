@@ -10,7 +10,6 @@ class DiscardChangesDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return AlertDialog(
       content: SizedBox(
         width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,

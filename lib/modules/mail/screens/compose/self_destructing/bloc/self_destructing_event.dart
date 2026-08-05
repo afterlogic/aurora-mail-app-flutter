@@ -1,7 +1,6 @@
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/model/contact_with_key.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/model/life_time.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
-import 'package:crypto_model/crypto_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class SelfDestructingEvent extends Equatable {

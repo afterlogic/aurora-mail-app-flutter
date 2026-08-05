@@ -14,7 +14,6 @@ import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:bloc/bloc.dart';
 import 'package:crypto_worker/crypto_worker.dart';
-import 'package:flutter/foundation.dart';
 
 import './bloc.dart';
 

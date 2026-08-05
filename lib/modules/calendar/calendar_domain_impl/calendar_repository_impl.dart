@@ -104,7 +104,7 @@ class CalendarRepositoryImpl implements CalendarRepository {
       for (final calendar in calendarsForDownload) {
         await _db.createOrUpdateCalendar(calendar);
       }
-    } catch (e, st) {
+    } catch (e) {
       _logger.log('CALENDARS SYNC ERROR: $e');
       rethrow;
     }
@@ -177,7 +177,7 @@ class CalendarRepositoryImpl implements CalendarRepository {
         await _db.createOrUpdateCalendar(calendar);
       }
       await _syncEvents();
-    } catch (e, st) {
+    } catch (e) {
       _logger.log('CALENDARS SYNC ERROR: $e');
       rethrow;
     }

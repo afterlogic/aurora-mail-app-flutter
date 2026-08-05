@@ -44,7 +44,7 @@ Future downloadFromUrl({
       final path = await moveToDownloads(File(await task.filePath()));
       onDownloaded?.call(path);
     }
-  }catch (e, st){
+  }catch (e){
     print(e);
   }
 }

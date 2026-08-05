@@ -13,9 +13,6 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/co
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/network/contacts_network_service.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:collection/collection.dart' show IterableExtension;
-import 'package:flutter/widgets.dart';
-import 'package:drift_sqflite/drift_sqflite.dart';
-import 'package:drift/drift.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class ContactsRepositoryImpl implements ContactsRepository {

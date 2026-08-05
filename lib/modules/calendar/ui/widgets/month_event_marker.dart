@@ -168,18 +168,3 @@ class EmptyMarker extends StatelessWidget {
     );
   }
 }
-
-class _EventText extends StatelessWidget {
-  const _EventText({required this.edge, required this.title});
-
-  final String title;
-  final Edge edge;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      edge.isSingle || edge.isStart ? title : "",
-      style: TextStyle(fontSize: 10, color: Colors.white),
-    );
-  }
-}

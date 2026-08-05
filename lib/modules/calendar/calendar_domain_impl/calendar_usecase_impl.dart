@@ -107,7 +107,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   Future<void> fetchCalendars() async {
     try {
       await repository.syncCalendars();
-    } catch (e, st) {
+    } catch (e) {
       logger.log('sync calendars error: ${e}');
     } finally {
       await getCalendars();
@@ -118,7 +118,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   Future<void> syncCalendarsWithActivities() async {
     try {
       await repository.syncCalendarsWithActivities();
-    } catch (e, st) {
+    } catch (e) {
       rethrow;
     } finally {
       await getCalendars();

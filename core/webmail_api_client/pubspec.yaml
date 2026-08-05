@@ -1,8 +1,8 @@
 name: webmail_api_client
 description: HTTP client, designed to work with Afterlogic WebMail API.
 version: 0.0.1
-author: Afterlogic
 homepage: https://afterlogic.com/webmail-pro-8-webapi/
+publish_to: "none"
 
 environment:
   sdk: ">=3.0.0 <4.0.0"

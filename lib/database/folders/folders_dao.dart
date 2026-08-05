@@ -1,6 +1,5 @@
 
 import 'package:aurora_mail/models/folder.dart';
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
 
 import '../app_database.dart';

@@ -111,7 +111,7 @@ class BackgroundSync {
       final calendarRepository = CalendarRepository(
           user: user, appDB: DBInstances.appDB, logger: logger);
       await calendarRepository.syncCalendarsWithActivities();
-    } catch (e, s) {
+    } catch (e) {
       logger.log("Calendars background sync error: ${e}");
     }
   }

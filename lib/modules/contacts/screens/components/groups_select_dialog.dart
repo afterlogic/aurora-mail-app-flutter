@@ -1,5 +1,4 @@
 import 'package:aurora_mail/generated/l10n.dart';
-import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:flutter/material.dart';

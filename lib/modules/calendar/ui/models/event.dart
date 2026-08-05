@@ -83,7 +83,7 @@ class ViewEvent extends Event implements Displayable, WeekViewVisible {
           recurrenceUntilDate: e.recurrenceUntilDate,
           recurrenceWeekDays: e.recurrenceWeekDays,
           recurrenceWeeklyFrequency: e.recurrenceWeeklyFrequency);
-    } catch (e, s) {
+    } catch (e) {
       return null;
     }
   }

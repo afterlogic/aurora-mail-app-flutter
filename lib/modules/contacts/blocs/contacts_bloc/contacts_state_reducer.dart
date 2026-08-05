@@ -2,7 +2,6 @@
 import 'package:aurora_mail/utils/copy_with_value.dart';
 
 import 'bloc.dart';
-import 'contacts_state.dart';
 
 Stream<ContactsState> reduceState(ContactsState state, dynamic event) async* {
   assert(state != null);

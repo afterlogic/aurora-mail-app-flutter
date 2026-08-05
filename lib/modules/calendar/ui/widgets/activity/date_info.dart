@@ -1,4 +1,3 @@
-import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/displayable.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/date_time_tile.dart';
 import 'package:flutter/material.dart';

@@ -4,10 +4,8 @@ import 'package:aurora_mail/modules/calendar/ui/screens/task_view_page.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TaskWidget extends StatelessWidget {
   final ViewTask task;

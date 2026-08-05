@@ -51,7 +51,7 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
       yield ProgressState();
       await _methods.updateContactPublicKeyFlags(contact: event.contact, pgpSignMessages: event.pgpSignMessages, pgpEncryptMessages: event.pgpEncryptMessages);
       yield KeyFlagsUpdated();
-    } catch(err, st){
+    } catch(err){
       yield ErrorState(ErrorToShow(err));
     }
   }

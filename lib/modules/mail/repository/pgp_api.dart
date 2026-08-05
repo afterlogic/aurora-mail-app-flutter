@@ -9,8 +9,6 @@ class PgpApi {
   final User user;
   final WebMailApi _pgpModule;
 
-  int get _accountId => account.accountId;
-
   PgpApi(this.user, this.account)
       : _pgpModule = WebMailApi(
           moduleName: WebMailModules.openPgp,

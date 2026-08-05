@@ -591,7 +591,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
             );
           }
           return _bloc!.add(SendMessages(messages));
-        } catch (e, s) {
+        } catch (e) {
           print(e);
         }
       } else {

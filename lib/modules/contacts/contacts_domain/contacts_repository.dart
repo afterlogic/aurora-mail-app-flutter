@@ -4,7 +4,6 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_mode
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/contacts_repository_impl.dart';
-import 'package:flutter/widgets.dart';
 
 abstract class ContactsRepository {
   factory ContactsRepository({

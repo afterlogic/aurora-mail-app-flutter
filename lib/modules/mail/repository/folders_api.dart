@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:flutter/foundation.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class FoldersApi {

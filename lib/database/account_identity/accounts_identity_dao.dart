@@ -1,5 +1,4 @@
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
 
 import 'account_identity_table.dart';

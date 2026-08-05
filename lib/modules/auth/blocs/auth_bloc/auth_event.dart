@@ -5,7 +5,6 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 
 abstract class AuthEvent extends Equatable {
   const AuthEvent();

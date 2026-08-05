@@ -1,7 +1,6 @@
 
 import 'dart:convert';
 
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
 
 class ListStringConverter extends TypeConverter<List<String>, String> {

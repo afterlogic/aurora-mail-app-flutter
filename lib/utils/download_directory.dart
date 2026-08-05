@@ -1,9 +1,6 @@
 
-import 'dart:io';
 
-import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 
 final _channel = MethodChannel("DIRECTORY_DOWNLOADS");
 

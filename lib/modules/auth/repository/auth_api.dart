@@ -304,7 +304,7 @@ class AuthApi {
           // addedHeaders: await deviceIdHeader(),
         );
         debugPrint('$res');
-      } catch (e, s) {
+      } catch (e) {
         success = false;
         debugPrint('$e');
       }
@@ -458,7 +458,7 @@ class AuthApi {
         // addedHeaders: await deviceIdHeader(),
       );
       debugPrint('$res');
-    } on Object catch (e, st) {
+    } on Object catch (e) {
       debugPrint('$e');
     }
   }

@@ -8,7 +8,6 @@ import 'package:aurora_mail/modules/contacts/screens/contact_edit/dialog/confirm
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 
 abstract class ContactsEvent extends Equatable {
   const ContactsEvent();

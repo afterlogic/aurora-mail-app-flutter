@@ -179,7 +179,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
       _navKey.currentState!.popUntil((r) => r.isFirst);
       _navKey.currentState!.pushReplacementNamed(LoginRoute.name);
       RestartWidget.restartApp(context);
-    } catch (e, st) {
+    } catch (e) {
       print(e);
     }
   }

@@ -13,7 +13,6 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/rec
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/calendar/calendar_table.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/activity/activity_table.dart';
-import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_table.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/converters/list_string_converter.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/groups/contacts_groups_table.dart';

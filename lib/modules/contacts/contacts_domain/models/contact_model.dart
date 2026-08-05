@@ -1,5 +1,4 @@
 
-import 'package:flutter/widgets.dart';
 
 class Contact {
   final int? entityId;

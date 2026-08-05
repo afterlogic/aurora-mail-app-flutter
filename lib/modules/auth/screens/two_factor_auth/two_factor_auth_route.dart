@@ -1,4 +1,3 @@
-import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 
 class TwoFactorAuthRoute {

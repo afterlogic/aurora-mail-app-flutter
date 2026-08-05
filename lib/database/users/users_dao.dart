@@ -1,6 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/users/users_table.dart';
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
 
 part 'users_dao.g.dart';

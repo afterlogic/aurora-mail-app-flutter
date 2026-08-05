@@ -4,7 +4,6 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/filters.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/calendar_usecase_impl.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/displayable.dart';

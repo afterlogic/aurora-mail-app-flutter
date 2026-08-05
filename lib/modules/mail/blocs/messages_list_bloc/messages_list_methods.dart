@@ -6,7 +6,6 @@ import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
-import 'package:flutter/foundation.dart';
 
 class MessagesListMethods {
   final _mailDao = MailDao(DBInstances.appDB);

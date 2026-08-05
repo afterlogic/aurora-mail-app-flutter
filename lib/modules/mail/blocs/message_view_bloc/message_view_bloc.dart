@@ -12,7 +12,6 @@ import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:bloc/bloc.dart';
 import 'package:crypto_worker/crypto_worker.dart';
-import 'package:flutter/foundation.dart';
 
 import './bloc.dart';
 
@@ -88,7 +87,7 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
 
   Stream<MessageViewState> _changeEventInviteStatus(ChangeEventInviteStatus event) async* {
     try{
-      final changeResult = await _methods.changeEventInviteStatus(status: event.status, calendarId: event.calendarId, fileName: event.fileName);
+      await _methods.changeEventInviteStatus(status: event.status, calendarId: event.calendarId, fileName: event.fileName);
       yield SuccessChangedInviteStatus();
     } catch (e, st) {
       yield MessagesViewError(

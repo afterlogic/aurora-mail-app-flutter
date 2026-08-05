@@ -10,7 +10,6 @@ import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:crypto_worker/crypto_worker.dart';
-import 'package:crypto_worker/src/pgp/pgp_worker.dart';
 import 'package:flutter/widgets.dart';
 
 class MessageViewMethods {

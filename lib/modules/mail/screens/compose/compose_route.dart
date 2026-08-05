@@ -1,9 +1,7 @@
 
-import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
-import 'package:flutter/cupertino.dart';
 
 class ComposeRoute {
   static const name = "compose_message";
