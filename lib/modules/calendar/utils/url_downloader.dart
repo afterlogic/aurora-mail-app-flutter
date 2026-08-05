@@ -37,7 +37,7 @@ Future downloadFromUrl({
       url: url,
       filename: '${fileName}.ics',
       baseDirectory: BaseDirectory.temporary,
-      headers: headers as Map<String, String>,
+      headers: headers,
     );
     final result = await FileDownloader().download(task);
     if (result.status == TaskStatus.complete) {

@@ -35,8 +35,6 @@ class SyncFreq {
         return S.of(context).settings_sync_frequency_monthly;
       case Freq.minute:
         return "1 minute";
-      default:
-        return null;
     }
   }
 
@@ -58,8 +56,6 @@ class SyncFreq {
         return Duration(days: 30);
       case Freq.minute:
         return Duration(minutes: 1);
-      default:
-        return null;
     }
   }
 

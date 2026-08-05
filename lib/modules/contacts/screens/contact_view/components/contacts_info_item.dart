@@ -92,8 +92,6 @@ class ContactsInfoItem extends StatelessWidget {
         );
       case InfoAction.none:
         return SizedBox();
-      default:
-        return SizedBox();
     }
   }
 }

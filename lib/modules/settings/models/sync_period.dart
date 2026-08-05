@@ -24,8 +24,6 @@ class SyncPeriod {
         return S.of(context).settings_sync_period_months6;
       case Period.years1:
         return S.of(context).settings_sync_period_years1;
-      default:
-        return null;
     }
   }
 
@@ -49,8 +47,6 @@ class SyncPeriod {
         return subtractPeriodFromNow(Duration(days: 31 * 6));
       case Period.years1:
         return subtractPeriodFromNow(Duration(days: 31 * 12));
-      default:
-        return null;
     }
   }
 

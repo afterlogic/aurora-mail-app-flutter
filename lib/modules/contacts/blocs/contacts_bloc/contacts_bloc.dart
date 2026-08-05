@@ -206,14 +206,14 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
 
   Stream<ContactsState> _createContact(CreateContact event) async* {
     add(StartActivity('CreateContact'));
-    _repo.addContact(event.contact).catchError((err, StackTrace st) {
+    try {
+      await _repo.addContact(event.contact);
+    } catch (err, st) {
       add(AddError(formatError(err, st)));
       add(StopActivity('CreateContact'));
-      return null;
-    }).whenComplete(() {
-      if (event.completer != null) add(GetContacts(completer: event.completer));
-      add(StopActivity('CreateContact'));
-    });
+    }
+    if (event.completer != null) add(GetContacts(completer: event.completer));
+    add(StopActivity('CreateContact'));
   }
 
   Stream<ContactsState> _updateContactPgpKey(UpdateContactPgpKey event) async* {
@@ -295,10 +295,12 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
 
   Stream<ContactsState> _addGroup(CreateGroup event) async* {
     add(StartActivity('CreateGroup'));
-    final groupWithId = await _repo.addGroup(event.group).catchError((err, StackTrace st) {
+    ContactsGroup? groupWithId;
+    try {
+      groupWithId = await _repo.addGroup(event.group);
+    } catch (err, st) {
       add(AddError(formatError(err, st)));
-      return null;
-    });
+    }
     add(SelectStorageGroup(group: groupWithId));
     add(StopActivity('CreateGroup'));
   }

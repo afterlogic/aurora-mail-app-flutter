@@ -18,6 +18,7 @@ class MessageViewProgress extends StatelessWidget {
     return FutureBuilder<Message?>(
       future: future.catchError((e) {
         Navigator.pop(context, ErrorToShow(e));
+        return null;
       }),
       builder: (context, state) {
         if (state.hasData) {

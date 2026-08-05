@@ -95,7 +95,6 @@ class RouteGenerator {
             builder: (_) => LoginAndroid(),
           );
         }
-        break;
       case TrustDeviceRoute.name:
         final args = settings.arguments as TrustDeviceRouteArgs?;
         return FadeRoute(
@@ -105,7 +104,6 @@ class RouteGenerator {
           builder: (_) => TrustDeviceWidget(args: args),
         );
 
-        break;
       case FidoAuthRoute.name:
         final args = settings.arguments as FidoAuthRouteArgs?;
         return FadeRoute(
@@ -115,7 +113,6 @@ class RouteGenerator {
           builder: (_) => IosFidoAuthWidget(args: args),
         );
 
-        break;
       case SelectTwoFactorRoute.name:
         final args = settings.arguments as SelectTwoFactorRouteArgs?;
         return FadeRoute(
@@ -125,7 +122,6 @@ class RouteGenerator {
           builder: (_) => SelectTwoFactorWidget(args: args),
         );
 
-        break;
       case TwoFactorAuthRoute.name:
         final args = settings.arguments as TwoFactorAuthRouteArgs?;
 
@@ -138,7 +134,6 @@ class RouteGenerator {
           ),
         );
 
-        break;
       case ConfigureTwoFactorRoute.name:
         final args = settings.arguments as ConfigureTwoFactorRouteArgs?;
 
@@ -151,7 +146,6 @@ class RouteGenerator {
           ),
         );
 
-        break;
       case BackupCodeAuthRoute.name:
         final args = settings.arguments as BackupCodeAuthRouteArgs?;
 
@@ -164,7 +158,6 @@ class RouteGenerator {
           ),
         );
 
-        break;
       case UpgradePlanRoute.name:
         final args = settings.arguments as UpgradePlanArg?;
         return FadeRoute(
@@ -174,7 +167,6 @@ class RouteGenerator {
           builder: (_) => UpgradePlanWidget(args?.message),
         );
 
-        break;
 
       // ================= CALENDAR =================
 
@@ -185,30 +177,25 @@ class RouteGenerator {
             builder: (_) => CalendarPage(
                   args: args,
                 ));
-        break;
 
       case EventViewPage.name:
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => EventViewPage());
-        break;
 
       case TaskViewPage.name:
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => TaskViewPage());
-        break;
 
       case EventCreationPage.name:
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => EventCreationPage());
-        break;
       case TaskCreationPage.name:
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => TaskCreationPage());
-        break;
 
       case AttendeesPage.name:
         final args = settings.arguments as AttendeesRouteArg?;
@@ -219,7 +206,6 @@ class RouteGenerator {
             onChange: args.onChange,
           ),
         );
-        break;
 
       // ================= MAIL =================
 
@@ -231,13 +217,11 @@ class RouteGenerator {
             initSearch: args?.search,
           ),
         );
-        break;
       case MessageHeadersRoute.name:
         final args = settings.arguments as MessageHeadersRouteArg?;
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => MessageHeaders(args!.text));
-        break;
       case MessageViewRoute.name:
         final args = settings.arguments as MessageViewScreenArgs?;
         final routeAnimationListener = RouteAnimationListener();
@@ -257,7 +241,6 @@ class RouteGenerator {
             ),
           ),
         );
-        break;
       case MessageProgressRoute.name:
         final args = settings.arguments as MessageProgressRouteArg?;
         final routeAnimationListener = RouteAnimationListener()
@@ -278,7 +261,6 @@ class RouteGenerator {
             ),
           ),
         );
-        break;
 
       case ComposeRoute.name:
         final args = settings.arguments as ComposeScreenArgs?;
@@ -298,7 +280,6 @@ class RouteGenerator {
                 ),
               );
             });
-        break;
 
       // ================= CONTACTS =================
 
@@ -313,7 +294,6 @@ class RouteGenerator {
                   ],
                   child: ContactsListAndroid(),
                 ));
-        break;
 
       case ContactViewRoute.name:
         final args = settings.arguments as ContactViewScreenArgs?;
@@ -327,7 +307,6 @@ class RouteGenerator {
                   child: ContactViewAndroid(
                       args.contact, args.scaffoldState, args.pgpSettingBloc),
                 ));
-        break;
 
       case ContactEditRoute.name:
         final args = settings.arguments as ContactEditScreenArgs?;
@@ -340,7 +319,6 @@ class RouteGenerator {
                   args.pgpSettingsBloc,
                   contact: args.contact,
                 )));
-        break;
 
       case GroupViewRoute.name:
         final args = settings.arguments as GroupViewScreenArgs?;
@@ -348,7 +326,6 @@ class RouteGenerator {
             settings: RouteSettings(name: settings.name),
             builder: (_) => BlocProvider<ContactsBloc>.value(
                 value: args!.bloc, child: GroupViewAndroid(args.group)));
-        break;
 
       case GroupEditRoute.name:
         final args = settings.arguments as GroupEditScreenArgs?;
@@ -356,26 +333,22 @@ class RouteGenerator {
             settings: RouteSettings(name: settings.name),
             builder: (_) => BlocProvider<ContactsBloc>.value(
                 value: args!.bloc!, child: GroupEditAndroid(group: args.group)));
-        break;
 
       // ================= SETTINGS =================
       case DebugRoute.name:
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => DebugSetting());
-        break;
       case SettingsMainRoute.name:
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => SettingsMainAndroid());
-        break;
       case NotificationsSettingsRoute.name:
         return CupertinoPageRoute(
             settings: RouteSettings(
               name: settings.name,
             ),
             builder: (_) => NotificationsSettings());
-        break;
       case PgpSettingsRoute.name:
         final arg = settings.arguments as PgpSettingsRouteArg?;
         return CupertinoPageRoute(
@@ -385,7 +358,6 @@ class RouteGenerator {
             builder: (_) => PgpSettings(
                   arg!.pgpSettingsBloc,
                 ));
-        break;
       case PgpKeyRoute.name:
         final arg = settings.arguments as PgpKeyRouteArg?;
         return CupertinoPageRoute(
@@ -398,7 +370,6 @@ class RouteGenerator {
                   arg.withAppBar,
                   arg.bloc,
                 ));
-        break;
       case PgpKeysRoute.name:
         final arg = settings.arguments as PgpKeysRouteArg?;
         return CupertinoPageRoute(
@@ -409,30 +380,25 @@ class RouteGenerator {
                   arg!.pgpKeys,
                   arg.bloc,
                 ));
-        break;
       case CommonSettingsRoute.name:
         return CupertinoPageRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => CommonSettingsAndroid());
-        break;
 
       case SyncSettingsRoute.name:
         return CupertinoPageRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => SyncSettingsAndroid());
-        break;
 
       case ManageUsersRoute.name:
         return CupertinoPageRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => ManageUsersAndroid());
-        break;
 
       case AboutRoute.name:
         return CupertinoPageRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => AboutAndroid());
-        break;
 
       // ==================================
 

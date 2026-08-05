@@ -195,7 +195,9 @@ class MailBloc extends Bloc<MailEvent, MailState> {
           .then((v) {
             add(UpdateFolders());
           })
-          .catchError((e, s) => logger.log("message update error: $e"))
+          .catchError((e, s) {
+            logger.log("message update error: $e");
+          })
           .whenComplete(() {
             event.completer?.complete();
           });

@@ -421,7 +421,7 @@ class MailApi {
     final headers = await _mailModule.getAuthHeaders();
 
     headers.forEach((key, value) {
-      request.headers.add(key as String, value as Object);
+      request.headers.add(key, value);
     });
 
     final response = await request.close();

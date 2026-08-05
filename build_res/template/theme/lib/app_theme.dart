@@ -41,7 +41,7 @@ class AppTheme {
     splashFactory: InkRipple.splashFactory,
     appBarTheme: _appBarThemeDark,
     bottomNavigationBarTheme: _bottomNavigationBarThemeDark,
-    bottomAppBarTheme: BottomAppBarTheme(color: Colors.black),
+    bottomAppBarTheme: BottomAppBarThemeData(color: Colors.black),
     buttonTheme: _buttonTheme,
     dialogTheme: _dialogTheme,
     floatingActionButtonTheme: _fabTheme,
@@ -137,7 +137,7 @@ class AppTheme {
     textTheme: ButtonTextTheme.primary,
   );
 
-  static final _dialogTheme = DialogTheme(
+  static final _dialogTheme = DialogThemeData(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
     titleTextStyle: TextStyle(
       fontSize: 20,

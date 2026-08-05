@@ -114,7 +114,6 @@ class RouteWrapState extends State<RouteWrap> {
     switch (notificationData.type) {
       case NotificationType.email:
         throw Exception('Unsupported activity type');
-        break;
       case NotificationType.event:
         activityType = ActivityType.event;
         break;

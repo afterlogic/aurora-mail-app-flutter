@@ -21,8 +21,6 @@ extension NotificationTypeMapper on NotificationType {
         return 'task';
       case NotificationType.email:
         return 'email';
-      default:
-        throw Exception('Unknown NotificationType');
     }
   }
 }

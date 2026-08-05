@@ -76,7 +76,6 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
           CalendarPage.selectedActivityId = _notification!.activityId;
           break;
         case NotificationType.email:
-        default:
           MessagesListAndroid.openMessageFolder = _notification!.folder;
           MessagesListAndroid.openMessageId = _notification!.messageId;
           break;

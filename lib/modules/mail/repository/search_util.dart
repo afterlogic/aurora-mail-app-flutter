@@ -121,7 +121,6 @@ class _SearchUtil {
       case SearchPattern.Attachment:
         return _attachment;
     }
-    return "invalid";
   }
 
   SearchFlag? _selectFlag(String textPattern) {
@@ -138,7 +137,6 @@ class _SearchUtil {
       case SearchFlag.Attachment:
         return _attachment;
     }
-    return "invalid";
   }
 
   DateTime? tryParseDate(String date) {

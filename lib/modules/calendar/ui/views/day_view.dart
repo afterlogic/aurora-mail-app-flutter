@@ -158,8 +158,7 @@ class _DayViewState extends State<DayView> {
                   shrinkWrap: true,
                   itemBuilder: (context, index) => InkWell(
                     onTap: () {
-                      final event = (events
-                          as List<CV.CalendarEventData<ViewEvent?>>)[index];
+                      final event = events[index];
                       BlocProvider.of<EventsBloc>(context)
                           .add(SelectEvent(event.event));
                       Navigator.of(context).pushNamed(
