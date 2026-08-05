@@ -63,9 +63,9 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
 
   // Custom trailing arrow for settings menu
   Widget _buildTrailingArrow() {
-    Color arrowColor = theme!.primaryColor;
+    Color arrowColor = theme.primaryColor;
     if (BuildProperty.useCustomSettingsColors) {
-      final isDarkTheme = theme!.brightness == Brightness.dark;
+      final isDarkTheme = theme.brightness == Brightness.dark;
       arrowColor = isDarkTheme
           ? AppColor.settingsArrowDark
           : AppColor.settingsArrowLight;
@@ -84,12 +84,12 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
 
   @override
   Widget build(BuildContext context) {
-    final iconBG = theme!.brightness == Brightness.dark
-        ? theme!.colorScheme.onPrimary.withOpacity(0.20)
-        : theme!.colorScheme.primary.withOpacity(0.08);
+    final iconBG = theme.brightness == Brightness.dark
+        ? theme.colorScheme.onPrimary.withOpacity(0.20)
+        : theme.colorScheme.primary.withOpacity(0.08);
     final isTablet = LayoutConfig.of(context).isTablet;
     final current = isTablet
-        ? (navigatorKey?.currentState?.current?.name ??
+        ? (navigatorKey.currentState?.current.name ??
             CommonSettingsRoute.name)
         : null;
     Widget body = ListView(
@@ -99,7 +99,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
           leading: AdaptiveSettingsMenuIcon(
             defaultIcon: Icons.tune,
             iconName: 'common',
-            color: theme!.primaryColor,
+            color: theme.primaryColor,
             background: iconBG,
           ),
           title: Text(S.of(context).settings_common),
@@ -112,7 +112,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
           leading: AdaptiveSettingsMenuIcon(
             defaultIcon: Icons.sync,
             iconName: 'sync',
-            color: theme!.primaryColor,
+            color: theme.primaryColor,
             background: iconBG,
           ),
           title: Text(S.of(context).settings_sync),
@@ -127,7 +127,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             leading: AdaptiveSettingsMenuIcon(
               defaultIcon: Icons.notifications,
               iconName: 'notifications',
-              color: theme!.primaryColor,
+              color: theme.primaryColor,
               background: iconBG,
             ),
             title: Text(S.of(context).label_notifications_settings),
@@ -143,7 +143,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             leading: AdaptiveSettingsMenuIcon(
               defaultIcon: Icons.vpn_key,
               iconName: 'openPGP',
-              color: theme!.primaryColor,
+              color: theme.primaryColor,
               background: iconBG,
             ),
             title: Text(S.of(context).label_pgp_settings),
@@ -160,7 +160,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             leading: AdaptiveSettingsMenuIcon(
               defaultIcon: Icons.account_circle,
               iconName: 'account',
-              color: theme!.primaryColor,
+              color: theme.primaryColor,
               background: iconBG,
             ),
             title: Text(S.of(context).settings_accounts_manage),
@@ -173,7 +173,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
           leading: AdaptiveSettingsMenuIcon(
             defaultIcon: Icons.info_outline,
             iconName: 'about',
-            color: theme!.primaryColor,
+            color: theme.primaryColor,
             background: iconBG,
           ),
           title: Text(S.of(context).settings_about),
@@ -193,7 +193,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             leading: AdaptiveSettingsMenuIcon(
               defaultIcon: Icons.perm_device_information,
               iconName: 'debug',
-              color: theme!.primaryColor,
+              color: theme.primaryColor,
               background: iconBG,
             ),
             title: Text("Debug"),
@@ -206,7 +206,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             leading: AdaptiveSettingsMenuIcon(
               defaultIcon: Icons.delete_outline,
               iconName: 'delete-account',
-              color: theme!.primaryColor,
+              color: theme.primaryColor,
               background: iconBG,
             ),
             title: Text(S.current.settings_delete_account),
@@ -219,7 +219,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             leading: AdaptiveSettingsMenuIcon(
               defaultIcon: Icons.exit_to_app,
               iconName: 'exit',
-              color: theme!.primaryColor,
+              color: theme.primaryColor,
               background: iconBG,
             ),
             title: Text(S.of(context).messages_list_app_bar_logout),
@@ -255,7 +255,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
                           child: Drawer(
                             child: ListTileTheme(
                               style: ListTileStyle.drawer,
-                              selectedColor: theme!.primaryColor,
+                              selectedColor: theme.primaryColor,
                               child: SafeArea(child: body),
                             ),
                           ),

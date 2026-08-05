@@ -36,9 +36,9 @@ class _DebugSettingState extends BState<DebugSetting> {
       _storage.getShowResponseBody(),
     ]).then((value) {
       setState(() {
-        _backgroundRecord = (value[0] ?? false);
-        _messageCounter = (value[1] ?? false);
-        _showResponseBody = (value[2] ?? false);
+        _backgroundRecord = value[0];
+        _messageCounter = value[1];
+        _showResponseBody = value[2];
       });
     });
   }

@@ -106,14 +106,14 @@ class _MessageItemState extends BState<MessageItem> {
       return Container(
         padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
         decoration: BoxDecoration(
-          color: hasUnread ? theme!.primaryColor : null,
+          color: hasUnread ? theme.primaryColor : null,
           borderRadius: BorderRadius.all(Radius.circular(50.0)),
-          border: Border.all(color: theme!.primaryColor, width: 2.0),
+          border: Border.all(color: theme.primaryColor, width: 2.0),
         ),
         child: Text(
           widget.children.length.toString(),
           style:
-              TextStyle(color: hasUnread ? Colors.white : theme!.primaryColor),
+              TextStyle(color: hasUnread ? Colors.white : theme.primaryColor),
         ),
       );
     }
@@ -145,7 +145,7 @@ class _MessageItemState extends BState<MessageItem> {
             }
           },
           background: Container(
-            color: theme!.primaryColor,
+            color: theme.primaryColor,
             child: Stack(
               children: <Widget>[
                 Align(
@@ -172,7 +172,7 @@ class _MessageItemState extends BState<MessageItem> {
             ),
           ),
           secondaryBackground: Container(
-            color: theme!.colorScheme.error,
+            color: theme.colorScheme.error,
             child: Stack(
               children: <Widget>[
                 Align(
@@ -234,7 +234,7 @@ class _MessageItemState extends BState<MessageItem> {
                         style: TextStyle(
                           fontWeight: fontWeight,
                           fontSize: 16.0,
-                          color: theme!.textTheme.titleLarge!.color,
+                          color: theme.textTheme.titleLarge!.color,
                         ),
                       ),
                       trailing: Column(
@@ -258,8 +258,8 @@ class _MessageItemState extends BState<MessageItem> {
                                   ),
                                   style: TextStyle(
                                     fontSize: 14.0,
-                                    color: theme!.disabledColor.withAlpha(
-                                        theme!.disabledColor.alpha ~/ 2),
+                                    color: theme.disabledColor.withAlpha(
+                                        theme.disabledColor.alpha ~/ 2),
                                   ),
                                 ),
                               ),
@@ -274,10 +274,10 @@ class _MessageItemState extends BState<MessageItem> {
                                         border: selected
                                             ? null
                                             : Border.all(
-                                                color: theme!.primaryColor,
+                                                color: theme.primaryColor,
                                                 width: 2),
                                         color: selected
-                                            ? theme!.primaryColor
+                                            ? theme.primaryColor
                                             : null,
                                       ),
                                       child: SizedBox(
@@ -298,7 +298,7 @@ class _MessageItemState extends BState<MessageItem> {
                           style: TextStyle(
                             fontWeight: fontWeight,
                             fontSize: 14.0,
-                            color: theme!.disabledColor,
+                            color: theme.disabledColor,
                           )),
                       subtitle: Padding(
                         padding: const EdgeInsets.only(top: 6.0),
@@ -325,7 +325,7 @@ class _MessageItemState extends BState<MessageItem> {
                                   style: TextStyle(
                                     fontWeight: fontWeight,
                                     fontSize: 16.0,
-                                    color: theme!.textTheme.titleLarge!.color,
+                                    color: theme.textTheme.titleLarge!.color,
                                   ),
                                 ),
                               ),
@@ -363,8 +363,8 @@ class _MessageItemState extends BState<MessageItem> {
                                   ),
                                   style: TextStyle(
                                     fontSize: 14.0,
-                                    color: theme!.disabledColor.withAlpha(
-                                        theme!.disabledColor.alpha ~/ 2),
+                                    color: theme.disabledColor.withAlpha(
+                                        theme.disabledColor.alpha ~/ 2),
                                   ),
                                 ),
                               ),
@@ -395,10 +395,10 @@ class _MessageItemState extends BState<MessageItem> {
                                         border: selected
                                             ? null
                                             : Border.all(
-                                                color: theme!.primaryColor,
+                                                color: theme.primaryColor,
                                                 width: 2),
                                         color: selected
-                                            ? theme!.primaryColor
+                                            ? theme.primaryColor
                                             : null,
                                       ),
                                       child: SizedBox(
@@ -459,7 +459,7 @@ class _MessageItemState extends BState<MessageItem> {
                     bottom: 0,
                     child: Container(
                       width: 4.0,
-                      color: theme!.primaryColor,
+                      color: theme.primaryColor,
                     ),
                   ),
                 ],

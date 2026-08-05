@@ -46,26 +46,24 @@ class _ComposeSubjectState extends BState<ComposeSubject> {
                 labelText: S.of(context).messages_subject,
                 focusNode: widget.focusNode,
                 onEditingComplete: widget.onNext,
-                suffixIcon: widget.onAttach != null
-                    ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.attachment),
-                            padding: EdgeInsets.zero,
-                            color: theme.primaryColor,
-                            onPressed: () => widget.onAttach(FileType.any),
-                          ),
-                          if (Platform.isIOS)
-                            IconButton(
-                              icon: Icon(Icons.perm_media),
-                              padding: EdgeInsets.zero,
-                              color: theme.primaryColor,
-                              onPressed: () => widget.onAttach(FileType.media),
-                            ),
-                        ],
-                      )
-                    : null,
+                suffixIcon: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.attachment),
+                      padding: EdgeInsets.zero,
+                      color: theme.primaryColor,
+                      onPressed: () => widget.onAttach(FileType.any),
+                    ),
+                    if (Platform.isIOS)
+                      IconButton(
+                        icon: Icon(Icons.perm_media),
+                        padding: EdgeInsets.zero,
+                        color: theme.primaryColor,
+                        onPressed: () => widget.onAttach(FileType.media),
+                      ),
+                  ],
+                ),
               ),
             ),
           ],

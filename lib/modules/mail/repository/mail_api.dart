@@ -347,7 +347,6 @@ class MailApi {
           final attachment = res["Result"]["Attachment"];
           final composeAttachment =
               ComposeAttachment.fromNetwork(attachment as Map);
-          assert(tempAttachment != null && tempAttachment.guid is String);
           composeAttachment.guid = tempAttachment.guid;
           composeAttachment.file = tempAttachment.file;
           onUploadEnd(composeAttachment);

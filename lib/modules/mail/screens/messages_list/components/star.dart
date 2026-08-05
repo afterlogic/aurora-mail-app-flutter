@@ -66,7 +66,7 @@ class _StarState extends BState<Star> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     // Define colors depending on the theme.
     final starActiveColor = AppColor.starActive;
-    final starInactiveColor = theme!.brightness == Brightness.light
+    final starInactiveColor = theme.brightness == Brightness.light
         ? AppColor.starInactiveLight
         : AppColor.starInactiveDark;
 
@@ -93,7 +93,7 @@ class _StarState extends BState<Star> with TickerProviderStateMixin {
             showSvg: BuildProperty.useCustomStarIcons,
             svgPath: '${BuildProperty.image_dir}/mail/star.svg',
             iconData: Icons.star_border,
-            color: widget.enabled ? starInactiveColor : theme!.disabledColor,
+            color: widget.enabled ? starInactiveColor : theme.disabledColor,
           ),
           onPressed: widget.enabled ? () => _setStarred(true) : null,
         ),

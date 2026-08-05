@@ -64,7 +64,7 @@ class _IdentitySelectorState extends BState<IdentitySelector> {
       child: Container(
         padding: widget.padding,
         decoration: BoxDecoration(
-          color: widget.enable! ? null : theme!.disabledColor.withAlpha(20),
+          color: widget.enable! ? null : theme.disabledColor.withAlpha(20),
         ),
         child: InkWell(
           onTap: widget.enable! ? focusNode.requestFocus : null,
@@ -76,7 +76,7 @@ class _IdentitySelectorState extends BState<IdentitySelector> {
             ),
             animationDuration: Duration.zero,
             suggestionsBoxDecoration: SuggestionsBoxDecoration(
-              color: theme!.cardColor,
+              color: theme.cardColor,
               constraints: BoxConstraints(
                 minWidth: dropDownWidth,
                 maxWidth: dropDownWidth,
@@ -108,7 +108,7 @@ class _IdentitySelectorState extends BState<IdentitySelector> {
                     padding: const EdgeInsets.symmetric(vertical: 0.0),
                     child: Text(
                       widget.label!,
-                      style: theme!.textTheme.titleMedium,
+                      style: theme.textTheme.titleMedium,
                     ),
                   ),
                   SizedBox(width: 8.0),

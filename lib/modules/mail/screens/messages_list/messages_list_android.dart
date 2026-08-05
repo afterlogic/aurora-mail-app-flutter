@@ -75,7 +75,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     selectionController.addListener(selectionCallback);
     _initBlocs();
     MessagesListAndroid.onShare = (files, text) {
-      if (files?.isNotEmpty == true || text?.isNotEmpty == true) {
+      if (files.isNotEmpty == true || text.isNotEmpty == true) {
         Navigator.pushNamed(
           context,
           ComposeRoute.name,
@@ -228,8 +228,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final isDraftMessage =
-          draftsFolder != null && message.folder == draftsFolder.fullNameRaw;
+      final isDraftMessage = message.folder == draftsFolder.fullNameRaw;
       final isNotesFolder = _selectedFolder!.folderType!.isNotes;
       if (isDraftMessage || isNotesFolder) {
         Navigator.pushNamed(

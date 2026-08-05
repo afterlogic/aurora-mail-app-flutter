@@ -41,7 +41,7 @@ class _MainDrawerState extends BState<MainDrawer> {
     return GradientDrawer(
       child: ListTileTheme(
         style: ListTileStyle.drawer,
-        selectedColor: theme!.primaryColor,
+        selectedColor: theme.primaryColor,
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,7 +61,7 @@ class _MainDrawerState extends BState<MainDrawer> {
                       children: <Widget>[
                         Text(
                           authBloc.currentAccount!.friendlyName,
-                          style: theme!.textTheme.titleLarge,
+                          style: theme.textTheme.titleLarge,
                         ),
                         SizedBox(height: 8.0),
                         Row(
@@ -90,7 +90,7 @@ class _MainDrawerState extends BState<MainDrawer> {
                     bloc: BlocProvider.of<MailBloc>(context),
                     listener: (BuildContext context, dynamic state) {
                       if (state is FoldersLoaded || state is FoldersError) {
-                        _refreshCompleter?.complete();
+                        _refreshCompleter.complete();
                         _refreshCompleter = new Completer();
                       }
                     },

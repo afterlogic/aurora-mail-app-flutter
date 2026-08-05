@@ -47,7 +47,7 @@ class FoldersLoaded extends MailState {
         selectedFolder ?? this.selectedFolder,
         filter ?? this.filter,
         postAction ?? this.postAction,
-        isProgress ?? this.isProgress,
+        isProgress,
       );
 }
 

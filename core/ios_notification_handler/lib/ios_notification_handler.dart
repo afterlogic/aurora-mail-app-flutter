@@ -23,7 +23,7 @@ class IosNotificationHandler {
   }
 
   static Future _finish(bool result) {
-    return _channel.invokeMethod("finish", [result ?? false]);
+    return _channel.invokeMethod("finish", [result]);
   }
 
   static onMessage(

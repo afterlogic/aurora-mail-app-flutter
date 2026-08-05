@@ -318,21 +318,13 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
                           );
                         }
                         if (state is DownloadFinished) {
-                          if (state.path == null) {
-                            _showSnack(
-                              S.of(context).messages_attachment_download_failed,
-                              context,
-                              isError: true,
-                            );
-                          } else {
-                            _showSnack(
-                              S
-                                  .of(context)
-                                  .messages_attachment_download_success(
-                                      state.path),
-                              context,
-                            );
-                          }
+                          _showSnack(
+                            S
+                                .of(context)
+                                .messages_attachment_download_success(
+                                    state.path),
+                            context,
+                          );
                         }
                       },
                       child: MessageWebView(

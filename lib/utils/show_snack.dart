@@ -30,7 +30,7 @@ void showSnack({
   SnackBarAction? action,
   bool isError = true,
 }) {
-  if (Theme.of(context) == null || scaffoldState == null) return;
+  if (scaffoldState == null) return;
   final theme = Theme.of(context);
 
   final snack = SnackBar(

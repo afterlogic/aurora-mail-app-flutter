@@ -132,7 +132,7 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
                       title: Text(
                           S.of(context).contacts_group_edit_is_organization),
                       value: _isOrg!,
-                      activeColor: theme!.primaryColor,
+                      activeColor: theme.primaryColor,
                       onChanged: (v) => setState(() => _isOrg = v),
                     ),
                     if (_isOrg!)

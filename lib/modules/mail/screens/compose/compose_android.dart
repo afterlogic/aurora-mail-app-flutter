@@ -849,7 +849,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 
   Future setIdentityOrSender(AliasOrIdentity aliasOrIdentity) async {
     await changeSignature(
-      AliasOrIdentity(alias, identity)?.signature ?? "",
+      AliasOrIdentity(alias, identity).signature ?? "",
       aliasOrIdentity.signature ?? "",
     );
     this.alias = aliasOrIdentity.alias;
@@ -1237,7 +1237,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       ),
     );
     if (result is Encrypted) {
-      if (!result.isKeyBase && result.contact.key == null) {
+      if (!result.isKeyBase) {
         final viewPasswordResult = await dialog(
           context: context,
           builder: (context) => BlocProvider.value(
@@ -1261,7 +1261,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       _attachments.clear();
       _ccEmails.clear();
       _bccEmails.clear();
-      _encryptType = result.contact.key != null
+      _encryptType = result.isKeyBase
           ? EncryptType.SelfDestructingEncrypt
           : EncryptType.SelfDestructing;
       setState(() {});

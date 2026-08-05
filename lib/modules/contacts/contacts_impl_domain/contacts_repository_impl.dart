@@ -40,7 +40,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
       moduleName: WebMailModules.contacts,
       hostname: user.hostname,
       token: user.token,
-      interceptor: DefaultApiInterceptor.get()!,
+      interceptor: DefaultApiInterceptor.get(),
     );
 
     _network = new ContactsNetworkService(module, user.serverId);

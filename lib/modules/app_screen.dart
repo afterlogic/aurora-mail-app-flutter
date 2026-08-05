@@ -91,7 +91,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
     });
     _initApp();
     ReceiveSharing.getInitialMedia().then((shared) {
-      if (shared == null || shared.isEmpty) return;
+      if (shared.isEmpty) return;
       final texts = <String>[];
       final files = <File>[];
       for (var value in shared) {
@@ -364,9 +364,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                                   l.languageCode == locale.languageCode;
                             });
 
-                            return supportedLocale ??
-                                locales.first ??
-                                Locale("en", "");
+                            return supportedLocale ?? locales.first;
                           },
                           locale: settingsState.language?.toLocale(),
                           initialRoute: authState.needsLogin

@@ -47,7 +47,7 @@ class AdvancedSearchState extends State<AdvancedSearch> {
         case SearchPattern.Has:
           withAttachment = (item as HasSearchParams)
                   .flags
-                  ?.contains(SearchFlag.Attachment) ==
+                  .contains(SearchFlag.Attachment) ==
               true;
           break;
         case SearchPattern.Date:

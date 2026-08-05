@@ -51,7 +51,7 @@ class _UserTileState extends BState<UserTile> {
           ? null
           : IconButton(
               icon: Icon(Icons.delete_outline),
-              color: theme!.iconTheme.color,
+              color: theme.iconTheme.color,
               tooltip: S.of(context).settings_accounts_delete,
               onPressed: _showDeleteDialog,
             ),
@@ -63,11 +63,7 @@ class _UserTileState extends BState<UserTile> {
 
   Widget? _buildLeading() {
     if (!widget.compact) {
-      if (widget.user.token == null) {
-        return Icon(Icons.error, color: theme!.disabledColor);
-      } else {
-        return Icon(Icons.account_circle);
-      }
+      return Icon(Icons.account_circle);
     } else {
       return null;
     }

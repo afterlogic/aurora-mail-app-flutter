@@ -236,7 +236,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
         if (public.isNotEmpty || keyProgress != null)
           Text(
             S.of(context).label_pgp_public_keys,
-            style: theme!.textTheme.titleLarge,
+            style: theme.textTheme.titleLarge,
           ),
         keysGroup(
           context,
@@ -247,7 +247,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
         if (private.isNotEmpty || keyProgress != null)
           Text(
             S.of(context).label_pgp_private_keys,
-            style: theme!.textTheme.titleLarge,
+            style: theme.textTheme.titleLarge,
           ),
         keysGroup(
           context,
@@ -260,7 +260,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
           if (contactPublic.isNotEmpty)
             Text(
               S.of(context).label_pgp_contact_public_keys,
-              style: theme!.textTheme.titleLarge,
+              style: theme.textTheme.titleLarge,
             ),
           keysGroup(
             context,

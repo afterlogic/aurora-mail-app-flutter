@@ -103,14 +103,13 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
         }
       } else if (item.pattern == SearchPattern.Has) {
         final flag = item as HasSearchParams;
-        if (flag.flags?.contains(SearchFlag.Attachment) == true) {
+        if (flag.flags.contains(SearchFlag.Attachment) == true) {
           query += "AND (${mail.hasAttachments.escapedName} = ?) ";
           params.add(
             Variable.withBool(true),
           );
         }
       } else if (item.pattern == SearchPattern.Default &&
-          searchTerm != null &&
           searchTerm.isNotEmpty) {
         query +=
             "AND (${mail.subject.escapedName} LIKE ? OR ${mail.toForSearch.escapedName} LIKE ? OR ${mail.fromForSearch.escapedName} LIKE ? OR ${mail.ccForSearch.escapedName} LIKE ? OR ${mail.bccForSearch.escapedName} LIKE ? OR ${mail.bodyForSearch.escapedName} LIKE ? OR ${mail.attachmentsForSearch.escapedName} LIKE ?) ";

@@ -70,7 +70,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
   SimpleSelectStatement<$ContactsTableTable, ContactDb> _search(
       SimpleSelectStatement<$ContactsTableTable, ContactDb> select,
       String search) {
-    if (search?.isNotEmpty == true) {
+    if (search.isNotEmpty == true) {
       return select
         ..where((c) =>
             c.viewEmail.like("%$search%") |

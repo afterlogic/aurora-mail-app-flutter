@@ -136,7 +136,6 @@ class BackgroundSync {
           (await _updateFolderHash(inboxFolders, user, account, interceptor!))!
               .toList();
 
-      if (account == null) continue;
       final folderGuidToUpdateMessage = {
         MailBloc.selectedFolderGuid,
         ...inboxFolders
@@ -257,7 +256,6 @@ class BackgroundSync {
   ) async {
     final newMessages = <Account, List<Message>>{};
     for (var account in accounts) {
-      if (account == null) continue;
       final inboxFolders = await _foldersDao.getByType(
           [Folder.getNumberFromFolderType(FolderType.inbox)], account.localId);
       if (inboxFolders.isEmpty) continue;

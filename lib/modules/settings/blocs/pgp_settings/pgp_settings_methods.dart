@@ -58,7 +58,7 @@ class PgpSettingsMethods {
   Future<File> downloadKey(PgpKey key) async {
     try {
       final fileName =
-          "${((key.name!.startsWith(" ") ? key.name!.substring(1) : key.name)! + " ") ?? ""}${key.mail} PGP ${key.isPrivate ? "private" : "public"} key.asc"
+          "${(key.name!.startsWith(" ") ? key.name!.substring(1) : key.name)! + " "}${key.mail} PGP ${key.isPrivate ? "private" : "public"} key.asc"
               .replaceAll(Platform.pathSeparator, "");
       return await _saveToDownloads(fileName, key.key);
     } catch (err) {
@@ -80,7 +80,7 @@ class PgpSettingsMethods {
 
   shareKey(PgpKey key, Rect rect) {
     final title =
-        "${(key.name! + " ") ?? ""}${key.mail} PGP ${key.isPrivate ? "private" : "public"} key.asc";
+        "${key.name! + " "}${key.mail} PGP ${key.isPrivate ? "private" : "public"} key.asc";
     _shareFile(
       title,
       key.key,
@@ -121,7 +121,7 @@ class PgpSettingsMethods {
     for (var key in keys) {
       final contact = await contactsRepository.getContactByEmail(key.mail);
       map[PgpKeyWithContact(key, contact)] =
-          (contact?.pgpPublicKey?.length ?? 0) <= 10 ? true : null;
+          (contact.pgpPublicKey?.length ?? 0) <= 10 ? true : null;
     }
     return map;
   }
@@ -201,11 +201,7 @@ class PgpSettingsMethods {
     try {
       final contacts = <Contact>[];
       for (var value in selectedContact) {
-        Contact contact = value?.contact ??
-            Contact.empty(
-              viewEmail: value.pgpKey.mail,
-              fullName: value.pgpKey.name,
-            );
+        Contact contact = value.contact;
         contacts.add(
           contact.copyWith(pgpPublicKey: () => value.key),
         );

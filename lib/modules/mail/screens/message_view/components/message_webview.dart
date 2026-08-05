@@ -186,7 +186,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     }
     theme = Theme.of(context);
     _mailBloc = BlocProvider.of(context);
-    _controller.setBackgroundColor(theme!.scaffoldBackgroundColor);
+    _controller.setBackgroundColor(theme.scaffoldBackgroundColor);
     _getHtmlWithImages();
   }
 
@@ -195,7 +195,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.decrypted != widget.decrypted ||
         oldWidget.message != widget.message) {
-      _controller.setBackgroundColor(theme!.scaffoldBackgroundColor);
+      _controller.setBackgroundColor(theme.scaffoldBackgroundColor);
       _getHtmlWithImages();
       setState(() {});
     }
@@ -218,7 +218,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     if (widget.decrypted != null) {
       htmlData = widget.decrypted;
       _htmlData = htmlData;
-      _controller?.loadRequest(Uri.parse(_getHtmlUri(htmlData)));
+      _controller.loadRequest(Uri.parse(_getHtmlUri(htmlData)));
       if (mounted) setState(() {});
 
       return;
@@ -245,7 +245,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     }
 
     if (_htmlData != null) {
-      _controller?.loadRequest(Uri.parse(_getHtmlUri(htmlData)));
+      _controller.loadRequest(Uri.parse(_getHtmlUri(htmlData)));
     }
     if (mounted) setState(() => _htmlData = htmlData);
   }
@@ -313,7 +313,7 @@ class MessageWebViewState extends BState<MessageWebView> {
         msg: msg,
         timeInSecForIosWeb: 2,
         backgroundColor:
-            Platform.isIOS ? theme!.disabledColor.withOpacity(0.5) : null,
+            Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
       );
 
       BlocProvider.of<MessageViewBloc>(context).downloadAttachment(
@@ -365,7 +365,7 @@ class MessageWebViewState extends BState<MessageWebView> {
         msg: msg,
         timeInSecForIosWeb: 2,
         backgroundColor:
-            Platform.isIOS ? theme!.disabledColor.withOpacity(0.5) : null,
+            Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
       );
     }
   }
@@ -477,7 +477,7 @@ class MessageWebViewState extends BState<MessageWebView> {
                   child: AnimatedOpacity(
                     opacity: _pageLoaded && _htmlData != null ? 0.0 : 1.0,
                     duration: Duration(milliseconds: 100),
-                    child: Container(color: theme!.scaffoldBackgroundColor),
+                    child: Container(color: theme.scaffoldBackgroundColor),
                   ),
                 ),
               ),

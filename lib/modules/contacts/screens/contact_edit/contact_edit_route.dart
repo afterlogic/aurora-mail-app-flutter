@@ -13,6 +13,5 @@ class ContactEditScreenArgs {
   final PgpSettingsBloc? pgpSettingsBloc;
 
   const ContactEditScreenArgs(this.pgpSettingsBloc,
-      {this.contact, required this.bloc})
-      : assert(bloc != null);
+      {this.contact, required this.bloc});
 }

@@ -32,7 +32,7 @@ class ComposeMethods {
     _mailApi = new MailApi(
       user: user,
       account: account,
-      interceptor: DefaultApiInterceptor.get()!,
+      interceptor: DefaultApiInterceptor.get(),
     );
   }
 
@@ -117,8 +117,6 @@ class ComposeMethods {
     required Function(ComposeAttachment) onUploadEnd,
     required Function(dynamic) onError,
   }) async {
-    if (file == null) return null;
-
     await _mailApi.uploadAttachment(file,
         onUploadStart: onUploadStart,
         onUploadEnd: onUploadEnd,

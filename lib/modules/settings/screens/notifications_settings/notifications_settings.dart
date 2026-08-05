@@ -80,7 +80,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                             children: <Widget>[
                               Text(
                                 'FB token',
-                                style: theme!.textTheme.titleMedium,
+                                style: theme.textTheme.titleMedium,
                               ),
                               Expanded(
                                 child: Text(
@@ -119,7 +119,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                             children: <Widget>[
                               Text(
                                 S.of(context).label_device_identifier,
-                                style: theme!.textTheme.titleMedium,
+                                style: theme.textTheme.titleMedium,
                               ),
                               Expanded(
                                 child: Text(
@@ -153,7 +153,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                         ),
                         ListTile(
                           title: Text(S.of(context).label_token_storing_status,
-                              style: theme!.textTheme.titleMedium),
+                              style: theme.textTheme.titleMedium),
                           trailing: Text(tokenStatus != null
                               ? tokenStatus
                                   ? S.of(context).label_token_successful

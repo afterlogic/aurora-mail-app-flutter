@@ -28,7 +28,7 @@ class ContactsStorage {
     this.isShared,
     this.accessCode,
     required this.contactsInfo,
-  }) : assert(userLocalId != null);
+  });
 
   ContactsStorage copyWith({
     int? sqliteId,
@@ -43,7 +43,7 @@ class ContactsStorage {
     return new ContactsStorage(
       sqliteId: sqliteId ?? this.sqliteId,
       id: id ?? this.id,
-      userLocalId: userLocalId ?? this.userLocalId,
+      userLocalId: this.userLocalId,
       name: name ?? this.name,
       uniqueName: uniqueName ?? this.uniqueName,
       cTag: cTag ?? this.cTag,
@@ -72,7 +72,7 @@ class ContactInfoItem {
     required this.eTag,
     this.hasBody = false,
     this.needsUpdate = false,
-  }) : assert(storage != null);
+  });
 
   Map<String, dynamic> toMap() {
     return {

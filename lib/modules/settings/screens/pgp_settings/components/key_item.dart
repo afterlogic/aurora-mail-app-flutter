@@ -24,10 +24,10 @@ class KeyItem extends StatefulWidget {
 class _KeyItemState extends BState<KeyItem> {
   @override
   Widget build(BuildContext context) {
-    var textTheme = theme!.textTheme;
+    var textTheme = theme.textTheme;
 
     final length =
-        widget.pgpKey.key.length != null ? "${widget.pgpKey.length}" : "";
+        widget.pgpKey.length != null ? "${widget.pgpKey.length}" : "";
     final type = widget.pgpKey.isPrivate ? "private" : "public";
     final external = widget.external == true ? " (external)" : "";
     final description = "($length-bit, $type)$external";

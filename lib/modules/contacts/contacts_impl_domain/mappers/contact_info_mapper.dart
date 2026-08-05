@@ -3,7 +3,6 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_sto
 class ContactInfoMapper {
   static List<ContactInfoItem> allFromNetwork(
       Map<String, dynamic> info, String storage) {
-    assert(storage != null);
     final converted = info["Info"].map((i) {
       return ContactInfoItem(
         uuid: i["UUID"] as String,

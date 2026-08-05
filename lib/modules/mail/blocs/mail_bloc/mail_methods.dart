@@ -44,12 +44,12 @@ class MailMethods {
     _foldersApi = new FoldersApi(
       user: user,
       account: account,
-      interceptor: DefaultApiInterceptor.get()!,
+      interceptor: DefaultApiInterceptor.get(),
     );
     _mailApi = new MailApi(
       user: user,
       account: account,
-      interceptor: DefaultApiInterceptor.get()!,
+      interceptor: DefaultApiInterceptor.get(),
     );
   }
 
@@ -264,10 +264,8 @@ class MailMethods {
     bool forceUpdateMessagesInfo = false,
   }) async {
     logger.log("method syncFolders");
-    if (_isOffline || user == null) return null;
+    if (_isOffline) return null;
 
-    // either localId or syncSystemFolders must be provided
-    assert(guid != null || syncSystemFolders != null);
     var localFolders = <LocalFolder>[];
     if (syncSystemFolders == true) {
       localFolders = await _foldersDao.getByType([
@@ -286,10 +284,8 @@ class MailMethods {
       }
     });
 
-    if (guid != null) {
-      if (syncQueue.contains(guid)) syncQueue.remove(guid);
-      syncQueue.insert(0, guid);
-    }
+    if (syncQueue.contains(guid)) syncQueue.remove(guid);
+    syncQueue.insert(0, guid);
     if (syncQueue.isNotEmpty && queueLengthBeforeInsert == 0) {
       try {
         await _setMessagesInfoToFolder(
@@ -312,7 +308,7 @@ class MailMethods {
   }) async {
     logger.log(
         "method _setMessagesInfoToFolder(guid:$guid forceSync:$forceSync)");
-    if (_isOffline || user == null) return null;
+    if (_isOffline) return null;
     if (syncQueue.isEmpty) {
       return;
     }
@@ -391,11 +387,6 @@ class MailMethods {
       newMessagesInfo,
     );
 
-    if (newMessagesInfo == null) {
-      logger.log(
-          "Attention! messagesInfo is null, perhaps another folder was selected while messages info was being retrieved.");
-      return _setMessagesInfoToFolder();
-    }
     final messages = await _getMessageInfoWithNotBody(newMessagesInfo);
     currentFolderUpdate = folderToUpdate.fullNameRaw;
 
@@ -425,7 +416,7 @@ class MailMethods {
       folderMessageCount,
       folderMessageCount - messagesForUpdate.length,
     );
-    if (_closed || _isOffline || user == null) {
+    if (_closed || _isOffline) {
       updateMessageCounter!.empty();
       return;
     }

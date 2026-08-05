@@ -232,7 +232,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final accounts = await _methods.getAccounts(user);
       _methods.setFbToken(users);
       if (accounts.isNotEmpty) {
-        assert(accounts[0] != null);
         this.accounts = accounts;
         currentAccount = accounts[0];
         await _methods.updateAliases(currentUser!, currentAccount);
@@ -394,7 +393,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         moduleName: WebMailModules.core,
         hostname: user.hostname,
         token: user.token,
-        interceptor: DefaultApiInterceptor.get()!);
+        interceptor: DefaultApiInterceptor.get());
 
     final settingsNetwork = SettingsNetwork(settingsModule: apiModule);
     AppData settings;

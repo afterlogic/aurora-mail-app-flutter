@@ -140,10 +140,9 @@ Future<bool> onAlarm({
   final isDebug = await DebugLocalStorage().getBackgroundRecord();
   final interceptor = DefaultApiInterceptor.get();
   Logger isolatedLogger = logger;
-  recordLog ??= true;
   if (recordLog && isDebug) {
     isolatedLogger =
-        Logger.backgroundSync(LoggerInterceptorAdapter(interceptor!));
+        Logger.backgroundSync(LoggerInterceptorAdapter(interceptor));
     isolatedLogger.start();
   }
   final isBackground = isBackgroundForce ?? BackgroundHelper.isBackground;
@@ -194,7 +193,7 @@ Future<bool> onAlarm({
   }
   BackgroundHelper.onEndAlarm(hasUpdate);
   if (recordLog && isDebug) {
-    isolatedLogger?.save();
+    isolatedLogger.save();
   }
   // TEMP: delay to keep the foreground sync notification visible long enough
   // to capture on video for the Play Console FOREGROUND_SERVICE_DATA_SYNC demo.

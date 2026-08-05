@@ -53,12 +53,8 @@ class _AboutAndroidState extends BState<AboutAndroid> {
   Future _initAppInfo() async {
     setState(() => loading = true);
     final packageInfo = await PackageInfo.fromPlatform();
-    if (packageInfo.version != null && packageInfo.buildNumber != null) {
-      _version = "${packageInfo.version}+${packageInfo.buildNumber}";
-    } else {
-      _version = '${BuildProperty.version} + ${BuildProperty.build}';
-    }
-    _appName = packageInfo.appName ?? BuildProperty.appName;
+    _version = "${packageInfo.version}+${packageInfo.buildNumber}";
+    _appName = packageInfo.appName;
     setState(() => loading = false);
   }
 

@@ -1,6 +1,6 @@
-extension StringExtension on String {
+extension StringExtension on String? {
   bool get isNullOrEmpty {
-    return this == null || this.isEmpty;
+    return this == null || this!.isEmpty;
   }
 }
 

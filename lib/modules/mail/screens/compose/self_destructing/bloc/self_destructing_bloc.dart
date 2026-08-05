@@ -68,7 +68,7 @@ class SelfDestructingBloc
       pgpPublicKey: null,
     );
 
-    final key = (await _cryptoStorage.getPgpKey(email, false))!;
+    final key = await _cryptoStorage.getPgpKey(email, false);
 
     return ContactWithKey(contact, key);
   }
@@ -76,7 +76,7 @@ class SelfDestructingBloc
   Stream<SelfDestructingState> _loadKey(LoadKey event) async* {
     final identityView = IdentityView.fromString(event.contact);
     final contacts = await _loadContacts(identityView);
-    final key = (await _cryptoStorage.getPgpKey(aliasOrIdentity.mail!, true))!;
+    final key = await _cryptoStorage.getPgpKey(aliasOrIdentity.mail!, true);
     final sender = Contact(
       viewEmail: aliasOrIdentity.mail,
       fullName: aliasOrIdentity.name,
@@ -148,7 +148,7 @@ class SelfDestructingBloc
     }
 
     message = message.replaceFirst("{link}", link);
-    if (event.contact.key != null) {
+    if (event.isKeyBased) {
       try {
         message = message.replaceFirst("{password}", password);
         message = await _pgpEncrypt(

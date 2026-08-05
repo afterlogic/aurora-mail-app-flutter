@@ -77,7 +77,7 @@ class AuthMethods {
       hostname = autoDiscoveredHost;
     }
     //manually entered host has priority
-    if (manuallyEnteredHost != null && manuallyEnteredHost.isNotEmpty) {
+    if (manuallyEnteredHost.isNotEmpty) {
       hostname = manuallyEnteredHost;
     }
     if (hostname.isEmpty) {
@@ -144,8 +144,7 @@ class AuthMethods {
     } catch (e) {}
     final futures = [
       deleteUserRelatedData(user),
-      if (_cryptoStorage != null && user.localId == currentUserId)
-        _cryptoStorage.deleteAll(),
+      if (user.localId == currentUserId) _cryptoStorage.deleteAll(),
       if (user.localId == currentUserId) _authLocal.deleteSelectedUserLocalId(),
       if (user.localId == currentUserId) _authLocal.deleteSelectedAccountId(),
       _usersDao.deleteUser(user.localId!),

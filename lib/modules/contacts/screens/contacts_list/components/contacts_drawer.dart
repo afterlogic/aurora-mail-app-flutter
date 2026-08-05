@@ -51,7 +51,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
         backgroundColor: Colors.white,
         color: Colors.black,
         child: ListTileTheme(
-          selectedColor: theme!.primaryColor,
+          selectedColor: theme.primaryColor,
           style: ListTileStyle.drawer,
           child: SafeArea(
             child: BlocBuilder<ContactsBloc, ContactsState>(
@@ -62,7 +62,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
                       S.of(context).contacts_drawer_section_storages,
-                      style: TextStyle(color: theme!.primaryColor),
+                      style: TextStyle(color: theme.primaryColor),
                     ),
                   ),
                   _buildStorages(context, state),
@@ -74,14 +74,14 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
                       children: <Widget>[
                         Text(
                           S.of(context).contacts_drawer_section_groups,
-                          style: TextStyle(color: theme!.primaryColor),
+                          style: TextStyle(color: theme.primaryColor),
                         ),
                         IconButton(
                           icon: AdaptiveDrawerIcon(
                             defaultIcon: Icons.add,
                             iconName: 'add',
                             folder: 'contacts',
-                            color: theme!.primaryColor,
+                            color: theme.primaryColor,
                           ),
                           onPressed: _addGroup,
                         ),

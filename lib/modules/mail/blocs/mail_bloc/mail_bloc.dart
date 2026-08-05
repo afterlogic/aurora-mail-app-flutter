@@ -23,7 +23,6 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     required User user,
     Account? account,
   }) : super(FoldersEmpty()) {
-    assert(user != null);
     init(user, account);
     BackgroundHelper.addOnEndAlarmObserver(true, onEndAlarm);
   }

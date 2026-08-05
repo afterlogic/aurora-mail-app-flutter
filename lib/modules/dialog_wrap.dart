@@ -144,7 +144,7 @@ class RouteWrapState extends State<RouteWrap> {
         S.of(context).btn_discard,
       );
 
-      return result ?? false;
+      return result;
     }
 
     return true;

@@ -96,7 +96,7 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                         Text(
                           S.of(context).fido_error_title,
                           textAlign: TextAlign.center,
-                          style: theme!.textTheme.titleLarge!
+                          style: theme.textTheme.titleLarge!
                               .copyWith(color: AppTheme.loginTextColor),
                         ),
                         SizedBox(height: 10),

@@ -17,7 +17,7 @@ class MessagesListMethods {
     _mailApi = new MailApi(
       user: user,
       account: account,
-      interceptor: DefaultApiInterceptor.get()!,
+      interceptor: DefaultApiInterceptor.get(),
     );
   }
 

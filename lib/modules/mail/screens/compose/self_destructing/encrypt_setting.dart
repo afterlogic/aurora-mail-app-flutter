@@ -70,7 +70,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                             S
                                 .of(context)
                                 .hint_self_destructing_supports_plain_text_only,
-                            style: theme!.textTheme.bodySmall,
+                            style: theme.textTheme.bodySmall,
                           ),
                           SizedBox(height: 20),
                           ContactWithKeyWidget(contact),
@@ -83,7 +83,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                                 : S
                                     .of(context)
                                     .hint_self_destructing_encrypt_with_not_key,
-                            style: theme!.textTheme.bodySmall,
+                            style: theme.textTheme.bodySmall,
                           ),
                           SizedBox(height: 10),
                           DropdownButtonFormField<LifeTime>(
@@ -143,7 +143,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                                 : S
                                     .of(context)
                                     .label_self_destructing_password_based_encryption_used,
-                            style: theme!.textTheme.bodySmall,
+                            style: theme.textTheme.bodySmall,
                           ),
                           SizedBox(height: 10),
                           SwitchListTile(
@@ -191,7 +191,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                                 : S
                                     .of(context)
                                     .label_self_destructing_not_sign_data,
-                            style: theme!.textTheme.bodySmall,
+                            style: theme.textTheme.bodySmall,
                           ),
                         ],
                       ),

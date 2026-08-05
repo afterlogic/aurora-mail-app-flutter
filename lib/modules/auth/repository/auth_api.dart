@@ -54,7 +54,7 @@ class AuthApi {
     final coreModuleForLogin = WebMailApi(
       moduleName: WebMailModules.core,
       hostname: hostname,
-      interceptor: DefaultApiInterceptor.get()!,
+      interceptor: DefaultApiInterceptor.get(),
     );
 
     final parameters =
@@ -127,7 +127,7 @@ class AuthApi {
       moduleName: WebMailModules.core,
       hostname: user.hostname,
       token: user.token,
-      interceptor: DefaultApiInterceptor.get()!,
+      interceptor: DefaultApiInterceptor.get(),
     );
 
     final body = WebMailApiBody(module: "Core", method: "Logout");
@@ -147,7 +147,7 @@ class AuthApi {
       moduleName: WebMailModules.mail,
       hostname: user.hostname,
       token: user.token,
-      interceptor: DefaultApiInterceptor.get()!,
+      interceptor: DefaultApiInterceptor.get(),
     );
 
     final parameters = json.encode({"UserId": user.serverId});
@@ -177,7 +177,7 @@ class AuthApi {
     final twoFactorModule = WebMailApi(
       moduleName: WebMailModules.twoFactorAuth,
       hostname: hostname,
-      interceptor: DefaultApiInterceptor.get()!,
+      interceptor: DefaultApiInterceptor.get(),
     );
     final parameters = json.encode({
       "Code": pin,
@@ -215,7 +215,7 @@ class AuthApi {
       moduleName: WebMailModules.mail,
       hostname: user.hostname,
       token: user.token,
-      interceptor: DefaultApiInterceptor.get()!,
+      interceptor: DefaultApiInterceptor.get(),
     );
 
     final request = WebMailApiBody(method: "GetIdentities");
@@ -241,7 +241,7 @@ class AuthApi {
       moduleName: "CpanelIntegrator",
       hostname: user.hostname,
       token: user.token,
-      interceptor: DefaultApiInterceptor.get()!,
+      interceptor: DefaultApiInterceptor.get(),
     );
 
     final request = WebMailApiBody(method: "GetAliases");
@@ -282,7 +282,7 @@ class AuthApi {
         final webMailApi = WebMailApi(
           moduleName: WebMailModules.core,
           hostname: entry.key,
-          interceptor: DefaultApiInterceptor.get()!,
+          interceptor: DefaultApiInterceptor.get(),
         );
         final parameters = json.encode({
           "Users": entry.value
@@ -320,7 +320,7 @@ class AuthApi {
     final mailModule = WebMailApi(
       moduleName: "TwoFactorAuth",
       hostname: host,
-      interceptor: DefaultApiInterceptor.get()!,
+      interceptor: DefaultApiInterceptor.get(),
     );
 
     final request = WebMailApiBody(
@@ -360,7 +360,7 @@ class AuthApi {
     final mailModule = WebMailApi(
       moduleName: "TwoFactorAuth",
       hostname: host,
-      interceptor: DefaultApiInterceptor.get()!,
+      interceptor: DefaultApiInterceptor.get(),
     );
 
     final request = WebMailApiBody(
@@ -400,7 +400,7 @@ class AuthApi {
     final twoFactorModule = WebMailApi(
       moduleName: WebMailModules.twoFactorAuth,
       hostname: hostname,
-      interceptor: DefaultApiInterceptor.get()!,
+      interceptor: DefaultApiInterceptor.get(),
     );
     final parameters = json.encode({
       "BackupCode": code,
@@ -443,7 +443,7 @@ class AuthApi {
       moduleName: WebMailModules.twoFactorAuth,
       hostname: hostname,
       token: token,
-      interceptor: DefaultApiInterceptor.get()!,
+      interceptor: DefaultApiInterceptor.get(),
     );
     final parameters = json.encode({
       "DeviceId": deviceId,
@@ -473,7 +473,7 @@ class AuthApi {
       moduleName: WebMailModules.twoFactorAuth,
       hostname: hostname,
       token: token,
-      interceptor: DefaultApiInterceptor.get()!,
+      interceptor: DefaultApiInterceptor.get(),
     );
     final parameters = json.encode({
       "DeviceId": deviceId,
@@ -494,7 +494,7 @@ class AuthApi {
     final twoFactorModule = WebMailApi(
       moduleName: WebMailModules.twoFactorAuth,
       hostname: hostname,
-      interceptor: DefaultApiInterceptor.get()!,
+      interceptor: DefaultApiInterceptor.get(),
     );
     final body = WebMailApiBody(method: "GetSettings");
 

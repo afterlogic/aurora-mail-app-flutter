@@ -58,7 +58,7 @@ class ToastWidgetState extends State<ToastWidget>
       animation: _animation,
       builder: (context, child) {
         final value = _animation.value;
-        if (value == null || _toast == null) {
+        if (_toast == null) {
           return SizedBox(
             height: 20,
           );

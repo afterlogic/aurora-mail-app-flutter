@@ -43,8 +43,8 @@ class _MessageCounterWidgetState extends State<MessageCounterWidget> {
   Widget build(BuildContext context) {
     final messageCounter = widget.messageCounter;
     if (_enableCounter == true &&
-        messageCounter?.folder != null &&
-        messageCounter?.folder?.fullNameHash == widget?.folder?.fullNameHash) {
+        messageCounter.folder != null &&
+        messageCounter.folder?.fullNameHash == widget.folder?.fullNameHash) {
       return Container(
         padding: EdgeInsets.all(5),
         child: Text("${messageCounter.current}/${messageCounter.total}"),

@@ -161,7 +161,7 @@ class ComposeEmailsState extends BState<ComposeEmails> {
     final dropDownWidth = screenWidth / 1.25;
 
     TextSpan _searchMatch(String? match) {
-      final color = theme!.textTheme.bodyMedium!.color;
+      final color = theme.textTheme.bodyMedium!.color;
       final posRes = TextStyle(fontWeight: FontWeight.w700, color: color);
       final negRes = TextStyle(fontWeight: FontWeight.w400, color: color);
 
@@ -243,7 +243,7 @@ class ComposeEmailsState extends BState<ComposeEmails> {
     return Container(
       padding: widget.padding,
       decoration: BoxDecoration(
-        color: widget.enable ? null : theme!.disabledColor.withAlpha(20),
+        color: widget.enable ? null : theme.disabledColor.withAlpha(20),
       ),
       child: GestureDetector(
         onLongPress: widget.enable ? _paste : null,
@@ -257,7 +257,7 @@ class ComposeEmailsState extends BState<ComposeEmails> {
           ),
           animationDuration: Duration.zero,
           suggestionsBoxDecoration: SuggestionsBoxDecoration(
-            color: theme!.cardColor,
+            color: theme.cardColor,
             constraints: BoxConstraints(
               minWidth: dropDownWidth,
               maxWidth: dropDownWidth,
@@ -317,7 +317,7 @@ class ComposeEmailsState extends BState<ComposeEmails> {
                                 : null,
                             child: Chip(
                               avatar: CircleAvatar(
-                                backgroundColor: theme!.primaryColor,
+                                backgroundColor: theme.primaryColor,
                                 child: Text(
                                   displayName[0],
                                   style:

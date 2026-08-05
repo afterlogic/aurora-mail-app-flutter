@@ -34,7 +34,7 @@ class DeviceIdStorage {
       final androidInfo = await _deviceInfo.androidInfo;
       final sdkVersion = androidInfo.version.sdkInt;
       // for Android 10 or high
-      if (sdkVersion != null && sdkVersion >= 29) {
+      if (sdkVersion >= 29) {
         return true;
       }
     }

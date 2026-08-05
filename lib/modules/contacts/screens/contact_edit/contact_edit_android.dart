@@ -483,7 +483,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                                           S
                                               .of(context)
                                               .hint_auto_encrypt_messages,
-                                          theme!.textTheme.titleMedium),
+                                          theme.textTheme.titleMedium),
                                       ContactCheckBox(
                                         S.of(context).label_pgp_sign,
                                         autoSign,

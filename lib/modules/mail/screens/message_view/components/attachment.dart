@@ -36,7 +36,7 @@ class _AttachmentState extends BState<Attachment> {
         msg: S.of(context).messages_attachment_downloading(widget.attachment.fileName!),
         timeInSecForIosWeb: 2,
         backgroundColor:
-            Platform.isIOS ? theme!.disabledColor.withOpacity(0.5) : null,
+            Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
       );
     }
 
@@ -72,7 +72,7 @@ class _AttachmentState extends BState<Attachment> {
                   return SizedBox(
                     height: 3.0,
                     child: LinearProgressIndicator(
-                      backgroundColor: theme!.disabledColor.withOpacity(0.1),
+                      backgroundColor: theme.disabledColor.withOpacity(0.1),
                       value:
                           snapshot.connectionState == ConnectionState.active &&
                                   snapshot.hasData

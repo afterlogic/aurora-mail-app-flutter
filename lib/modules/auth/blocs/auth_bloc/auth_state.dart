@@ -31,7 +31,7 @@ class InitializedUserAndAccounts extends AuthState {
     required this.accounts,
     required this.account,
     this.identity,
-  }) : assert(needsLogin != null);
+  });
 
   @override
   List<Object?> get props =>

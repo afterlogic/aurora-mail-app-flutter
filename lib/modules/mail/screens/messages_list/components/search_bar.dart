@@ -39,7 +39,7 @@ class SearchBarState extends BState<SearchBar> {
 
   void _getMessages(String val) {
     if (debounce?.isActive == true) debounce!.cancel();
-    debounce = Timer(Duration(milliseconds: val == null ? 0 : 500), () {
+    debounce = Timer(Duration(milliseconds: 500), () {
       widget.onSearch(val);
     });
   }

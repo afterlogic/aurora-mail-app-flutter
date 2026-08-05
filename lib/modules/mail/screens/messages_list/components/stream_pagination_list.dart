@@ -64,7 +64,7 @@ class _StreamPaginationListState extends State<StreamPaginationList> {
   Widget build(BuildContext context) {
     final threads = <Message>[];
     for (var part in parts.values) {
-      if (part?.items != null) {
+      if (part.items != null) {
         threads.addAll(part.threads!);
       }
     }

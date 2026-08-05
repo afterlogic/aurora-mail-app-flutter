@@ -131,7 +131,7 @@ class MailUtils {
     final names =
         sender["@Collection"].map((t) => t["DisplayName"]) as Iterable;
     final nameList = List<String>.from(names);
-    if (nameList.isEmpty || nameList[0] == null || nameList[0].isEmpty) {
+    if (nameList.isEmpty || nameList[0].isEmpty) {
       final emails = sender["@Collection"].map((t) => t["Email"]) as Iterable;
       final emailList = List<String>.from(emails);
       return emailList[0];
@@ -205,9 +205,7 @@ class MailUtils {
                   caseSensitive: false))
               .allMatches(partUpper)
               .toList();
-          if (matches != null &&
-              matches.isNotEmpty &&
-              matches[0].groupCount == 2) {
+          if (matches.isNotEmpty && matches[0].groupCount == 2) {
             final match = matches[0];
             re = rePrefixes.contains(match.group(1)!.toUpperCase());
             fwd = fwdPrefixes.contains(match.group(1)!.toUpperCase());

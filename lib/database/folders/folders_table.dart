@@ -321,8 +321,7 @@ class FoldersDiffCalcResult {
   FoldersDiffCalcResult(
       {required this.updatedFolders,
       required this.addedFolders,
-      required this.deletedFolders})
-      : assert(addedFolders != null, deletedFolders != null);
+      required this.deletedFolders});
 }
 
 class MessagesInfoDiffCalcResult {
@@ -335,10 +334,7 @@ class MessagesInfoDiffCalcResult {
       {required this.updatedInfo,
       required this.removedUids,
       required this.infosToUpdateFlags,
-      required this.addedMessages})
-      : assert(updatedInfo != null &&
-            removedUids != null &&
-            infosToUpdateFlags != null);
+      required this.addedMessages});
 }
 
 class FolderMessageInfo {

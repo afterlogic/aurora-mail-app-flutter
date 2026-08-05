@@ -42,7 +42,7 @@ class KeyInputState extends State<KeyInput> {
       return ListTile(
         leading: Icon(Icons.vpn_key),
         title: Text(pgpKey!.formatName() +
-            "\n${pgpKey!.key.length != null ? "(${pgpKey!.length}-bit," : "("} ${pgpKey!.isPrivate ? "private" : "public"})"),
+            "\n${pgpKey!.length != null ? "(${pgpKey!.length}-bit," : "("} ${pgpKey!.isPrivate ? "private" : "public"})"),
         trailing: Icon(
           Icons.arrow_forward_ios,
           size: 20,

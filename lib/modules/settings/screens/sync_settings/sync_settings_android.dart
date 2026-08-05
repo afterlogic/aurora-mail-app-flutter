@@ -46,9 +46,9 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
 
   // Custom trailing arrow for sync settings
   Widget _buildTrailingArrow() {
-    Color arrowColor = theme!.primaryColor;
+    Color arrowColor = theme.primaryColor;
     if (BuildProperty.useCustomSettingsColors) {
-      final isDarkTheme = theme!.brightness == Brightness.dark;
+      final isDarkTheme = theme.brightness == Brightness.dark;
       arrowColor = isDarkTheme
           ? AppColor.settingsArrowDark
           : AppColor.settingsArrowLight;
@@ -67,9 +67,9 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
   @override
   Widget build(BuildContext context) {
     final isTablet = LayoutConfig.of(context).isTablet;
-    final iconBG = theme!.brightness == Brightness.dark
-        ? theme!.colorScheme.onPrimary.withOpacity(0.20)
-        : theme!.colorScheme.primary.withOpacity(0.08);
+    final iconBG = theme.brightness == Brightness.dark
+        ? theme.colorScheme.onPrimary.withOpacity(0.20)
+        : theme.colorScheme.primary.withOpacity(0.08);
     return Scaffold(
       appBar: isTablet
           ? null
@@ -105,7 +105,7 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
                             defaultIcon: Icons.av_timer,
                             iconName: 'sync-frequency',
                             iconFolder: 'sync',
-                            color: theme!.primaryColor,
+                            color: theme.primaryColor,
                             background: iconBG,
                           ),
                           title: Text(S.of(context).settings_sync_frequency),
@@ -114,7 +114,7 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
                             children: [
                               Text(
                                 SyncFreq.freqToString(context, freq)!,
-                                style: theme!.textTheme.bodySmall,
+                                style: theme.textTheme.bodySmall,
                               ),
                               SizedBox(width: 8),
                               _buildTrailingArrow(),
@@ -128,7 +128,7 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
                           defaultIcon: MdiIcons.calendarSync,
                           iconName: 'sync-period',
                           iconFolder: 'sync',
-                          color: theme!.primaryColor,
+                          color: theme.primaryColor,
                           background: iconBG,
                         ),
                         title: Text(S.of(context).settings_sync_period),
@@ -137,7 +137,7 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
                           children: [
                             Text(
                               SyncPeriod.periodToTitle(context, period)!,
-                              style: theme!.textTheme.bodySmall,
+                              style: theme.textTheme.bodySmall,
                             ),
                             SizedBox(width: 8),
                             _buildTrailingArrow(),

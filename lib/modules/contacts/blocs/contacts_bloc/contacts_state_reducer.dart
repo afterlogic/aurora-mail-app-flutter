@@ -4,7 +4,6 @@ import 'package:aurora_mail/utils/copy_with_value.dart';
 import 'bloc.dart';
 
 Stream<ContactsState> reduceState(ContactsState state, dynamic event) async* {
-  assert(state != null);
   if (event is ReceivedContacts) {
     yield state.copyWith(
       contacts: event.contacts,

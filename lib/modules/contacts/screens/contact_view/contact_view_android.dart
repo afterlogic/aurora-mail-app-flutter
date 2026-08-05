@@ -75,7 +75,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
     this.contact = contact;
     _contactInfo = new ContactInfo(contact);
     if (BuildProperty.cryptoEnable && !BuildProperty.legacyPgpKey) {
-      if (contact?.pgpPublicKey != null) {
+      if (contact.pgpPublicKey != null) {
         contactsBloc!.getKeyInfo(contact.pgpPublicKey!).then((key) {
           if (key == null) {
             this.pgpKey = null;
@@ -216,12 +216,12 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
     );
 
     final sectionTitleTheme = BuildProperty.useCustomContactIcons
-        ? theme!.textTheme.bodyLarge!.copyWith(
+        ? theme.textTheme.bodyLarge!.copyWith(
             color: AppColor.contactsPrimary,
             fontSize: 14.0,
             fontWeight: FontWeight.w600,
           )
-        : theme!.textTheme.bodyLarge;
+        : theme.textTheme.bodyLarge;
 
     final _mainInfo = _buildInfos([
       _buildInfoItem(
@@ -488,7 +488,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
                 v: pgpKey == null
                     ? ""
                     : pgpKey!.formatName() +
-                        "\n${pgpKey!.key.length != null ? "(${pgpKey!.length}-bit," : "("} ${pgpKey!.isPrivate ? "private" : "public"})",
+                        "\n${pgpKey!.length != null ? "(${pgpKey!.length}-bit," : "("} ${pgpKey!.isPrivate ? "private" : "public"})",
               ),
             ),
             if (c.storage == StorageNames.team) ...[

@@ -68,11 +68,7 @@ class AlarmService {
     Function onAlarm,
     int id,
   ) {
-    if (onAlarm == null) {
-      _onAlarmMap.remove(id);
-    } else {
-      _onAlarmMap[id] = onAlarm;
-    }
+    _onAlarmMap[id] = onAlarm;
   }
 
   static _doOnAlarm() async {

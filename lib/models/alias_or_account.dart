@@ -13,7 +13,7 @@ class AliasOrAccount {
   String? get signature => alias?.signature ?? account?.signature;
 
   @override
-  int get hashCode => (account?.hashCode ?? 0) + (alias.hashCode ?? 0);
+  int get hashCode => (account?.hashCode ?? 0) + alias.hashCode;
 
   int? get entityId => account?.entityId ?? alias?.entityId;
 

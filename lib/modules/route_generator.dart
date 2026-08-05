@@ -338,7 +338,7 @@ class RouteGenerator {
                 value: args!.bloc,
                 child: ContactEditAndroid(
                   args.pgpSettingsBloc,
-                  contact: args?.contact,
+                  contact: args.contact,
                 )));
         break;
 

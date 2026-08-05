@@ -1,4 +1,4 @@
-﻿
+
 /// # Flutter TypeAhead
 /// A TypeAhead widget for Flutter, where you can show suggestions to
 /// users as they type
@@ -694,17 +694,7 @@ class ComposeTypeAheadField<T> extends StatefulWidget {
       this.keepSuggestionsOnLoading= true,
       this.keepSuggestionsOnSuggestionSelected= false,
       this.autoFlipDirection= false})
-      : assert(suggestionsCallback != null),
-        assert(itemBuilder != null),
-        assert(onSuggestionSelected != null),
-        assert(animationStart != null &&
-            animationStart >= 0.0 &&
-            animationStart <= 1.0),
-        assert(animationDuration != null),
-        assert(debounceDuration != null),
-        assert(textFieldConfiguration != null),
-        assert(suggestionsBoxDecoration != null),
-        assert(suggestionsBoxVerticalOffset != null),
+      : assert(animationStart >= 0.0 && animationStart <= 1.0),
         assert(
             direction == AxisDirection.down || direction == AxisDirection.up),
         super(key: key);
@@ -819,13 +809,11 @@ class ComposeTypeAheadFieldState<T> extends BState<ComposeTypeAheadField<T>>
   void didChangeDependencies() {
     super.didChangeDependencies();
     ScrollableState scrollableState = Scrollable.of(context);
-    if (scrollableState != null) {
-      // The TypeAheadField is inside a scrollable widget
-      _scrollPosition = scrollableState.position;
+    // The TypeAheadField is inside a scrollable widget
+    _scrollPosition = scrollableState.position;
 
-      _scrollPosition!.removeListener(_scrollResizeListener);
-      _scrollPosition!.isScrollingNotifier.addListener(_scrollResizeListener);
-    }
+    _scrollPosition!.removeListener(_scrollResizeListener);
+    _scrollPosition!.isScrollingNotifier.addListener(_scrollResizeListener);
   }
 
   resize() {
@@ -914,7 +902,7 @@ class ComposeTypeAheadFieldState<T> extends BState<ComposeTypeAheadField<T>>
           link: this._layerLink,
           showWhenUnlinked: false,
           offset: Offset(
-              widget.suggestionsBoxHorizontalOffset ?? 0.0,
+              widget.suggestionsBoxHorizontalOffset,
               _suggestionsBox!.direction == AxisDirection.down
                   ? _suggestionsBox!.textBoxHeight +
                       widget.suggestionsBoxVerticalOffset
@@ -1104,7 +1092,7 @@ class _SuggestionsListState<T> extends BState<_SuggestionsList<T>>
         // if it wasn't removed in the meantime
         setState(() {
           double? animationStart = widget.animationStart;
-          if (error != null || suggestions == null || suggestions.length == 0) {
+          if (error != null || suggestions.length == 0) {
             animationStart = 1.0;
           }
           this._animationController!.forward(from: animationStart);
@@ -1221,7 +1209,7 @@ class _SuggestionsListState<T> extends BState<_SuggestionsList<T>>
             padding: const EdgeInsets.all(8.0),
             child: Text(
               'Error: ${this._error}',
-              style: TextStyle(color: theme!.colorScheme.error),
+              style: TextStyle(color: theme.colorScheme.error),
             ),
           );
   }
@@ -1234,7 +1222,7 @@ class _SuggestionsListState<T> extends BState<_SuggestionsList<T>>
             child: Text(
               'No Items Found!',
               textAlign: TextAlign.center,
-              style: TextStyle(color: theme!.disabledColor, fontSize: 18.0),
+              style: TextStyle(color: theme.disabledColor, fontSize: 18.0),
             ),
           );
   }
@@ -1308,9 +1296,7 @@ class SuggestionsBoxDecoration {
       this.hasScrollbar= true,
       this.borderRadius,
       this.shadowColor= const Color(0xFF000000),
-      this.constraints})
-      : assert(shadowColor != null),
-        assert(elevation != null);
+      this.constraints});
 }
 
 /// Supply an instance of this class to the [TypeAhead.textFieldConfiguration]
@@ -1715,7 +1701,7 @@ class _SuggestionsBox {
       double textBoxAbsY) {
     // unsafe area, ie: iPhone X 'home button'
     // keyboardHeight includes unsafeAreaHeight, if keyboard is showing, set to 0
-    double unsafeAreaHeight = keyboardHeight == 0 && rootMediaQuery != null
+    double unsafeAreaHeight = keyboardHeight == 0
         ? rootMediaQuery.data.padding.bottom
         : 0;
 

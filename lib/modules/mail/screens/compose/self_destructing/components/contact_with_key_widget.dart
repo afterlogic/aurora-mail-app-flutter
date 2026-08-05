@@ -39,7 +39,7 @@ class ContactWithKeyWidget extends StatelessWidget {
                       : theme.textTheme.bodySmall,
                 ),
                 Text(
-                  model.contact.viewEmail ?? model.key.mail ?? "",
+                  model.contact.viewEmail ?? model.key?.mail ?? "",
                   maxLines: 1,
                   style: hasName
                       ? theme.textTheme.bodySmall
