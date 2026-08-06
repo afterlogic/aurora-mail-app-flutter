@@ -144,6 +144,13 @@ Future<bool> onAlarm({
     packageName: BuildProperty.packageName,
     defaultInterceptor: DefaultLoggerInterceptorAdapter(),
   ));
+  // Same fresh-isolate caveat applies to Firebase: without this, Crashlytics
+  // calls below would throw "No Firebase App has been created" on a cold
+  // start. Guard against double-init when onAlarm runs in the main isolate
+  // (Firebase.initializeApp() throws duplicate-app if called twice).
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp();
+  }
   final isDebug = await DebugLocalStorage().getBackgroundRecord();
   final interceptor = DefaultApiInterceptor.get();
   Logger isolatedLogger = logger;
@@ -195,6 +202,9 @@ Future<bool> onAlarm({
     } catch (e, s) {
       isolatedLogger.error(e, s);
       print(s);
+      if (!kDebugMode) {
+        FirebaseCrashlytics.instance.recordError(e, s, fatal: false);
+      }
     }
     updateFromNotification.remove(data?.to);
   }

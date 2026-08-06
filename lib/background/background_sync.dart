@@ -21,6 +21,8 @@ import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/notification/models/notification_data.dart';
 import 'package:aurora_mail/notification/notification_manager.dart';
 import 'package:drift/drift.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class BackgroundSync {
@@ -95,9 +97,9 @@ class BackgroundSync {
       isolatedLogger.log("MailSync: sync end in ${delay.toStringAsFixed(1)} s");
     } catch (e, s) {
       isolatedLogger.error(e, s);
-      // FirebaseCrashlytics.instance.recordFlutterError(
-      //   FlutterErrorDetails(exception: e, stack: s),
-      // );
+      if (!kDebugMode) {
+        FirebaseCrashlytics.instance.recordError(e, s, fatal: false);
+      }
     }
     return hasUpdate;
   }
@@ -111,8 +113,11 @@ class BackgroundSync {
       final calendarRepository = CalendarRepository(
           user: user, appDB: DBInstances.appDB, logger: logger);
       await calendarRepository.syncCalendarsWithActivities();
-    } catch (e) {
+    } catch (e, s) {
       logger.log("Calendars background sync error: ${e}");
+      if (!kDebugMode) {
+        FirebaseCrashlytics.instance.recordError(e, s, fatal: false);
+      }
     }
   }
 
