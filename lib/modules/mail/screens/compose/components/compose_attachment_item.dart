@@ -51,7 +51,7 @@ class ComposeAttachmentItem extends StatelessWidget {
                           height: 3.0,
                           child: LinearProgressIndicator(
                             backgroundColor:
-                                theme.disabledColor.withOpacity(0.1),
+                                theme.disabledColor.withValues(alpha: 0.1),
                             value: snapshot.connectionState ==
                                         ConnectionState.active &&
                                     snapshot.hasData
@@ -95,7 +95,7 @@ class ComposeAttachmentItem extends StatelessWidget {
             return SizedBox(
               height: 3.0,
               child: LinearProgressIndicator(
-                backgroundColor: theme.disabledColor.withOpacity(0.1),
+                backgroundColor: theme.disabledColor.withValues(alpha: 0.1),
                 value: snapshot.connectionState == ConnectionState.active &&
                         snapshot.hasData
                     ? (snapshot.data!.progress >= 0

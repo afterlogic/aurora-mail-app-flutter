@@ -15,7 +15,7 @@ class LoadingContainerIndicator extends StatelessWidget {
       duration: const Duration(milliseconds: 250),
       child: loading
           ? Container(
-              color: Colors.white.withOpacity(0.6),
+              color: Colors.white.withValues(alpha: 0.6),
               child: const Center(
                 child: LoadingIndicator(),
               ),

@@ -37,7 +37,7 @@ mixin CalendarMonthBuilders {
       currentDate: currentDate,
       events: events,
       boxColor: Colors.transparent,
-      eventsMarkerColor: Theme.of(context).primaryColor.withOpacity(0.5),
+      eventsMarkerColor: Theme.of(context).primaryColor.withValues(alpha: 0.5),
       dayNumberColor: Colors.grey.shade300,
     );
   }
@@ -56,7 +56,7 @@ mixin CalendarMonthBuilders {
       events: events,
       showEventMarker: showEventMarker,
       boxColor: Colors.transparent,
-      eventsMarkerColor: Theme.of(context).primaryColor.withOpacity(0.5),
+      eventsMarkerColor: Theme.of(context).primaryColor.withValues(alpha: 0.5),
       dayNumberColor: Colors.grey,
     );
   }

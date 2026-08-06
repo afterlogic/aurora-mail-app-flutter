@@ -46,18 +46,27 @@ class _ActivityFilterDialogState extends State<ActivityFilterDialog> {
               style: TextStyle(color: Colors.grey),
             ),
           ),
-          ...ActivityDateFilter.values.map(
-            (e) => RadioListTile<ActivityDateFilter>(
-              contentPadding: EdgeInsets.zero,
-              visualDensity: VisualDensity.compact,
-              title: Text(e.buildString(context)),
-              value: e,
-              groupValue: _selectedDateFilter,
-              onChanged: (value) {
+          RadioGroup<ActivityDateFilter>(
+            groupValue: _selectedDateFilter,
+            onChanged: (value) {
+              if (value != null) {
                 setState(() {
-                  _selectedDateFilter = e;
+                  _selectedDateFilter = value;
                 });
-              },
+              }
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: ActivityDateFilter.values
+                  .map(
+                    (e) => RadioListTile<ActivityDateFilter>(
+                      contentPadding: EdgeInsets.zero,
+                      visualDensity: VisualDensity.compact,
+                      title: Text(e.buildString(context)),
+                      value: e,
+                    ),
+                  )
+                  .toList(),
             ),
           ),
           const SizedBox(height: 20),
@@ -68,18 +77,27 @@ class _ActivityFilterDialogState extends State<ActivityFilterDialog> {
               style: TextStyle(color: Colors.grey),
             ),
           ),
-          ...ActivityStatusFilter.values.map(
-            (e) => RadioListTile<ActivityStatusFilter>(
-              contentPadding: EdgeInsets.zero,
-              visualDensity: VisualDensity.compact,
-              title: Text(e.buildString(context)),
-              value: e,
-              groupValue: _selectedStatusFilter,
-              onChanged: (value) {
+          RadioGroup<ActivityStatusFilter>(
+            groupValue: _selectedStatusFilter,
+            onChanged: (value) {
+              if (value != null) {
                 setState(() {
-                  _selectedStatusFilter = e;
+                  _selectedStatusFilter = value;
                 });
-              },
+              }
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: ActivityStatusFilter.values
+                  .map(
+                    (e) => RadioListTile<ActivityStatusFilter>(
+                      contentPadding: EdgeInsets.zero,
+                      visualDensity: VisualDensity.compact,
+                      title: Text(e.buildString(context)),
+                      value: e,
+                    ),
+                  )
+                  .toList(),
             ),
           )
         ],
@@ -119,7 +137,6 @@ extension _ActivityStatusFilterStringBuilder on ActivityStatusFilter {
         return S.of(context).calendar_filter_completed;
       case ActivityStatusFilter.uncompleted:
         return S.of(context).calendar_filter_uncompleted;
-
     }
   }
 }

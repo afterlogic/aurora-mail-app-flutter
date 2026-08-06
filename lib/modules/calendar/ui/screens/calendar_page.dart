@@ -255,7 +255,7 @@ class _CalendarPageState extends State<CalendarPage>
                         child: Container(
                           color: BuildProperty
                                   .disableScreenShadowFloatingActionButton
-                              ? Colors.black.withOpacity(0.2)
+                              ? Colors.black.withValues(alpha: 0.2)
                               : Colors.transparent,
                         )),
                   ),
@@ -338,7 +338,7 @@ class _CalendarPageState extends State<CalendarPage>
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 12, vertical: 8),
                                         decoration: BoxDecoration(
-                                          color: Colors.black.withOpacity(0.8),
+                                          color: Colors.black.withValues(alpha: 0.8),
                                           borderRadius:
                                               BorderRadius.circular(8),
                                         ),
@@ -445,7 +445,7 @@ class _CalendarPageState extends State<CalendarPage>
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 12, vertical: 8),
                                         decoration: BoxDecoration(
-                                          color: Colors.black.withOpacity(0.8),
+                                          color: Colors.black.withValues(alpha: 0.8),
                                           borderRadius:
                                               BorderRadius.circular(8),
                                         ),

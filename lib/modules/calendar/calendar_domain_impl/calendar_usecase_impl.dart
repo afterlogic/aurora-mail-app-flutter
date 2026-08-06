@@ -230,7 +230,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
               ? null
               : ViewEvent.tryFromEvent(e, color: calendar.color);
         })
-        .whereNotNull()
+        .nonNulls
         .map(
           (e) => e.copyWith(
             startDate: () => _location == null
@@ -257,7 +257,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
               ? null
               : e.toDisplayable(color: calendar.color);
         })
-        .whereNotNull()
+        .nonNulls
         .map(
           (e) => e.copyWith(
             startDate: _location == null || e.startDate == null

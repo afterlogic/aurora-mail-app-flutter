@@ -39,15 +39,12 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        if (current == null) {
-          return true;
-        } else {
-          stack.removeLast();
-          setState(() {});
-          return false;
-        }
+    return PopScope(
+      canPop: current == null,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        stack.removeLast();
+        setState(() {});
       },
       child: SafeArea(
         child: AlertDialog(

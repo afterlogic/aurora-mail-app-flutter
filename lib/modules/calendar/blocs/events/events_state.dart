@@ -135,7 +135,7 @@ class EventsState extends Equatable {
         ? (selectedEvents ?? [])
         /// This case is actually isn't used, kept it just for backward compatibility,
         : getEventsForDayFromMap(date: DateTime(date.year, date.month, date.day))
-          .whereNotNull()
+          .nonNulls
           .toList();
 
     return events

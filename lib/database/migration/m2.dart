@@ -3,5 +3,5 @@ import 'package:drift/drift.dart';
 import '../app_database.dart';
 
 Future m2(AppDatabase database, Migrator m) async {
-  await m.issueCustomQuery("ALTER TABLE users DROP COLUMN language");
+  await database.customStatement("ALTER TABLE users DROP COLUMN language");
 }

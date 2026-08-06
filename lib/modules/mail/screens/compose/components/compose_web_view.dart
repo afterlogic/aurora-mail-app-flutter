@@ -168,7 +168,7 @@ class _ComposeWebViewState extends State<ComposeWebView> {
     if (initUrl == navigation.url) {
       return NavigationDecision.navigate;
     }
-    launch(navigation.url);
+    launchUrl(Uri.parse(navigation.url));
     return NavigationDecision.prevent;
   }
 

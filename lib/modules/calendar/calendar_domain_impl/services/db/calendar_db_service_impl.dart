@@ -11,7 +11,6 @@ import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/ac
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/calendar/calendar_dao.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/calendar_db_service.dart';
 import 'package:aurora_mail/modules/calendar/utils/recurrence_handlers.dart';
-import 'package:collection/collection.dart';
 
 class CalendarDbServiceImpl implements CalendarDbService {
   CalendarDbServiceImpl(AppDatabase db)
@@ -82,7 +81,7 @@ class CalendarDbServiceImpl implements CalendarDbService {
   }) async {
     final result =
         await _activityDao.getEventsWithLimit(limit: limit, offset: offset);
-    return result.map((e) => e.toActivity()).whereNotNull().toList();
+    return result.map((e) => e.toActivity()).nonNulls.toList();
   }
 
   @override

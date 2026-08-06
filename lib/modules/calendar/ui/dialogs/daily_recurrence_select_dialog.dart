@@ -52,95 +52,93 @@ class _DailyRecurrenceSelectDialogState
           child: Text(S.of(context).btn_save),
         ),
       ],
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              Radio(
-                value: true,
-                visualDensity: const VisualDensity(
-                    horizontal: VisualDensity.minimumDensity,
-                    vertical: VisualDensity.minimumDensity),
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                groupValue: isAlways,
-                onChanged: (bool? value) {
-                  setState(() {
-                    isAlways = value!;
-                  });
-                },
-              ),
-              Text('Always'),
-            ],
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          Row(
-            children: [
-              Radio(
-                value: false,
-                visualDensity: const VisualDensity(
-                    horizontal: VisualDensity.minimumDensity,
-                    vertical: VisualDensity.minimumDensity),
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                groupValue: isAlways,
-                onChanged: (bool? value) {
-                  setState(() {
-                    isAlways = value!;
-                  });
-                },
-              ),
-              Text('Until'),
-              SizedBox(width: 8),
-              if (!isAlways)
-                Expanded(
-                  child: InputUtils.buildUnlymeInputDecorator(
-                    context: context,
-                    labelText: untilDate == null
-                        ? 'Select date'
-                        : DateFormat('yyyy/MM/dd').format(untilDate!),
-                    onTap: () async {
-                      final DateTime? picked = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime(2101),
-                      );
-                      if (picked != null) {
-                        setState(() {
-                          untilDate = picked;
-                        });
-                      }
-                    },
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            untilDate == null
-                                ? 'Select date'
-                                : DateFormat('yyyy/MM/dd').format(untilDate!),
-                            style: TextStyle(
-                              color: untilDate == null && !isAlways
-                                  ? Colors.red
-                                  : null,
+      content: RadioGroup<bool>(
+        groupValue: isAlways,
+        onChanged: (bool? value) {
+          if (value != null) {
+            setState(() {
+              isAlways = value;
+            });
+          }
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                Radio(
+                  value: true,
+                  visualDensity: const VisualDensity(
+                      horizontal: VisualDensity.minimumDensity,
+                      vertical: VisualDensity.minimumDensity),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                Text('Always'),
+              ],
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Row(
+              children: [
+                Radio(
+                  value: false,
+                  visualDensity: const VisualDensity(
+                      horizontal: VisualDensity.minimumDensity,
+                      vertical: VisualDensity.minimumDensity),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                Text('Until'),
+                SizedBox(width: 8),
+                if (!isAlways)
+                  Expanded(
+                    child: InputUtils.buildUnlymeInputDecorator(
+                      context: context,
+                      labelText: untilDate == null
+                          ? 'Select date'
+                          : DateFormat('yyyy/MM/dd').format(untilDate!),
+                      onTap: () async {
+                        final DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(2101),
+                        );
+                        if (picked != null) {
+                          setState(() {
+                            untilDate = picked;
+                          });
+                        }
+                      },
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              untilDate == null
+                                  ? 'Select date'
+                                  : DateFormat('yyyy/MM/dd').format(untilDate!),
+                              style: TextStyle(
+                                color: untilDate == null && !isAlways
+                                    ? Colors.red
+                                    : null,
+                              ),
                             ),
-                          ),
-                          Icon(
-                            Icons.calendar_today_outlined,
-                            size: 16,
-                          ),
-                        ],
+                            Icon(
+                              Icons.calendar_today_outlined,
+                              size: 16,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

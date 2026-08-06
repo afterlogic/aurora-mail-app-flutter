@@ -122,9 +122,11 @@ class SettingsNavigatorState extends State<SettingsNavigatorWidget>
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return pop();
+    return PopScope(
+      canPop: _stack.length == 1,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        pop();
       },
       child: _stack.isEmpty
           ? SizedBox.shrink()

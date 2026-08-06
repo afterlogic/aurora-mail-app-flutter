@@ -11,7 +11,6 @@ import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:collection/collection.dart' show IterableNullableExtension;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
@@ -71,9 +70,9 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
     );
   }
 
-  void _callGroupPhone(String phone) => launch("tel://$phone");
+  void _callGroupPhone(String phone) => launchUrl(Uri.parse("tel://$phone"));
 
-  void _visitWebsite(String site) => launch(site);
+  void _visitWebsite(String site) => launchUrl(Uri.parse(site));
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +180,7 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
   }
 
   List<Widget?> _buildInfos(List<Widget?> nullableWidgets) {
-    return nullableWidgets.whereNotNull().toList();
+    return nullableWidgets.nonNulls.toList();
   }
 
   Widget? _buildInfoItem({

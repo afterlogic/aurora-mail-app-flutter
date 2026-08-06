@@ -90,7 +90,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                             decoration: InputDecoration(
                               labelText: S.of(context).message_lifetime,
                             ),
-                            value: lifeTime,
+                            initialValue: lifeTime,
                             items: LifeTime.values.map((value) {
                               return DropdownMenuItem<LifeTime>(
                                 value: value,
@@ -108,31 +108,31 @@ class _EncryptSettingState extends BState<EncryptSetting>
                               setState(() {});
                             },
                           ),
-                          RadioListTile(
-                            title: Text(S
-                                .of(context)
-                                .input_self_destructing_password_based_encryption),
-                            value: false,
+                          RadioGroup<bool>(
+                            groupValue: isKeyBased,
                             onChanged: (bool? value) {
                               isKeyBased = value;
-                              useSign = false;
+                              useSign = value == true && hasKey;
                               setState(() {});
                             },
-                            groupValue: isKeyBased,
-                          ),
-                          RadioListTile(
-                            title: Text(S
-                                .of(context)
-                                .input_self_destructing_key_based_encryption),
-                            value: true,
-                            groupValue: isKeyBased,
-                            onChanged: !recipientHaveKey
-                                ? null
-                                : (bool? value) {
-                                    isKeyBased = value;
-                                    useSign = value! && hasKey;
-                                    setState(() {});
-                                  },
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RadioListTile(
+                                  title: Text(S
+                                      .of(context)
+                                      .input_self_destructing_password_based_encryption),
+                                  value: false,
+                                ),
+                                RadioListTile(
+                                  title: Text(S
+                                      .of(context)
+                                      .input_self_destructing_key_based_encryption),
+                                  value: true,
+                                  enabled: recipientHaveKey,
+                                ),
+                              ],
+                            ),
                           ),
                           SizedBox(height: 10),
                           Text(

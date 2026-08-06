@@ -48,7 +48,7 @@ class _CalendarEditDialogState extends State<CalendarEditDialog> {
     _nameController = TextEditingController()
       ..text = widget.calendar.name;
     _iCalController = TextEditingController()..text = widget.calendar.source;
-    final color = _colors.firstWhereOrNull((c) => c.value == widget.calendar.color.value);
+    final color = _colors.firstWhereOrNull((c) => c.toARGB32() == widget.calendar.color.toARGB32());
     if(color == null){
       _colors.add(widget.calendar.color);
       _selectedColor = widget.calendar.color;

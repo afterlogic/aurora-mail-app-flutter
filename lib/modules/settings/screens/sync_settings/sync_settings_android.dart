@@ -68,8 +68,8 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
   Widget build(BuildContext context) {
     final isTablet = LayoutConfig.of(context).isTablet;
     final iconBG = theme.brightness == Brightness.dark
-        ? theme.colorScheme.onPrimary.withOpacity(0.20)
-        : theme.colorScheme.primary.withOpacity(0.08);
+        ? theme.colorScheme.onPrimary.withValues(alpha: 0.20)
+        : theme.colorScheme.primary.withValues(alpha: 0.08);
     return Scaffold(
       appBar: isTablet
           ? null

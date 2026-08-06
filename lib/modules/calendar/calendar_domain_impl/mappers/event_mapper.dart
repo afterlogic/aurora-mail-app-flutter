@@ -11,7 +11,6 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/rem
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/task.dart';
-import 'package:collection/collection.dart';
 
 extension ActivityMapper on ActivityDb {
   ActivityBase? toActivity() {
@@ -47,7 +46,7 @@ extension ActivityMapper on ActivityDb {
             ? remindersString!
                 .split(',')
                 .map((e) => RemindersIntMapper.fromInt(int.parse(e)))
-                .whereNotNull()
+                .nonNulls
                 .toSet()
             : {},
         // rrule: null,
@@ -63,7 +62,7 @@ extension ActivityMapper on ActivityDb {
             ? recurrenceWeekDaysString!
                 .split(',')
                 .map((e) => DaysOfWeekX.fromDaysCode(e))
-                .whereNotNull()
+                .nonNulls
                 .toSet()
             : {},
       );
@@ -93,7 +92,7 @@ extension ActivityMapper on ActivityDb {
               ? remindersString!
                   .split(',')
                   .map((e) => RemindersIntMapper.fromInt(int.parse(e)))
-                  .whereNotNull()
+                  .nonNulls
                   .toSet()
               : {},
           // rrule: null,
@@ -109,7 +108,7 @@ extension ActivityMapper on ActivityDb {
               ? recurrenceWeekDaysString!
                   .split(',')
                   .map((e) => DaysOfWeekX.fromDaysCode(e))
-                  .whereNotNull()
+                  .nonNulls
                   .toSet()
               : {},
           attendees: attendees
@@ -190,7 +189,7 @@ class EventMapper {
       onceLoaded: true,
       reminders: (newData['alarms'] as List?)
               ?.map((e) => RemindersIntMapper.fromInt(e as int))
-              .whereNotNull()
+              .nonNulls
               .toSet() ??
           {},
     );
@@ -250,7 +249,7 @@ class EventMapper {
         onceLoaded: true,
         reminders: (newData['alarms'] as List?)
                 ?.map((e) => RemindersIntMapper.fromInt(e as int))
-                .whereNotNull()
+                .nonNulls
                 .toSet() ??
             {},
         attendees: (newData['attendees'] as List).map((e) => Attendee.fromMap(e as Map<String, dynamic>)).toSet());

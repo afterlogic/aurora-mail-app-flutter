@@ -49,7 +49,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
                   decoration: InputUtils.getUnlymeInputDecoration(
                     labelText: S.of(context).login_input_email,
                   ),
-                  value: current,
+                  initialValue: current,
                   items: widget.identities.map((value) {
                     return DropdownMenuItem<AliasOrAccount>(
                       value: value,
@@ -96,7 +96,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
                   decoration: InputUtils.getUnlymeInputDecoration(
                     labelText: S.of(context).label_length,
                   ),
-                  value: length,
+                  initialValue: length,
                   items: lengths.map((value) {
                     return DropdownMenuItem<int>(
                       value: value,

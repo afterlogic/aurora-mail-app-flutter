@@ -50,10 +50,10 @@ class _AuthInputState extends BState<AuthInput> {
       obscureText: widget.isPassword && _obscureText,
       decoration: InputDecoration(
         filled: true,
-        fillColor: Colors.white.withOpacity(0.5), 
+        fillColor: Colors.white.withValues(alpha: 0.5), 
         // enabledBorder: UnderlineInputBorder(
         //     borderSide:
-        //         BorderSide(color: theme.disabledColor.withOpacity(0.1))),
+        //         BorderSide(color: theme.disabledColor.withValues(alpha: 0.1))),
         // focusedBorder: UnderlineInputBorder(
         //     borderSide: BorderSide(color: theme.primaryColor)),
         contentPadding: EdgeInsets.symmetric(

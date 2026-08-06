@@ -54,8 +54,8 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
   Widget build(BuildContext context) {
     // ignore: close_sinks
     final iconBG = theme.brightness == Brightness.dark
-        ? theme.colorScheme.onPrimary.withOpacity(0.20)
-        : theme.colorScheme.primary.withOpacity(0.08);
+        ? theme.colorScheme.onPrimary.withValues(alpha: 0.20)
+        : theme.colorScheme.primary.withValues(alpha: 0.08);
     final bloc = BlocProvider.of<SettingsBloc>(context);
     final isTablet = LayoutConfig.of(context).isTablet;
     return Scaffold(
@@ -101,7 +101,7 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                               ),
                             ],
                           ),
-                          activeColor: theme.primaryColor,
+                          activeThumbColor: theme.primaryColor,
                           value: state.is24!,
                           onChanged: (val) => bloc.add(SetTimeFormat(val))),
                       _buildDivider(),

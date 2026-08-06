@@ -1143,7 +1143,7 @@ class _SuggestionsListState<T> extends BState<_SuggestionsList<T>>
     var animationChild = widget.transitionBuilder != null
         ? widget.transitionBuilder!(context, child, this._animationController)
         : SizeTransition(
-            axisAlignment: -1.0,
+            alignment: Alignment(-1.0, -1.0),
             sizeFactor: CurvedAnimation(
                 parent: this._animationController!, curve: Curves.fastOutSlowIn),
             child: child,

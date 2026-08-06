@@ -28,23 +28,27 @@ class LanguageSelectionDialog extends StatelessWidget {
       title: Text(S.of(context).settings_language),
       content: SizedBox(
         width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
-        child: AMDialogList(
-          children: Language.availableLanguages
-              .map(
-                (lang) => RadioListTile(
-                  activeColor: theme.primaryColor,
-                  title: Text(lang == null
-                      ? S.of(context).settings_language_system
-                      : lang.name!),
-                  value: lang?.tag ?? 'system',
-                  groupValue: selectedItem?.tag ?? 'system',
-                  onChanged: (dynamic val) {
-                    onItemSelected(lang);
-                    Navigator.pop(context);
-                  },
-                ),
-              )
-              .toList(),
+        child: RadioGroup<String>(
+          groupValue: selectedItem?.tag ?? 'system',
+          onChanged: (String? val) {
+            final lang = Language.availableLanguages
+                .firstWhere((l) => (l?.tag ?? 'system') == val);
+            onItemSelected(lang);
+            Navigator.pop(context);
+          },
+          child: AMDialogList(
+            children: Language.availableLanguages
+                .map(
+                  (lang) => RadioListTile(
+                    activeColor: theme.primaryColor,
+                    title: Text(lang == null
+                        ? S.of(context).settings_language_system
+                        : lang.name!),
+                    value: lang?.tag ?? 'system',
+                  ),
+                )
+                .toList(),
+          ),
         ),
       ),
       actions: <Widget>[

@@ -207,7 +207,7 @@ class _MessageItemState extends BState<MessageItem> {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: selected
-            ? Theme.of(context).highlightColor.withOpacity(0.1)
+            ? Theme.of(context).highlightColor.withValues(alpha: 0.1)
             : null,
       ),
       child: Column(
@@ -259,7 +259,10 @@ class _MessageItemState extends BState<MessageItem> {
                                   style: TextStyle(
                                     fontSize: 14.0,
                                     color: theme.disabledColor.withAlpha(
-                                        theme.disabledColor.alpha ~/ 2),
+                                        (theme.disabledColor.a * 255.0)
+                                                .round()
+                                                .clamp(0, 255) ~/
+                                            2),
                                   ),
                                 ),
                               ),
@@ -364,7 +367,10 @@ class _MessageItemState extends BState<MessageItem> {
                                   style: TextStyle(
                                     fontSize: 14.0,
                                     color: theme.disabledColor.withAlpha(
-                                        theme.disabledColor.alpha ~/ 2),
+                                        (theme.disabledColor.a * 255.0)
+                                                .round()
+                                                .clamp(0, 255) ~/
+                                            2),
                                   ),
                                 ),
                               ),

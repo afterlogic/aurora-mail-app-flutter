@@ -11,7 +11,6 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/rru
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/displayable.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class EventCreationData implements ActivityCreationData{
@@ -182,7 +181,7 @@ class Event implements Activity {
         onceLoaded: true,
         reminders: (newData['alarms'] as List?)
                 ?.map((e) => RemindersIntMapper.fromInt(e as int))
-                .whereNotNull()
+                .nonNulls
                 .toSet() ??
             {},
         attendees: (newData['attendees'] as List).map((e) => Attendee.fromMap(e as Map<String, dynamic>)).toSet());
@@ -213,7 +212,7 @@ class Event implements Activity {
                 ? entity.remindersString!
                     .split(',')
                     .map((e) => RemindersIntMapper.fromInt(int.parse(e)))
-                    .whereNotNull()
+                    .nonNulls
                     .toSet()
                 : {},
         // rrule: null,
@@ -229,7 +228,7 @@ class Event implements Activity {
             ? entity.recurrenceWeekDaysString!
                 .split(',')
                 .map((e) => DaysOfWeekX.fromDaysCode(e))
-                .whereNotNull()
+                .nonNulls
                 .toSet()
             : {},
         attendees: entity.attendees

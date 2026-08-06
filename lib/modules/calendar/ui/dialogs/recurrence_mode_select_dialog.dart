@@ -34,37 +34,39 @@ class _RecurrenceModeSelectDialogState
   Widget build(BuildContext context) {
     return BaseCalendarDialog(
       removeContentPadding: true,
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Spacer(),
-              CloseButton(
-                color: Theme.of(context).primaryColor,
-              )
-            ],
-          ),
-          ...RecurrenceMode.values.map((option) {
-            return RadioListTile<RecurrenceMode>(
-              dense: true,
-              title: Text(
-                option.buildString(context),
-                style: TextStyle(fontSize: 14),
-              ),
-              value: option,
-              onChanged: (value) {
-                _selectedOption = value;
-                setState(() {});
-                Navigator.pop(context, option);
-              },
-              groupValue: _selectedOption,
-            );
-          }).toList(),
-          const SizedBox(
-            height: 4,
-          )
-        ],
+      content: RadioGroup<RecurrenceMode>(
+        groupValue: _selectedOption,
+        onChanged: (value) {
+          _selectedOption = value;
+          setState(() {});
+          Navigator.pop(context, value);
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Spacer(),
+                CloseButton(
+                  color: Theme.of(context).primaryColor,
+                )
+              ],
+            ),
+            ...RecurrenceMode.values.map((option) {
+              return RadioListTile<RecurrenceMode>(
+                dense: true,
+                title: Text(
+                  option.buildString(context),
+                  style: TextStyle(fontSize: 14),
+                ),
+                value: option,
+              );
+            }).toList(),
+            const SizedBox(
+              height: 4,
+            )
+          ],
+        ),
       ),
     );
   }

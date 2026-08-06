@@ -29,19 +29,23 @@ class FreqSelectionDialog extends StatelessWidget {
       title: Text(S.of(context).settings_sync_frequency),
       content: SizedBox(
         width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
-        child: AMDialogList(
-          children: values.map((freq) {
-            return RadioListTile(
-              activeColor: theme.primaryColor,
-              title: Text(SyncFreq.freqToString(context, freq)!),
-              value: freq,
-              groupValue: selectedItem,
-              onChanged: (val) {
-                onItemSelected(freq);
-                Navigator.pop(context);
-              },
-            );
-          }).toList(),
+        child: RadioGroup<Freq>(
+          groupValue: selectedItem,
+          onChanged: (val) {
+            if (val != null) {
+              onItemSelected(val);
+              Navigator.pop(context);
+            }
+          },
+          child: AMDialogList(
+            children: values.map((freq) {
+              return RadioListTile(
+                activeColor: theme.primaryColor,
+                title: Text(SyncFreq.freqToString(context, freq)!),
+                value: freq,
+              );
+            }).toList(),
+          ),
         ),
       ),
       actions: <Widget>[

@@ -10,7 +10,6 @@ import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:calendar_view/calendar_view.dart';
-import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 
 part 'events_event.dart';

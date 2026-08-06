@@ -193,7 +193,7 @@ class InputUtils {
   }) {
     if (!BuildProperty.useCustomInputStyles) {
       return DropdownButtonFormField<T>(
-        value: value,
+        initialValue: value,
         items: items
             .map((item) => DropdownMenuItem<T>(
                   value: item,
@@ -215,7 +215,7 @@ class InputUtils {
     }
 
     return DropdownButtonFormField<T>(
-      value: value,
+      initialValue: value,
       items: items
           .map((item) => DropdownMenuItem<T>(
                 value: item,

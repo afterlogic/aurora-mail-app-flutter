@@ -313,7 +313,7 @@ class MessageWebViewState extends BState<MessageWebView> {
         msg: msg,
         timeInSecForIosWeb: 2,
         backgroundColor:
-            Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
+            Platform.isIOS ? theme.disabledColor.withValues(alpha: 0.5) : null,
       );
 
       BlocProvider.of<MessageViewBloc>(context).downloadAttachment(
@@ -365,7 +365,7 @@ class MessageWebViewState extends BState<MessageWebView> {
         msg: msg,
         timeInSecForIosWeb: 2,
         backgroundColor:
-            Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
+            Platform.isIOS ? theme.disabledColor.withValues(alpha: 0.5) : null,
       );
     }
   }
@@ -394,7 +394,7 @@ class MessageWebViewState extends BState<MessageWebView> {
       AttachmentsDialog.show(context, widget.attachments, messageViewBloc);
       return NavigationDecision.prevent;
     } else if (request.url != _getHtmlUri(_htmlData)) {
-      launch(request.url);
+      launchUrl(Uri.parse(request.url));
       return NavigationDecision.prevent;
     } else {
       return NavigationDecision.navigate;

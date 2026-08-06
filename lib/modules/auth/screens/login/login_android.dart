@@ -325,11 +325,11 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                             Column(children: <Widget>[
                               Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.7),
+                                  color: Colors.white.withValues(alpha: 0.7),
                                   borderRadius: BorderRadius.circular(8),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withOpacity(0.15),
+                                      color: Colors.black.withValues(alpha: 0.15),
                                       blurRadius: 30.0,
                                       offset: const Offset(0, 4),
                                     ),

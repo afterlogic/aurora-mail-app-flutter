@@ -1,6 +1,5 @@
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/month_event_marker.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class ShortMonthDay extends StatelessWidget {
@@ -39,7 +38,7 @@ class ShortMonthDay extends StatelessWidget {
         children: [
           Container(
             padding: EdgeInsets.all(4.0),
-            height: showEventMarker && events.whereNotNull().isNotEmpty
+            height: showEventMarker && events.nonNulls.isNotEmpty
                 ? height
                 : height - _markerDiameter,
             width: height,
@@ -51,7 +50,7 @@ class ShortMonthDay extends StatelessWidget {
                   dayNumber,
                   style: TextStyle(color: dayNumberColor, fontSize: 16),
                 ),
-                if (showEventMarker && events.whereNotNull().isNotEmpty)
+                if (showEventMarker && events.nonNulls.isNotEmpty)
                   Container(
                     width: _markerDiameter,
                     height: _markerDiameter,

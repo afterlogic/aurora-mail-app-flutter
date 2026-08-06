@@ -85,8 +85,8 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
   @override
   Widget build(BuildContext context) {
     final iconBG = theme.brightness == Brightness.dark
-        ? theme.colorScheme.onPrimary.withOpacity(0.20)
-        : theme.colorScheme.primary.withOpacity(0.08);
+        ? theme.colorScheme.onPrimary.withValues(alpha: 0.20)
+        : theme.colorScheme.primary.withValues(alpha: 0.08);
     final isTablet = LayoutConfig.of(context).isTablet;
     final current = isTablet
         ? (navigatorKey.currentState?.current.name ??

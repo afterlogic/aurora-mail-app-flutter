@@ -181,7 +181,7 @@ class _ListPartWidgetState extends State<_ListPartWidget> {
           widgets.add(Divider(
             height: 0.0,
             thickness: 0.5,
-            color: Theme.of(context).disabledColor.withOpacity(0.08),
+            color: Theme.of(context).disabledColor.withValues(alpha: 0.08),
           ));
         }
       }

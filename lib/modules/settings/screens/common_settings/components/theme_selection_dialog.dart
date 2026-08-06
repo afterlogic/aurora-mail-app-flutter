@@ -27,39 +27,31 @@ class ThemeSelectionDialog extends StatelessWidget {
       title: Text(S.of(context).settings_dark_theme),
       content: SizedBox(
         width: MediaQuery.of(context).size.width > 600 ? 400 : double.maxFinite,
-        child: AMDialogList(
-          children: [
-            RadioListTile<bool?>(
-              activeColor: theme.primaryColor,
-              title: Text(S.of(context).settings_dark_theme_system),
-              value: null,
-              groupValue: isTheme,
-              onChanged: (val) {
-                onItemSelected(null);
-                Navigator.pop(context);
-              },
-            ),
-            RadioListTile<bool>(
-              activeColor: theme.primaryColor,
-              title: Text(S.of(context).settings_dark_theme_dark),
-              value: true,
-              groupValue: isTheme,
-              onChanged: (val) {
-                onItemSelected(true);
-                Navigator.pop(context);
-              },
-            ),
-            RadioListTile<bool>(
-              activeColor: theme.primaryColor,
-              title: Text(S.of(context).settings_dark_theme_light),
-              value: false,
-              groupValue: isTheme,
-              onChanged: (val) {
-                onItemSelected(false);
-                Navigator.pop(context);
-              },
-            ),
-          ],
+        child: RadioGroup<bool?>(
+          groupValue: isTheme,
+          onChanged: (val) {
+            onItemSelected(val);
+            Navigator.pop(context);
+          },
+          child: AMDialogList(
+            children: [
+              RadioListTile<bool?>(
+                activeColor: theme.primaryColor,
+                title: Text(S.of(context).settings_dark_theme_system),
+                value: null,
+              ),
+              RadioListTile<bool?>(
+                activeColor: theme.primaryColor,
+                title: Text(S.of(context).settings_dark_theme_dark),
+                value: true,
+              ),
+              RadioListTile<bool?>(
+                activeColor: theme.primaryColor,
+                title: Text(S.of(context).settings_dark_theme_light),
+                value: false,
+              ),
+            ],
+          ),
         ),
       ),
       actions: <Widget>[

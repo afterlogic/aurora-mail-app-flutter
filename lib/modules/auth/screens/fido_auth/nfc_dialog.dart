@@ -209,7 +209,7 @@ abstract class _IosDialogState<W extends _IosDialog> extends State<W>
                           width: double.infinity,
                           child: CupertinoButton(
                             borderRadius: BorderRadius.circular(10),
-                            color: Colors.grey.withOpacity(0.5),
+                            color: Colors.grey.withValues(alpha: 0.5),
                             child: Text(
                               "Cancel",
                               style: TextStyle(

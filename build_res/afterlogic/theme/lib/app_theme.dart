@@ -8,11 +8,11 @@ class AppTheme {
     colorScheme: ColorScheme.light(
       primary: AppColor.primary,
       secondary: AppColor.secondary,
-      background: Color(0xFFe6ebf0),
+      surface: Color(0xFFe6ebf0),
       error: AppColor.warning,
     ),
     primaryColor: AppColor.primary,
-    disabledColor: Colors.black.withOpacity(0.4),
+    disabledColor: Colors.black.withValues(alpha: 0.4),
     scaffoldBackgroundColor: Colors.white,
     splashFactory: InkRipple.splashFactory,
     appBarTheme: _appBarThemeLight,
@@ -32,11 +32,11 @@ class AppTheme {
     colorScheme: ColorScheme.dark(
       primary: AppColor.primary,
       secondary: AppColor.secondary,
-      background: Color(0xFF1A1A1A),
+      surface: Color(0xFF1A1A1A),
       error: AppColor.warning,
     ),
     primaryColor: AppColor.primary,
-    disabledColor: Colors.white.withOpacity(0.4),
+    disabledColor: Colors.white.withValues(alpha: 0.4),
     scaffoldBackgroundColor: Color(0xFF1A1A1A),
     splashFactory: InkRipple.splashFactory,
     appBarTheme: _appBarThemeDark,
@@ -147,7 +147,7 @@ class AppTheme {
   );
 
   static final _fabTheme = FloatingActionButtonThemeData(
-    hoverColor: AppColor.accent.withOpacity(0.8),
+    hoverColor: AppColor.accent.withValues(alpha: 0.8),
     backgroundColor: AppColor.accent,
   );
 
@@ -178,7 +178,7 @@ class AppTheme {
 
   static final _textButtonTheme = TextButtonThemeData(
     style: ButtonStyle(
-      foregroundColor: MaterialStateProperty.all(AppColor.primary),
+      foregroundColor: WidgetStateProperty.all(AppColor.primary),
     ),
   );
 

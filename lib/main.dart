@@ -46,11 +46,12 @@ void main() async {
     debugPrint('!!! Dart FIREBASE_APP_CHECK_DEBUG_TOKEN: $appCheckDebugToken');
     final isDebugBuild = appCheckDebugToken.isNotEmpty;
     await FirebaseAppCheck.instance.activate(
-      androidProvider:
-          isDebugBuild ? AndroidProvider.debug : AndroidProvider.playIntegrity,
-      appleProvider: isDebugBuild
-          ? AppleProvider.debug
-          : AppleProvider.appAttestWithDeviceCheckFallback,
+      providerAndroid: isDebugBuild
+          ? const AndroidDebugProvider()
+          : const AndroidPlayIntegrityProvider(),
+      providerApple: isDebugBuild
+          ? const AppleDebugProvider()
+          : const AppleAppAttestWithDeviceCheckFallbackProvider(),
     );
   }
 

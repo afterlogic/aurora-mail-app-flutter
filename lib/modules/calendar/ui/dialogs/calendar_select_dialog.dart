@@ -56,27 +56,29 @@ class _CalendarSelectDialogState extends State<CalendarSelectDialog> {
                 ),
               ),
               child: SingleChildScrollView(
-                  child: Column(
-                children: [
-                  ...widget.options.map((option) {
-                    return RadioListTile<ViewCalendar>(
-                      dense: true,
-                      title: CalendarTile(
-                        circleColor: option.color,
-                        text: option.name,
-                        backgroundColor: null,
-                      ),
-                      value: option,
-                      groupValue: _selectedOption,
-                      onChanged: (ViewCalendar? value) {
-                        setState(() {
-                          _selectedOption = value;
-                        });
-                        Navigator.pop(context, _selectedOption);
-                      },
-                    );
-                  })
-                ],
+                  child: RadioGroup<ViewCalendar>(
+                groupValue: _selectedOption,
+                onChanged: (ViewCalendar? value) {
+                  setState(() {
+                    _selectedOption = value;
+                  });
+                  Navigator.pop(context, _selectedOption);
+                },
+                child: Column(
+                  children: [
+                    ...widget.options.map((option) {
+                      return RadioListTile<ViewCalendar>(
+                        dense: true,
+                        title: CalendarTile(
+                          circleColor: option.color,
+                          text: option.name,
+                          backgroundColor: null,
+                        ),
+                        value: option,
+                      );
+                    })
+                  ],
+                ),
               )),
             ),
           ),

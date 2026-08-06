@@ -113,7 +113,8 @@ class _AboutAndroidState extends BState<AboutAndroid> {
                               fontSize: 18.0,
                             ),
                           ),
-                          onTap: () => launch(BuildProperty.termsOfService),
+                          onTap: () =>
+                              launchUrl(Uri.parse(BuildProperty.termsOfService)),
                         ),
                       if (BuildProperty.termsOfService.isNotEmpty)
                         SizedBox(height: 22.0),
@@ -127,7 +128,8 @@ class _AboutAndroidState extends BState<AboutAndroid> {
                               fontSize: 18.0,
                             ),
                           ),
-                          onTap: () => launch(BuildProperty.privacyPolicy),
+                          onTap: () =>
+                              launchUrl(Uri.parse(BuildProperty.privacyPolicy)),
                         ),
                       if (BuildProperty.privacyPolicy.isNotEmpty)
                         SizedBox(height: 42.0),

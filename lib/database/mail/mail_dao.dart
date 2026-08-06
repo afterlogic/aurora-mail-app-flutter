@@ -50,39 +50,39 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     fields.add(mail.folder);
 
     var query =
-        "SELECT ${fields.map((item) => item.escapedName).join(",")} FROM ";
+        "SELECT ${fields.map((item) => item.escapedNameFor(SqlDialect.sqlite)).join(",")} FROM ";
 
     query += "${mail.actualTableName} WHERE ";
-    query += "${mail.accountEntityId.escapedName} = ? ";
-    query += "AND ${mail.hasBody.escapedName} = 1 ";
+    query += "${mail.accountEntityId.escapedNameFor(SqlDialect.sqlite)} = ? ";
+    query += "AND ${mail.hasBody.escapedNameFor(SqlDialect.sqlite)} = 1 ";
     params.add(Variable.withInt(accountEntityId));
 
-    query += "AND ${mail.folder.escapedName} = ? ";
+    query += "AND ${mail.folder.escapedNameFor(SqlDialect.sqlite)} = ? ";
     params.add(Variable.withString(folder));
 
     searchParams.forEach((item) {
       final searchTerm = item.value;
       if (item.pattern == SearchPattern.Email) {
         query +=
-            "AND (${mail.toForSearch.escapedName} LIKE ? OR ${mail.fromForSearch.escapedName} LIKE ? OR ${mail.ccForSearch.escapedName} LIKE ? OR ${mail.bccForSearch.escapedName} LIKE ?) ";
+            "AND (${mail.toForSearch.escapedNameFor(SqlDialect.sqlite)} LIKE ? OR ${mail.fromForSearch.escapedNameFor(SqlDialect.sqlite)} LIKE ? OR ${mail.ccForSearch.escapedNameFor(SqlDialect.sqlite)} LIKE ? OR ${mail.bccForSearch.escapedNameFor(SqlDialect.sqlite)} LIKE ?) ";
         params.add(Variable.withString("%$searchTerm%"));
         params.add(Variable.withString("%$searchTerm%"));
         params.add(Variable.withString("%$searchTerm%"));
         params.add(Variable.withString("%$searchTerm%"));
       } else if (item.pattern == SearchPattern.From) {
-        query += "AND (${mail.fromForSearch.escapedName} LIKE ?) ";
+        query += "AND (${mail.fromForSearch.escapedNameFor(SqlDialect.sqlite)} LIKE ?) ";
         params.add(Variable.withString("%$searchTerm%"));
       } else if (item.pattern == SearchPattern.To) {
-        query += "AND (${mail.toForSearch.escapedName} LIKE ?) ";
+        query += "AND (${mail.toForSearch.escapedNameFor(SqlDialect.sqlite)} LIKE ?) ";
         params.add(Variable.withString("%$searchTerm%"));
       } else if (item.pattern == SearchPattern.Subject) {
-        query += "AND (${mail.subject.escapedName} LIKE ?) ";
+        query += "AND (${mail.subject.escapedNameFor(SqlDialect.sqlite)} LIKE ?) ";
         params.add(Variable.withString("%$searchTerm%"));
       } else if (item.pattern == SearchPattern.Attachment) {
-        query += "AND (${mail.attachmentsForSearch.escapedName} LIKE ?) ";
+        query += "AND (${mail.attachmentsForSearch.escapedNameFor(SqlDialect.sqlite)} LIKE ?) ";
         params.add(Variable.withString("%$searchTerm%"));
       } else if (item.pattern == SearchPattern.Text) {
-        query += "AND (${mail.bodyForSearch.escapedName} LIKE ?) ";
+        query += "AND (${mail.bodyForSearch.escapedNameFor(SqlDialect.sqlite)} LIKE ?) ";
         params.add(Variable.withString("%$searchTerm%"));
       } else if (item.pattern == SearchPattern.Date) {
         final date = item as DateSearchParams;
@@ -90,7 +90,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
           params.add(
             Variable.withInt(date.since!.millisecondsSinceEpoch ~/ 1000),
           );
-          query += "AND (${mail.timeStampInUTC.escapedName} > ?) ";
+          query += "AND (${mail.timeStampInUTC.escapedNameFor(SqlDialect.sqlite)} > ?) ";
         }
         if (date.till != null) {
           final till = DateTime(date.till!.year, date.till!.month,
@@ -99,12 +99,12 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
           params.add(
             Variable.withInt(till.millisecondsSinceEpoch ~/ 1000),
           );
-          query += "AND (${mail.timeStampInUTC.escapedName} < ?) ";
+          query += "AND (${mail.timeStampInUTC.escapedNameFor(SqlDialect.sqlite)} < ?) ";
         }
       } else if (item.pattern == SearchPattern.Has) {
         final flag = item as HasSearchParams;
         if (flag.flags.contains(SearchFlag.Attachment) == true) {
-          query += "AND (${mail.hasAttachments.escapedName} = ?) ";
+          query += "AND (${mail.hasAttachments.escapedNameFor(SqlDialect.sqlite)} = ?) ";
           params.add(
             Variable.withBool(true),
           );
@@ -112,7 +112,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
       } else if (item.pattern == SearchPattern.Default &&
           searchTerm.isNotEmpty) {
         query +=
-            "AND (${mail.subject.escapedName} LIKE ? OR ${mail.toForSearch.escapedName} LIKE ? OR ${mail.fromForSearch.escapedName} LIKE ? OR ${mail.ccForSearch.escapedName} LIKE ? OR ${mail.bccForSearch.escapedName} LIKE ? OR ${mail.bodyForSearch.escapedName} LIKE ? OR ${mail.attachmentsForSearch.escapedName} LIKE ?) ";
+            "AND (${mail.subject.escapedNameFor(SqlDialect.sqlite)} LIKE ? OR ${mail.toForSearch.escapedNameFor(SqlDialect.sqlite)} LIKE ? OR ${mail.fromForSearch.escapedNameFor(SqlDialect.sqlite)} LIKE ? OR ${mail.ccForSearch.escapedNameFor(SqlDialect.sqlite)} LIKE ? OR ${mail.bccForSearch.escapedNameFor(SqlDialect.sqlite)} LIKE ? OR ${mail.bodyForSearch.escapedNameFor(SqlDialect.sqlite)} LIKE ? OR ${mail.attachmentsForSearch.escapedNameFor(SqlDialect.sqlite)} LIKE ?) ";
         params.add(Variable.withString("%$searchTerm%"));
         params.add(Variable.withString("%$searchTerm%"));
         params.add(Variable.withString("%$searchTerm%"));
@@ -123,16 +123,16 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
       }
     });
     if (starredOnly) {
-      query += "AND ${mail.flagsInJson.escapedName} LIKE ? ";
+      query += "AND ${mail.flagsInJson.escapedNameFor(SqlDialect.sqlite)} LIKE ? ";
       params.add(Variable.withString("%\\flagged%"));
     }
     //todo
     if (unreadOnly) {
-      query += "AND ${mail.flagsInJson.escapedName} NOT LIKE ? ";
+      query += "AND ${mail.flagsInJson.escapedNameFor(SqlDialect.sqlite)} NOT LIKE ? ";
       params.add(Variable.withString("%\\seen%"));
     }
 
-    query += "ORDER BY ${mail.timeStampInUTC.escapedName} DESC ";
+    query += "ORDER BY ${mail.timeStampInUTC.escapedNameFor(SqlDialect.sqlite)} DESC ";
     query += "LIMIT ? OFFSET ? ";
 
     params.add(Variable.withInt(limit));

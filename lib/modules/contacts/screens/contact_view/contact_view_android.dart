@@ -26,8 +26,7 @@ import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
-import 'package:collection/collection.dart'
-    show IterableExtension, IterableNullableExtension;
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -247,12 +246,14 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
         v: _contactInfo.viewAddress,
       ),
       _buildInfoItem(
+        // ignore: deprecated_member_use
         icon: MdiIcons.skype,
         iconName: 'skype',
         label: S.of(context).contacts_view_skype,
         v: c.skype!,
       ),
       _buildInfoItem(
+        // ignore: deprecated_member_use
         icon: MdiIcons.facebook,
         iconName: 'facebook',
         label: S.of(context).contacts_view_facebook,
@@ -712,7 +713,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
   }
 
   List<Widget?> _buildInfos(List<Widget?> nullableWidgets) {
-    final List<Widget?> filteredWidgets = nullableWidgets.whereNotNull().toList();
+    final List<Widget?> filteredWidgets = nullableWidgets.nonNulls.toList();
     if (!BuildProperty.useContactsDivider || filteredWidgets.isEmpty) {
       return filteredWidgets;
     }

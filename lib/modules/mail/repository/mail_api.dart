@@ -433,8 +433,11 @@ class MailApi {
       final tempDir = await getTemporaryDirectory();
       final file = await new File('${tempDir.path}/$name').create();
       await file.writeAsBytes(bytes);
-      await Share.shareXFiles([XFile(file.path)],
-          subject: attachment.fileName, sharePositionOrigin: rect);
+      await SharePlus.instance.share(ShareParams(
+        files: [XFile(file.path)],
+        subject: attachment.fileName,
+        sharePositionOrigin: rect,
+      ));
     }
   }
 

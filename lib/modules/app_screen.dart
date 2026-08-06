@@ -379,7 +379,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                           builder: (context, child) {
                             return MediaQuery(
                               data: MediaQuery.of(context).copyWith(
-                                textScaleFactor: 1.0,
+                                textScaler: TextScaler.noScaling,
                               ),
                               child: LoggerControllerWidget.wrap(
                                 child ?? const SizedBox.shrink(),

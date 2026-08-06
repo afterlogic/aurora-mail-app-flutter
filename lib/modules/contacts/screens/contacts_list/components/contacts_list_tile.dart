@@ -137,7 +137,8 @@ class _ContactsListTileState extends State<ContactsListTile> {
         style: TextStyle(
           color: subTitle?.isNotEmpty == true
               ? theme.disabledColor
-              : theme.disabledColor.withAlpha(theme.disabledColor.alpha ~/ 2),
+              : theme.disabledColor.withAlpha(
+                  (theme.disabledColor.a * 255.0).round().clamp(0, 255) ~/ 2),
         ),
         maxLines: 1,
       ),
@@ -161,7 +162,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
               widget.contact.viewEmail == authBloc.currentAccount!.email)
             Container(
               decoration: BoxDecoration(
-                color: theme.disabledColor.withOpacity(0.1),
+                color: theme.disabledColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(50.0),
               ),
               margin: EdgeInsets.only(right: 4.0),
@@ -206,7 +207,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
     Widget contactTile = DecoratedBox(
       decoration: BoxDecoration(
         color:
-            selected ? Theme.of(context).highlightColor.withOpacity(0.1) : null,
+            selected ? Theme.of(context).highlightColor.withValues(alpha: 0.1) : null,
       ),
       child: InkWell(
         onLongPress: changeEnable,

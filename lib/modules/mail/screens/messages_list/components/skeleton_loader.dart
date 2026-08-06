@@ -12,8 +12,8 @@ class SkeletonLoader extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 22.0),
       itemCount: 6,
       itemBuilder: (_, i) => Shimmer.fromColors(
-        baseColor: theme.iconTheme.color!.withOpacity(0.15),
-        highlightColor: theme.iconTheme.color!.withOpacity(0.1),
+        baseColor: theme.iconTheme.color!.withValues(alpha: 0.15),
+        highlightColor: theme.iconTheme.color!.withValues(alpha: 0.1),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[

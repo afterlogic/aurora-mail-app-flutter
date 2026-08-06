@@ -73,7 +73,16 @@ class _WeeklyRecurrenceSelectDialogState
           child: Text(S.of(context).btn_save),
         ),
       ],
-      content: Column(
+      content: RadioGroup<bool>(
+        groupValue: isAlways,
+        onChanged: (bool? value) {
+          if (value != null) {
+            setState(() {
+              isAlways = value;
+            });
+          }
+        },
+        child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
@@ -161,12 +170,6 @@ class _WeeklyRecurrenceSelectDialogState
                     horizontal: VisualDensity.minimumDensity,
                     vertical: VisualDensity.minimumDensity),
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                groupValue: isAlways,
-                onChanged: (bool? value) {
-                  setState(() {
-                    isAlways = value!;
-                  });
-                },
               ),
               Text('Always'),
             ],
@@ -182,12 +185,6 @@ class _WeeklyRecurrenceSelectDialogState
                     horizontal: VisualDensity.minimumDensity,
                     vertical: VisualDensity.minimumDensity),
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                groupValue: isAlways,
-                onChanged: (bool? value) {
-                  setState(() {
-                    isAlways = value!;
-                  });
-                },
               ),
               Text('Until'),
               SizedBox(width: 8),
@@ -239,6 +236,7 @@ class _WeeklyRecurrenceSelectDialogState
             ],
           ),
         ],
+        ),
       ),
     );
   }

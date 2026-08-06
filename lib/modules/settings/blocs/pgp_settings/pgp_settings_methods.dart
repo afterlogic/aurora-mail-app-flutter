@@ -171,7 +171,11 @@ class PgpSettingsMethods {
   }
 
   _shareFile(String title, String content, Rect rect) {
-    Share.share(content, subject: title, sharePositionOrigin: rect);
+    SharePlus.instance.share(ShareParams(
+      text: content,
+      subject: title,
+      sharePositionOrigin: rect,
+    ));
   }
 
   static const KEY_FOLDER = "pgp_keys";

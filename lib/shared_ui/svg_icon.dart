@@ -20,7 +20,7 @@ class SvgIcon extends StatelessWidget {
     final double? iconOpacity = iconTheme.opacity;
     Color? iconColor = color ?? iconTheme.color;
     if (iconOpacity != 1.0)
-      iconColor = iconColor!.withOpacity(iconColor.opacity * iconOpacity!);
+      iconColor = iconColor!.withValues(alpha: iconColor.a * iconOpacity!);
 
     return SvgPicture.asset(
       asset,
