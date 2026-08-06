@@ -97,7 +97,7 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
                                   : BoxShadow(),
                           child: Text(
                             S.of(context).btn_verify_pin,
-                            style: TextStyle(color: AppTheme.loginTextColor),
+                            style: TextStyle(color: Colors.white),
                           ),
                           isLoading: loading,
                           onPressed: () => _login(),

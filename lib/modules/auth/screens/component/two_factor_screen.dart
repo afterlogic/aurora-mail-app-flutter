@@ -72,7 +72,7 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
 
   Widget _buildPinForm(BuildContext context) {
     return SafeArea(
-      top: false,
+      top: !widget.isDialog!,
       child: Stack(
         children: <Widget>[
           if (!widget.isDialog! && !BuildProperty.useMainLogo)
@@ -89,20 +89,20 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 22.0),
                 child: Column(
-                  mainAxisAlignment: widget.isDialog!
-                      ? MainAxisAlignment.start
-                      : MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Spacer(),
+                    // 1. Logo
                     if (!widget.isDialog!) ...[
+                      SizedBox(height: 40.0),
                       PresentationHeader(
                         message: widget.logoHint,
+                        logoScale: 2 / 3,
                       ),
-                    ],
-                    if (widget.isDialog!) SizedBox(height: 40.0),
-                    Flexible(
-                      flex: 4,
+                      SizedBox(height: 40.0),
+                    ] else
+                      SizedBox(height: 40.0),
+                    // 2. Content: title, description, fields, main button
+                    Expanded(
                       child: ListView(
                         padding: EdgeInsets.zero,
                         children: [
@@ -133,26 +133,23 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
                         ],
                       ),
                     ),
-                    Flexible(
-                      child: widget.allowBack
-                          ? SizedBox(
-                              width: double.infinity,
-                              child: TextButton(
-                                child: Text(
-                                  S.of(context).btn_login_back_to_login,
-                                  style:
-                                      TextStyle(color: AppTheme.loginTextColor),
-                                ),
-                                onPressed: () {
-                                  Navigator.popUntil(
-                                    context,
-                                    ModalRoute.withName(LoginRoute.name),
-                                  );
-                                },
-                              ),
-                            )
-                          : SizedBox.shrink(),
-                    ),
+                    // 3. Footer
+                    if (widget.allowBack)
+                      SizedBox(
+                        width: double.infinity,
+                        child: TextButton(
+                          child: Text(
+                            S.of(context).btn_login_back_to_login,
+                            style: TextStyle(color: AppTheme.loginTextColor),
+                          ),
+                          onPressed: () {
+                            Navigator.popUntil(
+                              context,
+                              ModalRoute.withName(LoginRoute.name),
+                            );
+                          },
+                        ),
+                      ),
                   ],
                 ),
               ),

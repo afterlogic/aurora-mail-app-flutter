@@ -97,7 +97,7 @@ class _TrustDeviceWidgetState extends BState<TrustDeviceWidget> {
                             : BoxShadow(),
                         child: Text(
                           S.of(context).tfa_button_continue,
-                          style: TextStyle(color: AppTheme.loginTextColor),
+                          style: TextStyle(color: Colors.white),
                         ),
                         isLoading: loading,
                         onPressed: () {

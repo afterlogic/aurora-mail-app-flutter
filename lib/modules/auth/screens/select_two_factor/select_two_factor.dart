@@ -48,7 +48,7 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
                   : BoxShadow(),
               child: Text(
                 S.of(context).tfa_btn_use_security_key,
-                style: TextStyle(color: AppTheme.loginTextColor),
+                style: TextStyle(color: Colors.white),
               ),
               onPressed: () {
                 Navigator.pushNamedAndRemoveUntil(
@@ -70,7 +70,7 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
               color: AppColor.primaryVariant,
               child: Text(
                 S.of(context).tfa_btn_use_auth_app,
-                style: TextStyle(color: AppTheme.loginTextColor),
+                style: TextStyle(color: Colors.white),
               ),
               onPressed: () {
                 Navigator.pushNamedAndRemoveUntil(
@@ -92,7 +92,7 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
               color: AppColor.primaryVariant,
               child: Text(
                 S.of(context).tfa_btn_use_backup_code,
-                style: TextStyle(color: AppTheme.loginTextColor),
+                style: TextStyle(color: Colors.white),
               ),
               onPressed: () {
                 Navigator.pushNamedAndRemoveUntil(

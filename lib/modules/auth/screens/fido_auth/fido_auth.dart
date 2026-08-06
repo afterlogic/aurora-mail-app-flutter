@@ -116,7 +116,7 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                                     : BoxShadow(),
                             child: Text(
                               S.of(context).fido_btn_try_again,
-                              style: TextStyle(color: AppTheme.loginTextColor),
+                              style: TextStyle(color: Colors.white),
                             ),
                             onPressed: () {
                               bloc!.add(StartAuth(
