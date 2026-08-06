@@ -1,9 +1,6 @@
 
-import 'dart:io';
-
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
-import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
@@ -24,26 +21,11 @@ class PgpKeysScreen extends StatefulWidget {
 
 class _PgpKeysScreenState extends State<PgpKeysScreen> {
   late PgpSettingsBloc bloc;
-  late bool isAndroid9orLow;
 
   @override
   void initState() {
     super.initState();
     bloc = widget.bloc;
-    isAndroid9orLow = Platform.isAndroid;
-    DeviceIdStorage.isAndroid10orHigh().then((value) {
-      if (value) {
-        setState(() {
-          // TODO: deal with Android 10 file permissions
-          // isAndroid9orLow = false;
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -130,21 +112,20 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
         },
       ),
       space,
-      if (isAndroid9orLow)
-        AMButton(
-          color: AppColor.primaryVariant,
-          shadow: BuildProperty.disableShadowFloatingActionButton
-              ? null
-              : BoxShadow(),
-          child: Text(
-            S.of(context).btn_pgp_download_all,
-            style: TextStyle(color: Colors.white),
-          ),
-          onPressed: () {
-            bloc.add(DownloadKeys(widget.pgpKeys));
-            Navigator.pop(context);
-          },
+      AMButton(
+        color: AppColor.primaryVariant,
+        shadow: BuildProperty.disableShadowFloatingActionButton
+            ? null
+            : BoxShadow(),
+        child: Text(
+          S.of(context).btn_pgp_download_all,
+          style: TextStyle(color: Colors.white),
         ),
+        onPressed: () {
+          bloc.add(DownloadKeys(widget.pgpKeys));
+          Navigator.pop(context);
+        },
+      ),
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),

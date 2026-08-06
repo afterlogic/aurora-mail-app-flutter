@@ -28,16 +28,4 @@ class DeviceIdStorage {
       return null;
     }
   }
-
-  static Future<bool> isAndroid10orHigh() async {
-    if (Platform.isAndroid) {
-      final androidInfo = await _deviceInfo.androidInfo;
-      final sdkVersion = androidInfo.version.sdkInt;
-      // for Android 10 or high
-      if (sdkVersion >= 29) {
-        return true;
-      }
-    }
-    return false;
-  }
 }

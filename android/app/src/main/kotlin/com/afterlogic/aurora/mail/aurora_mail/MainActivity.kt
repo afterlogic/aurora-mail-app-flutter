@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.afterlogic.alarm_service.AlarmPlugin
@@ -72,9 +71,6 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine)
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "DIRECTORY_DOWNLOADS").setMethodCallHandler { call, result ->
-            result.success(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path)
-        }
         //todo fix permission_handler on android 10
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "REQUEST_STORAGE_PERMISSION").setMethodCallHandler { call, result ->
             val notGranted = permissions.firstOrNull { ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED }

@@ -1,9 +1,6 @@
 
-import 'dart:io';
-
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
-import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_navigator.dart';
@@ -31,7 +28,6 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
   PgpKey? pgpKey;
   Function()? onDelete;
   late bool withAppBar;
-  late bool isAndroid9orLow;
 
   @override
   void initState() {
@@ -40,20 +36,6 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
     onDelete = widget.onDelete;
     withAppBar = widget.withAppBar;
     bloc = widget.bloc;
-    isAndroid9orLow = Platform.isAndroid;
-    DeviceIdStorage.isAndroid10orHigh().then((value) {
-      if (value) {
-        setState(() {
-          // TODO: deal with Android 10 file permissions
-          // isAndroid9orLow = false;
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -151,20 +133,19 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
         },
       ),
       space,
-      if (isAndroid9orLow)
-        AMButton(
-          color: AppColor.primaryVariant,
-          shadow: BuildProperty.disableShadowFloatingActionButton
-              ? null
-              : BoxShadow(),
-          child: Text(S.of(context).btn_download,
-              style: TextStyle(color: Colors.white)),
-          onPressed: () {
-            bloc.add(DownloadKeys([pgpKey]));
-            SettingsNavigatorWidget.of(context).pop();
-          },
-        ),
-      if (isAndroid9orLow) space,
+      AMButton(
+        color: AppColor.primaryVariant,
+        shadow: BuildProperty.disableShadowFloatingActionButton
+            ? null
+            : BoxShadow(),
+        child: Text(S.of(context).btn_download,
+            style: TextStyle(color: Colors.white)),
+        onPressed: () {
+          bloc.add(DownloadKeys([pgpKey]));
+          SettingsNavigatorWidget.of(context).pop();
+        },
+      ),
+      space,
       AMButton(
         color: AppColor.primaryVariant,
         shadow: BuildProperty.disableShadowFloatingActionButton
