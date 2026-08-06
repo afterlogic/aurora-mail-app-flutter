@@ -31,7 +31,21 @@ import 'modules/settings/screens/debug/default_logger_interceptor_adapter.dart';
 import 'modules/settings/screens/debug/logger_interceptor_adapter.dart';
 import 'notification/notification_manager.dart';
 
-void main() async {
+void main() {
+  runZonedGuarded<void>(
+    () async {
+      await _mainImpl();
+    },
+    (error, stack) {
+      debugPrint('!!! ZoneError: $error Stack: $stack');
+      if (!kDebugMode) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      }
+    },
+  );
+}
+
+Future<void> _mainImpl() async {
   BackgroundHelper.appIsRunning = true;
   LoggerSetting.init(LoggerSetting(
     packageName: BuildProperty.packageName,
@@ -91,25 +105,17 @@ void main() async {
     ),
   );
 
-  runZonedGuarded<void>(
-    () => runApp(
-      FutureBuilder(
-        future: DBInstances.appDB.migrationCompleter.future,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return RestartWidget(child: App());
-          } else {
-            return Container();
-          }
-        },
-      ),
+  runApp(
+    FutureBuilder(
+      future: DBInstances.appDB.migrationCompleter.future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return RestartWidget(child: App());
+        } else {
+          return Container();
+        }
+      },
     ),
-    (error, stack) {
-      debugPrint('!!! ZoneError: $error Stack: $stack');
-      if (!kDebugMode) {
-        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-      }
-    },
   );
 
   NotificationManager.instance;
