@@ -89,12 +89,9 @@ class ConfigureTwoFactorScreen extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: AMButton(
-                          color: const Color(0xFF3975B5),
+                          color: AppTheme.buttonColor,
                           radius: AppTheme.buttonRadius,
-                          shadow:
-                              BuildProperty.disableShadowFloatingActionButton
-                                  ? null
-                                  : const BoxShadow(),
+                          shadow: AppTheme.buttonShadow,
                           child: Text(
                             buttonLabel,
                             style: TextStyle(color: Colors.white),

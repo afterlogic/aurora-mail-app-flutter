@@ -339,11 +339,9 @@ class _PgpSettingsState extends BState<PgpSettings> {
     final children = <Widget>[
       if (state.contactPublic.isNotEmpty)
         AMButton(
-          color: AppColor.primaryVariant,
+          color: AppTheme.buttonColor,
           radius: AppTheme.buttonRadius,
-          shadow: BuildProperty.disableShadowFloatingActionButton
-              ? null
-              : BoxShadow(),
+          shadow: AppTheme.buttonShadow,
           child: Text(
             S.of(context).btn_pgp_export_all_public_keys,
             style: TextStyle(color: Colors.white),
@@ -352,11 +350,9 @@ class _PgpSettingsState extends BState<PgpSettings> {
         ),
       space,
       AMButton(
-        color: AppColor.primaryVariant,
+        color: AppTheme.buttonColor,
         radius: AppTheme.buttonRadius,
-        shadow: BuildProperty.disableShadowFloatingActionButton
-            ? null
-            : BoxShadow(),
+        shadow: AppTheme.buttonShadow,
         child: Text(
           S.of(context).btn_pgp_import_keys_from_text,
           style: TextStyle(color: Colors.white),
@@ -365,11 +361,9 @@ class _PgpSettingsState extends BState<PgpSettings> {
       ),
       space,
       AMButton(
-        color: AppColor.primaryVariant,
+        color: AppTheme.buttonColor,
         radius: AppTheme.buttonRadius,
-        shadow: BuildProperty.disableShadowFloatingActionButton
-            ? null
-            : BoxShadow(),
+        shadow: AppTheme.buttonShadow,
         child: Text(
           S.of(context).btn_pgp_import_keys_from_file,
           style: TextStyle(color: Colors.white),
@@ -378,11 +372,9 @@ class _PgpSettingsState extends BState<PgpSettings> {
       ),
       space,
       AMButton(
-        color: AppColor.primaryVariant,
+        color: AppTheme.buttonColor,
         radius: AppTheme.buttonRadius,
-        shadow: BuildProperty.disableShadowFloatingActionButton
-            ? null
-            : BoxShadow(),
+        shadow: AppTheme.buttonShadow,
         child: Text(
           S.of(context).btn_pgp_generate_keys,
           style: TextStyle(color: Colors.white),

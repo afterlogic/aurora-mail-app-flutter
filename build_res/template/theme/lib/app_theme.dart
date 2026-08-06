@@ -56,6 +56,16 @@ class AppTheme {
   static final ThemeData? login = null;
   static final Color? loginTextColor = null;
   static final buttonRadius = BorderRadius.circular(40.0);
+  static final buttonColor = AppColor.primaryVariant;
+  static final buttonShadow = const BoxShadow();
+  static final loginCardPaddingLight = const EdgeInsets.symmetric(
+    horizontal: 20.0,
+    vertical: 36.0,
+  );
+
+  // Card not shown for this brand
+  static final loginCardDecorationLight = const BoxDecoration();
+  static final loginCardDecorationDark = const BoxDecoration();
 
   static final _appBarThemeLight = AppBarTheme(
     systemOverlayStyle: SystemUiOverlayStyle(

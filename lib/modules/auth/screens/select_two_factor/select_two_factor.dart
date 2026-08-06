@@ -12,7 +12,6 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:aurora_ui_kit/components/am_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
 class SelectTwoFactorWidget extends StatefulWidget {
@@ -42,11 +41,9 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
           SizedBox(
             width: double.infinity,
             child: AMButton(
-              color: AppColor.primaryVariant,
+              color: AppTheme.buttonColor,
               radius: AppTheme.buttonRadius,
-              shadow: BuildProperty.disableShadowFloatingActionButton
-                  ? null
-                  : BoxShadow(),
+              shadow: AppTheme.buttonShadow,
               child: Text(
                 S.of(context).tfa_btn_use_security_key,
                 style: TextStyle(color: Colors.white),
@@ -68,8 +65,9 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
           SizedBox(
             width: double.infinity,
             child: AMButton(
-              color: AppColor.primaryVariant,
+              color: AppTheme.buttonColor,
               radius: AppTheme.buttonRadius,
+              shadow: AppTheme.buttonShadow,
               child: Text(
                 S.of(context).tfa_btn_use_auth_app,
                 style: TextStyle(color: Colors.white),
@@ -91,8 +89,9 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
           SizedBox(
             width: double.infinity,
             child: AMButton(
-              color: AppColor.primaryVariant,
+              color: AppTheme.buttonColor,
               radius: AppTheme.buttonRadius,
+              shadow: AppTheme.buttonShadow,
               child: Text(
                 S.of(context).tfa_btn_use_backup_code,
                 style: TextStyle(color: Colors.white),

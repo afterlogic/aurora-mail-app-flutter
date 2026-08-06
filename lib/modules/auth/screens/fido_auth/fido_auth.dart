@@ -1,5 +1,4 @@
 
-import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/event.dart';
@@ -13,7 +12,6 @@ import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
 import 'fido_auth_route.dart';
@@ -109,12 +107,9 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                         SizedBox(
                           width: double.infinity,
                           child: AMButton(
-                            color: AppColor.primaryVariant,
+                            color: AppTheme.buttonColor,
                             radius: AppTheme.buttonRadius,
-                            shadow:
-                                BuildProperty.disableShadowFloatingActionButton
-                                    ? null
-                                    : BoxShadow(),
+                            shadow: AppTheme.buttonShadow,
                             child: Text(
                               S.of(context).fido_btn_try_again,
                               style: TextStyle(color: Colors.white),

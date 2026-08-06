@@ -95,11 +95,9 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
           );
     final children = <Widget>[
       AMButton(
-        color: AppColor.primaryVariant,
+        color: AppTheme.buttonColor,
         radius: AppTheme.buttonRadius,
-        shadow: BuildProperty.disableShadowFloatingActionButton
-            ? null
-            : BoxShadow(),
+        shadow: AppTheme.buttonShadow,
         child: Text(S.of(context).btn_php_send_all,
             style: TextStyle(color: Colors.white)),
         onPressed: () {
@@ -115,11 +113,9 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
       ),
       space,
       AMButton(
-        color: AppColor.primaryVariant,
+        color: AppTheme.buttonColor,
         radius: AppTheme.buttonRadius,
-        shadow: BuildProperty.disableShadowFloatingActionButton
-            ? null
-            : BoxShadow(),
+        shadow: AppTheme.buttonShadow,
         child: Text(
           S.of(context).btn_pgp_download_all,
           style: TextStyle(color: Colors.white),

@@ -48,6 +48,7 @@ class _AuthInputState extends BState<AuthInput> {
       keyboardType: widget.keyboardType,
       validator: widget.validator,
       obscureText: widget.isPassword && _obscureText,
+      style: TextStyle(color: Colors.black87),
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white.withValues(alpha: 0.5), 

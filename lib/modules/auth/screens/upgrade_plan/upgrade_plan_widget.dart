@@ -74,12 +74,9 @@ class UpgradePlanWidget extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: AMButton(
-                          color: const Color(0xFF3975B5),
+                          color: AppTheme.buttonColor,
                           radius: AppTheme.buttonRadius,
-                          shadow:
-                              BuildProperty.disableShadowFloatingActionButton
-                                  ? null
-                                  : const BoxShadow(),
+                          shadow: AppTheme.buttonShadow,
                           child: Text(S.of(context).btn_login_back_to_login,
                               style: TextStyle(color: Colors.white)),
                           onPressed: () => Navigator.of(context).pop(),

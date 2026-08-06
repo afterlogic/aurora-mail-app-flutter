@@ -53,11 +53,9 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                   final isProgress = state is ProgressState;
                   final tokenStatus = state is InitState ? state.state : null;
                   Widget button = AMButton(
-                    color: AppColor.primaryVariant,
+                    color: AppTheme.buttonColor,
                     radius: AppTheme.buttonRadius,
-                    shadow: BuildProperty.disableShadowFloatingActionButton
-                        ? null
-                        : BoxShadow(),
+                    shadow: AppTheme.buttonShadow,
                     isLoading: isProgress,
                     child: Text(S.of(context).btn_resend_push_token,
                         style: TextStyle(color: Colors.white)),

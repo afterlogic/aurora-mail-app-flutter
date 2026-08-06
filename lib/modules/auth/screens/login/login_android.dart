@@ -288,6 +288,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
 
   Widget _buildLoginForm(BuildContext context, {bool loading = false}) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Stack(
       children: <Widget>[
@@ -324,21 +325,10 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                             ],
                             Column(children: <Widget>[
                               Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.7),
-                                  borderRadius: BorderRadius.circular(8),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withValues(alpha: 0.15),
-                                      blurRadius: 30.0,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ],
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0,
-                                  vertical: 36.0,
-                                ),
+                                decoration: isDark
+                                    ? AppTheme.loginCardDecorationDark
+                                    : AppTheme.loginCardDecorationLight,
+                                padding: AppTheme.loginCardPadding,
                                 child: Column(children: <Widget>[
                                   Align(
                                     alignment: Alignment.centerLeft,
@@ -423,12 +413,9 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                                     width: double.infinity,
                                     child: _debugRouteToTwoFactor(
                                       AMButton(
-                                        color: const Color(0xFF3975B5),
+                                        color: AppTheme.buttonColor,
                                         radius: AppTheme.buttonRadius,
-                                        shadow: BuildProperty
-                                                .disableShadowFloatingActionButton
-                                            ? null
-                                            : const BoxShadow(),
+                                        shadow: AppTheme.buttonShadow,
                                         child: Text(
                                             widget.isDialog
                                                 ? S.of(context).btn_add_account
