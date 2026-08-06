@@ -92,6 +92,7 @@ class _TrustDeviceWidgetState extends BState<TrustDeviceWidget> {
                       width: double.infinity,
                       child: AMButton(
                         color: AppColor.primaryVariant,
+                        radius: AppTheme.buttonRadius,
                         shadow: BuildProperty.disableShadowFloatingActionButton
                             ? null
                             : BoxShadow(),

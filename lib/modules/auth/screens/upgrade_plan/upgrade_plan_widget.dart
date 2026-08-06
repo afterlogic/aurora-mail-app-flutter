@@ -75,7 +75,7 @@ class UpgradePlanWidget extends StatelessWidget {
                         width: double.infinity,
                         child: AMButton(
                           color: const Color(0xFF3975B5),
-                          radius: BorderRadius.circular(10.0),
+                          radius: AppTheme.buttonRadius,
                           shadow:
                               BuildProperty.disableShadowFloatingActionButton
                                   ? null

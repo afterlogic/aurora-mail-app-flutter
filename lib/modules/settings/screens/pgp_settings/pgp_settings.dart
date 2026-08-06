@@ -21,6 +21,7 @@ import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:theme/app_color.dart';
+import 'package:theme/app_theme.dart';
 
 class PgpSettings extends StatefulWidget {
   final PgpSettingsBloc pgpSettingsBloc;
@@ -339,6 +340,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
       if (state.contactPublic.isNotEmpty)
         AMButton(
           color: AppColor.primaryVariant,
+          radius: AppTheme.buttonRadius,
           shadow: BuildProperty.disableShadowFloatingActionButton
               ? null
               : BoxShadow(),
@@ -351,6 +353,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
       space,
       AMButton(
         color: AppColor.primaryVariant,
+        radius: AppTheme.buttonRadius,
         shadow: BuildProperty.disableShadowFloatingActionButton
             ? null
             : BoxShadow(),
@@ -363,6 +366,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
       space,
       AMButton(
         color: AppColor.primaryVariant,
+        radius: AppTheme.buttonRadius,
         shadow: BuildProperty.disableShadowFloatingActionButton
             ? null
             : BoxShadow(),
@@ -375,6 +379,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
       space,
       AMButton(
         color: AppColor.primaryVariant,
+        radius: AppTheme.buttonRadius,
         shadow: BuildProperty.disableShadowFloatingActionButton
             ? null
             : BoxShadow(),

@@ -55,6 +55,7 @@ class AppTheme {
   static final floatIconTheme = IconThemeData(color: Colors.white);
   static final ThemeData? login = null;
   static final Color? loginTextColor = null;
+  static final buttonRadius = BorderRadius.circular(40.0);
 
   static final _appBarThemeLight = AppBarTheme(
     systemOverlayStyle: SystemUiOverlayStyle(

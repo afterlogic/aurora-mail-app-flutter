@@ -43,6 +43,7 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
             width: double.infinity,
             child: AMButton(
               color: AppColor.primaryVariant,
+              radius: AppTheme.buttonRadius,
               shadow: BuildProperty.disableShadowFloatingActionButton
                   ? null
                   : BoxShadow(),
@@ -68,6 +69,7 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
             width: double.infinity,
             child: AMButton(
               color: AppColor.primaryVariant,
+              radius: AppTheme.buttonRadius,
               child: Text(
                 S.of(context).tfa_btn_use_auth_app,
                 style: TextStyle(color: Colors.white),
@@ -90,6 +92,7 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
             width: double.infinity,
             child: AMButton(
               color: AppColor.primaryVariant,
+              radius: AppTheme.buttonRadius,
               child: Text(
                 S.of(context).tfa_btn_use_backup_code,
                 style: TextStyle(color: Colors.white),

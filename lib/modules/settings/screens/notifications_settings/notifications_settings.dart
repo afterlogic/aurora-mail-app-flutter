@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:theme/app_color.dart';
+import 'package:theme/app_theme.dart';
 
 class NotificationsSettings extends StatefulWidget {
   @override
@@ -53,6 +54,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                   final tokenStatus = state is InitState ? state.state : null;
                   Widget button = AMButton(
                     color: AppColor.primaryVariant,
+                    radius: AppTheme.buttonRadius,
                     shadow: BuildProperty.disableShadowFloatingActionButton
                         ? null
                         : BoxShadow(),

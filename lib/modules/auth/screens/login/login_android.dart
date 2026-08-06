@@ -424,7 +424,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                                     child: _debugRouteToTwoFactor(
                                       AMButton(
                                         color: const Color(0xFF3975B5),
-                                        radius: BorderRadius.circular(10.0),
+                                        radius: AppTheme.buttonRadius,
                                         shadow: BuildProperty
                                                 .disableShadowFloatingActionButton
                                             ? null

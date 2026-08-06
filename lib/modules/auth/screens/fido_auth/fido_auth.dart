@@ -110,6 +110,7 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                           width: double.infinity,
                           child: AMButton(
                             color: AppColor.primaryVariant,
+                            radius: AppTheme.buttonRadius,
                             shadow:
                                 BuildProperty.disableShadowFloatingActionButton
                                     ? null

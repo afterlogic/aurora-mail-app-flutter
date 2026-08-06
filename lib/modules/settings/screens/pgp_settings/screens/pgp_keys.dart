@@ -8,6 +8,7 @@ import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:theme/app_color.dart';
+import 'package:theme/app_theme.dart';
 
 class PgpKeysScreen extends StatefulWidget {
   final List<PgpKey> pgpKeys;
@@ -95,6 +96,7 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
     final children = <Widget>[
       AMButton(
         color: AppColor.primaryVariant,
+        radius: AppTheme.buttonRadius,
         shadow: BuildProperty.disableShadowFloatingActionButton
             ? null
             : BoxShadow(),
@@ -114,6 +116,7 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
       space,
       AMButton(
         color: AppColor.primaryVariant,
+        radius: AppTheme.buttonRadius,
         shadow: BuildProperty.disableShadowFloatingActionButton
             ? null
             : BoxShadow(),

@@ -10,6 +10,7 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/material.dart';
 import 'package:theme/app_color.dart';
+import 'package:theme/app_theme.dart';
 
 class PgpKeyScreen extends StatefulWidget {
   final PgpSettingsBloc bloc;
@@ -107,6 +108,7 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
     final children = <Widget>[
       AMButton(
         color: AppColor.primaryVariant,
+        radius: AppTheme.buttonRadius,
         shadow: BuildProperty.disableShadowFloatingActionButton
             ? null
             : BoxShadow(),
@@ -135,6 +137,7 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
       space,
       AMButton(
         color: AppColor.primaryVariant,
+        radius: AppTheme.buttonRadius,
         shadow: BuildProperty.disableShadowFloatingActionButton
             ? null
             : BoxShadow(),
@@ -148,6 +151,7 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
       space,
       AMButton(
         color: AppColor.primaryVariant,
+        radius: AppTheme.buttonRadius,
         shadow: BuildProperty.disableShadowFloatingActionButton
             ? null
             : BoxShadow(),
