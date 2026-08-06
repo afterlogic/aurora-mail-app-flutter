@@ -33,7 +33,6 @@ import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/user_app_data_singleton.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -149,8 +148,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
     BackgroundHelper.current = state;
 
     if (state == AppLifecycleState.resumed) {
-      DBInstances.appDB.streamQueries
-          .handleTableUpdates({TableUpdate.onTable(DBInstances.appDB.mail)});
+      DBInstances.appDB.notifyMailTableUpdated();
       _settingsBloc.add(OnResume());
     }
 

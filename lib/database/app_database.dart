@@ -103,4 +103,8 @@ class AppDatabase extends _$AppDatabase {
   // are covered later in this readme.
   @override
   int get schemaVersion => 10;
+
+  void notifyMailTableUpdated() {
+    streamQueries.handleTableUpdates({TableUpdate.onTable(mail)});
+  }
 }
