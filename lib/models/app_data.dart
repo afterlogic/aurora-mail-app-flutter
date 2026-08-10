@@ -13,6 +13,10 @@ class AppData extends Equatable {
       this.calendarSettings,
       this.location});
 
+  bool hasModule(String module) =>
+      availableClientModules.contains(module) ||
+      availableBackendModules.contains(module);
+
   AppData copyWith({
     List<String>? availableBackendModules,
     List<String>? availableClientModules,
@@ -39,7 +43,7 @@ class AppData extends Equatable {
 
   factory AppData.fromMap(Map<String, dynamic> map) {
     return AppData(
-      calendarSettings: map['Calendar'] as Map<String, dynamic>,
+      calendarSettings: map['Calendar'] as Map<String, dynamic>?,
       location: tz.getLocation(map['Core']['Timezone'] as String),
       availableClientModules:
           (map['Core']['AvailableClientModules'] as List).cast<String>(),

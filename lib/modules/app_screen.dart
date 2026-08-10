@@ -267,8 +267,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                               BuildProperty.calendarModule &&
                               (UserAppDataSingleton()
                                       .getAppData
-                                      ?.availableBackendModules
-                                      .contains(ServerModules.calendar) ??
+                                      ?.hasModule(ServerModules.calendar) ??
                                   false)
                           ? CalendarRepository(
                               user: _authBloc.currentUser!,

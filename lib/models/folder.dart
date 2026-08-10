@@ -220,13 +220,12 @@ class Folder {
 
   static List<Folder>? getFoldersObjectsFromDb(List<LocalFolder> localFolders) {
     try {
-      final availableModules =
-          UserAppDataSingleton().getAppData?.availableClientModules;
+      final appData = UserAppDataSingleton().getAppData;
 
       return localFolders.map((localFolder) {
         return getFolderObjectsFromDb(localFolder,
             notesAvailable:
-                availableModules?.contains(ServerModules.notes) ?? false);
+                appData?.hasModule(ServerModules.notes) ?? false);
       }).toList();
     } catch (err, s) {
       print("getFolderObjectsFromDb err: $err");
