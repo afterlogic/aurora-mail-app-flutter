@@ -17,21 +17,10 @@ ErrorToShow formatError(dynamic err, StackTrace stack) {
       return ErrorToShow.message(
           err.message.isNotEmpty ? err.message : err.toString());
     }
-  } else if (err is TypeError) {
-    debugPrint("TypeError: $err Stack: $stack");
-    return ErrorToShow(err);
-  } else if (err is StateError) {
-    debugPrint("StateError: $err Stack: $stack");
-    if (err.message.contains('No element') == true) {
-      return ErrorToShow.message(S.current.record_not_found);
-    } else {
-      return ErrorToShow(err);
-    }
+  } else if (err is StateError && err.message.contains('No element') == true) {
+    return ErrorToShow.message(S.current.record_not_found);
   } else {
-    debugPrint("Debug error: $err");
-    debugPrint("Debug stack: $stack");
-    return ErrorToShow(err);
-    // TODO set unknown for release
-//    return "Unknown error";
+    debugPrint("Code-level error: $err Stack: $stack");
+    return ErrorToShow(err, stack);
   }
 }
