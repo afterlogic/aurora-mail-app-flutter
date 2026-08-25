@@ -191,7 +191,7 @@ Future<bool> onAlarm({
       final future = BackgroundSync()
           .sync(
             isBackground,
-            showNotification,
+            showNotification && isBackground,
             data,
             isolatedLogger,
             interceptor,
