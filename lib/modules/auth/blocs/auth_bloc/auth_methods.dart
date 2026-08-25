@@ -203,13 +203,22 @@ class AuthMethods {
     // await Future.wait(futures);
   }
 
-  Future<User?> invalidateToken(int userLocalId) async {
+  Future<User?> invalidateToken(User user) async {
     try {
-      await _usersDao.updateUser(userLocalId, UsersCompanion(token: Value("")));
+      // revoke server-side first - a locally-cleared token alone doesn't
+      // stop requests already in flight, or ones made from a stale in-memory
+      // API client instance that still holds the old (locally-still-valid)
+      // token
+      await _authApi.logout(user);
     } catch (e) {
       print(e);
     }
-    return _usersDao.getUserByLocalId(userLocalId);
+    try {
+      await _usersDao.updateUser(user.localId!, UsersCompanion(token: Value("")));
+    } catch (e) {
+      print(e);
+    }
+    return _usersDao.getUserByLocalId(user.localId!);
   }
 
   Future selectAccount(int accountLocalId) {

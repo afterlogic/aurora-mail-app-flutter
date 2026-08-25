@@ -324,7 +324,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     logger.log('user token invalidating');
 
     if (currentUser != null) {
-      currentUser = await _methods.invalidateToken(currentUser!.localId!);
+      // stop the periodic background mail-sync alarm right away so it can't
+      // start a new sync cycle for this (about to be signed-out) user; it
+      // gets re-armed by SettingsBloc if another logged-in user remains
+      AlarmService.removeAlarm(ALARM_ID);
+      currentUser = await _methods.invalidateToken(currentUser!);
       final notRelatedUsers =
           users.where((e) => e!.localId != currentUser!.localId).toList();
       if (!BuildProperty.multiUserEnable && notRelatedUsers.isNotEmpty) {
