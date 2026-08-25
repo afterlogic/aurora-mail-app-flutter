@@ -759,6 +759,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "error_server_voice_not_allowed": MessageLookupByLibrary.simpleMessage(
       "Ses\'e izin verilmiyor",
     ),
+    "error_session_expired": MessageLookupByLibrary.simpleMessage(
+      "Oturumunuzun süresi doldu. Lütfen tekrar giriş yapın.",
+    ),
     "error_timeout": MessageLookupByLibrary.simpleMessage(
       "Sunucuya bağlanılamıyor",
     ),

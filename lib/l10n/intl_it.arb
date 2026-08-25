@@ -231,6 +231,7 @@
 	"error_login_input_password": "Inserisci la password",
 	"error_login_auto_discover": "Impossibile rilevare il dominio da questa email, specifica manualmente l'URL del server.",
 	"error_login_no_accounts": "Questo utente non ha account di posta",
+	"error_session_expired": "La tua sessione è scaduta. Effettua nuovamente l'accesso.",
 	"error_login_account_exists": "Questo account esiste già nella tua lista di account.",
 	"error_compose_no_receivers": "Fornisci i destinatari",
 	"error_compose_wait_attachments": "Attendi che gli allegati vengano caricati",

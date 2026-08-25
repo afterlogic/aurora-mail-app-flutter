@@ -38,6 +38,15 @@ class LoginAndroid extends StatefulWidget {
   final bool isDialog;
   final String? email;
 
+  /// Set right before a forced sign-out (e.g. server auth error) so this
+  /// screen can explain to the user why they landed here, instead of it
+  /// looking like an app bug. Consumed (read and cleared) in [initState] -
+  /// a static field rather than a constructor param/route argument because
+  /// the redirect goes through [RestartWidget], which tears down and
+  /// recreates the whole widget tree (including the Navigator that would
+  /// otherwise carry route arguments) right after pushing this route.
+  static String? pendingMessage;
+
   const LoginAndroid({Key? key, this.isDialog = false, this.email})
       : super(key: key);
 
@@ -64,6 +73,24 @@ class _LoginAndroidState extends BState<LoginAndroid> {
       if (widget.email != null) emailCtrl.text = widget.email!;
     } else {
       BlocProvider.of<AuthBloc>(context).add(GetLastEmail());
+    }
+
+    final message = LoginAndroid.pendingMessage;
+    LoginAndroid.pendingMessage = null;
+    if (message != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              message,
+              style: const TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Theme.of(context).colorScheme.error,
+            duration: const Duration(seconds: 6),
+          ),
+        );
+      });
     }
   }
 

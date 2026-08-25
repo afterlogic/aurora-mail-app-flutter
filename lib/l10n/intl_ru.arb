@@ -231,6 +231,7 @@
 	"error_login_input_password": "Введите пароль",
 	"error_login_auto_discover": "Не удалось определить домен автоматически, пожалуйста, укажите его вручную.",
 	"error_login_no_accounts": "У данного пользователя нет почтовых аккаунтов",
+	"error_session_expired": "Ваша сессия истекла. Пожалуйста, войдите снова.",
 	"error_login_account_exists": "Этот аккаунт уже находится в списке ваших аккаунтов.",
 	"error_compose_no_receivers": "Укажите получателей",
 	"error_compose_wait_attachments": "Пожалуйста подождите пока загрузятся вложения",

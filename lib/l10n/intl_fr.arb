@@ -227,6 +227,7 @@
   "error_login_input_password": "Veuillez saisir le mot de passe",
   "error_login_auto_discover": "Impossible de détecter le domaine à partir de cet e-mail, veuillez spécifier manuellement l'URL de votre serveur.",
   "error_login_no_accounts": "Cet utilisateur n'a pas de comptes de messagerie",
+  "error_session_expired": "Votre session a expiré. Veuillez vous reconnecter.",
   "error_login_account_exists": "Ce compte existe déjà dans votre liste de comptes.",
   "error_compose_no_receivers": "Veuillez fournir des destinataires",
   "error_compose_wait_attachments": "Veuillez attendre que les pièces jointes soient téléversées",

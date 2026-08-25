@@ -41,6 +41,7 @@ import 'package:theme/app_theme.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 import 'auth/blocs/auth_bloc/bloc.dart';
+import 'auth/screens/login/login_android.dart';
 import 'auth/screens/login/login_route.dart';
 import 'dialog_wrap.dart';
 import 'route_generator.dart';
@@ -57,6 +58,17 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
   final _navKey = GlobalKey<NavigatorState>();
   final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   NotificationData? _notification;
+
+  /// Becomes true once we've observed a logged-in user this app session, so
+  /// we can tell "the current session was invalidated" (must force the user
+  /// back to the login screen) apart from "there was never a session to
+  /// begin with" (already showing the login screen, nothing to do).
+  bool _hadUser = false;
+
+  /// Set right before invalidating the token in response to a server auth
+  /// error, so [_navigateToLogin] knows to explain to the user why they were
+  /// signed out (as opposed to a deliberate manual sign-out).
+  bool _authErrorLogout = false;
 
   @override
   void initState() {
@@ -84,6 +96,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
     BackgroundHelper.current = WidgetsBinding.instance.lifecycleState!;
     sub = WebMailApi.authErrorStream.listen((_) {
       if (_authBloc.currentUser != null) {
+        _authErrorLogout = true;
         _authBloc.add(InvalidateCurrentUserToken());
       }
     });
@@ -173,6 +186,13 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
 
   void _navigateToLogin() {
     try {
+      // RestartWidget below tears down and recreates the whole widget tree
+      // (including the Navigator), so this has to be a static field the
+      // fresh LoginAndroid reads on init rather than a route argument
+      if (_authErrorLogout) {
+        LoginAndroid.pendingMessage = S.current.error_session_expired;
+      }
+      _authErrorLogout = false;
       _navKey.currentState!.popUntil((r) => r.isFirst);
       _navKey.currentState!.pushReplacementNamed(LoginRoute.name);
       RestartWidget.restartApp(context);
@@ -209,43 +229,14 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
           if (state is LoggedOut) _navigateToLogin();
           if (state is UserSelected) RestartWidget.restartApp(context);
           if (state is InitializedUserAndAccounts) {
-            if (state.user == null) {
-              /// SnackBar doesn't work in here because it disappear after some time
-
-              // _scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
-              //   content: Text(
-              //     'Authentication error! Please login to continue.',
-              //     style: TextStyle(color: Colors.white),
-              //   ),
-              //   duration: Duration(seconds: 10),
-              //   backgroundColor: theme.colorScheme.error,
-              //   action: SnackBarAction(
-              //     label: 'Relogin',
-              //     onPressed: () {
-              //       _navigateToLogin();
-              //     },
-              //   ),
-              // ));
-
-              /// Display a banner about the authentication problem and a button to re-login
-              _scaffoldMessengerKey.currentState?.showMaterialBanner(
-                MaterialBanner(
-                  content: Text(
-                    'An authentication problem has occurred! Please re-login to continue.',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  backgroundColor: Theme.of(context).colorScheme.error,
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        _navigateToLogin();
-                      },
-                      child: Text('Re-login',
-                          style: TextStyle(color: Colors.white)),
-                    ),
-                  ],
-                ),
-              );
+            if (state.user != null) {
+              _hadUser = true;
+            } else if (_hadUser) {
+              // the session that was active this app run just got
+              // invalidated (server-side auth error or manual sign-out) -
+              // force the user back to the login screen instead of letting
+              // them keep browsing already-downloaded, cached mail
+              _navigateToLogin();
             }
           }
         },

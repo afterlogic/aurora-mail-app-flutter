@@ -231,6 +231,7 @@
 	"error_login_input_password": "Bitte geben Sie das Passwort ein",
 	"error_login_auto_discover": "Domain konnte nicht aus dieser E-Mail erkannt werden, bitte geben Sie Ihre Server-URL manuell an.",
 	"error_login_no_accounts": "Dieser Benutzer hat keine E-Mail-Konten",
+	"error_session_expired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
 	"error_login_account_exists": "Dieses Konto existiert bereits in Ihrer Kontenliste.",
 	"error_compose_no_receivers": "Bitte geben Sie Empfänger an",
 	"error_compose_wait_attachments": "Bitte warten Sie, bis die Anhänge hochgeladen sind",

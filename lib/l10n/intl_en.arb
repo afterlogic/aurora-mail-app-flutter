@@ -231,6 +231,7 @@
 	"error_login_input_password": "Please enter password",
 	"error_login_auto_discover": "Could not detect domain from this email, please specify your server URL manually.",
 	"error_login_no_accounts": "This user doesn't have mail accounts",
+	"error_session_expired": "Your session has expired. Please sign in again.",
 	"error_login_account_exists": "This account already exists in your accounts list.",
 	"error_compose_no_receivers": "Please provide recipients",
 	"error_compose_wait_attachments": "Please wait until attachments are uploaded",

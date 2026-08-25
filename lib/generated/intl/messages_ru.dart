@@ -753,6 +753,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "error_server_voice_not_allowed": MessageLookupByLibrary.simpleMessage(
       "Голос не разрешен",
     ),
+    "error_session_expired": MessageLookupByLibrary.simpleMessage(
+      "Ваша сессия истекла. Пожалуйста, войдите снова.",
+    ),
     "error_timeout": MessageLookupByLibrary.simpleMessage(
       "Не удается подключиться к серверу",
     ),

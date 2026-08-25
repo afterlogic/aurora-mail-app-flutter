@@ -2174,6 +2174,16 @@ class S {
     );
   }
 
+  /// `Your session has expired. Please sign in again.`
+  String get error_session_expired {
+    return Intl.message(
+      'Your session has expired. Please sign in again.',
+      name: 'error_session_expired',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `This account already exists in your accounts list.`
   String get error_login_account_exists {
     return Intl.message(
