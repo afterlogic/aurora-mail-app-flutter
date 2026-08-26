@@ -38,6 +38,14 @@ class WebMailApi {
   static Function(String)? onRequest;
   static Function(String)? onError;
   static Function(String)? onResponse;
+
+  // Guards against a stale/half-open keep-alive connection: connectionTimeout
+  // below only covers establishing a new socket, not a reused one that never
+  // responds (e.g. a mobile NAT silently dropping it), which used to hang
+  // requests like SetDeviceName forever after a successful Login.
+  static const Duration _requestTimeout = Duration(seconds: 30);
+  static const Duration _uploadTimeout = Duration(minutes: 5);
+
   static IOClient _client = IOClient(
     HttpClient()
       ..badCertificateCallback =
@@ -77,11 +85,6 @@ class WebMailApi {
       'X-DeviceId': await DeviceIdStorage.getDeviceId() ?? '',
     };
   }
-
-  // Duration _connectionTimeout = const Duration(seconds: 120);
-  // Response Function() _onConnectionTimeout = () => Response(
-  //     json.encode({"ErrorMessage": "Connection timed out", "ErrorCode": 408}),
-  //     408);
 
   _onRequest(String id, String? parameters) {
     if (interceptor.onRequest != null) {
@@ -131,11 +134,13 @@ class WebMailApi {
     final start = DateTime.now().millisecondsSinceEpoch;
     _onRequest(id, body.parameters);
     try {
-      final rawResponse = await _client.post(
-        Uri.parse(apiUrl),
-        headers: headers,
-        body: body.toMap(moduleName),
-      );
+      final rawResponse = await _client
+          .post(
+            Uri.parse(apiUrl),
+            headers: headers,
+            body: body.toMap(moduleName),
+          )
+          .timeout(_requestTimeout);
       final res = json.decode(rawResponse.body);
 
       if (res["Result"] != null && (res["Result"] != false || getRawResponse)) {
@@ -182,7 +187,7 @@ class WebMailApi {
     }
     request.fields.addAll(body.toMap(moduleName));
     request.files.add(file);
-    final rawResponse = await request.send();
+    final rawResponse = await request.send().timeout(_uploadTimeout);
     final responseBody = await rawResponse.stream.bytesToString();
     final res = json.decode(responseBody);
 

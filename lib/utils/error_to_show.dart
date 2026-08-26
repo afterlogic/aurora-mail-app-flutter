@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:aurora_mail/generated/l10n.dart';
@@ -12,7 +13,7 @@ class ErrorToShow {
   /// [stackTrace] should be passed whenever available (eg. from [formatError])
   /// so code-level errors are reported to Crashlytics with an accurate trace.
   factory ErrorToShow(dynamic error, [StackTrace? stackTrace]) {
-    if (error is SocketException) {
+    if (error is SocketException || error is TimeoutException) {
       return ErrorToShow.message(S.current.error_timeout);
     } else if (error is WebMailApiError) {
       return error.toShow();

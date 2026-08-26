@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:aurora_mail/generated/l10n.dart';
@@ -9,6 +10,8 @@ import 'package:webmail_api_client/webmail_api_client.dart';
 ErrorToShow formatError(dynamic err, StackTrace stack) {
   if (err is WebMailApiError) {
     return err.toShow();
+  } else if (err is TimeoutException) {
+    return ErrorToShow.message(S.current.error_connection);
   } else if (err is SocketException) {
     if (err.osError?.errorCode == 7 ||
         err.message.contains('connection timed out') == true) {
