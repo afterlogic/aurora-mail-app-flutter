@@ -97,3 +97,44 @@ If you use VS Code, you can add these to the `args` of your launch configuration
 ```
 
 Do not commit real credentials to the repository. Keep them only in your local run configuration.
+
+17. Firebase App Check debug token.
+
+App Check is enabled per brand via the `enableAppCheck` flag in `build_variant.yaml`. When it's `true`, a debug build needs a debug token, otherwise it falls back to the production attestation providers (Play Integrity / App Attest), which don't work on unregistered dev devices/emulators.
+
+Generate any UUID yourself (e.g. `uuidgen`, or PowerShell's `New-Guid`), then pass it with `--dart-define`:
+
+```
+fvm flutter run --dart-define=FIREBASE_APP_CHECK_DEBUG_TOKEN=your-generated-uuid
+```
+
+Or add it to the `args` of your `.vscode/launch.json` configuration, same as `DEBUG_EMAIL`/`DEBUG_PASSWORD` above.
+
+On first run with this define set, the app registers that exact UUID as its own debug secret (see `MainActivity.onCreate` on Android). You then need to add the same UUID in the Firebase console: **App Check → your app → Manage debug tokens**. Without that registration step, requests using the token will still be rejected.
+
+This define is required on every `flutter run`/build where you want App Check to work in debug — it isn't persisted anywhere, and it's independent of which brand/`build_variant.sh` you last ran.
+
+18. Running in debug mode without Android Studio (terminal only).
+
+Android Studio isn't required to run the app in debug — the emulator and device tooling both work from Flutter's own CLI.
+
+* List connected devices and running emulators:
+  ```
+  fvm flutter devices
+  ```
+* Run on a specific device (use an id from the list above):
+  ```
+  fvm flutter run -d <device_id>
+  ```
+* To use a physical phone: enable Developer Options and USB debugging on the device, connect it via USB (or `adb connect <ip>:<port>` for wireless debugging), then it will show up in `fvm flutter devices`.
+* To use an emulator without opening Android Studio, list AVDs previously created through it and launch one:
+  ```
+  fvm flutter emulators
+  fvm flutter emulators --launch <emulator_id>
+  ```
+  (creating a new AVD from scratch still needs `avdmanager`/`sdkmanager` from the Android command-line tools, which can be installed separately from Android Studio.)
+
+Combine with the `--dart-define` flags from the sections above as needed, e.g.:
+```
+fvm flutter run -d <device_id> --dart-define=DEBUG_EMAIL=your@email.com --dart-define=DEBUG_PASSWORD=yourpassword --dart-define=FIREBASE_APP_CHECK_DEBUG_TOKEN=your-generated-uuid
+```

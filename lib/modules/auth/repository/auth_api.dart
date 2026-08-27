@@ -82,7 +82,15 @@ class AuthApi {
         throw AppCheckValidationError();
       }
 
-      final twoFactorAuth = response['Result']['TwoFactorAuth'] as dynamic;
+      // Any other server-side failure (e.g. Turnstile rejecting the request)
+      // comes back as {"Result": false, "ErrorCode": ...} rather than a Map -
+      // bail out via the generic error path instead of indexing into `false`.
+      final result = response['Result'];
+      if (result is! Map) {
+        throw WebMailApiError(response);
+      }
+
+      final twoFactorAuth = result['TwoFactorAuth'] as dynamic;
       if (twoFactorAuth != null) {
         final twoFactorModel = twoFactorAuth is bool
             ? TwoFactorAuthModel(hasAuthenticatorApp: twoFactorAuth)
@@ -96,10 +104,9 @@ class AuthApi {
         );
       }
 
-      final authToken = response['Result']['AuthToken'] as dynamic;
+      final authToken = result['AuthToken'] as dynamic;
       if (authToken is String) {
-        if (BuildProperty.supportAllowAccess &&
-            response['Result']["AllowAccess"] != 1) {
+        if (BuildProperty.supportAllowAccess && result["AllowAccess"] != 1) {
           throw AllowAccessError();
         }
 
