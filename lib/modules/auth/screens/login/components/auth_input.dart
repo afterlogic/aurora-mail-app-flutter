@@ -2,6 +2,7 @@
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:theme/login_form_style.dart';
 
 class AuthInput extends StatefulWidget {
   final TextEditingController controller;
@@ -39,6 +40,14 @@ class _AuthInputState extends BState<AuthInput> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // Brand-defined look of the sign-in fields; falls back to the historical
+    // hard-coded values if a brand's theme does not register the extension.
+    final style = theme.extension<LoginFormStyle>() ?? LoginFormStyle.fallback;
+    final baseBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(style.fieldRadius),
+      borderSide: BorderSide(color: style.fieldBorderColor),
+    );
+
     return TextFormField(
       inputFormatters: widget.inputFormatters,
       autocorrect: widget.autocorrect,
@@ -48,47 +57,35 @@ class _AuthInputState extends BState<AuthInput> {
       keyboardType: widget.keyboardType,
       validator: widget.validator,
       obscureText: widget.isPassword && _obscureText,
-      style: TextStyle(color: Colors.black87),
+      style: style.fieldTextStyle,
+      cursorColor: style.fieldCursorColor,
       decoration: InputDecoration(
         filled: true,
-        fillColor: Colors.white.withValues(alpha: 0.5), 
-        // enabledBorder: UnderlineInputBorder(
-        //     borderSide:
-        //         BorderSide(color: theme.disabledColor.withValues(alpha: 0.1))),
-        // focusedBorder: UnderlineInputBorder(
-        //     borderSide: BorderSide(color: theme.primaryColor)),
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 14,
-          vertical: 10,
+        fillColor: style.fieldFillColor,
+        contentPadding: style.fieldContentPadding,
+        border: baseBorder,
+        enabledBorder: baseBorder,
+        focusedBorder: baseBorder.copyWith(
+          borderSide: BorderSide(color: style.fieldFocusedBorderColor),
         ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(color: Color(0xFFEBEBEB)),
+        errorBorder: baseBorder.copyWith(
+          borderSide: BorderSide(color: style.fieldErrorBorderColor),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color(0xFFEBEBEB)),
-          borderRadius: BorderRadius.circular(10.0)),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color(0xFF1D67CD)),
-          borderRadius: BorderRadius.circular(10.0)),
-
-        // floatingLabelBehavior: BuildProperty.hasFloatingPlaceholder,
+        focusedErrorBorder: baseBorder.copyWith(
+          borderSide: BorderSide(color: style.fieldErrorBorderColor),
+        ),
         floatingLabelBehavior: FloatingLabelBehavior.never,
-        // hintText: BuildProperty.hasFloatingPlaceholder ? null : widget.label,
-        // labelText: BuildProperty.hasFloatingPlaceholder ? widget.label : null,
         hintText: widget.label,
-        hintStyle: TextStyle(
-          color: Color(0xFFA6ACB8),
-        ),
-        // labelText: widget.label,
+        hintStyle: style.fieldHintStyle,
         suffixIcon: widget.isPassword
             ? SizedBox(
                 height: 50.0,
                 child: IconButton(
                   icon: Icon(
                     _obscureText ? Icons.visibility : Icons.visibility_off,
-                    color:
-                        widget.visibilityToggleColor ?? theme.iconTheme.color,
+                    color: widget.visibilityToggleColor ??
+                        style.visibilityToggleColor ??
+                        theme.iconTheme.color,
                   ),
                   onPressed: () => setState(() => _obscureText = !_obscureText),
                 ),

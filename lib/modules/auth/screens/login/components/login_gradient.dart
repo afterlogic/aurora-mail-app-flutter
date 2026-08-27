@@ -1,7 +1,13 @@
 
-import 'package:aurora_mail/build_property.dart';
 import 'package:flutter/material.dart';
+import 'package:theme/login_form_style.dart';
 
+/// Paints the background behind the whole sign-in flow (login, 2FA, ...).
+///
+/// The background (flat colour / gradient / image) comes from
+/// [LoginFormStyle.screenBackground] on the active theme. Keep it visually in
+/// sync with `splashGradientTop/Bottom` in `build_variant.yaml`, which style
+/// the native Android splash screen (that one cannot be themed from Dart).
 class LoginGradient extends StatelessWidget {
   final Widget? child;
 
@@ -9,41 +15,13 @@ class LoginGradient extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final style = Theme.of(context).extension<LoginFormStyle>() ??
+        LoginFormStyle.fallback;
 
     return Container(
       width: double.infinity,
-      decoration: BuildProperty.useBackgroundImage
-          ? BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                    BuildProperty.image_dir + '/login_background.jpg'),
-                fit: BoxFit.cover,
-              ),
-            )
-          : BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                stops: [0, 1],
-                colors: [
-                  _fromHex(isDark
-                      ? BuildProperty.splashGradientTopDark
-                      : BuildProperty.splashGradientTop),
-                  _fromHex(isDark
-                      ? BuildProperty.splashGradientBottomDark
-                      : BuildProperty.splashGradientBottom),
-                ],
-              ),
-            ),
+      decoration: style.screenBackground,
       child: child,
     );
-  }
-
-  Color _fromHex(String hexString) {
-    final buffer = StringBuffer();
-    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
-    buffer.write(hexString.replaceFirst('#', ''));
-    return Color(int.parse(buffer.toString(), radix: 16));
   }
 }

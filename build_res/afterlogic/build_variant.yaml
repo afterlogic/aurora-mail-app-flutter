@@ -66,8 +66,8 @@ background_color: '#FFFFFF'
 useBackgroundImage: false
 splashGradientTop: '#FFFFFF'
 splashGradientBottom: '#FFFFFF'
-splashGradientTopDark: '#000000'
-splashGradientBottomDark: '#000000'
+splashGradientTopDark: '#1F3042'
+splashGradientBottomDark: '#202020'
 
 # Theme selection
 showThemeSelection: true # show theme selection in settings

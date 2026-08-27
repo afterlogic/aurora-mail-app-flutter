@@ -315,7 +315,8 @@ class _LoginAndroidState extends BState<LoginAndroid> {
 
   Widget _buildLoginForm(BuildContext context, {bool loading = false}) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final loginForm =
+        theme.extension<LoginFormStyle>() ?? LoginFormStyle.fallback;
 
     return Stack(
       children: <Widget>[
@@ -332,11 +333,11 @@ class _LoginAndroidState extends BState<LoginAndroid> {
               child: IntrinsicHeight(
                 child: Center(
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxWidth: LayoutConfig.formWidth,
+                    constraints: BoxConstraints(
+                      maxWidth: loginForm.cardMaxWidth,
                     ),
                     child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 22.0),
+                      margin: loginForm.cardMargin,
                       child: Form(
                         key: LoginAndroid._authFormKey,
                         child: Column(
@@ -352,24 +353,15 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                             ],
                             Column(children: <Widget>[
                               Container(
-                                decoration: isDark
-                                    ? AppTheme.loginCardDecorationDark
-                                    : AppTheme.loginCardDecorationLight,
-                                padding: AppTheme.loginCardPadding,
+                                decoration: loginForm.cardDecoration,
+                                padding: loginForm.cardPadding,
                                 child: Column(children: <Widget>[
                                   Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                       S.of(context).login_sign_in,
                                       textAlign: TextAlign.left,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge
-                                          ?.copyWith(
-                                            fontSize: 24.0,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black,
-                                          ),
+                                      style: loginForm.titleTextStyle,
                                     ),
                                   ),
                                   const SizedBox(height: 10),

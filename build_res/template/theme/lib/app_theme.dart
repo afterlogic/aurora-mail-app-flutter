@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'app_color.dart';
+import 'login_form_style.dart';
+
+export 'login_form_style.dart';
 
 class AppTheme {
   static final light = ThemeData(
@@ -28,6 +31,7 @@ class AppTheme {
     textSelectionTheme: _textSelectionTheme,
     dividerColor: AppColor.divider,
     dividerTheme: const DividerThemeData(color: AppColor.divider),
+    extensions: <ThemeExtension<dynamic>>[_loginFormLight],
   );
 
   static final dark = ThemeData(
@@ -54,6 +58,7 @@ class AppTheme {
     textSelectionTheme: _textSelectionTheme,
     dividerColor: AppColor.dividerDark,
     dividerTheme: const DividerThemeData(color: AppColor.dividerDark),
+    extensions: <ThemeExtension<dynamic>>[_loginFormDark],
   );
 
   static final floatIconTheme = IconThemeData(color: Colors.white);
@@ -70,6 +75,38 @@ class AppTheme {
   // Card not shown for this brand
   static final loginCardDecorationLight = const BoxDecoration();
   static final loginCardDecorationDark = const BoxDecoration();
+
+  // Sign-in form appearance (card + input fields). Registered in
+  // `light`/`dark` via `extensions:` and consumed by the login screen and
+  // `AuthInput`. This brand keeps a flat card.
+  static final _loginFormLight = LoginFormStyle(
+    // Keep visually in sync with `splashGradientTop/Bottom` in
+    // build_variant.yaml so the native Android splash blends into the
+    // Flutter login screen.
+    screenBackground: const BoxDecoration(color: Color(0xFFFFFFFF)),
+    cardMargin: const EdgeInsets.symmetric(horizontal: 22.0),
+    cardPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 36.0),
+    cardMaxWidth: 450.0,
+    cardDecoration: const BoxDecoration(),
+    titleTextStyle: const TextStyle(
+      fontSize: 24.0,
+      fontWeight: FontWeight.w600,
+      color: Colors.black,
+    ),
+    fieldFillColor: Colors.white.withValues(alpha: 0.5),
+    fieldContentPadding:
+        const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+    fieldRadius: 10.0,
+    fieldBorderColor: const Color(0xFFEBEBEB),
+    fieldFocusedBorderColor: const Color(0xFF1D67CD),
+    fieldErrorBorderColor: AppColor.warning,
+    fieldTextStyle: const TextStyle(color: Colors.black87),
+    fieldHintStyle: const TextStyle(color: Color(0xFFA6ACB8)),
+  );
+
+  static final _loginFormDark = _loginFormLight.copyWith(
+    screenBackground: const BoxDecoration(color: Color(0xFF000000)),
+  );
 
   static final _appBarThemeLight = AppBarTheme(
     systemOverlayStyle: SystemUiOverlayStyle(
