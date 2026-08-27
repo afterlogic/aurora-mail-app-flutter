@@ -1,5 +1,6 @@
 name: aurora_mail
 description: Mail client for {{appName}}.
+publish_to: "none"
 
 version: "{{version}}+{{build}}"
 
