@@ -79,7 +79,7 @@ class _MainDrawerState extends BState<MainDrawer> {
                   ),
                 ),
               ),
-              Divider(height: 0.0),
+              const Divider(),
               if (mode == _DrawerMode.accounts)
                 Expanded(
                   child: _buildAccounts(authBloc),

@@ -36,8 +36,6 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
     super.didChangeDependencies();
   }
 
-  final dividerColor = const Color(0xFFD0D0D0);
-
   @override
   Widget build(BuildContext context) {
     final User? user = BlocProvider.of<AuthBloc>(context).currentUser;
@@ -102,10 +100,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                         ],
                       ),
                     ),
-                    Divider(
-                      color: dividerColor,
-                      height: 1,
-                    ),
+                    const Divider(),
                     (myCalendars != null)
                         ? Column(
                             children: myCalendars
@@ -132,10 +127,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                             style: TextStyle(color: theme.primaryColor)),
                       ),
                     if (sharedCalendars?.isNotEmpty ?? false)
-                      Divider(
-                        color: dividerColor,
-                        height: 1,
-                      ),
+                      const Divider(),
                     (sharedCalendars != null)
                         ? Column(
                             children: sharedCalendars
@@ -161,10 +153,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                             style: TextStyle(color: theme.primaryColor)),
                       ),
                     if (sharedToAllCalendars?.isNotEmpty ?? false)
-                      Divider(
-                        color: dividerColor,
-                        height: 1,
-                      ),
+                      const Divider(),
                     (sharedToAllCalendars != null)
                         ? Column(
                             children: sharedToAllCalendars

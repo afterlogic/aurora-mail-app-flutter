@@ -26,6 +26,8 @@ class AppTheme {
     textButtonTheme: _textButtonTheme,
     textTheme: _textThemeLight,
     textSelectionTheme: _textSelectionTheme,
+    dividerColor: AppColor.divider,
+    dividerTheme: const DividerThemeData(color: AppColor.divider),
   );
 
   static final dark = ThemeData(
@@ -50,6 +52,8 @@ class AppTheme {
     textButtonTheme: _textButtonTheme,
     textTheme: _textThemeDark,
     textSelectionTheme: _textSelectionTheme,
+    dividerColor: AppColor.dividerDark,
+    dividerTheme: const DividerThemeData(color: AppColor.dividerDark),
   );
 
   static final floatIconTheme = IconThemeData(color: Colors.white);

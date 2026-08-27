@@ -17,6 +17,8 @@ class AppColor {
   static const appBarText = Color(0xFF212121); // for compatibility
   static const appBarDivider =
       Color(0xFFEBEBEB); // only used when useAppBarDivider is enabled
+  static const divider = Color(0xFFEBEBEB); // section/list separators (light)
+  static const dividerDark = Color(0xFF323232); // section/list separators (dark)
   static const bottomNavigationBackground = Color(0xFFF4F1FD);
   static const bottomNavigationBackgroundDark = Colors.black;
 
