@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
 
@@ -95,12 +95,17 @@ class WebMailApi {
   }
 
   _onResponse(String id, int delay, int status, dynamic res) {
+    // `logResponse` mirrors the "Show response body" debug toggle, which is only
+    // meant to gate the response body written to the log files persisted inside
+    // the app. The DebugConsole output of a debug build should always carry the
+    // full body regardless of that toggle, so include it whenever kDebugMode.
+    final includeBody = kDebugMode || interceptor.logResponse == true;
+    final message =
+        "$id\nDELAY: ${delay}\nSTATUS: ${status} ${includeBody ? "\nBODY:$res" : ""}";
     if (interceptor.onResponse != null) {
-      interceptor.onResponse!(
-          "$id\nDELAY: ${delay}\nSTATUS: ${status} ${interceptor.logResponse == true ? "\nBODY:$res" : ""}");
+      interceptor.onResponse!(message);
     } else if (onResponse != null) {
-      onResponse!(
-          "$id\nDELAY: ${delay}\nSTATUS: ${status} ${interceptor.logResponse == true ? "\nBODY:$res" : ""}");
+      onResponse!(message);
     }
   }
 
