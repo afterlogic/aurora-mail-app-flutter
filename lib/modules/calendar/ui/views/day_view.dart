@@ -12,7 +12,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:theme/app_color.dart';
+import 'calendar_grid_color.dart';
 
 class DayView extends StatefulWidget {
   const DayView({super.key});
@@ -64,7 +64,8 @@ class _DayViewState extends State<DayView> {
 
   @override
   Widget build(BuildContext context) {
-    final border = BorderSide(color: AppColor.calendarGridDevider, width: 1);
+    final gridColor = calendarGridColor(context);
+    final border = BorderSide(color: gridColor, width: 1);
     final settingsState = BlocProvider.of<SettingsBloc>(context).state;
 
     return BlocBuilder<EventsBloc, EventsState>(
@@ -109,7 +110,7 @@ class _DayViewState extends State<DayView> {
           ),
           hourIndicatorSettings: CV.HourIndicatorSettings(
             // Grid lines color
-            color: AppColor.calendarGridDevider,
+            color: gridColor,
             offset: 5, // offset between hour labels and the grid
           ),
           dateStringBuilder: (date, {secondaryDate}) =>

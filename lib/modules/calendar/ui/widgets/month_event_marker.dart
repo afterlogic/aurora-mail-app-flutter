@@ -2,9 +2,9 @@ import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/recurrence_mode.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/views/calendar_grid_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:theme/app_color.dart';
 
 class MonthEventMarker extends StatelessWidget {
   const MonthEventMarker(
@@ -50,7 +50,7 @@ class MonthEventMarker extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border(
                   left: addLeftBorder && event?.isStartedToday(currentDate) == true
-                      ? BorderSide(color: AppColor.calendarGridDevider)
+                      ? BorderSide(color: calendarGridColor(context))
                       : BorderSide.none
                 )
               ),
@@ -159,7 +159,7 @@ class EmptyMarker extends StatelessWidget {
       decoration: BoxDecoration(
           border: Border(
               left: addLeftBorder
-                  ? BorderSide(color: AppColor.calendarGridDevider)
+                  ? BorderSide(color: calendarGridColor(context))
                   : BorderSide.none)),
       child: SizedBox(
         height: height,

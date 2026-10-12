@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
@@ -14,7 +15,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:theme/app_color.dart';
+import 'calendar_grid_color.dart';
 
 class WeekView extends StatefulWidget {
   const WeekView({super.key});
@@ -102,12 +103,15 @@ class _WeekViewState extends State<WeekView> {
 
   @override
   Widget build(BuildContext context) {
-    final border = BorderSide(color: AppColor.calendarGridDevider, width: 1);
+    final gridColor = calendarGridColor(context);
+    final border = BorderSide(color: gridColor, width: 1);
     final settingsState = BlocProvider.of<SettingsBloc>(context).state;
 
     return BlocBuilder<EventsBloc, EventsState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
+        return LayoutBuilder(builder: (context, constraints) {
+        final allDayRowMinHeight = _allDayHeaderHeight(context, constraints.maxWidth);
         return CV.WeekView<WeekViewVisible>(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           startDay: _getWeekStartDay(state.firstDayInWeek),
@@ -123,7 +127,7 @@ class _WeekViewState extends State<WeekView> {
           ),
           hourIndicatorSettings: CV.HourIndicatorSettings(
             // Grid lines color
-            color: AppColor.calendarGridDevider,
+            color: gridColor,
             offset: 5, // offset between hour labels and the grid
           ),
           fullDayHeaderTitle: S.of(context).calendar_input_all_day,
@@ -198,6 +202,14 @@ class _WeekViewState extends State<WeekView> {
           },
           fullDayEventBuilder: (List<CV.CalendarEventData<Object?>> events, DateTime date) {
             final reversedEvents = events.reversed.toList();
+            // The row is at least as tall as the "All day" caption. If the stack
+            // of events is shorter, stretch the items so that their left
+            // borders span the whole row; the extra height goes to the gaps so
+            // the event bars keep their size.
+            const markerHeight = 18.0;
+            const markerGap = 2.0;
+            final stretchedHeight = max(markerHeight, allDayRowMinHeight / reversedEvents.length);
+            final stretchedGap = markerGap + (stretchedHeight - markerHeight);
             return ConstrainedBox(
               constraints: const BoxConstraints(maxHeight: 100),
               child: NotificationListener<ScrollNotification>(
@@ -213,8 +225,8 @@ class _WeekViewState extends State<WeekView> {
                       event: e.event is ViewEvent ? e.event as ViewEvent : null,
                       currentDate: date,
                       addLeftBorder: true,
-                      eventGap: 2,
-                      height: 18,
+                      eventGap: stretchedGap,
+                      height: stretchedHeight,
                       isWeekAllDay: true,
                       innerPaddingValue: 1,
                     );
@@ -242,8 +254,30 @@ class _WeekViewState extends State<WeekView> {
           },
           onDateLongPress: (date) => print(date),
         );
+        });
       },
     );
+  }
+
+  /// Height of the "All day" caption cell in the calendar_view all-day row:
+  /// the text (up to 2 lines, in a column 13% of the view width wide + 5px
+  /// offset) plus its 2px vertical padding.
+  double _allDayHeaderHeight(BuildContext context, double viewWidth) {
+    const hourIndicatorOffset = 5.0;
+    const captionHorizontalPadding = 2.0;
+    const captionVerticalPadding = 4.0;
+    final painter = TextPainter(
+      text: TextSpan(
+        text: S.of(context).calendar_input_all_day,
+        style: DefaultTextStyle.of(context).style,
+      ),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+      maxLines: 2,
+      ellipsis: '…',
+    )..layout(
+        maxWidth: viewWidth * 0.13 + hourIndicatorOffset - captionHorizontalPadding);
+    return painter.height + captionVerticalPadding;
   }
 
   _onStateChange(EventsState state) {
@@ -255,6 +289,12 @@ class _WeekViewState extends State<WeekView> {
     final allDayEvents = events['allDayEvents'];
     if (allDayEvents != null) {
       normalizeAndCleanUpEvents(allDayEvents);
+      // calendar_view builds an all-day cell only for days that have events, so
+      // keep one empty placeholder per day; otherwise a week without all-day
+      // events would have no column dividers in this row.
+      for (final dayEvents in allDayEvents.values) {
+        if (dayEvents.isEmpty) dayEvents.add(null);
+      }
     }
 
     final oldEvents = [..._controller.allEvents];
