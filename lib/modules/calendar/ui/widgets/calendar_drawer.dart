@@ -598,11 +598,14 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
                         color: null,
                         child: ListTile(
                           title: Text(e.titleBuilder(context)),
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: _horizontalSectionPadding,
-                              vertical: 0),
+                          // Indented by half of (checkbox 24 + gap 16) relative
+                          // to the calendar name above.
+                          contentPadding: EdgeInsets.only(
+                              left: _horizontalSectionPadding + (24 + 16) / 2,
+                              right: _horizontalSectionPadding),
                           dense: true,
-                          horizontalTitleGap: 0,
+                          minLeadingWidth: 24,
+                          horizontalTitleGap: 16,
                           leading: e.icon,
                           iconColor: Theme.of(context).primaryColor,
                           onTap: () => e.onTap(context, widget.calendar),
