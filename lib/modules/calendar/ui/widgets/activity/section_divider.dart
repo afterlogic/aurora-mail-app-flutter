@@ -5,9 +5,7 @@ class SectionDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Divider(
-      color: const Color(0xFFB6B5B5),
-      height: 1,
-    );
+    // The color comes from the theme, like every other divider in the app.
+    return const Divider(height: 1);
   }
 }
