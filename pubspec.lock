@@ -101,7 +101,7 @@ packages:
     description:
       path: "."
       ref: "flutter_3.44"
-      resolved-ref: a4d75faf9c6502f5f463b94a09ae0c3fd948f46a
+      resolved-ref: f0dc4e82938951274b000b71fad059258dfd8b1d
       url: "https://github.com/afterlogic/aurora_logger_flutter"
     source: git
     version: "0.0.3"
