@@ -46,6 +46,8 @@ String getErrMsgFromCode(int code) {
       return S.current.error_server_method_not_found;
     case 115:
       return S.current.error_server_license_limit;
+    case 117:
+      return S.current.error_session_expired;
     case 408:
       return S.current.error_connection;
     case 501:

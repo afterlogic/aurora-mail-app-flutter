@@ -195,7 +195,11 @@ class WebMailApi {
         if (res["ErrorCode"] == 4002) {
           res["ErrorCode"] = 102;
         }
-        if (res["ErrorCode"] == 101 || res["ErrorCode"] == 102) {
+        // 117 (UntrustedDevice) is the server rejecting every request for this
+        // device before it even ends the session; treat it like an invalid
+        // token so the app logs out instead of looping on an unrecoverable error.
+        if (res["ErrorCode"] == 101 || res["ErrorCode"] == 102 ||
+            res["ErrorCode"] == 117) {
           _authErrorStreamCtrl.add(res["ErrorCode"]);
         }
         throw WebMailApiError(res);
@@ -238,7 +242,8 @@ class WebMailApi {
         return res["Result"];
     } else {
       onError?.call("$id\n${responseBody}");
-      if (res["ErrorCode"] == 101|| res["ErrorCode"] == 102 || res["ErrorCode"] == 108) {
+      if (res["ErrorCode"] == 101|| res["ErrorCode"] == 102 ||
+          res["ErrorCode"] == 108 || res["ErrorCode"] == 117) {
         _authErrorStreamCtrl.add(res["ErrorCode"]);
       }
       throw WebMailApiError(res);
