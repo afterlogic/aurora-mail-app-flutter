@@ -25,6 +25,7 @@ import 'package:aurora_mail/shared_ui/loading_container_indicator.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/extensions/bloc_provider_extensions.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
+import 'package:aurora_mail/utils/user_app_data_singleton.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -271,7 +272,64 @@ class _CalendarPageState extends State<CalendarPage>
           ),
         ],
       )),
-      floatingActionButton: _overlay
+      floatingActionButton: AnimatedBuilder(
+        animation: _tabController,
+        builder: (context, _) {
+          // Tasks tab: a single button that creates tasks.
+          if (_tabController.index == 3) {
+            return AMFloatingActionButton(
+              child: IconTheme(
+                data: AppTheme.floatIconTheme,
+                child: Icon(Icons.check_box_outlined, size: 32),
+              ),
+              shadow: BuildProperty.disableShadowFloatingActionButton
+                  ? null
+                  : BoxShadow(),
+              onPressed: _openTaskCreation,
+            );
+          }
+          // Tasks are not shown in calendars: only events can be created.
+          if (!_showTasksInCalendars) {
+            return AMFloatingActionButton(
+              child: IconTheme(
+                data: AppTheme.floatIconTheme,
+                child: Icon(Icons.event, size: 32),
+              ),
+              shadow: BuildProperty.disableShadowFloatingActionButton
+                  ? null
+                  : BoxShadow(),
+              onPressed: _openEventCreation,
+            );
+          }
+          return _buildExpandableFab(context);
+        },
+      ),
+      bottomNavigationBar:
+          MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.calendar),
+    );
+  }
+
+  bool get _showTasksInCalendars =>
+      UserAppDataSingleton().getAppData?.calendarSettings?[
+          "ShowTasksInCalendars"] ==
+      true;
+
+  void _openEventCreation() {
+    _eventsBloc.add(SelectEvent(null));
+    _overlay = false;
+    setState(() {});
+    Navigator.of(context).pushNamed(EventCreationPage.name);
+  }
+
+  void _openTaskCreation() {
+    BlocProvider.of<TasksBloc>(context).add(SelectTask(null));
+    _overlay = false;
+    setState(() {});
+    Navigator.of(context).pushNamed(TaskCreationPage.name);
+  }
+
+  Widget _buildExpandableFab(BuildContext context) {
+    return _overlay
           ? Stack(
               children: [
                 // Overlay buttons (positioned above main button)
@@ -430,7 +488,7 @@ class _CalendarPageState extends State<CalendarPage>
                                           CrossAxisAlignment.center,
                                       children: [
                                         _buildCalendarIcon(
-                                            'task', Icons.add_task),
+                                            'task', Icons.check_box_outlined),
                                         SizedBox(width: 8),
                                         Text(
                                           S.of(context).calendar_create_task,
@@ -471,7 +529,7 @@ class _CalendarPageState extends State<CalendarPage>
                                         backgroundColor: Colors.white,
                                         child: IconTheme(
                                           data: AppTheme.floatIconTheme,
-                                          child: Icon(Icons.add_task,
+                                          child: Icon(Icons.check_box_outlined,
                                               color: Colors.black),
                                         ),
                                         shadow: BuildProperty
@@ -496,7 +554,19 @@ class _CalendarPageState extends State<CalendarPage>
                       // Space for the main button
                       const SizedBox(height: 72), // Height of FAB + some margin
                     ] else ...[
-                      // Original layout for other builds - single event button
+                      // Original layout for other builds - plain buttons
+                      AMFloatingActionButton(
+                        heroTag: 'task',
+                        child: IconTheme(
+                          data: AppTheme.floatIconTheme,
+                          child: Icon(Icons.check_box_outlined, size: 32),
+                        ),
+                        shadow: BuildProperty.disableShadowFloatingActionButton
+                            ? null
+                            : BoxShadow(),
+                        onPressed: _openTaskCreation,
+                      ),
+                      const SizedBox(height: 16),
                       AMFloatingActionButton(
                         child: IconTheme(
                           data: AppTheme.floatIconTheme,
@@ -553,10 +623,7 @@ class _CalendarPageState extends State<CalendarPage>
                 _overlay = true;
                 setState(() {});
               },
-            ),
-      bottomNavigationBar:
-          MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.calendar),
-    );
+            );
   }
 
   /// On tablets the calendars drawer is a permanent left column, like on the

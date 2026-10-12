@@ -257,7 +257,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       "rrule": null,
       "type": type.stringCode,
       "status": false,
-      "withDate": true,
+      "withDate": creationData.startDate != null,
       "isPrivate": false,
     };
 
