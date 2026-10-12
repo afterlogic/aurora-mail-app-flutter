@@ -84,21 +84,25 @@ class AdvancedSearchState extends State<AdvancedSearch> {
             children: <Widget>[
               SizedBox(height: 16.0),
               InputUtils.buildUnlymeTextField(
+                context: context,
                 controller: fromCtrl!,
                 labelText: S.of(context).messages_from,
               ),
               SizedBox(height: BuildProperty.useCustomInputStyles ? 16.0 : 8.0),
               InputUtils.buildUnlymeTextField(
+                context: context,
                 controller: toCtrl!,
                 labelText: S.of(context).messages_to,
               ),
               SizedBox(height: BuildProperty.useCustomInputStyles ? 16.0 : 8.0),
               InputUtils.buildUnlymeTextField(
+                context: context,
                 controller: subjectCtrl!,
                 labelText: S.of(context).messages_subject,
               ),
               SizedBox(height: BuildProperty.useCustomInputStyles ? 16.0 : 8.0),
               InputUtils.buildUnlymeTextField(
+                context: context,
                 controller: textCtrl!,
                 labelText: S.of(context).input_message_search_text,
               ),

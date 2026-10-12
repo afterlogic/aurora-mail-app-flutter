@@ -36,6 +36,7 @@ class MainInfo extends StatelessWidget {
       children: isEditable
           ? [
               InputUtils.buildUnlymeTextFormField(
+                context: context,
                 controller: titleController!,
                 focusNode: titleFocus!,
                 labelText: S.of(context).calendar_input_title,
@@ -56,6 +57,7 @@ class MainInfo extends StatelessWidget {
                 height: 20,
               ),
               InputUtils.buildUnlymeTextFormField(
+                context: context,
                 controller: descriptionController!,
                 focusNode: descriptionFocus!,
                 labelText: S.of(context).calendar_input_description,
@@ -71,6 +73,7 @@ class MainInfo extends StatelessWidget {
                 height: 20,
               ),
               InputUtils.buildUnlymeTextFormField(
+                context: context,
                 controller: locationController!,
                 focusNode: locationFocus!,
                 labelText: S.of(context).calendar_input_location,

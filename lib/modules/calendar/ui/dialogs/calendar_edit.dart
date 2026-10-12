@@ -91,17 +91,20 @@ class _CalendarEditDialogState extends State<CalendarEditDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             InputUtils.buildUnlymeTextFormField(
+              context: context,
               controller: _nameController,
               labelText: S.of(context).calendar_name_label,
               validator: _validator,
             ),
             SizedBox(height: 16),
             InputUtils.buildUnlymeTextFormField(
+              context: context,
               controller: _descriptionController,
               labelText: S.of(context).calendar_description_label,
             ),
             SizedBox(height: 16),
             if(widget.calendar.isSubscribed)InputUtils.buildUnlymeTextFormField(
+                context: context,
                 controller: _iCalController,
                 labelText: S.of(context).calendar_ical_url_label),
             SizedBox(height: 16),

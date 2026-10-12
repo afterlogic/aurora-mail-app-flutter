@@ -35,6 +35,7 @@ class _ImportFromTextDialogState extends BState<ImportFromTextDialog>
             maxLines: null,
             textAlignVertical: TextAlignVertical.top,
             decoration: InputUtils.getUnlymeInputDecoration(
+              context: context,
               contentPadding: EdgeInsets.all(8.0),
             ),
           ),

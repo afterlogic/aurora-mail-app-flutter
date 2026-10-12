@@ -55,6 +55,7 @@ class _KeyRequestDialogState extends BState<KeyRequestDialog> {
             Form(
               key: formKey,
               child: InputUtils.buildUnlymeTextFormField(
+                context: context,
                 controller: passCtrl,
                 labelText: S.of(context).login_input_password,
                 obscureText: _obscure,

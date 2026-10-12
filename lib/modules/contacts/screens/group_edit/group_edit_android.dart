@@ -182,6 +182,7 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
         controller: ctrl,
         keyboardType: type,
         decoration: InputUtils.getUnlymeInputDecoration(
+          context: context,
           labelText: label,
         ),
       ),

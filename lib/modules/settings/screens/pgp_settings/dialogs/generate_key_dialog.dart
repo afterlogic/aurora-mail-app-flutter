@@ -47,6 +47,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
               children: <Widget>[
                 DropdownButtonFormField<AliasOrAccount>(
                   decoration: InputUtils.getUnlymeInputDecoration(
+                    context: context,
                     labelText: S.of(context).login_input_email,
                   ),
                   initialValue: current,
@@ -74,6 +75,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
                 SizedBox(height: 16.0),
                 TextFormField(
                   decoration: InputUtils.getUnlymeInputDecoration(
+                    context: context,
                     labelText: S.of(context).login_input_password,
                     suffixIcon: GestureDetector(
                       child: Icon(
@@ -94,6 +96,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
                 SizedBox(height: 16.0),
                 DropdownButtonFormField<int>(
                   decoration: InputUtils.getUnlymeInputDecoration(
+                    context: context,
                     labelText: S.of(context).label_length,
                   ),
                   initialValue: length,

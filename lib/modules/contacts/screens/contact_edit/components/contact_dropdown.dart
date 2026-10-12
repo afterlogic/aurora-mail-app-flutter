@@ -19,6 +19,7 @@ class ContactDropdown extends StatelessWidget {
     final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
 
     return InputUtils.buildUnlymeDropdown<int>(
+      context: context,
       value: primaryValue,
       backgroundColor: isDarkTheme ? Colors.black : Colors.white,
       items: List.generate(options.length, (index) => index),

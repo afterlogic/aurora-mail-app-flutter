@@ -90,12 +90,14 @@ class _CalendarCreationDialogState extends State<CalendarCreationDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             InputUtils.buildUnlymeTextFormField(
+              context: context,
               controller: _nameController,
               labelText: S.of(context).calendar_name_label,
               validator: _validator,
             ),
             SizedBox(height: 16),
             InputUtils.buildUnlymeTextFormField(
+              context: context,
               controller: _descriptionController,
               labelText: S.of(context).calendar_description_label,
             ),
@@ -130,6 +132,7 @@ class _CalendarCreationDialogState extends State<CalendarCreationDialog> {
             if (_subscribeToIcalFeed) ...[
               SizedBox(height: 16),
               InputUtils.buildUnlymeTextFormField(
+                  context: context,
                   controller: _iCalController,
                   validator: _subscribeToIcalFeed ? _validator : null,
                   labelText: S.of(context).calendar_ical_url_label),

@@ -1,6 +1,7 @@
 
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/utils/input_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:theme/app_color.dart';
 
@@ -25,6 +26,7 @@ class _ComposeBodyState extends BState<ComposeBody> {
 
   @override
   Widget build(BuildContext context) {
+    final borderColor = InputUtils.borderColor(context);
     return TextField(
       enabled: widget.enable,
       controller: widget.textCtrl,
@@ -38,21 +40,21 @@ class _ComposeBodyState extends BState<ComposeBody> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide(
-            color: AppColor.inputBorder,
+            color: borderColor,
             width: 1.0,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide(
-            color: AppColor.inputBorder,
+            color: borderColor,
             width: 1.0,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide(
-            color: AppColor.inputBorder,
+            color: borderColor,
             width: 1.0,
           ),
         ),

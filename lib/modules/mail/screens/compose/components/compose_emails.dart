@@ -348,6 +348,7 @@ class ComposeEmailsState extends BState<ComposeEmails> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: InputUtils.buildUnlymeTextField(
+                    context: context,
                     controller: widget.textCtrl,
                     labelText: widget.label,
                     keyboardType: TextInputType.emailAddress,

@@ -4,8 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:theme/app_color.dart';
 
 class InputUtils {
+  /// Border color of the input fields: the light one or the dark theme one.
+  static Color borderColor(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? AppColor.inputBorderDark
+          : AppColor.inputBorder;
+
   /// Returns InputDecoration with unlyme styles if useCustomInputStyles = true
   static InputDecoration getUnlymeInputDecoration({
+    required BuildContext context,
     String? labelText,
     String? hintText,
     Widget? suffixIcon,
@@ -26,15 +33,15 @@ class InputUtils {
       suffixIcon: suffixIcon,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: AppColor.inputBorder, width: 1.0),
+        borderSide: BorderSide(color: borderColor(context), width: 1.0),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: AppColor.inputBorder, width: 1.0),
+        borderSide: BorderSide(color: borderColor(context), width: 1.0),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: AppColor.inputBorder, width: 1.0),
+        borderSide: BorderSide(color: borderColor(context), width: 1.0),
       ),
       labelStyle: TextStyle(color: AppColor.inputPlaceholder),
       hintStyle: TextStyle(color: AppColor.inputPlaceholder),
@@ -85,6 +92,7 @@ class InputUtils {
 
   /// A wrapper for a TextField with unlyme styles
   static Widget buildUnlymeTextField({
+    required BuildContext context,
     required TextEditingController controller,
     String? labelText,
     String? hintText,
@@ -107,6 +115,7 @@ class InputUtils {
       obscureText: obscureText,
       maxLines: maxLines,
       decoration: getUnlymeInputDecoration(
+        context: context,
         labelText: labelText,
         hintText: hintText,
         suffixIcon: suffixIcon,
@@ -116,6 +125,7 @@ class InputUtils {
 
   /// Wrapper for TextFormField with unlyme styles
   static Widget buildUnlymeTextFormField({
+    required BuildContext context,
     required TextEditingController controller,
     String? labelText,
     String? hintText,
@@ -140,6 +150,7 @@ class InputUtils {
       obscureText: obscureText,
       maxLines: maxLines,
       decoration: getUnlymeInputDecoration(
+        context: context,
         labelText: labelText,
         hintText: hintText,
         suffixIcon: suffixIcon,
@@ -177,6 +188,7 @@ class InputUtils {
 
   /// Creates a custom DropdownButtonFormField with unlyme styles
   static Widget buildUnlymeDropdownFormField<T>({
+    required BuildContext context,
     required T? value,
     required List<T> items,
     required ValueChanged<T?> onChanged,
@@ -234,6 +246,7 @@ class InputUtils {
       icon: Icon(Icons.arrow_drop_down,
           color: AppColor.inputPlaceholder, size: 20),
       decoration: getUnlymeInputDecoration(
+        context: context,
         labelText: labelText,
         hintText: hintText,
         contentPadding: isDense
@@ -258,6 +271,7 @@ class InputUtils {
 
   /// Creates a custom DropDownButton with unlyme styles (without a form)
   static Widget buildUnlymeDropdown<T>({
+    required BuildContext context,
     required T? value,
     required List<T> items,
     required ValueChanged<T?> onChanged,
@@ -292,7 +306,7 @@ class InputUtils {
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(
-          color: AppColor.inputBorder,
+          color: borderColor(context),
           width: 1.0,
         ),
       ),
@@ -322,6 +336,7 @@ class InputUtils {
 
   /// Creates a custom ContactPrimaryInput with anonymous styles
   static Widget buildUnlymePrimaryInput<T>({
+    required BuildContext context,
     required String label,
     required void Function(T?) onChanged,
     required T selectedValue,
@@ -384,7 +399,7 @@ class InputUtils {
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(
-          color: AppColor.inputBorder,
+          color: borderColor(context),
           width: 1.0,
         ),
       ),
@@ -407,7 +422,7 @@ class InputUtils {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(6.0),
                   border: Border.all(
-                    color: AppColor.inputBorder,
+                    color: borderColor(context),
                     width: 0.5,
                   ),
                 ),
@@ -493,6 +508,7 @@ class InputUtils {
             controller: controller,
             enabled: enabled,
             decoration: getUnlymeInputDecoration(
+        context: context,
               labelText: labelText,
               suffixIcon: suffixIcon ??
                   AssetSvgIcon(
@@ -530,17 +546,17 @@ class InputUtils {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide:
-                      BorderSide(color: AppColor.inputBorder, width: 1.0),
+                      BorderSide(color: borderColor(context), width: 1.0),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide:
-                      BorderSide(color: AppColor.inputBorder, width: 1.0),
+                      BorderSide(color: borderColor(context), width: 1.0),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide:
-                      BorderSide(color: AppColor.inputBorder, width: 1.0),
+                      BorderSide(color: borderColor(context), width: 1.0),
                 ),
                 labelStyle: TextStyle(color: AppColor.inputPlaceholder),
                 contentPadding:

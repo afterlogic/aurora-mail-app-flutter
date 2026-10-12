@@ -42,6 +42,7 @@ class _ComposeSubjectState extends BState<ComposeSubject> {
           children: [
             Expanded(
               child: InputUtils.buildUnlymeTextField(
+                context: context,
                 controller: widget.textCtrl,
                 labelText: S.of(context).messages_subject,
                 focusNode: widget.focusNode,

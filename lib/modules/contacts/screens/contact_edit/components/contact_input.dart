@@ -14,6 +14,7 @@ class ContactInput extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: InputUtils.buildUnlymeTextFormField(
+        context: context,
         controller: ctrl,
         labelText: label,
         keyboardType: keyboardType,

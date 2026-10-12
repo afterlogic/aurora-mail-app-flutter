@@ -28,6 +28,8 @@ class AppColor {
   // Input styles (for compatibility)
   static const inputBackground = Color(0xFFF5F5F5);
   static const inputBorder = Color(0xFFE0E0E0);
+  // Input field border in the dark theme (inputBorder is the light theme one)
+  static const inputBorderDark = Color(0xFF3C3C3C);
   static const inputPlaceholder = Color(0xFF757575);
 
   // Input sections and groups (for compatibility)

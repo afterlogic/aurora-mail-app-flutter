@@ -589,6 +589,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
             Expanded(
               flex: 1,
               child: InputUtils.buildUnlymeDropdownFormField<int>(
+                context: context,
                 labelText: null,
                 value: _primaryEmail,
                 items: [0, 1, 2],
@@ -616,6 +617,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
             Expanded(
               flex: 2,
               child: InputUtils.buildUnlymeTextFormField(
+                context: context,
                 controller: _getPrimaryEmailCtrl(),
                 labelText: label,
                 keyboardType: TextInputType.emailAddress,
@@ -644,6 +646,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
             Expanded(
               flex: 1,
               child: InputUtils.buildUnlymeDropdownFormField<int>(
+                context: context,
                 labelText: null,
                 value: _primaryPhone,
                 items: [0, 1, 2],
@@ -671,6 +674,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
             Expanded(
               flex: 2,
               child: InputUtils.buildUnlymeTextFormField(
+                context: context,
                 controller: _getPrimaryPhoneCtrl(),
                 labelText: label,
                 keyboardType: TextInputType.phone,
@@ -698,6 +702,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
             Expanded(
               flex: 1,
               child: InputUtils.buildUnlymeDropdownFormField<int>(
+                context: context,
                 labelText: null,
                 value: _primaryAddress,
                 items: [0, 1],
@@ -723,6 +728,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
             Expanded(
               flex: 2,
               child: InputUtils.buildUnlymeTextFormField(
+                context: context,
                 controller: _getPrimaryAddressCtrl(),
                 labelText: label,
               ),
