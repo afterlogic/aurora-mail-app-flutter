@@ -12,6 +12,7 @@ class GradientDrawer extends StatelessWidget {
     final bool useGradient = BuildProperty.useDrawerGradient == true;
 
     return Drawer(
+      shape: const RoundedRectangleBorder(),
       child: useGradient
           ? Container(
               decoration: BoxDecoration(

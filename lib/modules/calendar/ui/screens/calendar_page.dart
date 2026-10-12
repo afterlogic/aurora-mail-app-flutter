@@ -18,6 +18,7 @@ import 'package:aurora_mail/modules/calendar/ui/views/tasks_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/week_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_drawer.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tab.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/shared_ui/app_bar_icons.dart';
 import 'package:aurora_mail/shared_ui/asset_svg_icon.dart';
 import 'package:aurora_mail/shared_ui/loading_container_indicator.dart';
@@ -139,21 +140,27 @@ class _CalendarPageState extends State<CalendarPage>
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = LayoutConfig.of(context).isTablet;
+
     return Scaffold(
       key: GlobalKey<ScaffoldState>(),
-      drawer: CalendarDrawer(),
+      drawer: isTablet ? null : CalendarDrawer(),
       appBar: AMAppBar(
         automaticallyImplyLeading: false,
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: AppBarIcons.burger(context: context),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-        ),
+        leading: isTablet
+            ? null
+            : Builder(
+                builder: (context) => IconButton(
+                  icon: AppBarIcons.burger(context: context),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
+              ),
         title: Text(S.of(context).calendar),
         shadow: BoxShadow(color: Colors.transparent),
       ),
-      body: Column(
+      body: _wrapWithTabletSidebar(
+          isTablet,
+          Column(
         children: [
           if (BuildProperty.useAppBarDivider)
             Container(
@@ -263,7 +270,7 @@ class _CalendarPageState extends State<CalendarPage>
             ),
           ),
         ],
-      ),
+      )),
       floatingActionButton: _overlay
           ? Stack(
               children: [
@@ -549,6 +556,31 @@ class _CalendarPageState extends State<CalendarPage>
             ),
       bottomNavigationBar:
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.calendar),
+    );
+  }
+
+  /// On tablets the calendars drawer is a permanent left column, like on the
+  /// other screens, instead of a slide-out drawer.
+  Widget _wrapWithTabletSidebar(bool isTablet, Widget content) {
+    if (!isTablet) return content;
+
+    return Row(
+      children: [
+        ClipRRect(
+          child: SizedBox(
+            width: 304,
+            child: Scaffold(
+              body: DecoratedBox(
+                position: DecorationPosition.foreground,
+                decoration: BoxDecoration(
+                    border: Border(right: BorderSide(width: 0.2))),
+                child: CalendarDrawer(),
+              ),
+            ),
+          ),
+        ),
+        Expanded(child: content),
+      ],
     );
   }
 

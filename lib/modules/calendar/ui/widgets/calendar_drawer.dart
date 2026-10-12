@@ -285,7 +285,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
             // Close the drawer first: while it's open it renders above the
             // Scaffold's SnackBar, so a SnackBar shown before closing it
             // would be invisible behind it.
-            Navigator.of(ctx).pop();
+            _closeDrawerIfOpen(ctx);
             await downloadFromUrl(
                 url: calendar.getDownloadUrl(user),
                 user: user,
@@ -330,7 +330,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
               if (value != true) return;
               BlocProvider.of<CalendarsBloc>(ctx)
                   .add(UnsubscribeFromCalendar(calendar));
-              Navigator.of(ctx).pop();
+              _closeDrawerIfOpen(ctx);
             });
           },
         );
@@ -406,10 +406,18 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
                 .then((value) {
               if (value != true) return;
               BlocProvider.of<CalendarsBloc>(ctx).add(DeleteCalendar(calendar));
-              Navigator.of(ctx).pop();
+              _closeDrawerIfOpen(ctx);
             });
           },
         );
+    }
+  }
+
+  /// The drawer can also be a permanent sidebar (tablet), where there is
+  /// nothing to close and a plain pop would close the whole screen.
+  void _closeDrawerIfOpen(BuildContext ctx) {
+    if (Scaffold.maybeOf(ctx)?.isDrawerOpen ?? false) {
+      Navigator.of(ctx).pop();
     }
   }
 

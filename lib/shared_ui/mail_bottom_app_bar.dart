@@ -81,7 +81,6 @@ class MailBottomAppBar extends StatelessWidget {
         : EdgeInsets.symmetric(horizontal: 0, vertical: 6);
 
     Widget row = Container(
-        color: theme.bottomNavigationBarTheme.backgroundColor,
         padding: padding,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -147,6 +146,8 @@ class MailBottomAppBar extends StatelessWidget {
       );
     }
     return BottomAppBar(
+      color: theme.bottomNavigationBarTheme.backgroundColor,
+      surfaceTintColor: Colors.transparent,
       padding: EdgeInsets.zero,
       child: SafeArea(
         child: row,
