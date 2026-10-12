@@ -136,3 +136,4 @@ core/aurora_ui_kit
 
 # FVM Version Cache
 .fvm/
+.claude/
