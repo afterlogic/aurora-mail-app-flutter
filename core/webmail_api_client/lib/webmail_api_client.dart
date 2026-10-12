@@ -46,13 +46,24 @@ class WebMailApi {
   static const Duration _requestTimeout = Duration(seconds: 30);
   static const Duration _uploadTimeout = Duration(minutes: 5);
 
+  // A reused keep-alive socket that the peer has already dropped (typical right
+  // after a Wi-Fi<->LTE handover, or when a mobile NAT silently kills an idle
+  // connection) surfaces as `ClientException: Connection closed before full
+  // header was received` on the next request. Retrying once opens a fresh
+  // connection; a real outage fails again and propagates as before.
+  static const int _postRetries = 1;
+  static const Duration _retryDelay = Duration(milliseconds: 300);
+
   static IOClient _client = IOClient(
     HttpClient()
       ..badCertificateCallback =
           ((X509Certificate cert, String host, int port) {
         return false;
       })
-      ..connectionTimeout = const Duration(seconds: 15),
+      ..connectionTimeout = const Duration(seconds: 15)
+      // Evict pooled connections well before the server or NAT would, so we
+      // don't hand a dead socket to the next request.
+      ..idleTimeout = const Duration(seconds: 5),
   );
 
   static final _authErrorStreamCtrl = StreamController<void>.broadcast();
@@ -118,6 +129,34 @@ class WebMailApi {
     }
   }
 
+  // Sends the POST, retrying once on a transport-level failure (no response
+  // byte received) so a stale pooled connection after a network handover
+  // doesn't bubble up as a user-visible error. Timeouts are not retried - a
+  // second 30s wait helps nobody - and a WebMailApiError never reaches here.
+  Future<Response> _sendPost(
+      Map<String, String> headers, WebMailApiBody body) async {
+    var attempt = 0;
+    while (true) {
+      try {
+        return await _client
+            .post(
+              Uri.parse(apiUrl),
+              headers: headers,
+              body: body.toMap(moduleName),
+            )
+            .timeout(_requestTimeout);
+      } on ClientException catch (err) {
+        if (attempt++ >= _postRetries) rethrow;
+        print('WebMailApi.post(): retrying after transport error: $err');
+        await Future.delayed(_retryDelay);
+      } on SocketException catch (err) {
+        if (attempt++ >= _postRetries) rethrow;
+        print('WebMailApi.post(): retrying after socket error: $err');
+        await Future.delayed(_retryDelay);
+      }
+    }
+  }
+
   // getRawResponse in case AuthenticatedUserId is required, which is outside Result objects
   Future post(WebMailApiBody body, {
     bool useToken = true,
@@ -139,13 +178,7 @@ class WebMailApi {
     final start = DateTime.now().millisecondsSinceEpoch;
     _onRequest(id, body.parameters);
     try {
-      final rawResponse = await _client
-          .post(
-            Uri.parse(apiUrl),
-            headers: headers,
-            body: body.toMap(moduleName),
-          )
-          .timeout(_requestTimeout);
+      final rawResponse = await _sendPost(headers, body);
       final res = json.decode(rawResponse.body);
 
       if (res["Result"] != null && (res["Result"] != false || getRawResponse)) {
