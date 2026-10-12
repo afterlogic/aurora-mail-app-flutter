@@ -109,7 +109,6 @@ class _AboutAndroidState extends BState<AboutAndroid> {
                             S.of(context).settings_about_terms_of_service,
                             style: TextStyle(
                               color: theme.primaryColor,
-                              decoration: TextDecoration.underline,
                               fontSize: 18.0,
                             ),
                           ),
@@ -124,7 +123,6 @@ class _AboutAndroidState extends BState<AboutAndroid> {
                             S.of(context).settings_about_privacy_policy,
                             style: TextStyle(
                               color: theme.primaryColor,
-                              decoration: TextDecoration.underline,
                               fontSize: 18.0,
                             ),
                           ),
