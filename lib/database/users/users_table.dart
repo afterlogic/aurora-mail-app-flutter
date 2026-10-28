@@ -1,4 +1,3 @@
-import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 import 'package:drift/drift.dart';
 
@@ -14,8 +13,7 @@ class Users extends Table {
   TextColumn get token => text()();
 
   IntColumn get syncFreqInSeconds => integer()
-      .withDefault(Constant(
-          !BuildProperty.backgroundSync ? SyncFreq.NEVER_IN_SECONDS : 300))
+      .withDefault(Constant(SyncFreq.defaultFreqInSeconds))
       .nullable()();
 
   TextColumn get syncPeriod => text().nullable()();

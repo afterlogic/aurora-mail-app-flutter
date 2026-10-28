@@ -6034,8 +6034,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
       'sync_freq_in_seconds', aliasedName, true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultValue: Constant(
-          !BuildProperty.backgroundSync ? SyncFreq.NEVER_IN_SECONDS : 300));
+      defaultValue: Constant(SyncFreq.defaultFreqInSeconds));
   static const VerificationMeta _syncPeriodMeta =
       const VerificationMeta('syncPeriod');
   @override

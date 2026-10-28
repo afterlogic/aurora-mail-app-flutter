@@ -95,7 +95,8 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
               buildWhen: (_, state) => state is SettingsLoaded,
               builder: (_, state) {
                 if (state is SettingsLoaded) {
-                  final freq = SyncFreq.secondsToFreq(state.syncFrequency);
+                  final freq = SyncFreq.secondsToFreq(
+                      state.syncFrequency ?? SyncFreq.defaultFreqInSeconds);
                   final period = SyncPeriod.dbStringToPeriod(state.syncPeriod);
                   return ListView(
                     children: <Widget>[

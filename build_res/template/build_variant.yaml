@@ -31,6 +31,7 @@ supportLanguage: 'en,tr,ru'
 # App Settings
 # ===================================================================
 syncPeriod: 'Period.months6'
+syncFrequencyInSeconds: 1800
 mailMessagesChunkSize: 50
 
 # ===================================================================

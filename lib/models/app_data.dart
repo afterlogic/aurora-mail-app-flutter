@@ -44,12 +44,23 @@ class AppData extends Equatable {
   factory AppData.fromMap(Map<String, dynamic> map) {
     return AppData(
       calendarSettings: map['Calendar'] as Map<String, dynamic>?,
-      location: tz.getLocation(map['Core']['Timezone'] as String),
+      location: _parseLocation(map['Core']['Timezone'] as String?),
       availableClientModules:
           (map['Core']['AvailableClientModules'] as List).cast<String>(),
       availableBackendModules:
           (map['Core']['AvailableBackendModules'] as List).cast<String>(),
     );
+  }
+
+  // The server may send an empty timezone, and toMap() stores a missing one
+  // as "null"; treat any unknown name as "no timezone" instead of throwing.
+  static tz.Location? _parseLocation(String? name) {
+    if (name == null || name.isEmpty) return null;
+    try {
+      return tz.getLocation(name);
+    } on tz.LocationNotFoundException {
+      return null;
+    }
   }
 
   @override

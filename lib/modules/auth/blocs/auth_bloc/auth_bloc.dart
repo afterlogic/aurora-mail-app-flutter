@@ -288,7 +288,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             _methods.getDefaultIdentity(currentAccount, identities);
       }
       add(InitUserAndAccounts());
-    }).whenComplete(() => event.completer?.complete());
+    }).whenComplete(() {
+      final completer = event.completer;
+      if (completer != null && !completer.isCompleted) completer.complete();
+    });
   }
 
   Stream<AuthState> _deleteUser(DeleteUser event) async* {

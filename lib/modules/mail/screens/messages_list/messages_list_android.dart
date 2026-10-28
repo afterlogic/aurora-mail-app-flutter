@@ -228,8 +228,9 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
       final isDraftMessage = message.folder == draftsFolder.fullNameRaw;
-      final isNotesFolder = _selectedFolder!.folderType!.isNotes;
+      final isNotesFolder = _selectedFolder?.folderType?.isNotes == true;
       if (isDraftMessage || isNotesFolder) {
         Navigator.pushNamed(
           context,

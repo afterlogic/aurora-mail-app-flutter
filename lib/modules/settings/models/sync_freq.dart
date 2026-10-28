@@ -1,4 +1,5 @@
 
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -16,6 +17,10 @@ enum Freq {
 // Freq == frequency
 class SyncFreq {
   static const NEVER_IN_SECONDS = Duration.secondsPerDay * 365 * 1000;
+  // Used until the user picks a frequency in the sync settings.
+  static int get defaultFreqInSeconds => BuildProperty.backgroundSync
+      ? BuildProperty.syncFrequencyInSeconds
+      : NEVER_IN_SECONDS;
 
   static String? freqToString(BuildContext context, Freq freq) {
     switch (freq) {

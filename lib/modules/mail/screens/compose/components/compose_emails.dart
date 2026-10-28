@@ -123,9 +123,13 @@ class ComposeEmailsState extends BState<ComposeEmails> {
   _paste() async {
     _focus();
     await Future.delayed(Duration(milliseconds: 100));
-    final gesture = textFieldKey.currentState
-        as TextSelectionGestureDetectorBuilderDelegate;
-    gesture.editableTextKey.currentState!.toggleToolbar();
+    if (!mounted) return;
+    // textFieldKey isn't attached to the text field anymore, so its state may
+    // be missing; in that case focusing the field is all we can do.
+    final Object? gesture = textFieldKey.currentState;
+    if (gesture is TextSelectionGestureDetectorBuilderDelegate) {
+      gesture.editableTextKey.currentState?.toggleToolbar();
+    }
   }
 
   Future<Map<String?, Contact>> getContacts() async {

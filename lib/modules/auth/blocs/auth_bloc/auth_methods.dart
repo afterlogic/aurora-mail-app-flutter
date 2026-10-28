@@ -19,6 +19,7 @@ import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:drift/drift.dart';
 import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
+import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 
 class AuthMethods {
   final _authApi = new AuthApi();
@@ -91,6 +92,7 @@ class AuthMethods {
 
     newUser = newUser.copyWith(
       syncPeriod: Value(BuildProperty.syncPeriod),
+      syncFreqInSeconds: Value(SyncFreq.defaultFreqInSeconds),
     );
     return newUser;
   }

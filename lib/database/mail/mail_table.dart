@@ -217,13 +217,11 @@ class Mail extends Table {
     final messageInfoMap = Map.fromEntries(
         messagesInfo.map((item) => MapEntry(item.uid, item)).toList());
     result.forEach((raw) {
-      Message messageInfo;
-
-      try {
-        messageInfo = messageInfoMap[raw["Uid"]]!;
-      } catch (err) {
-        throw Exception("Couldn't find message: ${raw["Uid"]}");
-      }
+      final messageInfo = messageInfoMap[raw["Uid"]];
+      // The server can return a body for a message that is no longer in the
+      // local messages info (e.g. it was moved or deleted meanwhile); skip it
+      // instead of failing the whole chunk.
+      if (messageInfo == null) return;
       final toToDisplay = (raw["To"] != null &&
               raw["To"]["@Collection"]?.isNotEmpty == true)
           ? raw["To"]["@Collection"]
@@ -323,8 +321,6 @@ class Mail extends Table {
         hasBody: true,
       ));
     });
-
-    assert(result.length == messagesChunk.length);
 
     return messagesChunk.map((e) => e.toJson()).toList();
   }

@@ -420,12 +420,21 @@ class MailMethods {
       updateMessageCounter!.empty();
       return;
     }
-    assert(syncQueue.isNotEmpty);
+    // The queue can be emptied (e.g. on account switch or logout) while
+    // a chunk is still being synced.
+    if (syncQueue.isEmpty) {
+      updateMessageCounter!.empty();
+      return;
+    }
 
     // get the actual folder state every time
     final folder = await _foldersDao.getFolderByGuId(syncQueue[0]);
     // get the actual sync period
-    final updatedUser = (await _usersDao.getUserByLocalId(user.localId!))!;
+    final updatedUser = await _usersDao.getUserByLocalId(user.localId!);
+    if (updatedUser == null) {
+      updateMessageCounter!.empty();
+      return;
+    }
 //    if (folder?.messagesInfo == null) {
 //      print(
 //          "Attention! messagesInfo is null, perhaps another folder was selected while messages info was being retrieved.");
