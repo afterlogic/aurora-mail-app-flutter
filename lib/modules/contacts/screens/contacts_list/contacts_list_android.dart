@@ -150,7 +150,11 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
                       body: DecoratedBox(
                           position: DecorationPosition.foreground,
                           decoration: BoxDecoration(
-                              border: Border(right: BorderSide(width: 0.2))),
+                              border: Border(
+                                  right: BorderSide(
+                                      width: 0.5,
+                                      color: DividerTheme.of(context).color ??
+                                          Theme.of(context).dividerColor))),
                           child: ContactsDrawer()),
                     ),
                   ),

@@ -251,7 +251,11 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
                         body: DecoratedBox(
                           position: DecorationPosition.foreground,
                           decoration: BoxDecoration(
-                              border: Border(right: BorderSide(width: 0.2))),
+                              border: Border(
+                                  right: BorderSide(
+                                      width: 0.5,
+                                      color: DividerTheme.of(context).color ??
+                                          Theme.of(context).dividerColor))),
                           child: Drawer(
                             shape: const RoundedRectangleBorder(),
                             child: ListTileTheme(
